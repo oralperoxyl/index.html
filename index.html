@@ -358,79 +358,222 @@
   </section>
 
   <!-- Reviews -->
-  <section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
-    <h2 class="text-3xl md:text-4xl font-bold mb-8">Отзывы клиентов</h2>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><div class="flex items-center gap-2"><span>⭐</span><div class="font-semibold">Марина и Роман</div></div><div class="pt-2 text-sm text-slate-700">Семён помог продать нашу квартиру за 19 дней. Получили на 7% больше, чем ожидали.</div></div>
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><div class="flex items-center gap-2"><span>⭐</span><div class="font-semibold">Александр П.</div></div><div class="pt-2 text-sm text-slate-700">27 показов за выходные, выбрали лучшего покупателя.</div></div>
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><div class="flex items-center gap-2"><span>⭐</span><div class="font-semibold">Ирина К.</div></div><div class="pt-2 text-sm text-slate-700">Безопасные расчёты и полное сопровождение. Спокойно на сделке.</div></div>
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><div class="flex items-center gap-2"><span>⭐</span><div class="font-semibold">Дмитрий и Наталья</div></div><div class="pt-2 text-sm text-slate-700">Организовал всё от фото до ключей. Мы только подписали.</div></div>
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><div class="flex items-center gap-2"><span>⭐</span><div class="font-semibold">Анна С.</div></div><div class="pt-2 text-sm text-slate-700">Финальная цена выше на 500 тыс.</div></div>
-     <!-- новые отзывы -->
-<div class="rounded-2xl border border-sky-100 bg-white p-5">
-  <div class="flex items-center gap-2">
-    <span>⭐</span>
-    <div class="font-semibold">Маргарита Страшенко</div>
-  </div>
-  <div class="pt-2 text-sm text-slate-700">
-    Большое спасибо Семену за помощь в продаже квартиры, которая находилась в ипотеке. Сделка состоялась довольно быстро, Семен помог собрать все необходимые документы, все время был на связи и консультировал меня по всем имеющимся вопросам. Очень грамотный и ответственный специалист. Ни разу не пожалела, что обратилась именно к нему.
-  </div>
-</div>
+<section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
+  <style>
+    #reviews .card {
+      border-radius: 1.25rem;
+      background: linear-gradient(135deg, #f0f7ff, #ffffff);
+      box-shadow: 0 8px 24px rgba(16,24,40,.08);
+      padding: 1.25rem;
+      transition: box-shadow .2s ease, transform .2s ease;
+    }
+    #reviews .card:hover { box-shadow: 0 12px 30px rgba(16,24,40,.12); }
+    #reviews .avatar {
+      font-size: 1.75rem;
+      display:flex;align-items:center;justify-content:center;
+      width: 2.5rem;height: 2.5rem;
+      background:#fff;border-radius:50%;
+      box-shadow:0 0 0 1px #e2e8f0;
+    }
+    #reviews .collapsible {
+      position: relative;
+      max-height: 6.5rem;
+      overflow: hidden;
+    }
+    #reviews .collapsible::after{
+      content:"";
+      position:absolute;left:0;right:0;bottom:0;height:3rem;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+    }
+    #reviews .collapsible.expanded { max-height: none; }
+    #reviews .collapsible.expanded::after{ display: none; }
+    #reviews .toggle-btn{
+      margin-top:.5rem;
+      display:inline-block;
+      padding:.4rem .8rem;
+      border-radius:.6rem;
+      border:1px solid #e2e8f0;
+      background:#fff;
+      font-size:.875rem;
+      color:#0f172a;
+      transition: background .15s ease, border-color .15s ease;
+    }
+    #reviews .toggle-btn:hover{ background:#f8fafc; border-color:#cbd5e1; }
+    #reviews .stars{ color:#f5b301; }
+  </style>
 
-<div class="rounded-2xl border border-sky-100 bg-white p-5">
-  <div class="flex items-center gap-2">
-    <span>⭐</span>
-    <div class="font-semibold">Наталья</div>
-  </div>
-  <div class="pt-2 text-sm text-slate-700">
-    Спасибо огромное Семену за труд и терпение. Грамотный, отзывчивый, пунктуальный, добросовестный, профессионал своего дела. Я купила квартиру и очень довольна результатом. Процветание и благополучия вам Семен.
-  </div>
-</div>
+  <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Отзывы клиентов</h2>
 
-<div class="rounded-2xl border border-sky-100 bg-white p-5">
-  <div class="flex items-center gap-2">
-    <span>⭐</span>
-    <div class="font-semibold">Елена Григорьева</div>
-  </div>
-  <div class="pt-2 text-sm text-slate-700">
-    Самый грамотный специалист, которого я встречала! Продавала квартиру более года, пришлось сменить более 2 риэлторов.. к счастью, обратилась к Семену. Результат: покупатель был найден ровно за 21 день! Сделка была сложной: 2 встречные ипотеки, выделение долей для детей покупателя, опека... Но все уже в прошлом. Если бы не профессионализм Семена, сделка бы не состоялась, фактически он отработал и за агентов покупателя, консультируя и их тоже, исправляя их огрехи. На каждом этапе сделки мне оказывалась любая помощь в любое время! Сейчас планирую покупку новой квартиры и, бесспорно, обращаться буду только к нему!
-  </div>
-</div>
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-<div class="rounded-2xl border border-sky-100 bg-white p-5">
-  <div class="flex items-center gap-2">
-    <span>⭐</span>
-    <div class="font-semibold">redflag18</div>
-  </div>
-  <div class="pt-2 text-sm text-slate-700">
-    Работали на подбор по первичке. За 6 дней определились с выбором, считаю что семен нашёл нам лучшую в рынке квартиру на тот момент. Жк Черная Речка. Всем довольны, уже делаем ремонт.
-  </div>
-</div>
-
-<div class="rounded-2xl border border-sky-100 bg-white p-5">
-  <div class="flex items-center gap-2">
-    <span>⭐</span>
-    <div class="font-semibold">Сергей и Анна</div>
-  </div>
-  <div class="pt-2 text-sm text-slate-700">
-    Хоть квартиру мы и не купили, но очень понравилось, как Семён с командой проводят свою работу. Такого сервиса и клиентоориентированности не видели с мужем ни в одном агенстве. Когда будем продавать свою квартиру - хотели бы, чтобы нашу квартиру продавали именно Семён с командой. Обязательно обратимся в будущем!
-  </div>
-</div>
-
-<div class="rounded-2xl border border-sky-100 bg-white p-5">
-  <div class="flex items-center gap-2">
-    <span>⭐</span>
-    <div class="font-semibold">Татьяна</div>
-  </div>
-  <div class="pt-2 text-sm text-slate-700">
-    Спасибо Семену, помог осуществить мечту о новой квартире. Несмотря на «опеку» и другие сложности моей сделки. Продавец в кратчайшие сроки продал мне квартиру по выгодной цене и лето я уже встречу в новой квартире.
-  </div>
-</div>
-
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><div class="flex items-center gap-2"><span>⭐</span><div class="font-semibold">Олег Т.</div></div><div class="pt-2 text-sm text-slate-700">Покупатель найден за 2 недели, сделка быстро и безопасно.</div></div>
-      
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👩🏻‍❤️‍👨🏻</div>
+        <div>
+          <div class="font-semibold text-lg">Марина и Роман</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed">«Семён помог продать нашу квартиру за 19 дней. Получили на 7% больше, чем ожидали.»</div>
     </div>
-  </section>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👨🏻‍🦱</div>
+        <div>
+          <div class="font-semibold text-lg">Александр П.</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed">«27 показов за выходные, выбрали лучшего покупателя.»</div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👩🏼</div>
+        <div>
+          <div class="font-semibold text-lg">Ирина К.</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed">«Безопасные расчёты и полное сопровождение. Спокойно на сделке.»</div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👨🏻‍👩🏻</div>
+        <div>
+          <div class="font-semibold text-lg">Дмитрий и Наталья</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed">«Организовал всё от фото до ключей. Мы только подписали.»</div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👩🏻‍🦰</div>
+        <div>
+          <div class="font-semibold text-lg">Анна С.</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed">«Финальная цена выше на 500 тыс.»</div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👨🏼</div>
+        <div>
+          <div class="font-semibold text-lg">Олег Т.</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed">«Покупатель найден за 2 недели, сделка быстро и безопасно.»</div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👩🏼‍🦱</div>
+        <div>
+          <div class="font-semibold text-lg">Маргарита Страшенко</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
+        Большое спасибо Семену за помощь в продаже квартиры, которая находилась в ипотеке. Сделка состоялась довольно быстро, Семен помог собрать все необходимые документы, все время был на связи и консультировал меня по всем имеющимся вопросам. Очень грамотный и ответственный специалист. Ни разу не пожалела, что обратилась именно к нему.
+      </div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👩🏻</div>
+        <div>
+          <div class="font-semibold text-lg">Наталья</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
+        "Спасибо огромное Семену за труд и терпение. Грамотный, отзывчивый, пунктуальный, добросовестный, профессионал своего дела. Я купила квартиру и очень довольна результатом. Процветания и благополучия вам, Семен."
+      </div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👩🏼</div>
+        <div>
+          <div class="font-semibold text-lg">Елена Григорьева</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
+        "Самый грамотный специалист, которого я встречала! Продавала квартиру более года, пришлось сменить более 2 риэлторов... к счастью, обратилась к Семену. Результат: покупатель был найден ровно за 21 день! Сделка была сложной: 2 встречные ипотеки, выделение долей для детей покупателя, опека... Но всё уже в прошлом. Если бы не профессионализм Семена, сделка бы не состоялась, фактически он отработал и за агентов покупателя, консультируя и их тоже, исправляя их огрехи. На каждом этапе сделки мне оказывалась любая помощь в любое время! Сейчас планирую покупку новой квартиры и, бесспорно, обращаться буду только к нему!"
+      </div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">🧑🏻‍💻</div>
+        <div>
+          <div class="font-semibold text-lg">redflag18</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed">«Работали на подбор по первичке. За 6 дней определились с выбором, Семён нашёл лучшую в рынке квартиру. ЖК Черная Речка. Уже делаем ремонт.»</div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👨🏻‍👩🏼</div>
+        <div>
+          <div class="font-semibold text-lg">Сергей и Анна</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
+        "Хоть квартиру мы и не купили, но очень понравилось, как Семён с командой проводят свою работу. Такого сервиса и клиентоориентированности не видели с мужем ни в одном агентстве. Когда будем продавать свою квартиру — хотели бы, чтобы нашу квартиру продавали именно Семён с командой. Обязательно обратимся в будущем!"
+      </div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center gap-3 mb-3">
+        <div class="avatar">👩🏻‍🦳</div>
+        <div>
+          <div class="font-semibold text-lg">Татьяна</div>
+          <div class="stars">⭐⭐⭐⭐⭐</div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed">«Спасибо Семену, помог осуществить мечту о новой квартире. Несмотря на «опеку» и другие сложности сделки — всё прошло быстро и по выгодной цене.»</div>
+    </div>
+
+  </div>
+
+  <script>
+    (function(){
+      const cards = document.querySelectorAll('#reviews .card');
+      cards.forEach(card => {
+        const text = card.querySelector('.js-collapsible');
+        const btn  = card.querySelector('.js-toggle');
+        if (!text || !btn) return;
+        requestAnimationFrame(() => {
+          if (text.scrollHeight <= text.clientHeight + 4) {
+            btn.style.display = 'none';
+            text.classList.add('expanded');
+          }
+        });
+        btn.addEventListener('click', () => {
+          const expanded = text.classList.toggle('expanded');
+          btn.textContent = expanded ? 'Свернуть' : 'Показать ещё';
+        });
+      });
+    })();
+  </script>
+</section>
+
 
   <!-- FAQ -->
   <section id="faq" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -441,7 +584,7 @@
       <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Какая комиссия и что входит?</summary><div class="pt-2 text-sm text-slate-600">Маркетинг, показы, переговоры, юр. сопровождение и закрытие сделки. Условия обсуждаем на встрече.</div></details>
       <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Как проходят взаиморасчёты?</summary><div class="pt-2 text-sm text-slate-600">Подбираем удобную и безопасную форму расчётов под сделку и стороны.</div></details>
       <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Работаете с альтернативой/ипотекой?</summary><div class="pt-2 text-sm text-slate-600">Да. Сопровождаем сделки с альтернативой, помогаем с ипотекой и субсидиями.</div></details>
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Где публикуете объекты?</summary><div class="pt-2 text-sm text-slate-600">Крупные площадки и таргетированный трафик. По запросу дам список каналов.</div></details>
+      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Где публикуете объекты?</summary><div class="pt-2 text-sm text-slate-600">Крупные площадки и таргетированный трафик. Помимо размещения объявлений использую более 40 инструментов для создания ажиотажного спроса: спецпредложения, акционные показы, e-mail-рассылки и другие каналы привлечения покупателей.По запросу дам список каналов.</div></details>
     </div>
   </section>
 
