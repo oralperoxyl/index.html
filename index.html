@@ -445,95 +445,105 @@
     </div>
   </section>
 
-  <!-- Contact -->
-  <section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
-    <h2 class="text-3xl md:text-4xl font-bold">Связаться со мной</h2>
-    <div class="mt-8 grid md:grid-cols-2 gap-8">
-      <div class="rounded-2xl border border-sky-100 bg-white p-6">
-        <div class="text-lg font-semibold mb-2">Быстрая заявка</div>
-       <form id="leadForm" action="https://api.web3forms.com/submit" method="POST" class="flex flex-col gap-3">
+<!-- Contact -->
+<section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
+  <h2 class="text-3xl md:text-4xl font-bold">Связаться со мной</h2>
+  <div class="mt-8 grid md:grid-cols-2 gap-8">
 
-  <!-- Web3Forms access key -->
-  <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
+    <!-- левая колонка: форма (без изменений) -->
+    <div class="rounded-2xl border border-sky-100 bg-white p-6">
+      <div class="text-lg font-semibold mb-2">Быстрая заявка</div>
 
-  <!-- Имя -->
-  <input type="text" name="name" placeholder="Ваше имя" required class="border rounded-xl px-4 py-3" />
+      <form id="leadForm" action="https://api.web3forms.com/submit" method="POST" class="flex flex-col gap-3">
+        <!-- Web3Forms access key -->
+        <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
 
-  <!-- Телефон или Telegram -->
-  <input type="text" name="contact" placeholder="Ваш телефон или Telegram" required class="border rounded-xl px-4 py-3" />
+        <!-- Имя -->
+        <input type="text" name="name" placeholder="Ваше имя" required class="border rounded-xl px-4 py-3" />
 
-  <!-- Комментарий -->
-  <textarea name="comment" rows="3" class="border rounded-xl px-4 py-3"
-            placeholder="Хочу продать квартиру за 21 день">Хочу продать квартиру за 21 день</textarea>
+        <!-- Телефон или Telegram -->
+        <input type="text" name="contact" placeholder="Ваш телефон или Telegram" required class="border rounded-xl px-4 py-3" />
 
-  <!-- метаданные -->
-  <input type="hidden" name="from_name" value="fastbroker21.ru">
-  <input type="hidden" name="subject" value="Заявка с сайта fastbroker21.ru">
+        <!-- Комментарий -->
+        <textarea name="comment" rows="3" class="border rounded-xl px-4 py-3"
+                  placeholder="Хочу продать квартиру за 21 день">Хочу продать квартиру за 21 день</textarea>
 
-  <!-- анти-спам (honeypot) — оставьте пустым -->
-  <input type="checkbox" name="botcheck" class="hidden" style="display:none;">
+        <!-- метаданные -->
+        <input type="hidden" name="from_name" value="fastbroker21.ru">
+        <input type="hidden" name="subject" value="Заявка с сайта fastbroker21.ru">
 
-  <button type="submit" class="btn-main w-full">Отправить</button>
+        <!-- анти-спам (honeypot) — оставьте пустым -->
+        <input type="checkbox" name="botcheck" class="hidden" style="display:none;">
 
-  <!-- Сообщение об успехе/ошибке -->
-  <p id="formMessage" class="hidden text-green-700 bg-green-50 border border-green-200 rounded-xl p-3 text-center mt-2"></p>
-</form>
+        <button type="submit" class="btn-main w-full">Отправить</button>
 
-<script>
-  (function () {
-    const form = document.getElementById('leadForm');
-    const msg  = document.getElementById('formMessage');
+        <!-- Сообщение об успехе/ошибке -->
+        <p id="formMessage" class="hidden text-green-700 bg-green-50 border border-green-200 rounded-xl p-3 text-center mt-2"></p>
+      </form>
 
-    function show(type, text){
-      msg.textContent = text;
-      msg.classList.remove('hidden','text-red-700','bg-red-50','border-red-200','text-green-700','bg-green-50','border-green-200');
-      if(type==='ok'){ msg.classList.add('text-green-700','bg-green-50','border-green-200'); }
-      else           { msg.classList.add('text-red-700','bg-red-50','border-red-200'); }
-    }
+      <script>
+        (function () {
+          const form = document.getElementById('leadForm');
+          const msg  = document.getElementById('formMessage');
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      try {
-        const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
-        if(res.ok){
-          form.reset();
-          show('ok','Спасибо! Я свяжусь с вами в ближайшее время.');
-        } else {
-          const data = await res.json().catch(()=>({}));
-          show('err', data.message || 'Ошибка при отправке. Напишите в Telegram: t.me/semengme');
-        }
-      } catch {
-        show('err','Не удалось отправить. Попробуйте ещё раз или напишите в Telegram: t.me/semengme');
-      }
-    });
-  })();
-</script>
+          function show(type, text){
+            msg.textContent = text;
+            msg.classList.remove('hidden','text-red-700','bg-red-50','border-red-200','text-green-700','bg-green-50','border-green-200');
+            if(type==='ok'){ msg.classList.add('text-green-700','bg-green-50','border-green-200'); }
+            else           { msg.classList.add('text-red-700','bg-red-50','border-red-200'); }
+          }
 
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+              const res = await fetch(form.action, { method: 'POST', body: new FormData(form) });
+              if(res.ok){
+                form.reset();
+                show('ok','Спасибо! Я свяжусь с вами в ближайшее время.');
+              } else {
+                const data = await res.json().catch(()=>({}));
+                show('err', data.message || 'Ошибка при отправке. Напишите в Telegram: t.me/semengme');
+              }
+            } catch {
+              show('err','Не удалось отправить. Попробуйте ещё раз или напишите в Telegram: t.me/semengme');
+            }
+          });
+        })();
+      </script>
+    </div>
 
-   <div class="grid gap-3 sm:grid-cols-2">
-  <!-- Телефон -->
-  <a href="tel:+79118461965"
-     class="flex flex-col items-center justify-center rounded-xl bg-gray-100 text-gray-800 py-4 px-3 shadow hover:bg-gray-200 transition">
-     📞 <span class="mt-2 font-semibold">+7 911 846-19-65</span>
-  </a>
+    <!-- правая колонка: контакты как «кнопки» с мягкими цветами -->
+    <div class="rounded-2xl border border-sky-100 bg-white p-6">
+      <div class="text-lg font-semibold mb-4">Мои контакты</div>
 
-  <!-- WhatsApp -->
-  <a href="https://wa.me/79118461965" target="_blank" rel="noreferrer"
-     class="flex flex-col items-center justify-center rounded-xl bg-green-50 text-green-700 py-4 px-3 shadow hover:bg-green-100 transition">
-     💬 <span class="mt-2 font-semibold">WhatsApp</span>
-  </a>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <!-- Телефон -->
+        <a href="tel:+79118461965"
+           class="flex flex-col items-center justify-center rounded-xl bg-gray-100 text-gray-800 py-4 px-3 shadow hover:bg-gray-200 transition">
+           📞 <span class="mt-2 font-semibold">+7 911 846-19-65</span>
+        </a>
 
-  <!-- Telegram -->
-  <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
-     class="flex flex-col items-center justify-center rounded-xl bg-sky-50 text-sky-700 py-4 px-3 shadow hover:bg-sky-100 transition">
-     ✈️ <span class="mt-2 font-semibold">@semengme</span>
-  </a>
+        <!-- WhatsApp -->
+        <a href="https://wa.me/79118461965" target="_blank" rel="noreferrer"
+           class="flex flex-col items-center justify-center rounded-xl bg-green-50 text-green-700 py-4 px-3 shadow hover:bg-green-100 transition">
+           💬 <span class="mt-2 font-semibold">WhatsApp</span>
+        </a>
 
-  <!-- Локация -->
-  <div class="flex flex-col items-center justify-center rounded-xl bg-gray-50 text-gray-700 py-4 px-3 shadow">
-     📍 <span class="mt-2 font-semibold">Санкт-Петербург и ЛО</span>
+        <!-- Telegram -->
+        <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
+           class="flex flex-col items-center justify-center rounded-xl bg-sky-50 text-sky-700 py-4 px-3 shadow hover:bg-sky-100 transition">
+           ✈️ <span class="mt-2 font-semibold">@semengme</span>
+        </a>
+
+        <!-- Локация -->
+        <div class="flex flex-col items-center justify-center rounded-xl bg-gray-50 text-gray-700 py-4 px-3 shadow">
+           📍 <span class="mt-2 font-semibold">Санкт-Петербург и ЛО</span>
+        </div>
+      </div>
+    </div>
+
   </div>
-</div>
+</section>
 
 
   <section id="privacy" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
