@@ -92,17 +92,60 @@
     </div>
   </section>
 
-  <!-- Process -->
-  <section id="process" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
-    <h2 class="text-3xl md:text-4xl font-bold">Как проходит продажа</h2>
-    <div class="mt-8 grid md:grid-cols-5 gap-6">
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><span class="inline-flex items-center rounded-full border border-sky-200 text-sky-700 bg-sky-50 px-3 py-1 text-xs font-medium">Шаг 1</span><div class="mt-3 text-lg font-semibold">Диагностика</div><div class="pt-2 text-sm text-slate-600">Оценка рынка и коридор цены.</div></div>
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><span class="inline-flex items-center rounded-full border border-sky-200 text-sky-700 bg-sky-50 px-3 py-1 text-xs font-medium">Шаг 2</span><div class="mt-3 text-lg font-semibold">Подготовка</div><div class="pt-2 text-sm text-slate-600">Документы, съёмка, объявление.</div></div>
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><span class="inline-flex items-center rounded-full border border-sky-200 text-sky-700 bg-sky-50 px-3 py-1 text-xs font-medium">Шаг 3</span><div class="mt-3 text-lg font-semibold">Выход в продажу</div><div class="pt-2 text-sm text-slate-600">Площадки, окна показов, сбор заявок.</div></div>
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><span class="inline-flex items-center rounded-full border border-sky-200 text-sky-700 bg-sky-50 px-3 py-1 text-xs font-medium">Шаг 4</span><div class="mt-3 text-lg font-semibold">Торги</div><div class="pt-2 text-sm text-slate-600">Офферы, конкуренция, выбор лучшего.</div></div>
-      <div class="rounded-2xl border border-sky-100 bg-white p-5"><span class="inline-flex items-center rounded-full border border-sky-200 text-sky-700 bg-sky-50 px-3 py-1 text-xs font-medium">Шаг 5</span><div class="mt-3 text-lg font-semibold">Сделка</div><div class="pt-2 text-sm text-slate-600">Взаиморасчёты, подписание, ключи.</div></div>
+  <!-- Процесс продажи -->
+<section id="process" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Как проходит продажа</h2>
+
+  <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-8 text-center">
+    
+    <!-- Диагностика -->
+    <div class="cursor-pointer transition">
+      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+        <img src="processed_images/ocenka.png" alt="Диагностика" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+      </div>
+      <h3 class="font-semibold mt-4">Диагностика</h3>
+      <p class="text-sm text-slate-600">Оценка рынка и стоимости</p>
     </div>
-  </section>
+
+    <!-- Подготовка -->
+    <div class="cursor-pointer transition">
+      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+        <img src="processed_images/photo.png" alt="Подготовка" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+      </div>
+      <h3 class="font-semibold mt-4">Подготовка</h3>
+      <p class="text-sm text-slate-600">Документы, фото, объявление</p>
+    </div>
+
+    <!-- Выход в продажу -->
+    <div class="cursor-pointer transition">
+      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+        <img src="processed_images/process.png" alt="Выход в продажу" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+      </div>
+      <h3 class="font-semibold mt-4">Выход в продажу</h3>
+      <p class="text-sm text-slate-600">Запуск объявлений и звонки</p>
+    </div>
+
+    <!-- Торги -->
+    <div class="cursor-pointer transition">
+      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+        <img src="processed_images/offer.png" alt="Торги" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+      </div>
+      <h3 class="font-semibold mt-4">Торги</h3>
+      <p class="text-sm text-slate-600">Конкуренция и выбор лучшего</p>
+    </div>
+
+    <!-- Сделка -->
+    <div class="cursor-pointer transition">
+      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+        <img src="processed_images/deal.png" alt="Сделка" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+      </div>
+      <h3 class="font-semibold mt-4">Сделка</h3>
+      <p class="text-sm text-slate-600">Подписание договора</p>
+    </div>
+
+  </div>
+</section>
+
 
   <!-- Cases Slider -->
   <section id="cases" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -312,10 +355,22 @@
   <h2 class="text-3xl md:text-4xl font-bold mb-8">Обо мне</h2>
   <div class="grid md:grid-cols-2 gap-8 items-center">
 
-    <!-- Левая часть: картинка -->
-    <div>
-      <img src="obo_mne_fastbroker21.png" alt="Семён Гончаров" class="rounded-2xl w-full">
-    </div>
+<!-- Левая часть: 4 картинки в виде Apple-карточек с zoom + glow -->
+<div class="grid grid-cols-2 gap-4">
+  <div class="bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-xl hover:shadow-blue-200/50">
+    <img src="processed_images/spb.png" alt="Фото 1" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+  </div>
+  <div class="bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-xl hover:shadow-blue-200/50">
+    <img src="processed_images/moscow.png" alt="Фото 2" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+  </div>
+  <div class="bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-xl hover:shadow-blue-200/50">
+    <img src="processed_images/novostroy.png" alt="Фото 3" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+  </div>
+  <div class="bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-xl hover:shadow-blue-200/50">
+    <img src="processed_images/vtor.png" alt="Фото 4" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+  </div>
+</div>
+
 
     <!-- Правая часть: текст -->
     <div class="space-y-4 text-slate-700 text-base leading-relaxed">
