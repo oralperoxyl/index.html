@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="ru">
 <head>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Семён Гончаров — агент по недвижимости</title>
@@ -21,14 +23,18 @@
 <body class="text-slate-900">
   <div class="fixed top-0 left-0 right-0 z-50 bg-sky-700 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between">
-      <div>Оценю вашу квартиру и план продаж за 10 минут в Telegram</div>
+      <div>Оценю вашу квартиру и план продажи за 2 часа в Telegram</div>
       <a href="https://t.me/semengme" target="_blank" rel="noreferrer" class="underline">Написать сейчас</a>
     </div>
   </div>
 
   <header class="sticky top-10 z-40 backdrop-blur bg-white/70 border-b border-slate-200/70">
     <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
-      <a href="#top" class="font-extrabold tracking-tight text-lg">Гончаров Семён</a>
+<a href="#top"
+   class="font-extrabold text-xl tracking-tight"
+   style="font-family: 'Manrope', sans-serif; letter-spacing: -0.02em;">
+  Гончаров&nbsp;Семён
+</a>
       <div class="hidden md:flex items-center gap-6 text-sm">
         <a href="#services" class="hover:opacity-80">Услуги</a>
         <a href="#process" class="hover:opacity-80">Как работаю</a>
@@ -52,13 +58,38 @@
   <section id="top" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
     <div class="grid md:grid-cols-2 items-center gap-8">
       <div>
-        <span class="inline-flex items-center rounded-full border border-sky-200 text-sky-700 bg-sky-50 px-3 py-1 text-xs font-medium">Санкт‑Петербург • Продажа за 21 день</span>
-        <h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight">Ваш агент‑аукционист в СПб</h1>
-        <p class="mt-4 text-lg text-slate-600">Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели. Полное сопровождение до сделки.</p>
+<span class="inline-flex items-center rounded-full border border-sky-200 text-sky-700 bg-sky-50 px-3 py-1 text-xs font-medium"
+      style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em;">
+  Санкт-Петербург • Продажа за 21 день
+</span>
+
+<h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight"
+    style="font-family:'Manrope',sans-serif; letter-spacing:-0.02em;">
+  Ваш агент-аукционист в СПб
+</h1>
+
+<p class="mt-4 text-lg text-slate-600"
+   style="font-family:'Manrope',sans-serif; font-weight:500; letter-spacing:-0.01em;">
+  Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели. Полное сопровождение до сделки.
+</p>
         <div class="mt-6 flex flex-wrap gap-3">
-          <a href="#contact"><button class="rounded-2xl bg-sky-600 hover:bg-sky-700 text-white px-5 py-3">Бесплатная консультация →</button></a>
-          <a href="#services"><button class="rounded-2xl border border-sky-300 text-sky-700 hover:bg-sky-50 px-5 py-3">Посмотреть услуги</button></a>
-        </div>
+<div class="mt-6 flex flex-wrap gap-3">
+  <!-- Кнопка: Бесплатная консультация -->
+  <a href="#contact">
+    <button
+      class="inline-flex items-center justify-center rounded-full bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-semibold px-6 py-3 text-sm shadow-sm transition">
+      Бесплатная консультация →
+    </button>
+  </a>
+
+  <!-- Кнопка: Посмотреть услуги -->
+  <a href="#services">
+    <button
+      class="inline-flex items-center justify-center rounded-full border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 font-medium px-6 py-3 text-sm shadow-sm transition">
+      Посмотреть услуги
+    </button>
+  </a>
+</div>
       </div>
       <div class="relative">
         <div class="aspect-[4/3] w-full rounded-3xl bg-gradient-to-tr from-slate-100 to-sky-100 shadow-lg grid place-items-center overflow-hidden">
@@ -76,10 +107,11 @@
   <!-- Badges -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs text-slate-600">
-      <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Продажа аукционом</div>
-      <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Выход в продажу и торги</div>
+      <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Продажа аукционом за 21 день</div>
+      <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Бесплатный подбор новостроек</div>
       <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Работа на покупку</div>
-    </div>
+          <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Сопровождение сделки</div>
+</div>
   </section>
 
   <!-- Services -->
@@ -102,8 +134,9 @@
     
     <!-- Диагностика -->
     <div class="cursor-pointer transition">
-      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+      <div class="relative bg-white rounded-xl shadow-md transition hover:shadow-2xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
         <img src="processed_images/ocenka.png" alt="Диагностика" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
       </div>
       <h3 class="font-semibold mt-4">Диагностика</h3>
       <p class="text-sm text-slate-600">Оценка рынка и стоимости</p>
@@ -111,8 +144,9 @@
 
     <!-- Подготовка -->
     <div class="cursor-pointer transition">
-      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+      <div class="relative bg-white rounded-xl shadow-md transition hover:shadow-2xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
         <img src="processed_images/photo.png" alt="Подготовка" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
       </div>
       <h3 class="font-semibold mt-4">Подготовка</h3>
       <p class="text-sm text-slate-600">Документы, фото, объявление</p>
@@ -120,8 +154,9 @@
 
     <!-- Выход в продажу -->
     <div class="cursor-pointer transition">
-      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+      <div class="relative bg-white rounded-xl shadow-md transition hover:shadow-2xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
         <img src="processed_images/process.png" alt="Выход в продажу" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
       </div>
       <h3 class="font-semibold mt-4">Выход в продажу</h3>
       <p class="text-sm text-slate-600">Запуск объявлений и звонки</p>
@@ -129,8 +164,9 @@
 
     <!-- Торги -->
     <div class="cursor-pointer transition">
-      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+      <div class="relative bg-white rounded-xl shadow-md transition hover:shadow-2xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
         <img src="processed_images/offer.png" alt="Торги" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
       </div>
       <h3 class="font-semibold mt-4">Торги</h3>
       <p class="text-sm text-slate-600">Конкуренция и выбор лучшего</p>
@@ -138,8 +174,9 @@
 
     <!-- Сделка -->
     <div class="cursor-pointer transition">
-      <div class="bg-white shadow-md transition hover:shadow-xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
+      <div class="relative bg-white rounded-xl shadow-md transition hover:shadow-2xl hover:shadow-blue-200/50 p-2 flex items-center justify-center overflow-hidden">
         <img src="processed_images/deal.png" alt="Сделка" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
       </div>
       <h3 class="font-semibold mt-4">Сделка</h3>
       <p class="text-sm text-slate-600">Подписание договора</p>
@@ -400,27 +437,25 @@
     <div class="mt-6"><a href="https://agent-goncharov.toprealtors.ru" target="_blank" rel="noreferrer"><button class="rounded-2xl bg-sky-600 hover:bg-sky-700 text-white px-6 py-3">Перейти к подбору</button></a></div>
   </section>
 
-  <!-- About Me -->
-<section id="about" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
-  <h2 class="text-3xl md:text-4xl font-bold mb-8">Обо мне</h2>
-  <div class="grid md:grid-cols-2 gap-8 items-center">
-
-<!-- Левая часть: 4 картинки в виде Apple-карточек с zoom + glow -->
+<!-- Левая часть: 4 картинки в виде Apple-карточек с zoom + glow + gradient -->
 <div class="grid grid-cols-2 gap-4">
-  <div class="bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-xl hover:shadow-blue-200/50">
+  <div class="relative bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-2xl hover:shadow-blue-200/50">
     <img src="processed_images/spb.png" alt="Фото 1" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+    <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
   </div>
-  <div class="bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-xl hover:shadow-blue-200/50">
+  <div class="relative bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-2xl hover:shadow-blue-200/50">
     <img src="processed_images/moscow.png" alt="Фото 2" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+    <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
   </div>
-  <div class="bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-xl hover:shadow-blue-200/50">
+  <div class="relative bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-2xl hover:shadow-blue-200/50">
     <img src="processed_images/novostroy.png" alt="Фото 3" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+    <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
   </div>
-  <div class="bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-xl hover:shadow-blue-200/50">
+  <div class="relative bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-2xl hover:shadow-blue-200/50">
     <img src="processed_images/vtor.png" alt="Фото 4" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+    <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
   </div>
 </div>
-
 
     <!-- Правая часть: текст -->
     <div class="space-y-4 text-slate-700 text-base leading-relaxed">
