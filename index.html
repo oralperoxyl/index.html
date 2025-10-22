@@ -434,39 +434,63 @@
   <section id="newbuild" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-sky-50 rounded-3xl">
     <h2 class="text-3xl md:text-4xl font-bold">Бесплатный подбор новостроек</h2>
     <p class="mt-2 text-slate-600">Подберу варианты под ваши цели и бюджет. Бесплатно, прозрачно и в ваших интересах.</p>
-    <div class="mt-6"><a href="https://agent-goncharov.toprealtors.ru" target="_blank" rel="noreferrer"><button class="rounded-2xl bg-sky-600 hover:bg-sky-700 text-white px-6 py-3">Перейти к подбору</button></a></div>
-  </section>
-
-<!-- Левая часть: 4 картинки в виде Apple-карточек с zoom + glow + gradient -->
-<div class="grid grid-cols-2 gap-4">
-  <div class="relative bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-2xl hover:shadow-blue-200/50">
-    <img src="processed_images/spb.png" alt="Фото 1" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-    <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
-  </div>
-  <div class="relative bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-2xl hover:shadow-blue-200/50">
-    <img src="processed_images/moscow.png" alt="Фото 2" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-    <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
-  </div>
-  <div class="relative bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-2xl hover:shadow-blue-200/50">
-    <img src="processed_images/novostroy.png" alt="Фото 3" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-    <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
-  </div>
-  <div class="relative bg-white shadow-md transition p-2 flex items-center justify-center overflow-hidden hover:shadow-2xl hover:shadow-blue-200/50">
-    <img src="processed_images/vtor.png" alt="Фото 4" class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-    <div class="absolute inset-0 bg-gradient-to-t from-white/30 to-transparent opacity-0 hover:opacity-100 transition"></div>
-  </div>
+    <div class="mt-6">
+  <a href="https://agent-goncharov.toprealtors.ru" target="_blank" rel="noreferrer"
+     class="inline-flex items-center justify-center rounded-full
+            bg-sky-600 hover:bg-sky-700 active:bg-sky-800
+            text-white font-semibold px-6 py-3 text-sm
+            shadow-sm ring-1 ring-inset ring-sky-300/40
+            transition">
+    Перейти к подбору
+  </a>
 </div>
 
+
+<!-- About Me -->
+<section id="about" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
+  <h2 class="text-3xl md:text-4xl font-bold mb-8">Обо мне</h2>
+
+  <!-- Адаптивная сетка -->
+  <div class="grid md:grid-cols-2 gap-8 items-center">
+
+    <!-- Левая часть: карточки -->
+    <div class="grid grid-cols-2 gap-3 justify-items-center order-1 md:order-none">
+      <div class="relative bg-white shadow-md transition flex items-center justify-center overflow-hidden rounded-xl hover:shadow-2xl hover:shadow-blue-200/50">
+        <img src="processed_images/spb.png" alt="Фото 1"
+             class="max-w-[250px] aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+        <!-- постоянный блик -->
+        <div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent opacity-70 pointer-events-none"></div>
+      </div>
+
+      <div class="relative bg-white shadow-md transition flex items-center justify-center overflow-hidden rounded-xl hover:shadow-2xl hover:shadow-blue-200/50">
+        <img src="processed_images/moscow.png" alt="Фото 2"
+             class="max-w-[250px] aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent opacity-70 pointer-events-none"></div>
+      </div>
+
+      <div class="relative bg-white shadow-md transition flex items-center justify-center overflow-hidden rounded-xl hover:shadow-2xl hover:shadow-blue-200/50">
+        <img src="processed_images/novostroy.png" alt="Фото 3"
+             class="max-w-[250px] aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent opacity-70 pointer-events-none"></div>
+      </div>
+
+      <div class="relative bg-white shadow-md transition flex items-center justify-center overflow-hidden rounded-xl hover:shadow-2xl hover:shadow-blue-200/50">
+        <img src="processed_images/vtor.png" alt="Фото 4"
+             class="max-w-[250px] aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent opacity-70 pointer-events-none"></div>
+      </div>
+    </div>
+
     <!-- Правая часть: текст -->
-    <div class="space-y-4 text-slate-700 text-base leading-relaxed">
+    <div class="space-y-4 text-slate-700 text-base leading-relaxed order-2 md:order-none">
       <p>
         Меня зовут <strong>Семён Гончаров</strong>, я работаю агентом по недвижимости в Санкт-Петербурге.  
         В сфере продаж я с <strong>2012 года</strong>, а с <strong>2018 года</strong> полностью посвятил себя недвижимости.
       </p>
 
       <p>
-        За это время я успел поработать простым агентом в крупном агенстве недвижимости в Петербурге, и руководителем группы продаж, а так же был генеральным директором небольшого агентства недвижимости и строительной компании, что дало мне серьезный опыт по работе с загородной недвижимостью.   
-        Весь полученый опыт помогает мне не только разбираться в рынке, но и грамотно вести переговоры, находить лучшие решения и держать под контролем весь процесс сделки.
+        За это время я успел поработать простым агентом в крупном агентстве недвижимости в Петербурге, и руководителем группы продаж, а также был генеральным директором небольшого агентства недвижимости и строительной компании, что дало мне серьёзный опыт по работе с загородной недвижимостью.   
+        Весь полученный опыт помогает мне не только разбираться в рынке, но и грамотно вести переговоры, находить лучшие решения и держать под контролем весь процесс сделки.
       </p>
 
       <p>
@@ -486,16 +510,6 @@
   </div>
 </section>
 
-        </ul>
-      </div>
-<section>
-
-</section>
-
-</div>
-</div>
-    </div>
-  </section>
 
   <!-- Reviews -->
 <section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
