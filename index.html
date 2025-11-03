@@ -451,7 +451,6 @@
   </a>
 </div>
 
-
 <!-- About Me -->
 <section id="about" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
   <h2 class="text-3xl md:text-4xl font-bold mb-8">Обо мне</h2>
@@ -459,35 +458,34 @@
   <!-- Адаптивная сетка -->
   <div class="grid md:grid-cols-2 gap-8 items-center">
 
-    <!-- Левая часть: карточки -->
+    <!-- Левая часть: карточки (фикс наложений) -->
     <div class="grid grid-cols-2 gap-3 justify-items-center order-1 md:order-none">
       <div class="relative bg-white shadow-md transition flex items-center justify-center overflow-hidden rounded-xl hover:shadow-2xl hover:shadow-blue-200/50">
         <img src="processed_images/spb.png" alt="Фото 1"
-             class="max-w-[250px] aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-        <!-- постоянный блик -->
+             class="w-full h-auto object-contain max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px] transform transition-transform duration-300 hover:scale-[1.03]">
         <div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent opacity-70 pointer-events-none"></div>
       </div>
 
       <div class="relative bg-white shadow-md transition flex items-center justify-center overflow-hidden rounded-xl hover:shadow-2xl hover:shadow-blue-200/50">
         <img src="processed_images/moscow.png" alt="Фото 2"
-             class="max-w-[250px] aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+             class="w-full h-auto object-contain max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px] transform transition-transform duration-300 hover:scale-[1.03]">
         <div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent opacity-70 pointer-events-none"></div>
       </div>
 
       <div class="relative bg-white shadow-md transition flex items-center justify-center overflow-hidden rounded-xl hover:shadow-2xl hover:shadow-blue-200/50">
         <img src="processed_images/novostroy.png" alt="Фото 3"
-             class="max-w-[250px] aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+             class="w-full h-auto object-contain max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px] transform transition-transform duration-300 hover:scale-[1.03]">
         <div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent opacity-70 pointer-events-none"></div>
       </div>
 
       <div class="relative bg-white shadow-md transition flex items-center justify-center overflow-hidden rounded-xl hover:shadow-2xl hover:shadow-blue-200/50">
         <img src="processed_images/vtor.png" alt="Фото 4"
-             class="max-w-[250px] aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
+             class="w-full h-auto object-contain max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px] transform transition-transform duration-300 hover:scale-[1.03]">
         <div class="absolute inset-0 bg-gradient-to-t from-white/40 to-transparent opacity-70 pointer-events-none"></div>
       </div>
     </div>
 
-    <!-- Правая часть: текст -->
+    <!-- Правая часть: текст (без изменений) -->
     <div class="space-y-4 text-slate-700 text-base leading-relaxed order-2 md:order-none">
       <p>
         Меня зовут <strong>Семён Гончаров</strong>, я работаю агентом по недвижимости в Санкт-Петербурге.  
