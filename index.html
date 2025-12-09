@@ -8,35 +8,76 @@
   <title>Семён Гончаров — агент по недвижимости</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { background: linear-gradient(to bottom, #ffffff, #f0f7ff); }
+    :root {
+      --bg: #f6f7fb;
+      --text: #0f172a;
+      --muted: #475569;
+      --card: #ffffff;
+      --stroke: #e5e7eb;
+      --accent: #0a84ff;
+      --accent-dark: #0066cc;
+    }
+    body { background: radial-gradient(circle at 20% 20%, #fdfefe 0, #f6f7fb 55%, #f3f4f6 100%); color: var(--text); }
     .slider { position: relative; overflow: hidden; }
     .track { display: flex; transition: transform .4s ease; will-change: transform; }
     .slide { min-width: 100%; box-sizing: border-box; }
     @media (min-width: 768px) { .slide { min-width: 50%; } }
     @media (min-width: 1024px) { .slide { min-width: 33.3333%; } }
-    .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background: white; border: 1px solid #bae6fd; border-radius: 9999px; padding: .5rem .7rem; box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+    .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(15,23,42,0.08);
+      border-radius: 9999px;
+      color: var(--text);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.12);
+      backdrop-filter: blur(8px);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+    .nav-btn:hover {
+      transform: translateY(-50%) scale(1.04);
+      box-shadow: 0 18px 48px rgba(15,23,42,0.14);
+      background: rgba(255,255,255,1);
+    }
     .prev { left: .5rem; } .next { right: .5rem; }
     .dots { position: absolute; left: 0; right:0; bottom: .5rem; display:flex; gap:.4rem; justify-content:center; }
     .dot { width:8px; height:8px; border-radius:50%; background:#cbd5e1; } .dot.active { background:#0ea5e9; }
+    .badge-card {
+      background: linear-gradient(145deg, #ffffff, #f6f7fb);
+      border: 1px solid var(--stroke);
+      box-shadow: 0 18px 30px rgba(15,23,42,0.04);
+    }
+    .brand-logo {
+      font-family: "SF Pro Display","SF Pro Text",-apple-system,"Helvetica Neue",Arial,sans-serif;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+    }
   </style>
 </head>
 <body class="text-slate-900">
-  <div class="fixed top-0 left-0 right-0 z-50 bg-sky-700 text-white text-sm">
+  <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900 text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between">
-      <div>Оценю вашу квартиру и план продажи за 2 часа в Telegram</div>
-      <a href="https://t.me/semengme" target="_blank" rel="noreferrer" class="underline">Написать сейчас</a>
+      <div>Бесплатная первичная консультация по вашей ситуации в Telegram</div>
+      <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
+         class="inline-flex items-center text-white font-semibold text-xs sm:text-sm transition hover:underline hover:underline-offset-2 hover:opacity-90">
+        Написать сейчас
+      </a>
     </div>
   </div>
 
   <header class="sticky top-10 z-40 backdrop-blur bg-white/70 border-b border-slate-200/70">
     <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
 <a href="#top"
-   class="font-extrabold text-xl tracking-tight"
-   style="font-family: 'Manrope', sans-serif; letter-spacing: -0.02em;">
+   class="brand-logo text-xl tracking-tight">
   Гончаров&nbsp;Семён
 </a>
       <div class="hidden md:flex items-center gap-6 text-sm">
-        <a href="#services" class="hover:opacity-80">Услуги</a>
+        <a href="#services" class="hover:opacity-80">Польза</a>
         <a href="#process" class="hover:opacity-80">Как работаю</a>
         <a href="#cases" class="hover:opacity-80">Кейсы</a>
         <a href="#reviews" class="hover:opacity-80">Отзывы</a>
@@ -48,70 +89,77 @@
       </div>
       <div class="flex items-center gap-2">
         <a href="https://t.me/semengme" target="_blank" rel="noreferrer">
-          <button class="rounded-2xl bg-sky-600 hover:bg-sky-700 text-white border px-4 py-2">Telegram</button>
+          <button
+            class="inline-flex items-center justify-center rounded-full bg-[var(--accent)] hover:bg-[var(--accent-dark)] text-white font-semibold px-6 py-2.5 text-sm shadow-[0_10px_30px_rgba(10,132,255,0.28)] transition">
+            Telegram
+          </button>
         </a>
       </div>
     </nav>
   </header>
 
   <!-- Hero -->
-  <section id="top" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
-    <div class="grid md:grid-cols-2 items-center gap-8">
-      <div>
-<span class="inline-flex items-center rounded-full border border-sky-200 text-sky-700 bg-sky-50 px-3 py-1 text-xs font-medium"
-      style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em;">
-  Санкт-Петербург • Продажа за 21 день
-</span>
+  <section id="top" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-12">
 
-<h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight"
-    style="font-family:'Manrope',sans-serif; letter-spacing:-0.02em;">
-  Ваш агент-аукционист в СПб
-</h1>
-
-<p class="mt-4 text-lg text-slate-600"
-   style="font-family:'Manrope',sans-serif; font-weight:500; letter-spacing:-0.01em;">
-  Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели. Полное сопровождение до сделки.
-</p>
-        <div class="mt-6 flex flex-wrap gap-3">
-<div class="mt-6 flex flex-wrap gap-3">
-  <!-- Кнопка: Бесплатная консультация -->
-  <a href="#contact">
-    <button
-      class="inline-flex items-center justify-center rounded-full bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-semibold px-6 py-3 text-sm shadow-sm transition">
-      Бесплатная консультация →
-    </button>
-  </a>
-
-  <!-- Кнопка: Посмотреть услуги -->
-  <a href="#services">
-    <button
-      class="inline-flex items-center justify-center rounded-full border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 font-medium px-6 py-3 text-sm shadow-sm transition">
-      Посмотреть услуги
-    </button>
-  </a>
-</div>
+    <!-- Фото справа -->
+    <div class="hidden md:block absolute top-28 right-24 w-[260px] lg:w-[300px]">
+      <div class="aspect-square bg-white border border-slate-100 shadow-lg rounded-3xl overflow-hidden">
+        <img src="processed_images/hero.png"
+             alt="Семён Гончаров"
+             class="w-full h-full object-contain bg-white"
+             style="image-rendering: -webkit-optimize-contrast;" />
       </div>
-      <div class="relative">
-        <div class="aspect-[4/3] w-full rounded-3xl bg-gradient-to-tr from-slate-100 to-sky-100 shadow-lg grid place-items-center overflow-hidden">
-<img src="processed_images/hero.png"
-     alt="Семён Гончаров"
-     class="w-full object-contain rounded-2xl shadow-sm bg-white" />
-        </div>
-        <div class="absolute -bottom-4 -left-4">
-          <div class="rounded-2xl shadow-xl border border-sky-100 bg-white p-4 text-sm">📍 Работаю по всему СПб и ЛО</div>
+      <div class="absolute -top-8 -left-10">
+        <div class="rounded-xl shadow-[0_18px_40px_rgba(15,23,42,0.12)] border border-slate-200 bg-white/90 backdrop-blur px-4 py-3 text-sm font-semibold text-slate-800">
+          📍 Работаю по всему СПб и ЛО
         </div>
       </div>
     </div>
+
+    <!-- Текстовая часть -->
+    <div class="md:max-w-[60%] lg:max-w-[55%]">
+      <span class="inline-flex items-center rounded-full bg-white/80 backdrop-blur border border-slate-200 text-slate-800 px-3 py-1 text-xs font-semibold shadow-sm"
+            style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em;">
+        Санкт-Петербург • Продажа за 21 день
+      </span>
+
+      <h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight"
+          style="font-family:'Manrope',sans-serif; letter-spacing:-0.02em;">
+        Ваш агент-аукционист в СПб
+      </h1>
+
+      <p class="mt-4 text-lg text-slate-600"
+         style="font-family:'Manrope',sans-serif; font-weight:500; letter-spacing:-0.01em;">
+        Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели.
+        Полное сопровождение до сделки.
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="#contact">
+          <button class="inline-flex items-center justify-center rounded-full bg-[var(--accent)] hover:bg-[var(--accent-dark)] text-white font-semibold px-6 py-3 text-sm shadow-[0_12px_30px_rgba(10,132,255,0.28)] transition">
+            Бесплатная консультация →
+          </button>
+        </a>
+        <a href="#badges">
+          <button class="inline-flex items-center justify-center rounded-full border border-slate-200 text-slate-800 bg-white hover:bg-slate-50 font-medium px-6 py-3 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition">
+            Посмотреть услуги
+          </button>
+        </a>
+      </div>
+    </div>
+
   </section>
 
   <!-- Badges -->
-  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
+  <section id="badges" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs text-slate-600">
-      <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Продажа аукционом за 21 день</div>
-      <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Бесплатный подбор новостроек</div>
-      <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Работа на покупку</div>
-          <div class="rounded-2xl border border-sky-100 p-3 text-center bg-white">Сопровождение сделки</div>
-</div>
+      <div class="badge-card rounded-2xl border border-sky-100 p-3 text-center">Продажа аукционом за 21 день</div>
+      <div class="badge-card rounded-2xl border border-sky-100 p-3 text-center">Бесплатный подбор новостроек</div>
+      <div class="badge-card rounded-2xl border border-sky-100 p-3 text-center">Работа на покупку</div>
+      <div class="badge-card rounded-2xl border border-sky-100 p-3 text-center">Сопровождение сделки</div>
+      <div class="badge-card rounded-2xl border border-sky-100 p-3 text-center">Одобрение ипотеки</div>
+      <div class="badge-card rounded-2xl border border-sky-100 p-3 text-center">Бесплатная первичная консультация</div>
+    </div>
   </section>
 
   <!-- Services -->
@@ -196,7 +244,6 @@
 <section id="cases" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
   <div class="flex items-end justify-between gap-4 mb-6">
     <h2 class="text-3xl md:text-4xl font-bold">Примеры кейсов</h2>
-    <span class="inline-flex items-center rounded-full border border-slate-200 text-slate-600 bg-white px-3 py-1 text-xs font-medium">Свайп/кнопки</span>
   </div>
   <div class="slider rounded-2xl">
     <div class="track">
@@ -213,7 +260,7 @@
           <div class="p-4 flex flex-col gap-2">
             <div class="flex items-center justify-between gap-3">
               <div class="text-lg font-semibold">1-к у м. Дунайская</div>
-              <span class="inline-flex items-center rounded-full border border-sky-200 text-sky-800 bg-sky-50 px-3 py-1 text-xs font-medium">начальная цена 6,1 млн ₽</span>
+              <span class="inline-flex items-center rounded-full bg-white/80 border border-slate-200 text-slate-800 px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur">начальная цена 6,1 млн ₽</span>
             </div>
             <div class="text-sm text-slate-600">Компактная планировка, высокий спрос локации.</div>
             <div class="text-sm text-slate-600">Срок: 20 дней</div>
@@ -238,7 +285,7 @@
           <div class="p-4 flex flex-col gap-2">
             <div class="flex items-center justify-between gap-3">
               <div class="text-lg font-semibold">3-к в центре СПб</div>
-              <span class="inline-flex items-center rounded-full border border-sky-200 text-sky-800 bg-sky-50 px-3 py-1 text-xs font-medium">начальная цена 14,5 млн ₽</span>
+              <span class="inline-flex items-center rounded-full bg-white/80 border border-slate-200 text-slate-800 px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur">начальная цена 14,5 млн ₽</span>
             </div>
             <div class="text-sm text-slate-600">Светлая квартира с высокими потолками.</div>
             <div class="text-sm text-slate-600">Срок: 30 дней</div>
@@ -261,7 +308,7 @@
     <div class="p-4 flex flex-col gap-2">
       <div class="flex items-center justify-between gap-3">
         <div class="text-lg font-semibold">3-к, Петроградка</div>
-        <span class="inline-flex items-center rounded-full border border-sky-200 text-sky-800 bg-sky-50 px-3 py-1 text-xs font-medium">начальная цена 25,1 млн ₽</span>
+        <span class="inline-flex items-center rounded-full bg-white/80 border border-slate-200 text-slate-800 px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur">начальная цена 25,1 млн ₽</span>
       </div>
       <div class="text-sm text-slate-600">Престижный район, качественный покупательский поток.</div>
       <div class="text-sm text-slate-600">Срок: 21 день</div>
@@ -285,7 +332,7 @@
     <div class="p-4 flex flex-col gap-2">
       <div class="flex items-center justify-between gap-3">
         <div class="text-lg font-semibold">2-к, двусторонняя</div>
-        <span class="inline-flex items-center rounded-full border border-sky-200 text-sky-800 bg-sky-50 px-3 py-1 text-xs font-medium">начальная цена 9,8 млн ₽</span>
+        <span class="inline-flex items-center rounded-full bg-white/80 border border-slate-200 text-slate-800 px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur">начальная цена 9,8 млн ₽</span>
       </div>
       <div class="text-sm text-slate-600">Удобная планировка для семьи, окна на две стороны.</div>
       <div class="text-sm text-slate-600">Срок: 15 дней</div>
@@ -308,7 +355,7 @@
     <div class="p-4 flex flex-col gap-2">
       <div class="flex items-center justify-between gap-3">
         <div class="text-lg font-semibold">2-к, Васильевский остров</div>
-        <span class="inline-flex items-center rounded-full border border-sky-200 text-sky-800 bg-sky-50 px-3 py-1 text-xs font-medium">начальная цена 14,1 млн ₽</span>
+        <span class="inline-flex items-center rounded-full bg-white/80 border border-slate-200 text-slate-800 px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur">начальная цена 14,1 млн ₽</span>
       </div>
       <div class="text-sm text-slate-600">Уютная квартира в историческом районе, рядом набережная.</div>
       <div class="text-sm text-slate-600">Срок: 18 дней</div>
@@ -332,7 +379,7 @@
     <div class="p-4 flex flex-col gap-2">
       <div class="flex items-center justify-between gap-3">
         <div class="text-lg font-semibold">3-к, Петроградская сторона</div>
-        <span class="inline-flex items-center rounded-full border border-sky-200 text-sky-800 bg-sky-50 px-3 py-1 text-xs font-medium">начальная цена 21,3 млн ₽</span>
+        <span class="inline-flex items-center rounded-full bg-white/80 border border-slate-200 text-slate-800 px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur">начальная цена 21,3 млн ₽</span>
       </div>
       <div class="text-sm text-slate-600">Жилой фонд в престижном районе.</div>
       <div class="text-sm text-slate-600">Срок: 12 дней</div>
@@ -356,7 +403,7 @@
     <div class="p-4 flex flex-col gap-2">
       <div class="flex items-center justify-between gap-3">
         <div class="text-lg font-semibold">3-к в ЖК Tokyo</div>
-        <span class="inline-flex items-center rounded-full border border-sky-200 text-sky-800 bg-sky-50 px-3 py-1 text-xs font-medium">начальная цена 13,9 млн ₽</span>
+        <span class="inline-flex items-center rounded-full bg-white/80 border border-slate-200 text-slate-800 px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur">начальная цена 13,9 млн ₽</span>
       </div>
       <div class="text-sm text-slate-600">Современный жилой комплекс с высокой конкуренцией в локации.</div>
       <div class="text-sm text-slate-600">Срок: 23 дней</div>
@@ -380,7 +427,7 @@
     <div class="p-4 flex flex-col gap-2">
       <div class="flex items-center justify-between gap-3">
         <div class="text-lg font-semibold">3Е-к, ул. Гжатская</div>
-        <span class="inline-flex items-center rounded-full border border-sky-200 text-sky-800 bg-sky-50 px-3 py-1 text-xs font-medium">начальная цена 23 млн ₽</span>
+        <span class="inline-flex items-center rounded-full bg-white/80 border border-slate-200 text-slate-800 px-3 py-1 text-xs font-semibold shadow-sm backdrop-blur">начальная цена 23 млн ₽</span>
       </div>
       <div class="text-sm text-slate-600">Москва, СЗАО, метро в шаговой доступности, собственная набережная на территории комплекса.</div>
       <div class="text-sm text-slate-600">Срок: 21 дней</div>
@@ -735,42 +782,114 @@
   <!-- FAQ -->
   <section id="faq" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <h2 class="text-3xl md:text-4xl font-bold">FAQ</h2>
-    <div class="mt-8 grid md:grid-cols-2 gap-6">
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Как работает аукционный подход?</summary><div class="pt-2 text-sm text-slate-600">Мы задаём чёткие сроки выхода в продажу и дни показов, после чего привлекаем максимально большой поток покупателей. Все смотрят объект в один период и понимают, что они не единственные, что создаёт честную конкуренцию. Покупатели делают предложения и могут повышать их — поэтому объект продаётся дороже и в заранее понятные сроки. Если объяснить проще, это как рыбалка сетью, а не удочкой: мы собираем весь спрос сразу и выбираем «самую крупную рыбу» — идеального покупателя с лучшими условиями. И важно: это не залоговый и не судебный аукцион по ГК РФ. Это современный аукционный метод продажи — добровольный, прозрачный и полностью контролируемый собственником..</div></details>
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Что, если не продадим за 21 день?</summary><div class="pt-2 text-sm text-slate-600">Пересобираем стратегию: расширяем каналы, корректируем подачу/цену, добавляем доп. окна показов.</div></details>
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Какая комиссия и что входит?</summary><div class="pt-2 text-sm text-slate-600">Маркетинг, показы, переговоры, юр. сопровождение и закрытие сделки. Весь процесс сделки под ключ.  Комиссия — в рынке. Её размер зависит от выбранного формата продажи: аукцион или классическая модель. Мы обсуждаем условия на встрече, без скрытых платежей — всё прозрачно и понятно.</div></details>
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Как проходят взаиморасчёты?</summary><div class="pt-2 text-sm text-slate-600">Подбираем удобную и безопасную форму расчётов под сделку и стороны.</div></details>
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Работаете с альтернативой/ипотекой?</summary><div class="pt-2 text-sm text-slate-600">Да. Сопровождаю сделки с альтернативой, помогаю с ипотекой и субсидиями. Работаю в паре с ипотечным брокером и юристом. </div></details>
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Где публикуете объекты?</summary><div class="pt-2 text-sm text-slate-600">Крупные площадки и таргетированный трафик. Помимо размещения объявлений использую более 40 инструментов для создания ажиотажного спроса: спецпредложения, акционные показы, e-mail-рассылки и другие каналы привлечения покупателей. По запросу дам список каналов.</div></details>
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">А что с новостройками?</summary><div class="pt-2 text-sm text-slate-600">Я работаю в связке с застройщиками и вижу все изменения в режиме реального времени. Если квартира занята, можно встать в очередь — и быть первым, кто узнает, когда она освободится. Комиссию всегда платит застройщик. Но ни один застройщик никогда не расскажет о своих минусах, если вы пойдете в отдел продаж самостоятельно, без агента. Моя задача - предложить вам объективно лучший в рынке объект под вашу ситуацию. </div></details>
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">А если не аукцион?</summary><div class="pt-2 text-sm text-slate-600">Аукцион — отличный инструмент, но он подходит не всем. Это формат для тех, у кого есть конкретные сроки и высокая мотивация. Если вам комфортнее работать в более спокойном темпе, я провожу классическую продажу: готовим объект, запускаем рекламу и собираем покупателей без жёсткого тайминга и интенсивных торгов. При этом результат остаётся сильным — цена формируется за счёт правильной подачи и стабильного спроса, просто без давления по времени. Вы выбираете ритм, а я обеспечиваю безопасный, управляемый и предсказуемый процесс. </div></details>
-      <details class="rounded-2xl border border-sky-100 bg-white p-5"><summary class="cursor-pointer font-semibold">Агент мне не нужен, сделаю все сам. </summary><div class="pt-2 text-sm text-slate-600">Продать самостоятельно можно, но важно понимать несколько вещей: Большинство звонков — от агентов, предлагающих свои услуги, а не покупателей. Это занимает время и не даёт объективной картины спроса. Собственники редко собирают обратную связь. Без неё сложно понять, почему объект не выбирают и что мешает продаже. "Знакомый юрист" — не продажник. Да еще зачастую и вообще не из сферы недвижимости. Он оформляет сделку, но не занимается маркетингом, переговорами и созданием спроса. Юрист не работает на то, чтобы объект ушёл дороже. Задача агента — продать дороже, чем собственник сделал бы сам. За счёт подготовки, правильной подачи, фильтрации покупателей и грамотных переговоров результат по цене и условиям почти всегда выше. Простая аналогия: когда болит зуб — человек идёт к стоматологу, а не лечит его дома по картинкам из интернета. Так же и с продажей квартиры: можно делать самому, но профессионал почти всегда даёт лучший и быстрый результат. </div></details>
+    <div class="mt-8 grid md:grid-cols-2 gap-4 md:gap-6">
+      <details class="group rounded-2xl border border-slate-200 bg-white/80 backdrop-blur px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition">
+        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
+          <span>Как работает аукционный подход?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition">+</span>
+        </summary>
+        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+          Мы задаём чёткие сроки выхода в продажу и дни показов, после чего привлекаем максимально большой поток покупателей. Все смотрят объект в один период и понимают, что они не единственные, что создаёт честную конкуренцию. Покупатели делают предложения и могут повышать их — поэтому объект продаётся дороже и в заранее понятные сроки. Если объяснить проще, это как рыбалка сетью, а не удочкой: мы собираем весь спрос сразу и выбираем «самую крупную рыбу» — идеального покупателя с лучшими условиями. И важно: это не залоговый и не судебный аукцион по ГК РФ. Это современный аукционный метод продажи — добровольный, прозрачный и полностью контролируемый собственником..
+        </div>
+      </details>
+      <details class="group rounded-2xl border border-slate-200 bg-white/80 backdrop-blur px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition">
+        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
+          <span>Что, если не продадим за 21 день?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition">+</span>
+        </summary>
+        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+          Пересобираем стратегию: расширяем каналы, корректируем подачу/цену, добавляем доп. окна показов.
+        </div>
+      </details>
+      <details class="group rounded-2xl border border-slate-200 bg-white/80 backdrop-blur px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition">
+        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
+          <span>Какая комиссия и что входит?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition">+</span>
+        </summary>
+        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+          Маркетинг, показы, переговоры, юр. сопровождение и закрытие сделки. Весь процесс сделки под ключ.  Комиссия — в рынке. Её размер зависит от выбранного формата продажи: аукцион или классическая модель. Мы обсуждаем условия на встрече, без скрытых платежей — всё прозрачно и понятно.
+        </div>
+      </details>
+      <details class="group rounded-2xl border border-slate-200 bg-white/80 backdrop-blur px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition">
+        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
+          <span>Как проходят взаиморасчёты?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition">+</span>
+        </summary>
+        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+          Подбираем удобную и безопасную форму расчётов под сделку и стороны.
+        </div>
+      </details>
+      <details class="group rounded-2xl border border-slate-200 bg-white/80 backdrop-blur px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition">
+        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
+          <span>Работаете с альтернативой/ипотекой?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition">+</span>
+        </summary>
+        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+          Да. Сопровождаю сделки с альтернативой, помогаю с ипотекой и субсидиями. Работаю в паре с ипотечным брокером и юристом.
+        </div>
+      </details>
+      <details class="group rounded-2xl border border-slate-200 bg-white/80 backdrop-blur px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition">
+        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
+          <span>Где публикуете объекты?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition">+</span>
+        </summary>
+        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+          Крупные площадки и таргетированный трафик. Помимо размещения объявлений использую более 40 инструментов для создания ажиотажного спроса: спецпредложения, акционные показы, e-mail-рассылки и другие каналы привлечения покупателей. По запросу дам список каналов.
+        </div>
+      </details>
+      <details class="group rounded-2xl border border-slate-200 bg-white/80 backdrop-blur px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition">
+        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
+          <span>А что с новостройками?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition">+</span>
+        </summary>
+        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+          Я работаю в связке с застройщиками и вижу все изменения в режиме реального времени. Если квартира занята, можно встать в очередь — и быть первым, кто узнает, когда она освободится. Комиссию всегда платит застройщик. Но ни один застройщик никогда не расскажет о своих минусах, если вы пойдете в отдел продаж самостоятельно, без агента. Моя задача - предложить вам объективно лучший в рынке объект под вашу ситуацию.
+        </div>
+      </details>
+      <details class="group rounded-2xl border border-slate-200 bg-white/80 backdrop-blur px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition">
+        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
+          <span>А если не аукцион?</span>
+          <span class="text-slate-400 group-open:rotate-45 transition">+</span>
+        </summary>
+        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+          Аукцион — отличный инструмент, но он подходит не всем. Это формат для тех, у кого есть конкретные сроки и высокая мотивация. Если вам комфортнее работать в более спокойном темпе, я провожу классическую продажу: готовим объект, запускаем рекламу и собираем покупателей без жёсткого тайминга и интенсивных торгов. При этом результат остаётся сильным — цена формируется за счёт правильной подачи и стабильного спроса, просто без давления по времени. Вы выбираете ритм, а я обеспечиваю безопасный, управляемый и предсказуемый процесс.
+        </div>
+      </details>
+      <details class="group rounded-2xl border border-slate-200 bg-white/80 backdrop-blur px-5 py-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition">
+        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
+          <span>Агент мне не нужен, сделаю все сам.</span>
+          <span class="text-slate-400 group-open:rotate-45 transition">+</span>
+        </summary>
+        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+          Продать самостоятельно можно, но важно понимать несколько вещей: Большинство звонков — от агентов, предлагающих свои услуги, а не покупателей. Это занимает время и не даёт объективной картины спроса. Собственники редко собирают обратную связь. Без неё сложно понять, почему объект не выбирают и что мешает продаже. "Знакомый юрист" — не продажник. Да еще зачастую и вообще не из сферы недвижимости. Он оформляет сделку, но не занимается маркетингом, переговорами и созданием спроса. Юрист не работает на то, чтобы объект ушёл дороже. Задача агента — продать дороже, чем собственник сделал бы сам. За счёт подготовки, правильной подачи, фильтрации покупателей и грамотных переговоров результат по цене и условиям почти всегда выше. Простая аналогия: когда болит зуб — человек идёт к стоматологу, а не лечит его дома по картинкам из интернета. Так же и с продажей квартиры: можно делать самому, но профессионал почти всегда даёт лучший и быстрый результат.
+        </div>
+      </details>
 
     </div>
   </section>
 
   <!-- Contact -->
-<section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
+<section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
   <h2 class="text-3xl md:text-4xl font-bold">Связаться со мной</h2>
 
   <!-- Сетка: форма + контакты -->
   <div class="mt-8 grid md:grid-cols-2 gap-8 items-stretch">
     
     <!-- Левая колонка: форма -->
-    <div class="rounded-2xl border border-sky-100 bg-white p-6 shadow-sm h-full flex flex-col">
+    <div class="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-[0_22px_48px_rgba(15,23,42,0.08)] h-full flex flex-col">
       <div class="text-lg font-semibold mb-4">Быстрая заявка</div>
 
       <form id="leadForm" action="https://api.web3forms.com/submit" method="POST" class="flex flex-col gap-4 flex-grow">
         <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
 
         <input type="text" name="name" placeholder="Ваше имя" required
-               class="border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400 transition" />
+               class="border border-slate-200 rounded-xl px-4 py-3 bg-white/90 backdrop-blur focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition" />
 
         <input type="text" name="contact" placeholder="Ваш телефон или Telegram" required
-               class="border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400 transition" />
+               class="border border-slate-200 rounded-xl px-4 py-3 bg-white/90 backdrop-blur focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition" />
 
         <textarea name="comment" rows="3"
-                  class="border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-400 transition"
+                  class="border border-slate-200 rounded-xl px-4 py-3 bg-white/90 backdrop-blur focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition"
                   placeholder="Хочу продать квартиру за 21 день">Хочу пообщаться по вопросу недвижимости</textarea>
 
         <input type="hidden" name="from_name" value="fastbroker21.ru">
@@ -779,7 +898,7 @@
 
         <!-- Кнопка -->
         <button type="submit"
-                class="inline-flex items-center justify-center rounded-full bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-semibold px-6 py-3 shadow-sm ring-1 ring-inset ring-sky-300/40 transition mt-auto">
+                class="inline-flex items-center justify-center rounded-full bg-[var(--accent)] hover:bg-[var(--accent-dark)] text-white font-semibold px-6 py-3 shadow-[0_12px_30px_rgba(10,132,255,0.28)] transition mt-auto">
           Отправить
         </button>
 
@@ -789,26 +908,26 @@
     </div>
 
     <!-- Правая колонка: контакты -->
-    <div class="rounded-2xl border border-sky-100 bg-white p-6 shadow-sm h-full flex flex-col">
+    <div class="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-[0_22px_48px_rgba(15,23,42,0.08)] h-full flex flex-col">
       <div class="text-lg font-semibold mb-4">Мои контакты</div>
 
       <div class="flex flex-col gap-3 mt-auto">
         <a href="tel:+79118461965"
-           class="inline-flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-900 text-white font-semibold px-6 py-3 shadow-sm transition">
+           class="inline-flex items-center justify-center rounded-full bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 shadow-[0_10px_30px_rgba(15,23,42,0.25)] transition">
            <span>+7 911 846-19-65</span>
         </a>
 
         <a href="https://wa.me/79118461965" target="_blank" rel="noreferrer"
-           class="inline-flex items-center justify-center rounded-full bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 shadow-sm transition">
+           class="inline-flex items-center justify-center rounded-full bg-[#25D366] hover:bg-[#1ebe5b] text-white font-semibold px-6 py-3 shadow-[0_10px_28px_rgba(37,211,102,0.35)] transition">
            <span>WhatsApp</span>
         </a>
 
         <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
-           class="inline-flex items-center justify-center rounded-full bg-sky-500 hover:bg-sky-600 text-white font-semibold px-6 py-3 shadow-sm transition">
+           class="inline-flex items-center justify-center rounded-full bg-[#229ED9] hover:bg-[#1c8dc2] text-white font-semibold px-6 py-3 shadow-[0_10px_28px_rgba(34,158,217,0.35)] transition">
            <span>Telegram</span>
         </a>
 
-        <div class="inline-flex items-center justify-center rounded-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 shadow-sm transition">
+        <div class="inline-flex items-center justify-center rounded-full bg-[#F6C344] hover:bg-[#edba39] text-slate-900 font-semibold px-6 py-3 shadow-[0_10px_28px_rgba(246,195,68,0.35)]">
            <span>Санкт-Петербург и ЛО</span>
         </div>
       </div>
