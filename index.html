@@ -76,6 +76,9 @@
       letter-spacing: -0.02em;
       font-weight: 800;
     }
+    @media (max-width: 767px) {
+      body { background-attachment: scroll; }
+    }
   </style>
 </head>
 <body class="text-slate-900">
@@ -1076,6 +1079,14 @@
 
     // Анимации появления при скролле
     (function() {
+      const sections = Array.from(document.querySelectorAll('section'));
+
+      // Фолбэк, если IntersectionObserver недоступен
+      if (!('IntersectionObserver' in window)) {
+        sections.forEach(el => el.classList.add('visible'));
+        return;
+      }
+
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
@@ -1084,9 +1095,14 @@
         });
       }, { threshold: 0.15 });
 
-      document.querySelectorAll('section').forEach(el => {
+      sections.forEach(el => {
         el.classList.add('reveal');
         observer.observe(el);
+
+        // Быстрее показываем на мобильных, если наблюдатель не успел
+        if (window.innerWidth < 768) {
+          setTimeout(() => el.classList.add('visible'), 400);
+        }
       });
     })();
 
