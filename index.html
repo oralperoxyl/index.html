@@ -77,22 +77,15 @@
     .card-soft {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(155deg, rgba(255,255,255,0.98) 0%, rgba(230,241,255,0.94) 100%);
-      border: 1px solid rgba(15,23,42,0.12);
-      box-shadow: 0 20px 44px rgba(15,23,42,0.16);
-      backdrop-filter: blur(7px);
-      transition: transform .25s ease, box-shadow .25s ease;
+      background: #ffffff;
+      border: 1px solid rgba(15,23,42,0.08);
+      box-shadow: 0 16px 32px rgba(15,23,42,0.10), inset 0 1px 0 rgba(255,255,255,0.6);
+      backdrop-filter: blur(4px);
+      transition: transform .24s ease, box-shadow .24s ease;
       border-radius: var(--radius-card);
     }
-    .card-soft:hover { transform: translateY(-5px); box-shadow: 0 26px 56px rgba(15,23,42,0.18); }
-    .card-soft::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.25) 55%);
-      opacity: 1;
-    }
+    .card-soft:hover { transform: translateY(-3px); box-shadow: 0 18px 36px rgba(15,23,42,0.12); }
+    .card-soft::after { content: none; }
     .card-soft > * { position: relative; z-index: 1; }
     .faq-card { position: relative; overflow: hidden; }
     .faq-card::before {
@@ -131,8 +124,20 @@
       box-shadow: 0 16px 36px rgba(15,23,42,0.14);
       border-radius: var(--radius-pill);
     }
+    .badge-warm {
+      background: linear-gradient(120deg, rgba(242,194,123,0.35), rgba(242,194,123,0.12));
+      border: 1px solid rgba(242,194,123,0.35);
+      color: #8a5a13;
+    }
+    .glass-panel {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(15,23,42,0.08);
+      backdrop-filter: blur(6px);
+      border-radius: 18px;
+      box-shadow: 0 16px 34px rgba(15,23,42,0.12);
+    }
     .section-gap { height: 48px; }
-    .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .9s ease, transform .9s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .brand-logo {
       font-family: "SF Pro Display","SF Pro Text",-apple-system,"Helvetica Neue",Arial,sans-serif;
@@ -198,8 +203,9 @@
              class="w-full h-full object-contain bg-white"
              style="image-rendering: -webkit-optimize-contrast;" />
       </div>
+      <div class="hero-marker"></div>
       <div class="absolute -top-8 -left-10">
-        <div class="rounded-xl shadow-[0_18px_40px_rgba(15,23,42,0.14)] border border-white/60 bg-white/55 backdrop-blur-md px-4 py-3 text-sm font-semibold text-slate-900">
+        <div class="rounded-xl shadow-[0_18px_40px_rgba(15,23,42,0.14)] border border-white/60 bg-white/70 backdrop-blur-md px-4 py-3 text-sm font-semibold text-slate-900">
           📍 Работаю по всему СПб и ЛО
         </div>
       </div>
@@ -216,7 +222,7 @@
 
     <!-- Текстовая часть -->
     <div class="md:max-w-[60%] lg:max-w-[55%]">
-      <span class="inline-flex items-center rounded-full badge-gradient backdrop-blur-md text-slate-900 px-3 py-1 text-xs font-semibold"
+      <span class="inline-flex items-center rounded-full bg-white/92 border border-slate-200 shadow-sm text-slate-900 px-3 py-1 text-xs font-semibold"
             style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em;">
         Санкт-Петербург • Продажа за 21 день
       </span>
@@ -575,7 +581,7 @@
       <div class="card-soft rounded-2xl p-5"><div class="text-lg font-semibold">Быстрее и дороже, чем самостоятельно</div><div class="pt-2 text-sm text-slate-700">Индивидуальная стратегия и целевой трафик.</div></div>
     </div>
   </section>
-  <div class="h-8"></div>
+  <div class="h-8 border-t border-slate-200/70"></div>
   <!-- Advantages for Buyers -->
 <section id="advantages-buyers" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
   <h2 class="text-3xl md:text-4xl font-bold">Преимущества для покупателя</h2>
@@ -683,7 +689,7 @@
 
   <!-- Reviews -->
 <div class="h-8"></div>
-<section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
+  <section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
   <style>
     #reviews .card {
       border-radius: 1.25rem;
@@ -991,13 +997,12 @@
   <!-- Contact -->
 <section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
   <h2 class="text-3xl md:text-4xl font-bold">Свяжитесь со мной</h2>
+  <p class="mt-2 text-slate-700">Быстрая связь, консультация или оценка стоимости — ответ сразу после заявки.</p>
 
-  <!-- Сетка: форма + контакты -->
-  <div class="mt-8 grid md:grid-cols-2 gap-8 items-stretch">
-    
+  <div class="mt-8 grid md:grid-cols-2 gap-6 items-stretch">
     <!-- Левая колонка: форма -->
-    <div class="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-[0_22px_48px_rgba(15,23,42,0.08)] h-full flex flex-col">
-      <div class="text-lg font-semibold mb-4">Быстрая заявка</div>
+    <div class="glass-panel p-6 h-full flex flex-col">
+      <div class="text-lg font-semibold mb-4 text-slate-900">Быстрая заявка</div>
 
       <form id="leadForm" action="https://api.web3forms.com/submit" method="POST" class="flex flex-col gap-4 flex-grow">
         <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
@@ -1016,7 +1021,6 @@
         <input type="hidden" name="subject" value="Заявка с сайта fastbroker21.ru">
         <input type="checkbox" name="botcheck" class="hidden" style="display:none;">
 
-        <!-- Кнопка -->
         <button type="submit"
                 class="inline-flex items-center justify-center rounded-full btn-cta px-6 py-3 text-sm font-semibold transition mt-auto">
           Отправить
@@ -1028,8 +1032,8 @@
     </div>
 
     <!-- Правая колонка: контакты -->
-    <div class="rounded-2xl border border-slate-200 bg-white/80 backdrop-blur p-6 shadow-[0_22px_48px_rgba(15,23,42,0.08)] h-full flex flex-col">
-      <div class="text-lg font-semibold mb-4">Мои контакты</div>
+    <div class="glass-panel p-6 h-full flex flex-col">
+      <div class="text-lg font-semibold mb-4 text-slate-900">Мои контакты</div>
 
       <div class="flex flex-col gap-3 mt-auto">
         <a href="tel:+79118461965"
