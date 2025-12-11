@@ -38,12 +38,24 @@
       --shadow-soft: 0 20px 44px rgba(15,23,42,0.16);
     }
     body {
+      position: relative;
       background:
-        radial-gradient(720px at 18% 18%, rgba(149,189,255,0.14), rgba(247,249,252,0)),
-        radial-gradient(640px at 82% 12%, rgba(164,214,255,0.14), rgba(247,249,252,0)),
-        linear-gradient(180deg, #fbfcff 0%, #f1f5fb 100%);
+        radial-gradient(820px at 18% 18%, rgba(85,94,112,0.40), rgba(247,247,248,0)),
+        radial-gradient(760px at 82% 10%, rgba(70,76,92,0.34), rgba(247,247,248,0)),
+        radial-gradient(520px at 50% 80%, rgba(60,66,80,0.22), rgba(247,247,248,0)),
+        linear-gradient(180deg, #f6f7fa 0%, #e9edf2 100%);
       color: var(--text);
       background-attachment: scroll;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.08;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+      mix-blend-mode: soft-light;
     }
     .slider { position: relative; overflow: hidden; }
     .track { display: flex; transition: transform .35s ease; will-change: transform; }
@@ -54,26 +66,27 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       display: grid;
       place-items: center;
-      background: rgba(255,255,255,0.9);
-      border: 1px solid rgba(15,23,42,0.08);
+      background: rgba(15,23,42,0.88);
+      border: 1px solid rgba(255,255,255,0.18);
       border-radius: 9999px;
-      color: var(--text);
-      box-shadow: 0 16px 40px rgba(15,23,42,0.12);
-      backdrop-filter: blur(8px);
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      color: #fff;
+      box-shadow: 0 14px 32px rgba(15,23,42,0.20);
+      backdrop-filter: blur(4px);
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+      font-size: 18px;
     }
     .nav-btn:hover {
-      transform: translateY(-50%) scale(1.04);
-      box-shadow: 0 18px 48px rgba(15,23,42,0.14);
-      background: rgba(255,255,255,1);
+      transform: translateY(-50%) translateX(2px);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.22);
+      background: rgba(15,23,42,1);
     }
     .prev { left: .5rem; } .next { right: .5rem; }
     .dots { position: absolute; left: 0; right:0; bottom: .5rem; display:flex; gap:.4rem; justify-content:center; }
-    .dot { width:8px; height:8px; border-radius:50%; background:#cbd5e1; } .dot.active { background:#0ea5e9; }
+    .dot { width:8px; height:8px; border-radius:50%; background:#cbd5e1; } .dot.active { background:#0f172a; }
     .card-soft {
       position: relative;
       overflow: hidden;
@@ -108,19 +121,31 @@
     }
     .group:hover .faq-toggle { transform: translateY(-1px); }
     .btn-cta {
-      background: linear-gradient(135deg, #0a84ff 0%, #0a6fe5 40%, #0b5fcc 85%, #0c54b6 100%);
-      border: 1px solid rgba(10,132,255,0.55);
-      box-shadow: 0 18px 44px rgba(10,132,255,0.42);
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #111827 0%, #161b22 45%, #0f172a 80%);
+      border: 1px solid rgba(15,23,42,0.45);
+      box-shadow: 0 18px 44px rgba(15,23,42,0.32);
       color: #fff;
       border-radius: var(--radius-pill);
     }
-    .btn-cta:hover {
-      background: linear-gradient(135deg, #0b7ae8 0%, #0a67cf 55%, #0b59b8 100%);
-      box-shadow: 0 22px 52px rgba(10,132,255,0.46);
+    .btn-cta::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
+      opacity: 0;
+      transition: opacity .25s ease;
+      pointer-events: none;
     }
+    .btn-cta:hover {
+      background: linear-gradient(135deg, #0f172a 0%, #101621 55%, #0b1220 100%);
+      box-shadow: 0 22px 52px rgba(15,23,42,0.38);
+    }
+    .btn-cta:hover::after { opacity: 1; }
     .badge-gradient {
-      background: linear-gradient(120deg, rgba(10,132,255,0.36), rgba(10,132,255,0.12));
-      border: 1px solid rgba(10,132,255,0.32);
+      background: linear-gradient(120deg, rgba(100,116,139,0.26), rgba(100,116,139,0.10));
+      border: 1px solid rgba(100,116,139,0.28);
       box-shadow: 0 16px 36px rgba(15,23,42,0.14);
       border-radius: var(--radius-pill);
     }
@@ -137,7 +162,7 @@
       box-shadow: 0 16px 34px rgba(15,23,42,0.12);
     }
     .section-gap { height: 48px; }
-    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .9s ease, transform .9s ease; }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 1s ease, transform 1s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .brand-logo {
       font-family: "SF Pro Display","SF Pro Text",-apple-system,"Helvetica Neue",Arial,sans-serif;
@@ -191,37 +216,13 @@
   <!-- Hero -->
   <section id="top" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
-      <div class="hero-spot absolute -top-24 -left-20 w-[420px] h-[420px] rounded-full blur-3xl opacity-60" style="background: radial-gradient(circle, rgba(149,189,255,0.3), rgba(247,249,252,0));"></div>
-      <div class="hero-spot absolute -bottom-32 right-0 w-[380px] h-[380px] rounded-full blur-3xl opacity-50" style="background: radial-gradient(circle, rgba(164,214,255,0.28), rgba(247,249,252,0));"></div>
-    </div>
-
-    <!-- Фото справа -->
-    <div class="hidden md:block absolute top-28 right-24 w-[260px] lg:w-[300px]">
-      <div class="aspect-square bg-white border border-slate-100 shadow-lg rounded-3xl overflow-hidden">
-        <img src="processed_images/hero.png"
-             alt="Семён Гончаров"
-             class="w-full h-full object-contain bg-white"
-             style="image-rendering: -webkit-optimize-contrast;" />
-      </div>
-      <div class="hero-marker"></div>
-      <div class="absolute -top-8 -left-10">
-        <div class="rounded-xl shadow-[0_18px_40px_rgba(15,23,42,0.14)] border border-white/60 bg-white/70 backdrop-blur-md px-4 py-3 text-sm font-semibold text-slate-900">
-          📍 Работаю по всему СПб и ЛО
-        </div>
-      </div>
-    </div>
-    <!-- Фото на мобильных -->
-    <div class="md:hidden mt-8 w-48 mx-auto">
-      <div class="aspect-square bg-white border border-slate-200 shadow-md rounded-3xl overflow-hidden">
-        <img src="processed_images/hero.png"
-             alt="Семён Гончаров"
-             class="w-full h-full object-contain bg-white" />
-      </div>
-      <div class="mt-2 text-center text-xs text-slate-700">📍 Работаю по всему СПб и ЛО</div>
+      <div class="hero-spot absolute -top-24 -left-20 w-[460px] h-[460px] rounded-full blur-3xl opacity-85" style="background: radial-gradient(circle, rgba(70,78,92,0.55), rgba(247,249,252,0));"></div>
+      <div class="hero-spot absolute -bottom-36 right-6 w-[420px] h-[420px] rounded-full blur-3xl opacity-70" style="background: radial-gradient(circle, rgba(52,58,72,0.42), rgba(247,249,252,0));"></div>
+      <div class="hero-spot absolute top-10 left-1/2 w-[320px] h-[320px] rounded-full blur-3xl opacity-40" style="background: radial-gradient(circle, rgba(110,118,134,0.35), rgba(247,249,252,0));"></div>
     </div>
 
     <!-- Текстовая часть -->
-    <div class="md:max-w-[60%] lg:max-w-[55%]">
+    <div class="md:max-w-[70%] lg:max-w-[62%]">
       <span class="inline-flex items-center rounded-full bg-white/92 border border-slate-200 shadow-sm text-slate-900 px-3 py-1 text-xs font-semibold"
             style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em;">
         Санкт-Петербург • Продажа за 21 день
@@ -304,68 +305,50 @@
 
 <!-- Процесс продажи -->
   <section id="process" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Как проходит продажа</h2>
-
-  <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-8 text-center">
-
-    <!-- Диагностика -->
-    <div class="cursor-pointer transition">
-      <div class="relative flex items-center justify-center overflow-hidden rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-200/50 transition">
-        <img src="processed_images/ocenka.png" alt="Диагностика"
-             class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-        <!-- постоянный блик -->
-        <div class="absolute inset-0 bg-gradient-to-t from-white/25 to-transparent pointer-events-none"></div>
-      </div>
-      <h3 class="font-semibold mt-4">Диагностика</h3>
-      <p class="text-sm text-slate-600">Оценка рынка и стоимости</p>
+    <div class="text-center mb-12">
+      <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Процесс</p>
+      <h2 class="text-3xl md:text-4xl font-bold">Как проходит продажа</h2>
+      <p class="mt-2 text-sm text-slate-500">Чёткие шаги с прозрачными сроками и ответственностью.</p>
     </div>
 
-    <!-- Подготовка -->
-    <div class="cursor-pointer transition">
-      <div class="relative flex items-center justify-center overflow-hidden rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-200/50 transition">
-        <img src="processed_images/photo.png" alt="Подготовка"
-             class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-white/25 to-transparent pointer-events-none"></div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+      <div class="card-soft rounded-2xl p-4 text-left">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">1</div>
+          <div class="font-semibold text-slate-900">Диагностика</div>
+        </div>
+        <p class="mt-3 text-sm text-slate-600">Оценка рынка, сценарий цены, календарь запуска.</p>
       </div>
-      <h3 class="font-semibold mt-4">Подготовка</h3>
-      <p class="text-sm text-slate-600">Документы, профессиональный фотограф, объявление</p>
-    </div>
-
-    <!-- Выход в продажу -->
-    <div class="cursor-pointer transition">
-      <div class="relative flex items-center justify-center overflow-hidden rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-200/50 transition">
-        <img src="processed_images/process.png" alt="Выход в продажу"
-             class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-white/25 to-transparent pointer-events-none"></div>
+      <div class="card-soft rounded-2xl p-4 text-left">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">2</div>
+          <div class="font-semibold text-slate-900">Подготовка</div>
+        </div>
+        <p class="mt-3 text-sm text-slate-600">Документы, визуал, объявление, фильтр покупателей.</p>
       </div>
-      <h3 class="font-semibold mt-4">Выход в продажу</h3>
-      <p class="text-sm text-slate-600">Запуск объявлений и звонки</p>
-    </div>
-
-    <!-- Торги -->
-    <div class="cursor-pointer transition">
-      <div class="relative flex items-center justify-center overflow-hidden rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-200/50 transition">
-        <img src="processed_images/offer.png" alt="Торги"
-             class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-white/25 to-transparent pointer-events-none"></div>
+      <div class="card-soft rounded-2xl p-4 text-left">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">3</div>
+          <div class="font-semibold text-slate-900">Выход в продажу</div>
+        </div>
+        <p class="mt-3 text-sm text-slate-600">Запуск рекламы, окна показов, контроль спроса.</p>
       </div>
-      <h3 class="font-semibold mt-4">Торги</h3>
-      <p class="text-sm text-slate-600">Конкуренция и выбор лучшего</p>
-    </div>
-
-    <!-- Сделка -->
-    <div class="cursor-pointer transition">
-      <div class="relative flex items-center justify-center overflow-hidden rounded-2xl shadow-md hover:shadow-2xl hover:shadow-blue-200/50 transition">
-        <img src="processed_images/deal.png" alt="Сделка"
-             class="w-full aspect-square object-contain transform transition-transform duration-300 hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-white/25 to-transparent pointer-events-none"></div>
+      <div class="card-soft rounded-2xl p-4 text-left">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">4</div>
+          <div class="font-semibold text-slate-900">Торги</div>
+        </div>
+        <p class="mt-3 text-sm text-slate-600">Переговоры, повышение офферов, выбор лучшего.</p>
       </div>
-      <h3 class="font-semibold mt-4">Сделка</h3>
-      <p class="text-sm text-slate-600">Подписание договора и закрытие сделки</p>
+      <div class="card-soft rounded-2xl p-4 text-left">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">5</div>
+          <div class="font-semibold text-slate-900">Сделка</div>
+        </div>
+        <p class="mt-3 text-sm text-slate-600">Договор, расчёты, сопровождение до передачи ключей.</p>
+      </div>
     </div>
-
-  </div>
-</section>
+  </section>
 
 
 <!-- Cases Slider -->
@@ -636,25 +619,10 @@
 
     <div class="grid md:grid-cols-2 gap-8 items-center">
 
-      <div class="grid grid-cols-2 gap-3 justify-items-center order-1 md:order-none">
-        <div class="card-soft rounded-2xl p-3 flex items-center justify-center">
-          <img src="processed_images/spb.png" alt="Фото 1"
-               class="w-full h-auto object-contain max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px]">
-        </div>
-
-        <div class="card-soft rounded-2xl p-3 flex items-center justify-center">
-          <img src="processed_images/moscow.png" alt="Фото 2"
-               class="w-full h-auto object-contain max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px]">
-        </div>
-
-        <div class="card-soft rounded-2xl p-3 flex items-center justify-center">
-          <img src="processed_images/novostroy.png" alt="Фото 3"
-               class="w-full h-auto object-contain max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px]">
-        </div>
-
-        <div class="card-soft rounded-2xl p-3 flex items-center justify-center">
-          <img src="processed_images/vtor.png" alt="Фото 4"
-               class="w-full h-auto object-contain max-w-[180px] sm:max-w-[200px] md:max-w-[220px] lg:max-w-[240px]">
+      <div class="order-1 md:order-none">
+        <div class="card-soft rounded-3xl overflow-hidden shadow-[0_24px_60px_rgba(15,23,42,0.14)] border border-slate-100">
+          <img src="processed_images/bwhero.png" alt="Семён Гончаров"
+               class="w-full h-full object-cover aspect-[3/4]">
         </div>
       </div>
 
@@ -693,18 +661,20 @@
   <style>
     #reviews .card {
       border-radius: 1.25rem;
-      background: linear-gradient(135deg, #f0f7ff, #ffffff);
-      box-shadow: 0 8px 24px rgba(16,24,40,.08);
+      background: #ffffff;
+      box-shadow: 0 12px 28px rgba(16,24,40,.08);
       padding: 1.25rem;
       transition: box-shadow .2s ease, transform .2s ease;
     }
-    #reviews .card:hover { box-shadow: 0 12px 30px rgba(16,24,40,.12); }
+    #reviews .card:hover { box-shadow: 0 14px 34px rgba(16,24,40,.12); }
     #reviews .avatar {
       font-size: 1.75rem;
       display:flex;align-items:center;justify-content:center;
       width: 2.5rem;height: 2.5rem;
-      background:#fff;border-radius:50%;
+      background:#0f172a;color:#fff;border-radius:50%;
       box-shadow:0 0 0 1px #e2e8f0;
+      font-weight:700;
+      font-size:1rem;
     }
     #reviews .collapsible {
       position: relative;
@@ -730,7 +700,6 @@
       transition: background .15s ease, border-color .15s ease;
     }
     #reviews .toggle-btn:hover{ background:#f8fafc; border-color:#cbd5e1; }
-    #reviews .stars{ color:#f5b301; }
   </style>
 
   <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Отзывы клиентов</h2>
@@ -738,146 +707,170 @@
   <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👩🏻‍❤️‍👨🏻</div>
-        <div>
-          <div class="font-semibold text-lg">Марина и Роман</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">MR</div>
+          <div>
+            <div class="font-semibold text-lg">Марина и Роман</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">+7% к цене · 19 дней</div>
+          </div>
         </div>
       </div>
-      <div class="text-slate-700 leading-relaxed">«Семён помог продать нашу квартиру за 19 дней. Получили на 7% больше, чем ожидали.»</div>
+      <div class="text-slate-700 leading-relaxed">Семён помог продать нашу квартиру за 19 дней. Получили на 7% больше, чем ожидали.</div>
     </div>
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👨🏻‍🦱</div>
-        <div>
-          <div class="font-semibold text-lg">Александр П.</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">AP</div>
+          <div>
+            <div class="font-semibold text-lg">Александр П.</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">27 показов · выходные</div>
+          </div>
         </div>
       </div>
-      <div class="text-slate-700 leading-relaxed">«27 показов за выходные, выбрали лучшего покупателя.»</div>
+      <div class="text-slate-700 leading-relaxed">27 показов за выходные, выбрали лучшего покупателя.</div>
     </div>
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👩🏼</div>
-        <div>
-          <div class="font-semibold text-lg">Ирина К.</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">IK</div>
+          <div>
+            <div class="font-semibold text-lg">Ирина К.</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Безопасные расчёты</div>
+          </div>
         </div>
       </div>
-      <div class="text-slate-700 leading-relaxed">«Безопасные расчёты и полное сопровождение. Спокойно на сделке.»</div>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👨🏻‍👩🏻</div>
-        <div>
-          <div class="font-semibold text-lg">Дмитрий и Наталья</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed">«Организовал всё от фото до ключей. Мы только подписали.»</div>
+      <div class="text-slate-700 leading-relaxed">Безопасные расчёты и полное сопровождение. Спокойно на сделке.</div>
     </div>
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👩🏻‍🦰</div>
-        <div>
-          <div class="font-semibold text-lg">Анна С.</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">DN</div>
+          <div>
+            <div class="font-semibold text-lg">Дмитрий и Наталья</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Полный цикл</div>
+          </div>
         </div>
       </div>
-      <div class="text-slate-700 leading-relaxed">«Финальная цена выше на 500 тыс.»</div>
+      <div class="text-slate-700 leading-relaxed">Организовал всё от фото до ключей. Мы только подписали.</div>
     </div>
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👨🏼</div>
-        <div>
-          <div class="font-semibold text-lg">Олег Т.</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">AS</div>
+          <div>
+            <div class="font-semibold text-lg">Анна С.</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">+500 тыс к ожиданию</div>
+          </div>
         </div>
       </div>
-      <div class="text-slate-700 leading-relaxed">«Покупатель найден за 2 недели, сделка быстро и безопасно.»</div>
+      <div class="text-slate-700 leading-relaxed">Финальная цена выше на 500 тыс.</div>
     </div>
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👩🏼‍🦱</div>
-        <div>
-          <div class="font-semibold text-lg">Маргарита Страшенко</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">OT</div>
+          <div>
+            <div class="font-semibold text-lg">Олег Т.</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">2 недели</div>
+          </div>
+        </div>
+      </div>
+      <div class="text-slate-700 leading-relaxed">Покупатель найден за 2 недели, сделка быстро и безопасно.</div>
+    </div>
+
+    <div class="card">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">MS</div>
+          <div>
+            <div class="font-semibold text-lg">Маргарита Страшенко</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Продажа с ипотекой</div>
+          </div>
         </div>
       </div>
       <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
-        Большое спасибо Семену за помощь в продаже квартиры, которая находилась в ипотеке. Сделка состоялась довольно быстро, Семен помог собрать все необходимые документы, все время был на связи и консультировал меня по всем имеющимся вопросам. Очень грамотный и ответственный специалист. Ни разу не пожалела, что обратилась именно к нему.
+        Большое спасибо Семену за помощь в продаже квартиры, которая находилась в ипотеке. Сделка состоялась быстро, Семен помог собрать все документы, консультировал по всем вопросам. Очень грамотный и ответственный специалист.
       </div>
       <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
     </div>
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👩🏻</div>
-        <div>
-          <div class="font-semibold text-lg">Наталья</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">N</div>
+          <div>
+            <div class="font-semibold text-lg">Наталья</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Покупка</div>
+          </div>
         </div>
       </div>
       <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
-        "Спасибо огромное Семену за труд и терпение. Грамотный, отзывчивый, пунктуальный, добросовестный, профессионал своего дела. Я купила квартиру и очень довольна результатом. Процветания и благополучия вам, Семен."
+        Спасибо огромное Семену за труд и терпение. Грамотный, отзывчивый, пунктуальный, добросовестный, профессионал своего дела. Я купила квартиру и довольна результатом.
       </div>
       <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
     </div>
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👩🏼</div>
-        <div>
-          <div class="font-semibold text-lg">Елена Григорьева</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">EG</div>
+          <div>
+            <div class="font-semibold text-lg">Елена Григорьева</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">21 день</div>
+          </div>
         </div>
       </div>
       <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
-        "Самый грамотный специалист, которого я встречала! Продавала квартиру более года, пришлось сменить более 2 риэлторов... к счастью, обратилась к Семену. Результат: покупатель был найден ровно за 21 день! Сделка была сложной: 2 встречные ипотеки, выделение долей для детей покупателя, опека... Но всё уже в прошлом. Если бы не профессионализм Семена, сделка бы не состоялась, фактически он отработал и за агентов покупателя, консультируя и их тоже, исправляя их огрехи. На каждом этапе сделки мне оказывалась любая помощь в любое время! Сейчас планирую покупку новой квартиры и, бесспорно, обращаться буду только к нему!"
+        Продавала квартиру более года, пришлось сменить риэлторов. С Семёном покупатель найден за 21 день. Сложная сделка с ипотеками и опекой — всё прошло.
       </div>
       <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
     </div>
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">🧑🏻‍💻</div>
-        <div>
-          <div class="font-semibold text-lg">redflag18</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">RF</div>
+          <div>
+            <div class="font-semibold text-lg">redflag18</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Подбор первички</div>
+          </div>
         </div>
       </div>
-      <div class="text-slate-700 leading-relaxed">«Работали на подбор по первичке. За 6 дней определились с выбором, Семён нашёл лучшую в рынке квартиру. ЖК Черная Речка. Уже делаем ремонт.»</div>
+      <div class="text-slate-700 leading-relaxed">Работали на подбор по первичке. За 6 дней определились с выбором, Семён нашёл лучшую в рынке квартиру. ЖК Чёрная Речка.</div>
     </div>
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👨🏻‍👩🏼</div>
-        <div>
-          <div class="font-semibold text-lg">Сергей и Анна</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">SA</div>
+          <div>
+            <div class="font-semibold text-lg">Сергей и Анна</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Сервис</div>
+          </div>
         </div>
       </div>
       <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
-        "Хоть квартиру мы и не купили, но очень понравилось, как Семён с командой проводят свою работу. Такого сервиса и клиентоориентированности не видели с мужем ни в одном агентстве. Когда будем продавать свою квартиру — хотели бы, чтобы нашу квартиру продавали именно Семён с командой. Обязательно обратимся в будущем!"
+        Очень понравилось, как Семён с командой проводят работу. Когда будем продавать свою квартиру — обратимся к нему.
       </div>
       <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
     </div>
 
     <div class="card">
-      <div class="flex items-center gap-3 mb-3">
-        <div class="avatar">👩🏻‍🦳</div>
-        <div>
-          <div class="font-semibold text-lg">Татьяна</div>
-          <div class="stars">⭐⭐⭐⭐⭐</div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-3">
+          <div class="avatar">T</div>
+          <div>
+            <div class="font-semibold text-lg">Татьяна</div>
+            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Сложная сделка</div>
+          </div>
         </div>
       </div>
-      <div class="text-slate-700 leading-relaxed">«Спасибо Семену, помог осуществить мечту о новой квартире. Несмотря на «опеку» и другие сложности сделки — всё прошло быстро и по выгодной цене.»</div>
+      <div class="text-slate-700 leading-relaxed">Спасибо Семену, помог осуществить мечту о новой квартире. Несмотря на сложности сделки — всё прошло быстро и по выгодной цене.</div>
     </div>
 
   </div>
