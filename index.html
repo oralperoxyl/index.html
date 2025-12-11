@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -29,33 +29,38 @@
       --muted: #475569;
       --card: #ffffff;
       --stroke: #e5e7eb;
-      --accent: #0a84ff;
-      --accent-dark: #0066cc;
-      --accent-strong: #0b5fcc;
+      --accent: #0ea5e9;
+      --accent-dark: #0b8cc8;
+      --accent-strong: #0ea5e9;
       --accent-secondary: #f3c96a;
-      --radius-card: 18px;
+      --radius-card: 24px;
       --radius-pill: 9999px;
-      --shadow-soft: 0 20px 44px rgba(15,23,42,0.16);
+      --shadow-soft: 0 8px 30px rgba(0,0,0,0.06);
     }
+    html { scroll-behavior: smooth; }
     body {
       position: relative;
-      background:
-        radial-gradient(820px at 18% 18%, rgba(85,94,112,0.40), rgba(247,247,248,0)),
-        radial-gradient(760px at 82% 10%, rgba(70,76,92,0.34), rgba(247,247,248,0)),
-        radial-gradient(520px at 50% 80%, rgba(60,66,80,0.22), rgba(247,247,248,0)),
-        linear-gradient(180deg, #f6f7fa 0%, #e9edf2 100%);
+      min-height: 100vh;
+      background: #ffffff;
       color: var(--text);
-      background-attachment: scroll;
+      font-family: "IBM Plex Serif", serif;
+      letter-spacing: -0.01em;
+      font-weight: 400;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      font-smooth: antialiased;
     }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.08;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
-      mix-blend-mode: soft-light;
+    h1,h2,h3,h4,h5,h6 {
+      font-family: "IBM Plex Serif", serif;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: #0f172a;
+    }
+    p, span, a, button, input, textarea, select, option, label {
+      font-family: "IBM Plex Serif", serif;
+      letter-spacing: -0.01em;
+      line-height: 1.5;
     }
     .slider { position: relative; overflow: hidden; }
     .track { display: flex; transition: transform .35s ease; will-change: transform; }
@@ -70,84 +75,118 @@
       height: 38px;
       display: grid;
       place-items: center;
-      background: rgba(15,23,42,0.88);
-      border: 1px solid rgba(255,255,255,0.18);
+      background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(247,249,252,0.98));
+      border: none;
       border-radius: 9999px;
-      color: #fff;
-      box-shadow: 0 14px 32px rgba(15,23,42,0.20);
-      backdrop-filter: blur(4px);
-      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+      color: var(--text);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(6px);
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
       font-size: 18px;
     }
     .nav-btn:hover {
       transform: translateY(-50%) translateX(2px);
-      box-shadow: 0 18px 40px rgba(15,23,42,0.22);
-      background: rgba(15,23,42,1);
+      box-shadow: 0 16px 38px rgba(0,0,0,0.12);
+      background: linear-gradient(145deg, rgba(255,255,255,0.98), rgba(247,249,252,1));
     }
     .prev { left: .5rem; } .next { right: .5rem; }
     .dots { position: absolute; left: 0; right:0; bottom: .5rem; display:flex; gap:.4rem; justify-content:center; }
     .dot { width:8px; height:8px; border-radius:50%; background:#cbd5e1; } .dot.active { background:#0f172a; }
-    .card-soft {
+    .panel-premium, .card-soft, .glass-panel, #cases .rounded-2xl, #advantages-sellers .card-soft, #advantages-buyers .card-soft, #services .card-soft, #reviews .card {
       position: relative;
       overflow: hidden;
-      background: #ffffff;
-      border: 1px solid rgba(15,23,42,0.08);
-      box-shadow: 0 16px 32px rgba(15,23,42,0.10), inset 0 1px 0 rgba(255,255,255,0.6);
+      background: linear-gradient(145deg, rgba(255,255,255,0.96) 0%, rgba(247,249,252,0.98) 100%);
+      border: none;
+      box-shadow: var(--shadow-soft);
       backdrop-filter: blur(4px);
       transition: transform .24s ease, box-shadow .24s ease;
       border-radius: var(--radius-card);
+      color: var(--text);
     }
-    .card-soft:hover { transform: translateY(-3px); box-shadow: 0 18px 36px rgba(15,23,42,0.12); }
+    .panel-premium:hover, .card-soft:hover, .glass-panel:hover, #cases .rounded-2xl:hover, #reviews .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    }
     .card-soft::after { content: none; }
     .card-soft > * { position: relative; z-index: 1; }
-    .faq-card { position: relative; overflow: hidden; }
-    .faq-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.0), rgba(15,23,42,0.04));
-      pointer-events: none;
+    .faq-row {
+      border-bottom: 1px solid #e5e7eb;
     }
-    .faq-toggle {
-      width: auto;
-      height: auto;
-      display: inline-block;
-      background: transparent;
-      border: none;
-      color: #0f172a;
-      font-size: 20px;
-      font-weight: 700;
-      transition: transform .2s ease;
+    .faq-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 0;
+      cursor: pointer;
     }
-    .group:hover .faq-toggle { transform: translateY(-1px); }
+    .faq-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+      text-align: left;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: max-height 280ms ease, opacity 280ms ease, transform 280ms ease;
+      color: #6b7280;
+      font-size: 15px;
+      line-height: 1.6;
+      padding-right: 8px;
+    }
+    .faq-row.open .faq-answer {
+      max-height: 320px;
+      opacity: 1;
+      transform: translateY(0);
+      padding-bottom: 14px;
+    }
+    .faq-dot {
+      flex-shrink: 0;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      border: 2px solid #9ca3af;
+      transition: background-color 220ms ease, border-color 220ms ease, transform 220ms ease;
+    }
+    .faq-row.open .faq-dot {
+      background-color: #111827;
+      border-color: #111827;
+      transform: scale(1.05);
+    }
     .btn-cta {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, #111827 0%, #161b22 45%, #0f172a 80%);
-      border: 1px solid rgba(15,23,42,0.45);
-      box-shadow: 0 18px 44px rgba(15,23,42,0.32);
+      background: linear-gradient(135deg, #3da9ff 0%, #0ea5e9 60%, #0b8cc8 100%);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 16px 34px rgba(14,165,233,0.28), inset 0 0 10px rgba(255,255,255,0.2);
       color: #fff;
       border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 14px;
     }
-    .btn-cta::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
-      opacity: 0;
-      transition: opacity .25s ease;
-      pointer-events: none;
+    .gradient-wrap {
+      background: linear-gradient(
+        180deg,
+        #0f172a 0%,
+        #172033 20%,
+        #1e293b 40%,
+        #334155 65%,
+        #f8fafc 85%,
+        #ffffff 100%
+      );
+      background-repeat: no-repeat;
+      background-size: 100% 140vh;
     }
-    .btn-cta:hover {
-      background: linear-gradient(135deg, #0f172a 0%, #101621 55%, #0b1220 100%);
-      box-shadow: 0 22px 52px rgba(15,23,42,0.38);
-    }
-    .btn-cta:hover::after { opacity: 1; }
     .badge-gradient {
-      background: linear-gradient(120deg, rgba(100,116,139,0.26), rgba(100,116,139,0.10));
-      border: 1px solid rgba(100,116,139,0.28);
-      box-shadow: 0 16px 36px rgba(15,23,42,0.14);
+      background: linear-gradient(120deg, rgba(255,255,255,0.92), rgba(247,249,252,0.95));
+      border: none;
+      box-shadow: var(--shadow-soft);
       border-radius: var(--radius-pill);
+      color: #0f172a;
     }
     .badge-warm {
       background: linear-gradient(120deg, rgba(242,194,123,0.35), rgba(242,194,123,0.12));
@@ -155,11 +194,11 @@
       color: #8a5a13;
     }
     .glass-panel {
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(15,23,42,0.08);
+      background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(247,249,252,0.98));
+      border: none;
       backdrop-filter: blur(6px);
-      border-radius: 18px;
-      box-shadow: 0 16px 34px rgba(15,23,42,0.12);
+      border-radius: var(--radius-card);
+      box-shadow: var(--shadow-soft);
     }
     .section-gap { height: 48px; }
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 1s ease, transform 1s ease; }
@@ -169,50 +208,52 @@
       letter-spacing: -0.02em;
       font-weight: 800;
     }
+    /* Светлый текст в тёмной верхней части */
+    header, header a { color: #0f172a; }
+    header a:hover { opacity: 0.85; }
+    #top, #top h1, #top p, #top span, #top a { color: #0f172a; }
+    #top .text-slate-600, #top .text-slate-700 { color: #475569 !important; }
     @media (max-width: 767px) {
       body { background-attachment: scroll; }
     }
   </style>
 </head>
 <body class="text-slate-900">
-  <div class="fixed top-0 left-0 right-0 z-50 bg-slate-900 text-white text-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-10 flex items-center justify-between">
-      <div>Бесплатная первичная консультация по вашей ситуации в Telegram</div>
+  <div class="fixed top-0 left-0 right-0 z-50 bg-[rgba(255,255,255,0.15)] backdrop-blur-[8px] text-white text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[42px] flex items-center justify-between">
+      <div class="text-[#f8fafc] font-medium text-[12px] sm:text-[13px]" style="font-family:'Manrope',sans-serif;">
+        Первичная консультация и план продажи — в Telegram
+      </div>
       <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
-         class="inline-flex items-center text-white font-semibold text-xs sm:text-sm transition hover:underline hover:underline-offset-2 hover:opacity-90">
-        Написать сейчас
+         class="inline-flex items-center justify-center rounded-full bg-[#0ea5e9] hover:bg-[#0d94d2] text-white font-semibold px-4 py-1.5 text-xs sm:text-sm transition"
+         style="font-family:'Manrope',sans-serif;">
+        Telegram
       </a>
     </div>
   </div>
 
-  <header class="sticky top-10 z-40 backdrop-blur bg-white/80 border-b border-slate-200/70 shadow-[0_8px_24px_rgba(15,23,42,0.05)]">
-    <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
+  <header class="absolute top-[52px] left-0 right-0 z-40">
+    <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12">
 <a href="#top"
-   class="brand-logo text-xl tracking-tight">
+   class="brand-logo text-2xl tracking-[-0.02em] text-white font-extrabold" style="font-family:'Manrope',sans-serif; color:#ffffff;">
   Гончаров&nbsp;Семён
 </a>
-      <div class="hidden md:flex items-center gap-6 text-sm">
-        <a href="#services" class="hover:opacity-80">Польза</a>
-        <a href="#process" class="hover:opacity-80">Как работаю</a>
-        <a href="#cases" class="hover:opacity-80">Кейсы</a>
-        <a href="#reviews" class="hover:opacity-80">Отзывы</a>
-        <a href="#advantages-sellers" class="hover:opacity-80">Преимущества</a>
-        <a href="#newbuild" class="hover:opacity-80">Новостройки</a>
-        <a href="#about" class="hover:opacity-80">Обо мне</a>
-        <a href="#faq" class="hover:opacity-80">FAQ</a>
-        <a href="#contact" class="hover:opacity-80">Контакты</a>
+      <div class="hidden md:flex items-center gap-8 text-[14px]" style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em; color:#ffffff;">
+        <a href="#services" class="hover:text-white transition" style="color:#ffffff;">Польза</a>
+        <a href="#process" class="hover:text-white transition" style="color:#ffffff;">Как работаю</a>
+        <a href="#cases" class="hover:text-white transition" style="color:#ffffff;">Кейсы</a>
+        <a href="#reviews" class="hover:text-white transition" style="color:#ffffff;">Отзывы</a>
+        <a href="#advantages-sellers" class="hover:text-white transition" style="color:#ffffff;">Преимущества</a>
+        <a href="#newbuild" class="hover:text-white transition" style="color:#ffffff;">Новостройки</a>
+        <a href="#about" class="hover:text-white transition" style="color:#ffffff;">Обо мне</a>
+        <a href="#faq" class="hover:text-white transition" style="color:#ffffff;">FAQ</a>
+        <a href="#contact" class="hover:text-white transition" style="color:#ffffff;">Контакты</a>
       </div>
-      <div class="flex items-center gap-2">
-        <a href="https://t.me/semengme" target="_blank" rel="noreferrer">
-          <button
-            class="inline-flex items-center justify-center rounded-full bg-[#229ED9] hover:bg-[#1c8dc2] text-white font-semibold px-6 py-2.5 text-sm shadow-[0_10px_30px_rgba(34,158,217,0.30)] transition">
-            Telegram
-          </button>
-        </a>
-      </div>
+      <div class="flex items-center gap-3"></div>
     </nav>
   </header>
 
+  <div class="gradient-wrap">
   <!-- Hero -->
   <section id="top" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
@@ -223,30 +264,25 @@
 
     <!-- Текстовая часть -->
     <div class="md:max-w-[70%] lg:max-w-[62%]">
-      <span class="inline-flex items-center rounded-full bg-white/92 border border-slate-200 shadow-sm text-slate-900 px-3 py-1 text-xs font-semibold"
-            style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em;">
-        Санкт-Петербург • Продажа за 21 день
-      </span>
-
-      <h1 class="mt-4 text-4xl md:text-6xl font-extrabold leading-tight"
-          style="font-family:'Manrope',sans-serif; letter-spacing:-0.02em;">
+      <h1 class="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.2]"
+          style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.02em; color:#ffffff;">
         Ваш человек в мире недвижимости СПб
       </h1>
 
-      <p class="mt-4 text-lg text-slate-600"
-         style="font-family:'Manrope',sans-serif; font-weight:500; letter-spacing:-0.01em;">
+      <p class="mt-5 text-lg"
+         style="font-family:'IBM Plex Serif',serif; font-weight:500; letter-spacing:-0.01em; color:#ffffff; line-height:1.45;">
         Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели.
         Полное сопровождение до сделки.
       </p>
 
-      <div class="mt-6 flex flex-wrap gap-3">
+      <div class="mt-8 flex flex-wrap gap-3">
         <a href="#contact">
           <button class="inline-flex items-center justify-center rounded-full btn-cta text-white font-semibold px-6 py-3 text-sm transition">
             Бесплатная консультация →
           </button>
         </a>
         <a href="#badges">
-          <button class="inline-flex items-center justify-center rounded-full border border-slate-200 text-slate-800 bg-white hover:bg-slate-50 font-medium px-6 py-3 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition">
+          <button class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium shadow-md bg-white/10 backdrop-blur text-white border border-white/40 transition hover:shadow-lg">
             Посмотреть услуги
           </button>
         </a>
@@ -269,8 +305,8 @@
 
   <!-- Services -->
   <section id="services" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl md:text-4xl font-bold">Чем я помогу</h2>
-    <p class="mt-2 text-slate-600">Нацелен на то, чтобы ваша недвижимость была продана дороже, чем самостоятельно или с другим агентом. Сфокусирован на результате, юридической безопасности и комфорте клиента.</p>
+    <h2 class="text-3xl md:text-4xl font-bold" style="color:#ffffff;">Чем я помогу</h2>
+    <p class="mt-2" style="color:#ffffff;">Нацелен на то, чтобы ваша недвижимость была продана дороже, чем самостоятельно или с другим агентом. Сфокусирован на результате, юридической безопасности и комфорте клиента.</p>
     <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
       <div class="card-soft rounded-2xl p-5">
         <div class="flex items-center gap-3">
@@ -302,6 +338,7 @@
       </div>
     </div>
   </section>
+  </div>
 
 <!-- Процесс продажи -->
   <section id="process" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -619,7 +656,7 @@
 
     <div class="grid md:grid-cols-2 gap-8 items-center">
 
-      <div class="order-1 md:order-none w-full max-w-sm mx-auto md:mx-0 relative z-10">
+      <div class="order-1 md:order-none w-full max-w-md lg:max-w-lg mx-auto md:mx-0 relative z-10">
         <div class="card-soft rounded-3xl overflow-hidden shadow-[0_24px_60px_rgba(15,23,42,0.14)] border border-slate-100">
           <img src="processed_images/bwhero.png" alt="Семён Гончаров"
                class="w-full h-auto block object-cover aspect-[3/4]">
@@ -627,20 +664,15 @@
       </div>
 
       <div class="space-y-4 text-slate-700 text-base leading-relaxed order-2 md:order-none">
-        <p>
-          Меня зовут <strong>Семён Гончаров</strong>, я работаю агентом по недвижимости в Санкт-Петербурге.  
-          В сфере продаж я с <strong>2012 года</strong>, а с <strong>2018 года</strong> полностью посвятил себя недвижимости.
-        </p>
+        <p>Меня зовут Семён Гончаров. Я — агент по недвижимости в Санкт-Петербурге с глубоким опытом в продажах с 2012 года. С 2018 года полностью сфокусирован на рынке недвижимости.</p>
 
-        <p>
-          За это время я успел поработать простым агентом в крупном агентстве недвижимости в Петербурге, и руководителем группы продаж, а также был  директором небольшого агентства недвижимости, специализируясь на историческом центре Санкт-Петербурга, а так же директором строительной компании, что дало мне серьёзный опыт по работе с загородной недвижимостью.   
-          Весь полученный опыт помогает мне не только разбираться в рынке, но и грамотно вести переговоры, находить лучшие решения и держать под контролем весь процесс сделки.
-        </p>
+        <p>За эти годы я прошёл весь путь: от агента в крупном петербургском АН до руководителя группы продаж и директора агентства, специализирующегося на историческом центре города. Работа директором строительной компании дала мне сильную экспертизу и в загородной недвижимости.</p>
 
-        <p>
-          Сегодня, зачастую, я работаю по <strong>аукционной модели продаж</strong> — это прозрачность, честность и безопасность для всех сторон сделки, в том числе для моего клиента-продавца.  
-          Я верю, что квартира или дом должны продаваться и покупаться легко, а не превращаться в бесконечный стресс, затянутый на месяцы и годы.
-        </p>
+        <p>Этот опыт позволяет мне точно понимать рынок, грамотно вести переговоры, предлагать нестандартные решения и уверенно сопровождать клиента на каждом этапе сделки.</p>
+
+        <p>Сегодня я часто использую аукционную модель продаж. Она обеспечивает прозрачность, честность и безопасность для всех участников сделки, а главное — помогает продавцам получать максимальную цену за свой объект.</p>
+
+        <p>Я убеждён: продажа квартиры или дома должна быть понятным, спокойным и контролируемым процессом, а не стрессом, растянутым на месяцы. Моя задача — сделать так, чтобы ваша сделка прошла легко, быстро и результативно.</p>
 
         <div class="grid sm:grid-cols-2 gap-3">
           <div class="card-soft rounded-2xl px-4 py-4 text-slate-900 font-semibold">Удобные и безопасные взаиморасчёты</div>
@@ -901,88 +933,96 @@
   <!-- FAQ -->
   <section id="faq" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <h2 class="text-3xl md:text-4xl font-bold">FAQ</h2>
-    <div class="mt-8 grid md:grid-cols-2 gap-4 md:gap-6">
-      <details class="group faq-card card-soft rounded-2xl px-6 py-5 transition">
-        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
-          <span>Как работает аукционный подход?</span>
-          <span class="faq-toggle group-open:rotate-45 transition">+</span>
-        </summary>
-        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+    <div class="mt-8 divide-y divide-slate-200 faq-list">
+      <div class="faq-row">
+        <button class="faq-btn">
+          <span class="faq-dot"></span>
+          <span class="faq-title">Как работает аукционный подход?</span>
+        </button>
+        <div class="faq-answer">
           Мы задаём чёткие сроки выхода в продажу и дни показов, после чего привлекаем максимально большой поток покупателей. Все смотрят объект в один период и понимают, что они не единственные, что создаёт честную конкуренцию. Покупатели делают предложения и могут повышать их — поэтому объект продаётся дороже и в заранее понятные сроки. Если объяснить проще, это как рыбалка сетью, а не удочкой: мы собираем весь спрос сразу и выбираем «самую крупную рыбу» — идеального покупателя с лучшими условиями. И важно: это не залоговый и не судебный аукцион по ГК РФ. Это современный аукционный метод продажи — добровольный, прозрачный и полностью контролируемый собственником..
         </div>
-      </details>
-      <details class="group faq-card card-soft rounded-2xl px-6 py-5 transition">
-        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
-          <span>Что, если не продадим за 21 день?</span>
-          <span class="faq-toggle group-open:rotate-45 transition">+</span>
-        </summary>
-        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+      </div>
+
+      <div class="faq-row">
+        <button class="faq-btn">
+          <span class="faq-dot"></span>
+          <span class="faq-title">Что, если не продадим за 21 день?</span>
+        </button>
+        <div class="faq-answer">
           Пересобираем стратегию: расширяем каналы, корректируем подачу/цену, добавляем доп. окна показов.
         </div>
-      </details>
-      <details class="group faq-card card-soft rounded-2xl px-6 py-5 transition">
-        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
-          <span>Какая комиссия и что входит?</span>
-          <span class="faq-toggle group-open:rotate-45 transition">+</span>
-        </summary>
-        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+      </div>
+
+      <div class="faq-row">
+        <button class="faq-btn">
+          <span class="faq-dot"></span>
+          <span class="faq-title">Какая комиссия и что входит?</span>
+        </button>
+        <div class="faq-answer">
           Маркетинг, показы, переговоры, юр. сопровождение и закрытие сделки. Весь процесс сделки под ключ.  Комиссия — в рынке. Её размер зависит от выбранного формата продажи: аукцион или классическая модель. Мы обсуждаем условия на встрече, без скрытых платежей — всё прозрачно и понятно.
         </div>
-      </details>
-      <details class="group faq-card card-soft rounded-2xl px-6 py-5 transition">
-        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
-          <span>Как проходят взаиморасчёты?</span>
-          <span class="faq-toggle group-open:rotate-45 transition">+</span>
-        </summary>
-        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+      </div>
+
+      <div class="faq-row">
+        <button class="faq-btn">
+          <span class="faq-dot"></span>
+          <span class="faq-title">Как проходят взаиморасчёты?</span>
+        </button>
+        <div class="faq-answer">
           Подбираем удобную и безопасную форму расчётов под сделку и стороны.
         </div>
-      </details>
-      <details class="group faq-card card-soft rounded-2xl px-6 py-5 transition">
-        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
-          <span>Работаете с альтернативой/ипотекой?</span>
-          <span class="faq-toggle group-open:rotate-45 transition">+</span>
-        </summary>
-        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+      </div>
+
+      <div class="faq-row">
+        <button class="faq-btn">
+          <span class="faq-dot"></span>
+          <span class="faq-title">Работаете с альтернативой/ипотекой?</span>
+        </button>
+        <div class="faq-answer">
           Да. Сопровождаю сделки с альтернативой, помогаю с ипотекой и субсидиями. Работаю в паре с ипотечным брокером и юристом.
         </div>
-      </details>
-      <details class="group faq-card card-soft rounded-2xl px-6 py-5 transition">
-        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
-          <span>Где публикуете объекты?</span>
-          <span class="faq-toggle group-open:rotate-45 transition">+</span>
-        </summary>
-        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+      </div>
+
+      <div class="faq-row">
+        <button class="faq-btn">
+          <span class="faq-dot"></span>
+          <span class="faq-title">Где публикуете объекты?</span>
+        </button>
+        <div class="faq-answer">
           Крупные площадки и таргетированный трафик. Помимо размещения объявлений использую более 40 инструментов для создания ажиотажного спроса: спецпредложения, акционные показы, e-mail-рассылки и другие каналы привлечения покупателей. По запросу дам список каналов.
         </div>
-      </details>
-      <details class="group faq-card card-soft rounded-2xl px-6 py-5 transition">
-        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
-          <span>А что с новостройками?</span>
-          <span class="faq-toggle group-open:rotate-45 transition">+</span>
-        </summary>
-        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+      </div>
+
+      <div class="faq-row">
+        <button class="faq-btn">
+          <span class="faq-dot"></span>
+          <span class="faq-title">А что с новостройками?</span>
+        </button>
+        <div class="faq-answer">
           Я работаю в связке с застройщиками и вижу все изменения в режиме реального времени. Если квартира занята, можно встать в очередь — и быть первым, кто узнает, когда она освободится. Комиссию всегда платит застройщик. Но ни один застройщик никогда не расскажет о своих минусах, если вы пойдете в отдел продаж самостоятельно, без агента. Моя задача - предложить вам объективно лучший в рынке объект под вашу ситуацию.
         </div>
-      </details>
-      <details class="group faq-card card-soft rounded-2xl px-6 py-5 transition">
-        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
-          <span>А если не аукцион?</span>
-          <span class="faq-toggle group-open:rotate-45 transition">+</span>
-        </summary>
-        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+      </div>
+
+      <div class="faq-row">
+        <button class="faq-btn">
+          <span class="faq-dot"></span>
+          <span class="faq-title">А если не аукцион?</span>
+        </button>
+        <div class="faq-answer">
           Аукцион — отличный инструмент, но он подходит не всем. Это формат для тех, у кого есть конкретные сроки и высокая мотивация. Если вам комфортнее работать в более спокойном темпе, я провожу классическую продажу: готовим объект, запускаем рекламу и собираем покупателей без жёсткого тайминга и интенсивных торгов. При этом результат остаётся сильным — цена формируется за счёт правильной подачи и стабильного спроса, просто без давления по времени. Вы выбираете ритм, а я обеспечиваю безопасный, управляемый и предсказуемый процесс.
         </div>
-      </details>
-      <details class="group faq-card card-soft rounded-2xl px-6 py-5 transition">
-        <summary class="flex items-center justify-between cursor-pointer font-semibold text-slate-900">
-          <span>Агент мне не нужен, сделаю все сам.</span>
-          <span class="faq-toggle group-open:rotate-45 transition">+</span>
-        </summary>
-        <div class="pt-2 text-sm text-slate-600 leading-relaxed">
+      </div>
+
+      <div class="faq-row">
+        <button class="faq-btn">
+          <span class="faq-dot"></span>
+          <span class="faq-title">Агент мне не нужен, сделаю все сам.</span>
+        </button>
+        <div class="faq-answer">
           Продать самостоятельно можно, но важно понимать несколько вещей: Большинство звонков — от агентов, предлагающих свои услуги, а не покупателей. Это занимает время и не даёт объективной картины спроса. Собственники редко собирают обратную связь. Без неё сложно понять, почему объект не выбирают и что мешает продаже. "Знакомый юрист" — не продажник. Да еще зачастую и вообще не из сферы недвижимости. Он оформляет сделку, но не занимается маркетингом, переговорами и созданием спроса. Юрист не работает на то, чтобы объект ушёл дороже. Задача агента — продать дороже, чем собственник сделал бы сам. За счёт подготовки, правильной подачи, фильтрации покупателей и грамотных переговоров результат по цене и условиям почти всегда выше. Простая аналогия: когда болит зуб — человек идёт к стоматологу, а не лечит его дома по картинкам из интернета. Так же и с продажей квартиры: можно делать самому, но профессионал почти всегда даёт лучший и быстрый результат.
         </div>
-      </details>
+      </div>
 
     </div>
   </section>
@@ -1188,16 +1228,13 @@
       }, { passive: true });
     })();
 
-    // FAQ: открыта только одна карточка
+    // FAQ: аккордеон с плавным раскрытием
     (function() {
-      const faqDetails = Array.from(document.querySelectorAll('#faq details'));
-      faqDetails.forEach(d => {
-        d.addEventListener('toggle', () => {
-          if (d.open) {
-            faqDetails.forEach(other => {
-              if (other !== d) other.open = false;
-            });
-          }
+      const rows = Array.from(document.querySelectorAll('#faq .faq-row'));
+      rows.forEach(row => {
+        const btn = row.querySelector('.faq-btn');
+        btn.addEventListener('click', () => {
+          row.classList.toggle('open');
         });
       });
     })();
