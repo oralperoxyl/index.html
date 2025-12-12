@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -44,7 +44,7 @@
       margin: 0;
       background: #ffffff;
       color: var(--text);
-      font-family: "Manrope", sans-serif;
+      font-family: "IBM Plex Serif", serif;
       letter-spacing: -0.01em;
       font-weight: 400;
       line-height: 1.6;
@@ -52,14 +52,14 @@
       font-smooth: antialiased;
     }
     h1,h2,h3,h4,h5,h6 {
-      font-family: "Manrope", sans-serif;
+      font-family: "IBM Plex Serif", serif;
       font-weight: 600;
       letter-spacing: -0.02em;
       line-height: 1.35;
       color: #111111;
     }
     p, span, a, button, input, textarea, select, option, label, li {
-      font-family: "Manrope", sans-serif;
+      font-family: "IBM Plex Serif", serif;
       letter-spacing: -0.01em;
       line-height: 1.65;
       color: var(--muted);
@@ -203,10 +203,11 @@
       border: none;
       color: rgba(255,255,255,0.88);
       box-shadow: none;
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(6px);
       transition: background .2s ease, transform .25s ease;
-      padding: 10px 14px;
-      font-weight: 500;
+      padding: 10px 18px;
+      font-weight: 600;
+      border-radius: var(--radius-pill);
     }
     .badge-ghost:hover {
       background: rgba(255,255,255,0.12);
@@ -285,10 +286,16 @@
       --pill-text: rgba(255,255,255,0.92);
       --ink-shadow: 0 0 12px rgba(0,0,0,0.18);
     }
+    :root {
+      --nav-offset: 96px;
+    }
+    @media (max-width: 767px) {
+      :root { --nav-offset: 72px; }
+    }
     .gradient-wrap {
       position: relative;
       overflow: clip;
-      min-height: 300vh;
+      min-height: 360vh;
       background:
         radial-gradient(900px 600px at 85% 35%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 55%),
         radial-gradient(700px 500px at 15% 70%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 60%),
@@ -331,22 +338,50 @@
       border: none;
       color: var(--pill-text);
     }
-    .scene {
-      position: relative;
-      min-height: 120vh;
+    /* Pinned stack */
+    #pinned-stack {
+      position: sticky;
+      top: var(--nav-offset);
+      height: calc(100vh - var(--nav-offset));
+      isolation: isolate;
+    }
+    .pinned-panel {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity .6s ease, transform .6s ease;
+      pointer-events: none;
       display: flex;
       align-items: center;
+      justify-content: center;
+      padding: 0 1rem;
     }
-    @media (max-width: 767px) { .scene { min-height: 110vh; } }
-    .scene-content {
-      position: sticky;
-      top: 96px;
-      width: 100%;
-      z-index: 1;
-      color: var(--ink);
-      text-shadow: var(--ink-shadow);
+    .pinned-panel.is-active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
     }
-    @media (max-width: 767px) { .scene-content { top: 72px; } }
+    .pinned-panel .reveal-text {
+      opacity: 0;
+      transform: translateY(10px);
+      filter: blur(8px);
+      transition: opacity .9s ease, transform .9s ease, filter .9s ease;
+    }
+    .pinned-panel.is-active .reveal-text {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .pinned-panel,
+      .pinned-panel .reveal-text {
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+    }
     .bottom-gradient {
       background: linear-gradient(
         180deg,
@@ -409,12 +444,12 @@
     <div id="topbar" class="topbar text-white text-xs transition-colors"
          style="background: transparent !important; box-shadow: none !important; backdrop-filter: none !important;">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[42px] flex items-center justify-between">
-        <div class="topbar-text text-[#f8fafc] font-medium text-[12px] sm:text-[13px]" style="font-family:'Manrope',sans-serif;">
+        <div class="topbar-text text-[#f8fafc] font-medium text-[12px] sm:text-[13px]" style="font-family:'IBM Plex Serif',serif;">
           Первичная консультация и план продажи — в Telegram
         </div>
         <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
            class="topbar-btn inline-flex items-center justify-center rounded-full bg-[#0ea5e9] hover:bg-[#0d94d2] text-white font-semibold px-4 py-1.5 text-xs sm:text-sm transition"
-           style="font-family:'Manrope',sans-serif;">
+           style="font-family:'IBM Plex Serif',serif;">
           Telegram
         </a>
       </div>
@@ -423,10 +458,10 @@
     <header style="background: transparent !important; box-shadow: none !important; backdrop-filter: none !important;">
       <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12">
 <a href="#top"
-   class="brand-logo brand-link text-2xl tracking-[-0.02em] text-white font-extrabold" style="font-family:'Manrope',sans-serif; color:#ffffff;">
+   class="brand-logo brand-link text-2xl tracking-[-0.02em] text-white font-extrabold" style="font-family:'IBM Plex Serif',serif; color:#ffffff;">
   Гончаров&nbsp;Семён
 </a>
-        <div class="hidden md:flex items-center gap-8 text-[14px]" style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em; color:#ffffff;">
+        <div class="hidden md:flex items-center gap-8 text-[14px]" style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.01em; color:#ffffff;">
           <a href="#services" class="hover:text-white transition nav-link" style="color:#ffffff;">Польза</a>
           <a href="#process" class="hover:text-white transition nav-link" style="color:#ffffff;">Как работаю</a>
           <a href="#cases" class="hover:text-white transition nav-link" style="color:#ffffff;">Кейсы</a>
@@ -442,139 +477,128 @@
     </header>
   </div>
 
-    <section class="scene" id="scene-hero">
-      <div class="scene-content">
-        <!-- Hero -->
-        <section id="top" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 overflow-hidden">
-
-          <!-- Текстовая часть -->
-          <div class="md:max-w-[70%] lg:max-w-[62%]">
-            <h1 class="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.2]"
-                style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.02em; color:var(--ink);">
-              Ваш человек в мире недвижимости СПб
-            </h1>
-
-            <p class="mt-5 text-lg"
-               style="font-family:'IBM Plex Serif',serif; font-weight:500; letter-spacing:-0.01em; color:var(--ink); line-height:1.45;">
-              Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели.
-              Полное сопровождение до сделки.
-            </p>
-
-            <div class="mt-8 flex flex-wrap gap-3">
-              <a href="#contact">
-                <button class="inline-flex items-center justify-center rounded-full btn-cta btn-ghost-light text-sm font-semibold px-6 py-3">
-                  Бесплатная консультация →
-                </button>
-              </a>
-              <a href="#badges">
-                <button class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-white/10 backdrop-blur" style="border:none; box-shadow:none; color:var(--pill-text);">
-                  Посмотреть услуги
-                </button>
-              </a>
+  <div id="pinned-stack">
+    <div class="pinned-panel" data-panel="1">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="md:max-w-[70%] lg:max-w-[62%] space-y-6">
+          <h1 class="text-4xl md:text-6xl font-extrabold leading-[1.2] reveal-text"
+              style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.02em; color:var(--ink);">
+            Ваш человек в мире недвижимости СПб
+          </h1>
+          <p class="text-lg reveal-text"
+             style="font-family:'IBM Plex Serif',serif; font-weight:500; letter-spacing:-0.01em; color:var(--ink); line-height:1.45;">
+            Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели.
+            Полное сопровождение до сделки.
+          </p>
+          <div class="flex flex-wrap gap-3 reveal-text">
+            <a href="#contact">
+              <button class="inline-flex items-center justify-center rounded-full btn-cta btn-ghost-light text-sm font-semibold px-6 py-3">
+                Бесплатная консультация →
+              </button>
+            </a>
+            <a href="#badges">
+              <button class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-white/10 backdrop-blur" style="border:none; box-shadow:none; color:var(--pill-text);">
+                Посмотреть услуги
+              </button>
+            </a>
+          </div>
+          <section id="badges" class="pt-2">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Продажа аукционом за 21 день</div>
+              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатный подбор новостроек</div>
+              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Работа на покупку</div>
+              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Сопровождение сделки</div>
+              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Одобрение ипотеки</div>
+              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатная первичная консультация</div>
             </div>
-          </div>
-        </section>
-
-        <!-- Badges -->
-        <section id="badges" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Продажа аукционом за 21 день</div>
-            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатный подбор новостроек</div>
-            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Работа на покупку</div>
-            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Сопровождение сделки</div>
-            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Одобрение ипотеки</div>
-            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатная первичная консультация</div>
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <section class="scene" id="scene-services">
-      <div class="scene-content">
-        <!-- Services -->
-        <section id="services" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-28">
+    <div class="pinned-panel" data-panel="2">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="space-y-4 reveal-text">
           <h2 class="text-3xl md:text-4xl font-bold" style="color:var(--ink);">Чем я помогу</h2>
-          <p class="mt-2" style="color:var(--ink);">Нацелен на то, чтобы ваша недвижимость была продана дороже, чем самостоятельно или с другим агентом. Сфокусирован на результате, юридической безопасности и комфорте клиента.</p>
-          <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div class="card-soft rounded-2xl p-5">
-              <div class="flex items-center gap-3">
-                <div class="font-semibold">Продажа за 21 день</div>
-              </div>
-              <div class="pt-2 text-sm text-slate-700">Аукционный подход: концентрируем спрос и находим идеального покупателя по максимальной цене.</div>
+          <p style="color:var(--ink);">Нацелен на то, чтобы ваша недвижимость была продана дороже, чем самостоятельно или с другим агентом. Сфокусирован на результате, юридической безопасности и комфорте клиента.</p>
+        </div>
+        <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="card-soft rounded-2xl p-5 reveal-text">
+            <div class="flex items-center gap-3">
+              <div class="font-semibold">Продажа за 21 день</div>
             </div>
-            <div class="card-soft rounded-2xl p-5">
-              <div class="flex items-center gap-3">
-                <div class="font-semibold">Юридическая чистота</div>
-              </div>
-              <div class="pt-2 text-sm text-slate-700">Проверка документов и полное сопровождение сделки в связке с профессиональным юристом.</div>
-            </div>
-            <div class="card-soft rounded-2xl p-5">
-              <div class="flex items-center gap-3">
-                <div class="font-semibold">Экономия времени</div>
-              </div>
-              <div class="pt-2 text-sm text-slate-700">Беру на себя весь процесс: звонки, показы, заявки и переговоры.</div>
-            </div>
-            <div class="card-soft rounded-2xl p-5">
-              <div class="flex items-center gap-3">
-                <div class="font-semibold">Работаю и на покупку</div>
-              </div>
-              <div class="pt-2 text-sm text-slate-700">Подбор лучшего объекта под ваш запрос, переговоры, безопасность, ипотека/субсидии — до ключей.</div>
-            </div>
+            <div class="pt-2 text-sm text-slate-700">Аукционный подход: концентрируем спрос и находим идеального покупателя по максимальной цене.</div>
           </div>
-        </section>
+          <div class="card-soft rounded-2xl p-5 reveal-text">
+            <div class="flex items-center gap-3">
+              <div class="font-semibold">Юридическая чистота</div>
+            </div>
+            <div class="pt-2 text-sm text-slate-700">Проверка документов и полное сопровождение сделки в связке с профессиональным юристом.</div>
+          </div>
+          <div class="card-soft rounded-2xl p-5 reveal-text">
+            <div class="flex items-center gap-3">
+              <div class="font-semibold">Экономия времени</div>
+            </div>
+            <div class="pt-2 text-sm text-slate-700">Беру на себя весь процесс: звонки, показы, заявки и переговоры.</div>
+          </div>
+          <div class="card-soft rounded-2xl p-5 reveal-text">
+            <div class="flex items-center gap-3">
+              <div class="font-semibold">Работаю и на покупку</div>
+            </div>
+            <div class="pt-2 text-sm text-slate-700">Подбор лучшего объекта под ваш запрос, переговоры, безопасность, ипотека/субсидии — до ключей.</div>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
 
-    <section class="scene" id="scene-process">
-      <div class="scene-content">
-        <!-- Процесс продажи -->
-        <section id="process" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
-          <div class="mb-12">
-            <p class="text-xs uppercase tracking-[0.2em]" style="color:var(--ink);">Процесс</p>
-            <h2 class="text-3xl md:text-4xl font-bold" style="color:var(--ink);">Как проходит продажа</h2>
-            <p class="mt-2 text-sm" style="color:var(--ink);">Чёткие шаги с прозрачными сроками и ответственностью.</p>
-          </div>
+    <div class="pinned-panel" data-panel="3">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="mb-12 space-y-2 reveal-text">
+          <p class="text-xs uppercase tracking-[0.2em]" style="color:var(--ink);">Процесс</p>
+          <h2 class="text-3xl md:text-4xl font-bold" style="color:var(--ink);">Как проходит продажа</h2>
+          <p class="text-sm" style="color:var(--ink);">Чёткие шаги с прозрачными сроками и ответственностью.</p>
+        </div>
 
-          <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
-            <div class="card-soft rounded-2xl p-4 text-left">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">1</div>
-                <div class="font-semibold text-slate-900">Диагностика</div>
-              </div>
-              <p class="mt-3 text-sm text-slate-600">Оценка рынка, сценарий цены, календарь запуска.</p>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">1</div>
+              <div class="font-semibold text-slate-900">Диагностика</div>
             </div>
-            <div class="card-soft rounded-2xl p-4 text-left">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">2</div>
-                <div class="font-semibold text-slate-900">Подготовка</div>
-              </div>
-              <p class="mt-3 text-sm text-slate-600">Документы, визуал, объявление, фильтр покупателей.</p>
-            </div>
-            <div class="card-soft rounded-2xl p-4 text-left">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">3</div>
-                <div class="font-semibold text-slate-900">Выход в продажу</div>
-              </div>
-              <p class="mt-3 text-sm text-slate-600">Запуск рекламы, окна показов, контроль спроса.</p>
-            </div>
-            <div class="card-soft rounded-2xl p-4 text-left">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">4</div>
-                <div class="font-semibold text-slate-900">Торги</div>
-              </div>
-              <p class="mt-3 text-sm text-slate-600">Переговоры, повышение офферов, выбор лучшего.</p>
-            </div>
-            <div class="card-soft rounded-2xl p-4 text-left">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">5</div>
-                <div class="font-semibold text-slate-900">Сделка</div>
-              </div>
-              <p class="mt-3 text-sm text-slate-600">Договор, расчёты, сопровождение до передачи ключей.</p>
-            </div>
+            <p class="mt-3 text-sm text-slate-600">Оценка рынка, сценарий цены, календарь запуска.</p>
           </div>
-        </section>
+          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">2</div>
+              <div class="font-semibold text-slate-900">Подготовка</div>
+            </div>
+            <p class="mt-3 text-sm text-slate-600">Документы, визуал, объявление, фильтр покупателей.</p>
+          </div>
+          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">3</div>
+              <div class="font-semibold text-slate-900">Выход в продажу</div>
+            </div>
+            <p class="mt-3 text-sm text-slate-600">Запуск рекламы, окна показов, контроль спроса.</p>
+          </div>
+          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">4</div>
+              <div class="font-semibold text-slate-900">Торги</div>
+            </div>
+            <p class="mt-3 text-sm text-slate-600">Переговоры, повышение офферов, выбор лучшего.</p>
+          </div>
+          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">5</div>
+              <div class="font-semibold text-slate-900">Сделка</div>
+            </div>
+            <p class="mt-3 text-sm text-slate-600">Договор, расчёты, сопровождение до передачи ключей.</p>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
+  </div>
   </div>
 
 
@@ -1253,6 +1277,51 @@
       setVars();
     })();
 
+    // Pinned panels (hero → help → process)
+    (function() {
+      const zone = document.getElementById('gradient-zone');
+      const stack = document.getElementById('pinned-stack');
+      const panels = Array.from(document.querySelectorAll('.pinned-panel'));
+      if (!zone || !stack || !panels.length) return;
+
+      const offset = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-offset')) || 96;
+
+      let current = 0;
+      const seen = new Set();
+
+      const applyState = (idx) => {
+        panels.forEach((p, i) => {
+          const active = i === idx;
+          p.classList.toggle('is-active', active);
+          if (active && !seen.has(i)) {
+            seen.add(i);
+            p.classList.add('is-revealed');
+          }
+        });
+      };
+
+      const onScroll = () => {
+        const start = zone.offsetTop;
+        const end = start + zone.offsetHeight - window.innerHeight;
+        const y = window.scrollY;
+        if (y < start) {
+          applyState(0);
+          return;
+        }
+        const progress = Math.min(1, Math.max(0, (y - start) / Math.max(1, end - start)));
+        const idx = Math.min(panels.length - 1, Math.floor(progress * panels.length));
+        if (idx !== current) {
+          current = idx;
+          applyState(current);
+        }
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      applyState(0);
+      onScroll();
+    })();
+
     // Vanilla slider logic
     (function() {
       const slider = document.querySelector('.slider');
@@ -1343,29 +1412,6 @@
           setTimeout(() => el.classList.add('visible'), 400);
         }
       });
-    })();
-
-    // Лёгкий параллакс световых пятен в герое
-    (function() {
-      const spots = Array.from(document.querySelectorAll('.hero-spot'));
-      if (!spots.length) return;
-
-      const move = (nx, ny) => {
-        spots.forEach((spot, idx) => {
-          const k = (idx + 1) / spots.length;
-          spot.style.transform = `translate3d(${(nx - 0.5) * 24 * k}px, ${(ny - 0.5) * 24 * k}px, 0)`;
-        });
-      };
-
-      window.addEventListener('mousemove', (e) => {
-        move(e.clientX / window.innerWidth, e.clientY / window.innerHeight);
-      }, { passive: true });
-
-      window.addEventListener('deviceorientation', (e) => {
-        const nx = 0.5 + ((e.gamma || 0) / 90) * 0.25;
-        const ny = 0.5 + ((e.beta || 0) / 180) * 0.25;
-        move(nx, ny);
-      }, { passive: true });
     })();
 
     // FAQ: аккордеон с плавным раскрытием
