@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -43,24 +43,25 @@
       min-height: 100vh;
       background: #ffffff;
       color: var(--text);
-      font-family: "IBM Plex Serif", serif;
+      font-family: "Manrope", sans-serif;
       letter-spacing: -0.01em;
       font-weight: 400;
-      line-height: 1.5;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       font-smooth: antialiased;
     }
     h1,h2,h3,h4,h5,h6 {
-      font-family: "IBM Plex Serif", serif;
+      font-family: "Manrope", sans-serif;
       font-weight: 600;
       letter-spacing: -0.02em;
-      line-height: 1.25;
-      color: #0f172a;
+      line-height: 1.35;
+      color: #111111;
     }
-    p, span, a, button, input, textarea, select, option, label {
-      font-family: "IBM Plex Serif", serif;
+    p, span, a, button, input, textarea, select, option, label, li {
+      font-family: "Manrope", sans-serif;
       letter-spacing: -0.01em;
-      line-height: 1.5;
+      line-height: 1.65;
+      color: var(--muted);
     }
     .slider { position: relative; overflow: hidden; }
     .track { display: flex; transition: transform .35s ease; will-change: transform; }
@@ -95,10 +96,10 @@
     .panel-premium, .card-soft, .glass-panel, #cases .rounded-2xl, #advantages-sellers .card-soft, #advantages-buyers .card-soft, #services .card-soft, #reviews .card {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(145deg, rgba(255,255,255,0.96) 0%, rgba(247,249,252,0.98) 100%);
-      border: none;
+      background: rgba(255,255,255,0.65);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.18);
       box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(4px);
       transition: transform .24s ease, box-shadow .24s ease;
       border-radius: var(--radius-card);
       color: var(--text);
@@ -160,26 +161,92 @@
     .btn-cta {
       position: relative;
       overflow: hidden;
-      background: linear-gradient(135deg, #3da9ff 0%, #0ea5e9 60%, #0b8cc8 100%);
-      border: 1px solid rgba(255,255,255,0.2);
-      box-shadow: 0 16px 34px rgba(14,165,233,0.28), inset 0 0 10px rgba(255,255,255,0.2);
-      color: #fff;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #f8fafc;
       border-radius: var(--radius-pill);
-      font-weight: 600;
+      font-weight: 500;
       font-size: 14px;
+      box-shadow: none;
+      transition: background .2s ease, border-color .2s ease;
     }
-    .gradient-wrap {
+    .btn-cta:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.36);
+    }
+    .btn-cta-light {
+      background: rgba(0,0,0,0.04);
+      border: 1px solid rgba(0,0,0,0.08);
+      color: #1f2937;
+      box-shadow: none;
+      font-weight: 500;
+    }
+    .btn-cta-light:hover {
+      background: rgba(0,0,0,0.06);
+      border-color: rgba(0,0,0,0.12);
+    }
+    .btn-ghost-light {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.28);
+      color: #ffffff;
+      box-shadow: none;
+    }
+    .btn-ghost-light:hover {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.38);
+      transform: translateY(-1px);
+    }
+    .gradient-wrapper {
+      position: relative;
+      overflow: hidden;
       background: linear-gradient(
         180deg,
-        #0f172a 0%,
-        #172033 20%,
-        #1e293b 40%,
-        #334155 65%,
-        #f8fafc 85%,
+        #0b1020 0%,
+        #141a2e 18%,
+        #243a5a 38%,
+        #4f6f94 58%,
+        #9fb4c9 72%,
+        #e6edf3 88%,
         #ffffff 100%
       );
       background-repeat: no-repeat;
-      background-size: 100% 140vh;
+      background-size: 100% 320vh;
+      min-height: 300vh;
+      color: #e6edf3;
+    }
+    .gradient-wrapper::before {
+      content: "";
+      position: absolute;
+      inset: -10% -10% 20% -10%;
+      background: radial-gradient(circle at 30% 15%, rgba(0,0,0,0.32), transparent 40%),
+                  radial-gradient(circle at 85% 80%, rgba(255,255,255,0.24), transparent 40%);
+      mix-blend-mode: soft-light;
+      pointer-events: none;
+    }
+    .gradient-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E");
+      background-size: 140px 140px;
+    }
+    .gradient-wrapper h1,
+    .gradient-wrapper h2,
+    .gradient-wrapper h3,
+    .gradient-wrapper h4,
+    .gradient-wrapper p,
+    .gradient-wrapper span,
+    .gradient-wrapper a {
+      color: #e9edf7;
+    }
+    .gradient-wrapper .card-soft *,
+    .gradient-wrapper .panel-premium *,
+    .gradient-wrapper .glass-panel *,
+    .gradient-wrapper .card {
+      color: #0f172a !important;
     }
     .badge-gradient {
       background: linear-gradient(120deg, rgba(255,255,255,0.92), rgba(247,249,252,0.95));
@@ -199,6 +266,69 @@
       backdrop-filter: blur(6px);
       border-radius: var(--radius-card);
       box-shadow: var(--shadow-soft);
+    }
+    .badge-ghost {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.88);
+      box-shadow: none;
+      backdrop-filter: blur(4px);
+      transition: background .2s ease, border-color .2s ease;
+      padding: 10px 14px;
+      font-weight: 500;
+    }
+    .badge-ghost:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.24);
+    }
+    .card-luxe {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(20px);
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    }
+    .btn-premium {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      border-radius: 9999px;
+      background: #f3f4f6;
+      color: #0f172a;
+      font-weight: 600;
+      border: 1px solid rgba(15,23,42,0.05);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+    }
+    .btn-premium:hover {
+      background: #eceef2;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.1);
+    }
+    .contact-chip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(0,0,0,0.04);
+      box-shadow: 0 8px 26px rgba(0,0,0,0.06);
+      color: #0f172a;
+      font-weight: 600;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .contact-chip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+    }
+    .bottom-gradient {
+      background: linear-gradient(to bottom, #ffffff 0%, #f3f5fa 20%, #1a2a43 70%, #0c152a 100%);
+      padding-top: 80px;
+      padding-bottom: 80px;
     }
     .section-gap { height: 48px; }
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 1s ease, transform 1s ease; }
@@ -253,7 +383,7 @@
     </nav>
   </header>
 
-  <div class="gradient-wrap">
+  <div class="gradient-wrapper">
   <!-- Hero -->
   <section id="top" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 overflow-hidden">
     <div class="absolute inset-0 pointer-events-none">
@@ -277,7 +407,7 @@
 
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="#contact">
-          <button class="inline-flex items-center justify-center rounded-full btn-cta text-white font-semibold px-6 py-3 text-sm transition">
+          <button class="inline-flex items-center justify-center rounded-full btn-cta btn-ghost-light text-white font-semibold px-6 py-3 text-sm transition">
             Бесплатная консультация →
           </button>
         </a>
@@ -294,12 +424,12 @@
   <!-- Badges -->
   <section id="badges" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
     <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs text-slate-600">
-      <div class="card-soft rounded-2xl p-3 text-center font-semibold text-slate-900">Продажа аукционом за 21 день</div>
-      <div class="card-soft rounded-2xl p-3 text-center font-semibold text-slate-900">Бесплатный подбор новостроек</div>
-      <div class="card-soft rounded-2xl p-3 text-center font-semibold text-slate-900">Работа на покупку</div>
-      <div class="card-soft rounded-2xl p-3 text-center font-semibold text-slate-900">Сопровождение сделки</div>
-      <div class="card-soft rounded-2xl p-3 text-center font-semibold text-slate-900">Одобрение ипотеки</div>
-      <div class="card-soft rounded-2xl p-3 text-center font-semibold text-slate-900">Бесплатная первичная консультация</div>
+      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Продажа аукционом за 21 день</div>
+      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатный подбор новостроек</div>
+      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Работа на покупку</div>
+      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Сопровождение сделки</div>
+      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Одобрение ипотеки</div>
+      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатная первичная консультация</div>
     </div>
   </section>
 
@@ -338,14 +468,13 @@
       </div>
     </div>
   </section>
-  </div>
 
-<!-- Процесс продажи -->
+  <!-- Процесс продажи -->
   <section id="process" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
     <div class="text-center mb-12">
-      <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Процесс</p>
-      <h2 class="text-3xl md:text-4xl font-bold">Как проходит продажа</h2>
-      <p class="mt-2 text-sm text-slate-500">Чёткие шаги с прозрачными сроками и ответственностью.</p>
+      <p class="text-xs uppercase tracking-[0.2em]" style="color:#dbe4f4;">Процесс</p>
+      <h2 class="text-3xl md:text-4xl font-bold" style="color:#ffffff;">Как проходит продажа</h2>
+      <p class="mt-2 text-sm" style="color:#dbe4f4;">Чёткие шаги с прозрачными сроками и ответственностью.</p>
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
@@ -386,12 +515,10 @@
       </div>
     </div>
   </section>
-
-
 <!-- Cases Slider -->
 <section id="cases" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
   <div class="flex items-end justify-between gap-4 mb-6">
-    <h2 class="text-3xl md:text-4xl font-bold">Примеры кейсов</h2>
+    <h2 class="text-3xl md:text-4xl font-bold" style="color:#ffffff;">Примеры кейсов</h2>
   </div>
   <div class="slider rounded-2xl">
     <div class="track">
@@ -591,16 +718,16 @@
       <div class="dots"></div>
     </div>
   </section>
-
   <!-- Advantages for Sellers -->
   <section id="advantages-sellers" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl md:text-4xl font-bold">Преимущества для продавца</h2>
+    <h2 class="text-3xl md:text-4xl font-bold" style="color:#ffffff;">Преимущества для продавца</h2>
     <div class="mt-8 grid md:grid-cols-3 gap-6">
       <div class="card-soft rounded-2xl p-5"><div class="text-lg font-semibold">Безопасные взаиморасчёты</div><div class="pt-2 text-sm text-slate-700">Подберём удобную и надёжную схему расчётов индивидуально под вас.</div></div>
       <div class="card-soft rounded-2xl p-5"><div class="text-lg font-semibold">Гарантия спроса</div><div class="pt-2 text-sm text-slate-700">Минимум 25 реальных покупателей за 2 дня показов при аукционной продаже.</div></div>
       <div class="card-soft rounded-2xl p-5"><div class="text-lg font-semibold">Быстрее и дороже, чем самостоятельно</div><div class="pt-2 text-sm text-slate-700">Индивидуальная стратегия и целевой трафик.</div></div>
     </div>
   </section>
+  </div>
   <div class="h-8 border-t border-slate-200/70"></div>
   <!-- Advantages for Buyers -->
 <section id="advantages-buyers" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -638,7 +765,7 @@
       <p class="mt-2 text-slate-600">Подберу варианты под ваши цели и бюджет. Бесплатно, прозрачно и в ваших интересах.</p>
       <div class="mt-6">
   <a href="https://agent-goncharov.toprealtors.ru" target="_blank" rel="noreferrer"
-     class="inline-flex items-center justify-center rounded-full btn-cta px-6 py-3 text-sm transition">
+     class="inline-flex items-center justify-center rounded-full btn-cta-light px-6 py-3 text-sm transition">
     Перейти к подбору
   </a>
     </div>
@@ -1027,87 +1154,67 @@
     </div>
   </section>
 
-  <!-- Contact -->
-<section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <h2 class="text-3xl md:text-4xl font-bold">Свяжитесь со мной</h2>
-  <p class="mt-2 text-slate-700">Быстрая связь, консультация или оценка стоимости — ответ сразу после заявки.</p>
+  <div class="bottom-gradient mt-12">
+    <section id="contact" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-[#E6E8F0]">
+      <div class="grid md:grid-cols-2 gap-8 items-start">
+        <div class="card-luxe">
+          <div class="text-xs uppercase tracking-[0.12em] text-slate-500">Быстрая заявка</div>
+          <h2 class="text-3xl md:text-4xl font-semibold text-slate-900 mt-2">Свяжитесь со мной</h2>
+          <p class="mt-3 text-slate-600">Быстрая связь, консультация или оценка стоимости — отвечу сразу после заявки.</p>
 
-  <div class="mt-8 grid md:grid-cols-2 gap-6 items-stretch">
-    <!-- Левая колонка: форма -->
-    <div class="glass-panel p-6 h-full flex flex-col">
-      <div class="text-lg font-semibold mb-4 text-slate-900">Быстрая заявка</div>
+          <form id="leadForm" action="https://api.web3forms.com/submit" method="POST" class="mt-6 flex flex-col gap-4">
+            <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
 
-      <form id="leadForm" action="https://api.web3forms.com/submit" method="POST" class="flex flex-col gap-4 flex-grow">
-        <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
+            <input type="text" name="name" placeholder="Ваше имя" required
+                   class="w-full rounded-2xl border border-white/60 bg-white/85 px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-300 transition" />
 
-        <input type="text" name="name" placeholder="Ваше имя" required
-               class="border border-slate-200 rounded-xl px-4 py-3 bg-white/90 backdrop-blur focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition" />
+            <input type="text" name="contact" placeholder="Ваш телефон или Telegram" required
+                   class="w-full rounded-2xl border border-white/60 bg-white/85 px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-300 transition" />
 
-        <input type="text" name="contact" placeholder="Ваш телефон или Telegram" required
-               class="border border-slate-200 rounded-xl px-4 py-3 bg-white/90 backdrop-blur focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition" />
+            <textarea name="comment" rows="3"
+                      class="w-full rounded-2xl border border-white/60 bg-white/85 px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-300 transition"
+                      placeholder="Хочу продать квартиру за 21 день">Хочу пообщаться по вопросу недвижимости</textarea>
 
-        <textarea name="comment" rows="3"
-                  class="border border-slate-200 rounded-xl px-4 py-3 bg-white/90 backdrop-blur focus:outline-none focus:ring-2 focus:ring-[var(--accent)] transition"
-                  placeholder="Хочу продать квартиру за 21 день">Хочу пообщаться по вопросу недвижимости</textarea>
+            <input type="hidden" name="from_name" value="fastbroker21.ru">
+            <input type="hidden" name="subject" value="Заявка с сайта fastbroker21.ru">
+            <input type="checkbox" name="botcheck" class="hidden" style="display:none;">
 
-        <input type="hidden" name="from_name" value="fastbroker21.ru">
-        <input type="hidden" name="subject" value="Заявка с сайта fastbroker21.ru">
-        <input type="checkbox" name="botcheck" class="hidden" style="display:none;">
+            <button type="submit" class="btn-premium mt-2">
+              Отправить
+            </button>
 
-        <button type="submit"
-                class="inline-flex items-center justify-center rounded-full btn-cta px-6 py-3 text-sm font-semibold transition mt-auto">
-          Отправить
-        </button>
+            <p id="formMessage"
+               class="hidden text-green-700 bg-green-50 border border-green-200 rounded-xl p-3 text-center mt-2"></p>
+          </form>
+        </div>
 
-        <p id="formMessage"
-           class="hidden text-green-700 bg-green-50 border border-green-200 rounded-xl p-3 text-center mt-2"></p>
-      </form>
-    </div>
-
-    <!-- Правая колонка: контакты -->
-    <div class="glass-panel p-6 h-full flex flex-col">
-      <div class="text-lg font-semibold mb-4 text-slate-900">Мои контакты</div>
-
-      <div class="flex flex-col gap-3 mt-auto">
-        <a href="tel:+79118461965"
-           class="inline-flex items-center justify-center rounded-full bg-slate-900 hover:bg-slate-800 text-white font-semibold px-6 py-3 shadow-[0_10px_30px_rgba(15,23,42,0.25)] transition">
-           <span>+7 911 846-19-65</span>
-        </a>
-
-        <a href="https://wa.me/79118461965" target="_blank" rel="noreferrer"
-           class="inline-flex items-center justify-center rounded-full bg-[#25D366] hover:bg-[#1ebe5b] text-white font-semibold px-6 py-3 shadow-[0_10px_28px_rgba(37,211,102,0.35)] transition">
-           <span>WhatsApp</span>
-        </a>
-
-        <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
-           class="inline-flex items-center justify-center rounded-full bg-[#229ED9] hover:bg-[#1c8dc2] text-white font-semibold px-6 py-3 shadow-[0_10px_28px_rgba(34,158,217,0.35)] transition">
-           <span>Telegram</span>
-        </a>
-
-        <div class="inline-flex items-center justify-center rounded-full bg-[#F6C344] hover:bg-[#edba39] text-slate-900 font-semibold px-6 py-3 shadow-[0_10px_28px_rgba(246,195,68,0.35)]">
-           <span>Санкт-Петербург и ЛО</span>
+        <div class="space-y-4">
+          <div class="card-luxe">
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-lg font-semibold text-slate-900">Мои контакты</div>
+              <div class="text-xs uppercase tracking-[0.14em] text-slate-500">Всегда на связи</div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <a href="tel:+79118461965" class="contact-chip">+7 911 846-19-65</a>
+              <a href="https://wa.me/79118461965" target="_blank" rel="noreferrer" class="contact-chip">WhatsApp</a>
+              <a href="https://t.me/semengme" target="_blank" rel="noreferrer" class="contact-chip">Telegram</a>
+              <div class="contact-chip bg-[#f6c344] text-slate-900 font-semibold border-none shadow-[0_10px_28px_rgba(246,195,68,0.25)]">Санкт-Петербург и ЛО</div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-  </div>
-</section>
-
-
-  <section id="privacy" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <h2 class="text-xl font-bold">Политика конфиденциальности </h2>
-    <p class="mt-2 text-sm text-slate-600">Оставляя заявку, вы передаёте контакты для связи по вопросу недвижимости. Данные не передаются третьим лицам, используются только для обработки запроса. По запросу данные удаляются.</p>
-  </section>
-
-  <footer class="border-t border-slate-200 bg-white/60">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between text-sm text-slate-500">
-      <div>© <span id="year"></span> Семён Гончаров. Агент по недвижимости.</div>
-      <div class="flex items-center gap-4">
-        <a href="privacy-policy.html" class="hover:opacity-80">Политика персональных данных</a>
-        <a href="#top" class="hover:opacity-80">Наверх</a>
+    <footer class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-14">
+      <div class="card-luxe flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-800">
+        <div>© <span id="year"></span> Семён Гончаров. Агент по недвижимости.</div>
+        <div class="flex items-center gap-5">
+          <a href="privacy-policy.html" class="hover:opacity-80 text-slate-700">Политика персональных данных</a>
+          <a href="#top" class="hover:opacity-80 text-slate-700">Наверх</a>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
+  </div>
 
   <script>
     // Year
