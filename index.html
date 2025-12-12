@@ -162,28 +162,29 @@
       position: relative;
       overflow: hidden;
       background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.28);
+      border: none;
       color: #f8fafc;
       border-radius: var(--radius-pill);
       font-weight: 500;
       font-size: 14px;
       box-shadow: none;
-      transition: background .2s ease, border-color .2s ease;
+      transition: background .2s ease, transform .25s ease;
     }
     .btn-cta:hover {
       background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.36);
+      transform: translateY(-1px);
     }
     .btn-cta-light {
       background: rgba(0,0,0,0.04);
-      border: 1px solid rgba(0,0,0,0.08);
+      border: none;
       color: #1f2937;
       box-shadow: none;
       font-weight: 500;
+      transition: background .2s ease, transform .25s ease;
     }
     .btn-cta-light:hover {
       background: rgba(0,0,0,0.06);
-      border-color: rgba(0,0,0,0.12);
+      transform: translateY(-1px);
     }
     .btn-ghost-light {
       background: rgba(255,255,255,0.12);
@@ -267,66 +268,79 @@
       border-radius: var(--radius-card);
       box-shadow: var(--shadow-soft);
     }
+    .btn-ghost-light {
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: #ffffff;
+      box-shadow: none;
+      transition: background .2s ease, transform .25s ease;
+    }
+    .btn-ghost-light:hover {
+      background: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+    }
     .badge-ghost {
       background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.16);
+      border: none;
       color: rgba(255,255,255,0.88);
       box-shadow: none;
       backdrop-filter: blur(4px);
-      transition: background .2s ease, border-color .2s ease;
+      transition: background .2s ease, transform .25s ease;
       padding: 10px 14px;
       font-weight: 500;
     }
     .badge-ghost:hover {
       background: rgba(255,255,255,0.12);
-      border-color: rgba(255,255,255,0.24);
+      transform: translateY(-1px);
     }
     .card-luxe {
-      background: rgba(255, 255, 255, 0.65);
-      backdrop-filter: blur(20px);
-      border-radius: 26px;
-      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.94);
+      border-radius: 28px;
+      border: 1px solid rgba(15,23,42,0.08);
       padding: 32px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+      color: #0f172a;
     }
     .btn-premium {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 12px 20px;
+      padding: 11px 18px;
       border-radius: 9999px;
-      background: #f3f4f6;
-      color: #0f172a;
-      font-weight: 600;
-      border: 1px solid rgba(15,23,42,0.05);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+      background: rgba(255,255,255,0.12);
+      color: #f8fafc;
+      font-weight: 500;
+      border: none;
+      box-shadow: none;
+      transition: background .2s ease, transform .2s ease;
     }
     .btn-premium:hover {
-      background: #eceef2;
+      background: rgba(255,255,255,0.18);
       transform: translateY(-1px);
-      box-shadow: 0 14px 36px rgba(0,0,0,0.1);
     }
-    .contact-chip {
+    .contact-row {
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 12px 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.82);
-      border: 1px solid rgba(0,0,0,0.04);
-      box-shadow: 0 8px 26px rgba(0,0,0,0.06);
-      color: #0f172a;
-      font-weight: 600;
-      transition: transform .2s ease, box-shadow .2s ease;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+      transition: opacity .2s ease, transform .25s ease;
     }
-    .contact-chip:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.08);
-    }
+    .contact-row:last-child { border-bottom: none; }
+    .contact-row:hover { opacity: 1; transform: translateY(-1px); }
+    .contact-label { color: rgba(255,255,255,0.6); font-size: 13px; letter-spacing: 0.02em; }
+    .contact-value { color: rgba(255,255,255,0.9); font-weight: 500; }
     .bottom-gradient {
-      background: linear-gradient(to bottom, #ffffff 0%, #f3f5fa 20%, #1a2a43 70%, #0c152a 100%);
+      background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #a7b5c9 45%,
+        #0b1220 100%
+      );
       padding-top: 80px;
       padding-bottom: 80px;
     }
@@ -338,6 +352,8 @@
       letter-spacing: -0.02em;
       font-weight: 800;
     }
+    .topbar.light .topbar-text { color: #0f172a; }
+    .topbar.light .topbar-btn { background: #0ea5e9; color: #ffffff; }
     /* Светлый текст в тёмной верхней части */
     header, header a { color: #0f172a; }
     header a:hover { opacity: 0.85; }
@@ -349,13 +365,13 @@
   </style>
 </head>
 <body class="text-slate-900">
-  <div class="fixed top-0 left-0 right-0 z-50 bg-[rgba(255,255,255,0.15)] backdrop-blur-[8px] text-white text-xs">
+  <div id="topbar" class="topbar fixed top-0 left-0 right-0 z-50 bg-[rgba(255,255,255,0.15)] backdrop-blur-[8px] text-white text-xs transition-colors">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[42px] flex items-center justify-between">
-      <div class="text-[#f8fafc] font-medium text-[12px] sm:text-[13px]" style="font-family:'Manrope',sans-serif;">
+      <div class="topbar-text text-[#f8fafc] font-medium text-[12px] sm:text-[13px]" style="font-family:'Manrope',sans-serif;">
         Первичная консультация и план продажи — в Telegram
       </div>
       <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
-         class="inline-flex items-center justify-center rounded-full bg-[#0ea5e9] hover:bg-[#0d94d2] text-white font-semibold px-4 py-1.5 text-xs sm:text-sm transition"
+         class="topbar-btn inline-flex items-center justify-center rounded-full bg-[#0ea5e9] hover:bg-[#0d94d2] text-white font-semibold px-4 py-1.5 text-xs sm:text-sm transition"
          style="font-family:'Manrope',sans-serif;">
         Telegram
       </a>
@@ -412,7 +428,7 @@
           </button>
         </a>
         <a href="#badges">
-          <button class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium shadow-md bg-white/10 backdrop-blur text-white border border-white/40 transition hover:shadow-lg">
+          <button class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-white/10 backdrop-blur text-white transition transform hover:-translate-y-[1px]" style="border:none; box-shadow:none;">
             Посмотреть услуги
           </button>
         </a>
@@ -440,28 +456,24 @@
     <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
       <div class="card-soft rounded-2xl p-5">
         <div class="flex items-center gap-3">
-          <span class="text-xl">🚀</span>
           <div class="font-semibold">Продажа за 21 день</div>
         </div>
         <div class="pt-2 text-sm text-slate-700">Аукционный подход: концентрируем спрос и находим идеального покупателя по максимальной цене.</div>
       </div>
       <div class="card-soft rounded-2xl p-5">
         <div class="flex items-center gap-3">
-          <span class="text-xl">🛡️</span>
           <div class="font-semibold">Юридическая чистота</div>
         </div>
         <div class="pt-2 text-sm text-slate-700">Проверка документов и полное сопровождение сделки в связке с профессиональным юристом.</div>
       </div>
       <div class="card-soft rounded-2xl p-5">
         <div class="flex items-center gap-3">
-          <span class="text-xl">⏱️</span>
           <div class="font-semibold">Экономия времени</div>
         </div>
         <div class="pt-2 text-sm text-slate-700">Беру на себя весь процесс: звонки, показы, заявки и переговоры.</div>
       </div>
       <div class="card-soft rounded-2xl p-5">
         <div class="flex items-center gap-3">
-          <span class="text-xl">✅</span>
           <div class="font-semibold">Работаю и на покупку</div>
         </div>
         <div class="pt-2 text-sm text-slate-700">Подбор лучшего объекта под ваш запрос, переговоры, безопасность, ипотека/субсидии — до ключей.</div>
@@ -1155,24 +1167,24 @@
   </section>
 
   <div class="bottom-gradient mt-12">
-    <section id="contact" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-[#E6E8F0]">
+    <section id="contact" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-[#0f172a]">
       <div class="grid md:grid-cols-2 gap-8 items-start">
         <div class="card-luxe">
-          <div class="text-xs uppercase tracking-[0.12em] text-slate-500">Быстрая заявка</div>
-          <h2 class="text-3xl md:text-4xl font-semibold text-slate-900 mt-2">Свяжитесь со мной</h2>
+          <div class="text-xs uppercase tracking-[0.14em] text-slate-500">Быстрая заявка</div>
+          <h2 class="text-3xl md:text-4xl font-semibold mt-2" style="letter-spacing:-0.02em;">Свяжитесь со мной</h2>
           <p class="mt-3 text-slate-600">Быстрая связь, консультация или оценка стоимости — отвечу сразу после заявки.</p>
 
           <form id="leadForm" action="https://api.web3forms.com/submit" method="POST" class="mt-6 flex flex-col gap-4">
             <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
 
             <input type="text" name="name" placeholder="Ваше имя" required
-                   class="w-full rounded-2xl border border-white/60 bg-white/85 px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-300 transition" />
+                   class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300 focus:border-slate-300 transition" />
 
             <input type="text" name="contact" placeholder="Ваш телефон или Telegram" required
-                   class="w-full rounded-2xl border border-white/60 bg-white/85 px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-300 transition" />
+                   class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300 focus:border-slate-300 transition" />
 
             <textarea name="comment" rows="3"
-                      class="w-full rounded-2xl border border-white/60 bg-white/85 px-4 py-3 text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-900/15 focus:border-slate-300 transition"
+                      class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300 focus:border-slate-300 transition"
                       placeholder="Хочу продать квартиру за 21 день">Хочу пообщаться по вопросу недвижимости</textarea>
 
             <input type="hidden" name="from_name" value="fastbroker21.ru">
@@ -1188,29 +1200,32 @@
           </form>
         </div>
 
-        <div class="space-y-4">
-          <div class="card-luxe">
-            <div class="flex items-center justify-between mb-4">
-              <div class="text-lg font-semibold text-slate-900">Мои контакты</div>
-              <div class="text-xs uppercase tracking-[0.14em] text-slate-500">Всегда на связи</div>
+        <div class="card-luxe">
+          <div class="flex items-center justify-between mb-4">
+            <div class="text-lg font-semibold" style="letter-spacing:-0.02em;">Мои контакты</div>
+            <div class="text-xs uppercase tracking-[0.14em] text-slate-500">Всегда на связи</div>
+          </div>
+          <div class="space-y-3">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <a href="tel:+79118461965" class="rounded-full border border-slate-200 bg-slate-900 text-white px-4 py-3 text-sm font-medium text-center transition hover:bg-slate-800">+7 911 846-19-65</a>
+              <a href="https://wa.me/79118461965" target="_blank" rel="noreferrer" class="rounded-full border border-transparent bg-[#25D366] text-white px-4 py-3 text-sm font-medium text-center transition hover:bg-[#1ebe57]">WhatsApp</a>
+              <a href="https://t.me/semengme" target="_blank" rel="noreferrer" class="rounded-full border border-transparent bg-[#229ED9] text-white px-4 py-3 text-sm font-medium text-center transition hover:bg-[#1f8fc5]">Telegram</a>
             </div>
-            <div class="grid sm:grid-cols-2 gap-3">
-              <a href="tel:+79118461965" class="contact-chip">+7 911 846-19-65</a>
-              <a href="https://wa.me/79118461965" target="_blank" rel="noreferrer" class="contact-chip">WhatsApp</a>
-              <a href="https://t.me/semengme" target="_blank" rel="noreferrer" class="contact-chip">Telegram</a>
-              <div class="contact-chip bg-[#f6c344] text-slate-900 font-semibold border-none shadow-[0_10px_28px_rgba(246,195,68,0.25)]">Санкт-Петербург и ЛО</div>
+            <div class="rounded-full border border-slate-200 bg-slate-100 text-slate-700 px-4 py-3 text-sm font-medium flex items-center justify-center gap-2 w-full">
+              <span class="h-2 w-2 rounded-full bg-slate-400"></span>
+              <span>Санкт-Петербург и ЛО</span>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <footer class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-14">
-      <div class="card-luxe flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-800">
+    <footer class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-14 border-t border-white/20 pt-6 text-white/65">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
         <div>© <span id="year"></span> Семён Гончаров. Агент по недвижимости.</div>
         <div class="flex items-center gap-5">
-          <a href="privacy-policy.html" class="hover:opacity-80 text-slate-700">Политика персональных данных</a>
-          <a href="#top" class="hover:opacity-80 text-slate-700">Наверх</a>
+          <a href="privacy-policy.html" class="hover:opacity-90 transition">Политика персональных данных</a>
+          <a href="#top" class="hover:opacity-90 transition">Наверх</a>
         </div>
       </div>
     </footer>
@@ -1219,6 +1234,21 @@
   <script>
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Переключение цвета топ-бара в зависимости от фона
+    (function() {
+      const topbar = document.getElementById('topbar');
+      const wrapper = document.querySelector('.gradient-wrapper');
+      if (!topbar || !wrapper) return;
+      const update = () => {
+        const threshold = wrapper.offsetTop + wrapper.offsetHeight - 80;
+        const onLight = window.scrollY >= threshold;
+        topbar.classList.toggle('light', onLight);
+      };
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    })();
 
     // Vanilla slider logic
     (function() {
