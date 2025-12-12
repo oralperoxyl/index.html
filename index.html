@@ -41,6 +41,7 @@
     body {
       position: relative;
       min-height: 100vh;
+      margin: 0;
       background: #ffffff;
       color: var(--text);
       font-family: "Manrope", sans-serif;
@@ -93,7 +94,7 @@
     .prev { left: .5rem; } .next { right: .5rem; }
     .dots { position: absolute; left: 0; right:0; bottom: .5rem; display:flex; gap:.4rem; justify-content:center; }
     .dot { width:8px; height:8px; border-radius:50%; background:#cbd5e1; } .dot.active { background:#0f172a; }
-    .panel-premium, .card-soft, .glass-panel, #cases .rounded-2xl, #advantages-sellers .card-soft, #advantages-buyers .card-soft, #services .card-soft, #reviews .card {
+    .panel-premium, .card-soft, .glass-panel, #cases .rounded-2xl, #advantages-sellers .card-soft, #advantages-buyers .card-soft, #services .card-soft, #reviews .card-soft {
       position: relative;
       overflow: hidden;
       background: rgba(255,255,255,0.65);
@@ -104,7 +105,7 @@
       border-radius: var(--radius-card);
       color: var(--text);
     }
-    .panel-premium:hover, .card-soft:hover, .glass-panel:hover, #cases .rounded-2xl:hover, #reviews .card:hover {
+    .panel-premium:hover, .card-soft:hover, .glass-panel:hover, #cases .rounded-2xl:hover, #reviews .card-soft:hover {
       transform: translateY(-3px);
       box-shadow: 0 12px 32px rgba(0,0,0,0.08);
     }
@@ -147,10 +148,10 @@
     }
     .faq-dot {
       flex-shrink: 0;
-      width: 12px;
-      height: 12px;
+      width: 9px;
+      height: 9px;
       border-radius: 999px;
-      border: 2px solid #9ca3af;
+      border: 1.5px solid #9ca3af;
       transition: background-color 220ms ease, border-color 220ms ease, transform 220ms ease;
     }
     .faq-row.open .faq-dot {
@@ -185,86 +186,6 @@
     .btn-cta-light:hover {
       background: rgba(0,0,0,0.06);
       transform: translateY(-1px);
-    }
-    .btn-ghost-light {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.28);
-      color: #ffffff;
-      box-shadow: none;
-    }
-    .btn-ghost-light:hover {
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.38);
-      transform: translateY(-1px);
-    }
-    .gradient-wrapper {
-      position: relative;
-      overflow: hidden;
-      background: linear-gradient(
-        180deg,
-        #0b1220 0%,
-        #1e293b 25%,
-        #5f7694 50%,
-        #e7e2db 75%,
-        #f6f4f1 100%
-      );
-      background-repeat: no-repeat;
-      background-size: 100% 320vh;
-      min-height: 300vh;
-      color: #e6edf3;
-    }
-    .gradient-wrapper::before {
-      content: "";
-      position: absolute;
-      inset: -10% -10% 20% -10%;
-      background: radial-gradient(circle at 30% 15%, rgba(0,0,0,0.32), transparent 40%),
-                  radial-gradient(circle at 85% 80%, rgba(255,255,255,0.24), transparent 40%);
-      mix-blend-mode: soft-light;
-      pointer-events: none;
-    }
-    .gradient-wrapper::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.05;
-      mix-blend-mode: soft-light;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.65'/%3E%3C/svg%3E");
-      background-size: 140px 140px;
-    }
-    .gradient-wrapper h1,
-    .gradient-wrapper h2,
-    .gradient-wrapper h3,
-    .gradient-wrapper h4,
-    .gradient-wrapper p,
-    .gradient-wrapper span,
-    .gradient-wrapper a {
-      color: #e9edf7;
-    }
-    .gradient-wrapper .card-soft *,
-    .gradient-wrapper .panel-premium *,
-    .gradient-wrapper .glass-panel *,
-    .gradient-wrapper .card {
-      color: #0f172a !important;
-    }
-    .badge-gradient {
-      background: linear-gradient(120deg, rgba(255,255,255,0.92), rgba(247,249,252,0.95));
-      border: none;
-      box-shadow: var(--shadow-soft);
-      border-radius: var(--radius-pill);
-      color: #0f172a;
-    }
-    .badge-warm {
-      background: linear-gradient(120deg, rgba(242,194,123,0.35), rgba(242,194,123,0.12));
-      border: 1px solid rgba(242,194,123,0.35);
-      color: #8a5a13;
-    }
-    .glass-panel {
-      background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(247,249,252,0.98));
-      border: none;
-      backdrop-filter: blur(6px);
-      border-radius: var(--radius-card);
-      box-shadow: var(--shadow-soft);
     }
     .btn-ghost-light {
       background: rgba(255,255,255,0.12);
@@ -317,6 +238,30 @@
       background: rgba(255,255,255,0.18);
       transform: translateY(-1px);
     }
+    .collapsible {
+      position: relative;
+      overflow: hidden;
+    }
+    .collapsible:not(.expanded)::after {
+      content:"";
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height:2.2rem;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+      pointer-events:none;
+    }
+    .collapsible.expanded { overflow: visible; }
+    .toggle-btn {
+      margin-top:.35rem;
+      display:inline-block;
+      padding:.35rem 0;
+      border:none;
+      background: transparent;
+      font-size:.85rem;
+      color:#334155;
+      transition: opacity .15s ease, transform .15s ease;
+    }
+    .toggle-btn:hover { opacity:0.8; transform: translateY(-1px); }
     .contact-row {
       display: flex;
       align-items: center;
@@ -332,6 +277,76 @@
     .contact-row:hover { opacity: 1; transform: translateY(-1px); }
     .contact-label { color: rgba(255,255,255,0.6); font-size: 13px; letter-spacing: 0.02em; }
     .contact-value { color: rgba(255,255,255,0.9); font-weight: 500; }
+    /* Gradient zone (hero → услуги → процесс) */
+    :root {
+      --ink: #0f172a;
+      --pill-bg: rgba(255,255,255,0.12);
+      --pill-border: transparent;
+      --pill-text: rgba(255,255,255,0.92);
+      --ink-shadow: 0 0 12px rgba(0,0,0,0.18);
+    }
+    .gradient-wrap {
+      position: relative;
+      overflow: clip;
+      min-height: 300vh;
+      background:
+        radial-gradient(900px 600px at 85% 35%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 55%),
+        radial-gradient(700px 500px at 15% 70%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 60%),
+        linear-gradient(
+          to bottom,
+          #2A140E 0%,
+          #2B1712 10%,
+          #0E1B33 28%,
+          #5F7597 52%,
+          #A9B6C7 68%,
+          #E9E2D8 82%,
+          #F6F3EE 100%
+        );
+      background-repeat: no-repeat;
+      background-size: 100% 320vh;
+      color: var(--ink);
+      isolation: isolate;
+    }
+    .gradient-wrap::after {
+      content:"";
+      position:absolute;
+      inset:-20%;
+      pointer-events:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      background-size:220px 220px;
+      opacity:0.08;
+      mix-blend-mode: soft-light;
+      transform: translateZ(0);
+      z-index: 0;
+    }
+    .gradient-wrap section,
+    .gradient-wrap main {
+      background: transparent !important;
+    }
+    #gradient-zone .pill,
+    #gradient-zone .btn-cta,
+    #gradient-zone .btn-ghost-light,
+    #gradient-zone .badge-ghost {
+      background: var(--pill-bg);
+      border: none;
+      color: var(--pill-text);
+    }
+    .scene {
+      position: relative;
+      min-height: 120vh;
+      display: flex;
+      align-items: center;
+    }
+    @media (max-width: 767px) { .scene { min-height: 110vh; } }
+    .scene-content {
+      position: sticky;
+      top: 96px;
+      width: 100%;
+      z-index: 1;
+      color: var(--ink);
+      text-shadow: var(--ink-shadow);
+    }
+    @media (max-width: 767px) { .scene-content { top: 72px; } }
     .bottom-gradient {
       background: linear-gradient(
         180deg,
@@ -352,185 +367,221 @@
       letter-spacing: -0.02em;
       font-weight: 800;
     }
+    .top-shell {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: transparent;
+    }
+    .topbar, .topbar::before, .topbar::after {
+      background: transparent !important;
+      backdrop-filter: none !important;
+      box-shadow: none !important;
+      border: none !important;
+    }
     .topbar.light .topbar-text { color: #0f172a; }
     .topbar.light .topbar-btn { background: #0ea5e9; color: #ffffff; }
-    /* Светлый текст в тёмной верхней части */
-    header, header a { color: #0f172a; }
-    header a:hover { opacity: 0.85; }
-    #top, #top h1, #top p, #top span, #top a { color: #0f172a; }
-    #top .text-slate-600, #top .text-slate-700 { color: #475569 !important; }
+    /* Навигация и топ-блок используют динамическое перо */
+    header { color: #ffffff; }
+    header a { color: #ffffff; }
+    .nav-link { opacity: 1; transition: opacity .2s ease; }
+    .nav-link:hover { opacity: 1; }
+    .brand-link { opacity: 1; transition: opacity .2s ease; }
+    .brand-link:hover { opacity: 1; }
+    header,
+    header::before,
+    header::after,
+    header nav {
+      background: transparent !important;
+      backdrop-filter: none !important;
+      box-shadow: none !important;
+    }
+    #top, #top h1, #top p, #top span, #top a { color: var(--ink); background: transparent !important; }
     @media (max-width: 767px) {
       body { background-attachment: scroll; }
     }
   </style>
 </head>
 <body class="text-slate-900">
-  <div id="topbar" class="topbar fixed top-0 left-0 right-0 z-50 bg-[rgba(255,255,255,0.15)] backdrop-blur-[8px] text-white text-xs transition-colors">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[42px] flex items-center justify-between">
-      <div class="topbar-text text-[#f8fafc] font-medium text-[12px] sm:text-[13px]" style="font-family:'Manrope',sans-serif;">
-        Первичная консультация и план продажи — в Telegram
-      </div>
-      <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
-         class="topbar-btn inline-flex items-center justify-center rounded-full bg-[#0ea5e9] hover:bg-[#0d94d2] text-white font-semibold px-4 py-1.5 text-xs sm:text-sm transition"
-         style="font-family:'Manrope',sans-serif;">
-        Telegram
-      </a>
-    </div>
-  </div>
+  <div id="gradient-zone" class="gradient-wrap">
 
-  <header class="absolute top-[52px] left-0 right-0 z-40">
-    <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12">
+  <div class="top-shell">
+    <div id="topbar" class="topbar text-white text-xs transition-colors"
+         style="background: transparent !important; box-shadow: none !important; backdrop-filter: none !important;">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[42px] flex items-center justify-between">
+        <div class="topbar-text text-[#f8fafc] font-medium text-[12px] sm:text-[13px]" style="font-family:'Manrope',sans-serif;">
+          Первичная консультация и план продажи — в Telegram
+        </div>
+        <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
+           class="topbar-btn inline-flex items-center justify-center rounded-full bg-[#0ea5e9] hover:bg-[#0d94d2] text-white font-semibold px-4 py-1.5 text-xs sm:text-sm transition"
+           style="font-family:'Manrope',sans-serif;">
+          Telegram
+        </a>
+      </div>
+    </div>
+
+    <header style="background: transparent !important; box-shadow: none !important; backdrop-filter: none !important;">
+      <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12">
 <a href="#top"
-   class="brand-logo text-2xl tracking-[-0.02em] text-white font-extrabold" style="font-family:'Manrope',sans-serif; color:#ffffff;">
+   class="brand-logo brand-link text-2xl tracking-[-0.02em] text-white font-extrabold" style="font-family:'Manrope',sans-serif; color:#ffffff;">
   Гончаров&nbsp;Семён
 </a>
-      <div class="hidden md:flex items-center gap-8 text-[14px]" style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em; color:#ffffff;">
-        <a href="#services" class="hover:text-white transition" style="color:#ffffff;">Польза</a>
-        <a href="#process" class="hover:text-white transition" style="color:#ffffff;">Как работаю</a>
-        <a href="#cases" class="hover:text-white transition" style="color:#ffffff;">Кейсы</a>
-        <a href="#reviews" class="hover:text-white transition" style="color:#ffffff;">Отзывы</a>
-        <a href="#advantages-sellers" class="hover:text-white transition" style="color:#ffffff;">Преимущества</a>
-        <a href="#newbuild" class="hover:text-white transition" style="color:#ffffff;">Новостройки</a>
-        <a href="#about" class="hover:text-white transition" style="color:#ffffff;">Обо мне</a>
-        <a href="#faq" class="hover:text-white transition" style="color:#ffffff;">FAQ</a>
-        <a href="#contact" class="hover:text-white transition" style="color:#ffffff;">Контакты</a>
-      </div>
-      <div class="flex items-center gap-3"></div>
-    </nav>
-  </header>
-
-  <div class="gradient-wrapper">
-  <!-- Hero -->
-  <section id="top" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 overflow-hidden">
-    <div class="absolute inset-0 pointer-events-none">
-      <div class="hero-spot absolute -top-24 -left-20 w-[460px] h-[460px] rounded-full blur-3xl opacity-85" style="background: radial-gradient(circle, rgba(70,78,92,0.55), rgba(247,249,252,0));"></div>
-      <div class="hero-spot absolute -bottom-36 right-6 w-[420px] h-[420px] rounded-full blur-3xl opacity-70" style="background: radial-gradient(circle, rgba(52,58,72,0.42), rgba(247,249,252,0));"></div>
-      <div class="hero-spot absolute top-10 left-1/2 w-[320px] h-[320px] rounded-full blur-3xl opacity-40" style="background: radial-gradient(circle, rgba(110,118,134,0.35), rgba(247,249,252,0));"></div>
-    </div>
-
-    <!-- Текстовая часть -->
-    <div class="md:max-w-[70%] lg:max-w-[62%]">
-      <h1 class="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.2]"
-          style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.02em; color:#ffffff;">
-        Ваш человек в мире недвижимости СПб
-      </h1>
-
-      <p class="mt-5 text-lg"
-         style="font-family:'IBM Plex Serif',serif; font-weight:500; letter-spacing:-0.01em; color:#ffffff; line-height:1.45;">
-        Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели.
-        Полное сопровождение до сделки.
-      </p>
-
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#contact">
-          <button class="inline-flex items-center justify-center rounded-full btn-cta btn-ghost-light text-white font-semibold px-6 py-3 text-sm transition">
-            Бесплатная консультация →
-          </button>
-        </a>
-        <a href="#badges">
-          <button class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-white/10 backdrop-blur text-white transition transform hover:-translate-y-[1px]" style="border:none; box-shadow:none;">
-            Посмотреть услуги
-          </button>
-        </a>
-      </div>
-    </div>
-
-  </section>
-
-  <!-- Badges -->
-  <section id="badges" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs text-slate-600">
-      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Продажа аукционом за 21 день</div>
-      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатный подбор новостроек</div>
-      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Работа на покупку</div>
-      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Сопровождение сделки</div>
-      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Одобрение ипотеки</div>
-      <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатная первичная консультация</div>
-    </div>
-  </section>
-
-  <!-- Services -->
-  <section id="services" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl md:text-4xl font-bold" style="color:#ffffff;">Чем я помогу</h2>
-    <p class="mt-2" style="color:#ffffff;">Нацелен на то, чтобы ваша недвижимость была продана дороже, чем самостоятельно или с другим агентом. Сфокусирован на результате, юридической безопасности и комфорте клиента.</p>
-    <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div class="card-soft rounded-2xl p-5">
-        <div class="flex items-center gap-3">
-          <div class="font-semibold">Продажа за 21 день</div>
+        <div class="hidden md:flex items-center gap-8 text-[14px]" style="font-family:'Manrope',sans-serif; letter-spacing:-0.01em; color:#ffffff;">
+          <a href="#services" class="hover:text-white transition nav-link" style="color:#ffffff;">Польза</a>
+          <a href="#process" class="hover:text-white transition nav-link" style="color:#ffffff;">Как работаю</a>
+          <a href="#cases" class="hover:text-white transition nav-link" style="color:#ffffff;">Кейсы</a>
+          <a href="#reviews" class="hover:text-white transition nav-link" style="color:#ffffff;">Отзывы</a>
+          <a href="#advantages-sellers" class="hover:text-white transition nav-link" style="color:#ffffff;">Преимущества</a>
+          <a href="#newbuild" class="hover:text-white transition nav-link" style="color:#ffffff;">Новостройки</a>
+          <a href="#about" class="hover:text-white transition nav-link" style="color:#ffffff;">Обо мне</a>
+          <a href="#faq" class="hover:text-white transition nav-link" style="color:#ffffff;">FAQ</a>
+          <a href="#contact" class="hover:text-white transition nav-link" style="color:#ffffff;">Контакты</a>
         </div>
-        <div class="pt-2 text-sm text-slate-700">Аукционный подход: концентрируем спрос и находим идеального покупателя по максимальной цене.</div>
-      </div>
-      <div class="card-soft rounded-2xl p-5">
-        <div class="flex items-center gap-3">
-          <div class="font-semibold">Юридическая чистота</div>
-        </div>
-        <div class="pt-2 text-sm text-slate-700">Проверка документов и полное сопровождение сделки в связке с профессиональным юристом.</div>
-      </div>
-      <div class="card-soft rounded-2xl p-5">
-        <div class="flex items-center gap-3">
-          <div class="font-semibold">Экономия времени</div>
-        </div>
-        <div class="pt-2 text-sm text-slate-700">Беру на себя весь процесс: звонки, показы, заявки и переговоры.</div>
-      </div>
-      <div class="card-soft rounded-2xl p-5">
-        <div class="flex items-center gap-3">
-          <div class="font-semibold">Работаю и на покупку</div>
-        </div>
-        <div class="pt-2 text-sm text-slate-700">Подбор лучшего объекта под ваш запрос, переговоры, безопасность, ипотека/субсидии — до ключей.</div>
-      </div>
-    </div>
-  </section>
+        <div class="flex items-center gap-3"></div>
+      </nav>
+    </header>
+  </div>
 
-  <!-- Процесс продажи -->
-  <section id="process" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-    <div class="text-center mb-12">
-      <p class="text-xs uppercase tracking-[0.2em]" style="color:#dbe4f4;">Процесс</p>
-      <h2 class="text-3xl md:text-4xl font-bold" style="color:#ffffff;">Как проходит продажа</h2>
-      <p class="mt-2 text-sm" style="color:#dbe4f4;">Чёткие шаги с прозрачными сроками и ответственностью.</p>
-    </div>
+    <section class="scene" id="scene-hero">
+      <div class="scene-content">
+        <!-- Hero -->
+        <section id="top" class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20 overflow-hidden">
 
-    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
-      <div class="card-soft rounded-2xl p-4 text-left">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">1</div>
-          <div class="font-semibold text-slate-900">Диагностика</div>
-        </div>
-        <p class="mt-3 text-sm text-slate-600">Оценка рынка, сценарий цены, календарь запуска.</p>
+          <!-- Текстовая часть -->
+          <div class="md:max-w-[70%] lg:max-w-[62%]">
+            <h1 class="mt-6 text-4xl md:text-6xl font-extrabold leading-[1.2]"
+                style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.02em; color:var(--ink);">
+              Ваш человек в мире недвижимости СПб
+            </h1>
+
+            <p class="mt-5 text-lg"
+               style="font-family:'IBM Plex Serif',serif; font-weight:500; letter-spacing:-0.01em; color:var(--ink); line-height:1.45;">
+              Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели.
+              Полное сопровождение до сделки.
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="#contact">
+                <button class="inline-flex items-center justify-center rounded-full btn-cta btn-ghost-light text-sm font-semibold px-6 py-3">
+                  Бесплатная консультация →
+                </button>
+              </a>
+              <a href="#badges">
+                <button class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-white/10 backdrop-blur" style="border:none; box-shadow:none; color:var(--pill-text);">
+                  Посмотреть услуги
+                </button>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Badges -->
+        <section id="badges" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Продажа аукционом за 21 день</div>
+            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатный подбор новостроек</div>
+            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Работа на покупку</div>
+            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Сопровождение сделки</div>
+            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Одобрение ипотеки</div>
+            <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатная первичная консультация</div>
+          </div>
+        </section>
       </div>
-      <div class="card-soft rounded-2xl p-4 text-left">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">2</div>
-          <div class="font-semibold text-slate-900">Подготовка</div>
-        </div>
-        <p class="mt-3 text-sm text-slate-600">Документы, визуал, объявление, фильтр покупателей.</p>
+    </section>
+
+    <section class="scene" id="scene-services">
+      <div class="scene-content">
+        <!-- Services -->
+        <section id="services" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-28">
+          <h2 class="text-3xl md:text-4xl font-bold" style="color:var(--ink);">Чем я помогу</h2>
+          <p class="mt-2" style="color:var(--ink);">Нацелен на то, чтобы ваша недвижимость была продана дороже, чем самостоятельно или с другим агентом. Сфокусирован на результате, юридической безопасности и комфорте клиента.</p>
+          <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="card-soft rounded-2xl p-5">
+              <div class="flex items-center gap-3">
+                <div class="font-semibold">Продажа за 21 день</div>
+              </div>
+              <div class="pt-2 text-sm text-slate-700">Аукционный подход: концентрируем спрос и находим идеального покупателя по максимальной цене.</div>
+            </div>
+            <div class="card-soft rounded-2xl p-5">
+              <div class="flex items-center gap-3">
+                <div class="font-semibold">Юридическая чистота</div>
+              </div>
+              <div class="pt-2 text-sm text-slate-700">Проверка документов и полное сопровождение сделки в связке с профессиональным юристом.</div>
+            </div>
+            <div class="card-soft rounded-2xl p-5">
+              <div class="flex items-center gap-3">
+                <div class="font-semibold">Экономия времени</div>
+              </div>
+              <div class="pt-2 text-sm text-slate-700">Беру на себя весь процесс: звонки, показы, заявки и переговоры.</div>
+            </div>
+            <div class="card-soft rounded-2xl p-5">
+              <div class="flex items-center gap-3">
+                <div class="font-semibold">Работаю и на покупку</div>
+              </div>
+              <div class="pt-2 text-sm text-slate-700">Подбор лучшего объекта под ваш запрос, переговоры, безопасность, ипотека/субсидии — до ключей.</div>
+            </div>
+          </div>
+        </section>
       </div>
-      <div class="card-soft rounded-2xl p-4 text-left">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">3</div>
-          <div class="font-semibold text-slate-900">Выход в продажу</div>
-        </div>
-        <p class="mt-3 text-sm text-slate-600">Запуск рекламы, окна показов, контроль спроса.</p>
+    </section>
+
+    <section class="scene" id="scene-process">
+      <div class="scene-content">
+        <!-- Процесс продажи -->
+        <section id="process" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24">
+          <div class="mb-12">
+            <p class="text-xs uppercase tracking-[0.2em]" style="color:var(--ink);">Процесс</p>
+            <h2 class="text-3xl md:text-4xl font-bold" style="color:var(--ink);">Как проходит продажа</h2>
+            <p class="mt-2 text-sm" style="color:var(--ink);">Чёткие шаги с прозрачными сроками и ответственностью.</p>
+          </div>
+
+          <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            <div class="card-soft rounded-2xl p-4 text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">1</div>
+                <div class="font-semibold text-slate-900">Диагностика</div>
+              </div>
+              <p class="mt-3 text-sm text-slate-600">Оценка рынка, сценарий цены, календарь запуска.</p>
+            </div>
+            <div class="card-soft rounded-2xl p-4 text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">2</div>
+                <div class="font-semibold text-slate-900">Подготовка</div>
+              </div>
+              <p class="mt-3 text-sm text-slate-600">Документы, визуал, объявление, фильтр покупателей.</p>
+            </div>
+            <div class="card-soft rounded-2xl p-4 text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">3</div>
+                <div class="font-semibold text-slate-900">Выход в продажу</div>
+              </div>
+              <p class="mt-3 text-sm text-slate-600">Запуск рекламы, окна показов, контроль спроса.</p>
+            </div>
+            <div class="card-soft rounded-2xl p-4 text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">4</div>
+                <div class="font-semibold text-slate-900">Торги</div>
+              </div>
+              <p class="mt-3 text-sm text-slate-600">Переговоры, повышение офферов, выбор лучшего.</p>
+            </div>
+            <div class="card-soft rounded-2xl p-4 text-left">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">5</div>
+                <div class="font-semibold text-slate-900">Сделка</div>
+              </div>
+              <p class="mt-3 text-sm text-slate-600">Договор, расчёты, сопровождение до передачи ключей.</p>
+            </div>
+          </div>
+        </section>
       </div>
-      <div class="card-soft rounded-2xl p-4 text-left">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">4</div>
-          <div class="font-semibold text-slate-900">Торги</div>
-        </div>
-        <p class="mt-3 text-sm text-slate-600">Переговоры, повышение офферов, выбор лучшего.</p>
-      </div>
-      <div class="card-soft rounded-2xl p-4 text-left">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">5</div>
-          <div class="font-semibold text-slate-900">Сделка</div>
-        </div>
-        <p class="mt-3 text-sm text-slate-600">Договор, расчёты, сопровождение до передачи ключей.</p>
-      </div>
-    </div>
-  </section>
+    </section>
+  </div>
+
+
 <!-- Cases Slider -->
 <section id="cases" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
   <div class="flex items-end justify-between gap-4 mb-6">
-    <h2 class="text-3xl md:text-4xl font-bold" style="color:#ffffff;">Примеры кейсов</h2>
+    <h2 class="text-3xl md:text-4xl font-bold">Примеры кейсов</h2>
   </div>
   <div class="slider rounded-2xl">
     <div class="track">
@@ -730,9 +781,151 @@
       <div class="dots"></div>
     </div>
   </section>
+
+  <!-- Reviews -->
+<section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+
+  <h2 class="text-3xl md:text-4xl font-bold mb-8">Отзывы клиентов</h2>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Марина и Роман</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">«Семён помог продать нашу квартиру за 19 дней. Получили на 7% больше, чем ожидали.»</div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Александр П.</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">«27 показов за выходные, выбрали лучшего покупателя.»</div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Ирина К.</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">«Безопасные расчёты и полное сопровождение. Спокойно на сделке.»</div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Дмитрий и Наталья</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">«Организовал всё от фото до ключей. Мы только подписали.»</div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Анна С.</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">«Финальная цена выше на 500 тыс.»</div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Олег Т.</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">«Покупатель найден за 2 недели, сделка быстро и безопасно.»</div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Маргарита Страшенко</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
+        Большое спасибо Семену за помощь в продаже квартиры, которая находилась в ипотеке. Сделка состоялась довольно быстро, Семен помог собрать все необходимые документы, все время был на связи и консультировал меня по всем имеющимся вопросам. Очень грамотный и ответственный специалист. Ни разу не пожалела, что обратилась именно к нему.
+      </div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Наталья</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
+        "Спасибо огромное Семену за труд и терпение. Грамотный, отзывчивый, пунктуальный, добросовестный, профессионал своего дела. Я купила квартиру и очень довольна результатом. Процветания и благополучия вам, Семен."
+      </div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Елена Григорьева</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
+        "Самый грамотный специалист, которого я встречала! Продавала квартиру более года, пришлось сменить более 2 риэлторов... к счастью, обратилась к Семену. Результат: покупатель был найден ровно за 21 день! Сделка была сложной: 2 встречные ипотеки, выделение долей для детей покупателя, опека... Но всё уже в прошлом. Если бы не профессионализм Семена, сделка бы не состоялась, фактически он отработал и за агентов покупателя, консультируя и их тоже, исправляя их огрехи. На каждом этапе сделки мне оказывалась любая помощь в любое время! Сейчас планирую покупку новой квартиры и, бесспорно, обращаться буду только к нему!"
+      </div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">redflag18</div>
+      <div class="text-slate-700 leading-relaxed">«Работали на подбор по первичке. За 6 дней определились с выбором, Семён нашёл лучшую в рынке квартиру. ЖК Черная Речка. Уже делаем ремонт.»</div>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Сергей и Анна</div>
+      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
+        "Хоть квартиру мы и не купили, но очень понравилось, как Семён с командой проводят свою работу. Такого сервиса и клиентоориентированности не видели с мужем ни в одном агентстве. Когда будем продавать свою квартиру — хотели бы, чтобы нашу квартиру продавали именно Семён с командой. Обязательно обратимся в будущем!"
+      </div>
+      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
+    </div>
+
+    <div class="card-soft rounded-2xl p-6 flex flex-col gap-3">
+      <div class="font-semibold text-lg mb-2">Татьяна</div>
+      <div class="text-slate-700 leading-relaxed">«Спасибо Семену, помог осуществить мечту о новой квартире. Несмотря на «опеку» и другие сложности сделки — всё прошло быстро и по выгодной цене.»</div>
+    </div>
+
+  </div>
+
+  <script>
+    (function(){
+      const cards = Array.from(document.querySelectorAll('#reviews .card-soft'));
+      let openCard = null;
+
+      const collapse = (card) => {
+        const text = card.querySelector('.js-collapsible');
+        const btn  = card.querySelector('.js-toggle');
+        if (!text || !btn) return;
+        const base = text.dataset.maxh;
+        text.style.maxHeight = base ? `${base}px` : '';
+        text.classList.remove('expanded');
+        btn.textContent = 'Показать ещё';
+      };
+
+      cards.forEach(card => {
+        const text = card.querySelector('.js-collapsible');
+        const btn  = card.querySelector('.js-toggle');
+        if (!text || !btn) return;
+
+        // вычисляем высоту 4 строк для усечения
+        const lineHeight = parseFloat(getComputedStyle(text).lineHeight) || 22;
+        const maxH = lineHeight * 4;
+        text.dataset.maxh = maxH;
+        text.style.maxHeight = `${maxH}px`;
+
+        // прячем кнопку если текст короткий
+        requestAnimationFrame(() => {
+          if (text.scrollHeight <= maxH + 2) {
+            btn.style.display = 'none';
+            text.classList.add('expanded');
+          }
+        });
+
+        btn.addEventListener('click', () => {
+          const isOpen = text.classList.contains('expanded');
+          // сворачиваем открытый
+          if (openCard && openCard !== card) collapse(openCard);
+          // переключаем текущий
+          if (!isOpen) {
+            text.style.maxHeight = 'none';
+            text.classList.add('expanded');
+          } else {
+            text.style.maxHeight = `${text.dataset.maxh}px`;
+            text.classList.remove('expanded');
+          }
+          btn.textContent = !isOpen ? 'Свернуть' : 'Показать ещё';
+          openCard = !isOpen ? card : null;
+        });
+      });
+    })();
+  </script>
+</section>
+
+
   <!-- Advantages for Sellers -->
   <section id="advantages-sellers" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl md:text-4xl font-bold" style="color:#ffffff;">Преимущества для продавца</h2>
+    <h2 class="text-3xl md:text-4xl font-bold" style="color:#111827;">Преимущества для продавца</h2>
     <div class="mt-8 grid md:grid-cols-3 gap-6">
       <div class="card-soft rounded-2xl p-5"><div class="text-lg font-semibold">Безопасные взаиморасчёты</div><div class="pt-2 text-sm text-slate-700">Подберём удобную и надёжную схему расчётов индивидуально под вас.</div></div>
       <div class="card-soft rounded-2xl p-5"><div class="text-lg font-semibold">Гарантия спроса</div><div class="pt-2 text-sm text-slate-700">Минимум 25 реальных покупателей за 2 дня показов при аукционной продаже.</div></div>
@@ -812,314 +1005,69 @@
         <p>Сегодня я часто использую аукционную модель продаж. Она обеспечивает прозрачность, честность и безопасность для всех участников сделки, а главное — помогает продавцам получать максимальную цену за свой объект.</p>
 
         <p>Я убеждён: продажа квартиры или дома должна быть понятным, спокойным и контролируемым процессом, а не стрессом, растянутым на месяцы. Моя задача — сделать так, чтобы ваша сделка прошла легко, быстро и результативно.</p>
-
-        <div class="grid sm:grid-cols-2 gap-3">
-          <div class="card-soft rounded-2xl px-4 py-4 text-slate-900 font-semibold">Удобные и безопасные взаиморасчёты</div>
-          <div class="card-soft rounded-2xl px-4 py-4 text-slate-900 font-semibold">25+ реальных показов за 2 дня</div>
-          <div class="card-soft rounded-2xl px-4 py-4 text-slate-900 font-semibold">Индивидуальная стратегия под объект</div>
-          <div class="card-soft rounded-2xl px-4 py-4 text-slate-900 font-semibold">Подбор новостроек и вторички без переплаты</div>
-          <div class="card-soft rounded-2xl px-4 py-4 text-slate-900 font-semibold sm:col-span-2">Сопровождение на каждом этапе — от первого звонка до передачи ключей</div>
-        </div>
       </div>
 
     </div>
   </section>
 
+  <div class="h-8"></div>
 
-  <!-- Reviews -->
-<div class="h-8"></div>
-  <section id="reviews" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-white rounded-3xl">
-  <style>
-    #reviews .card {
-      border-radius: 1.25rem;
-      background: #ffffff;
-      box-shadow: 0 12px 28px rgba(16,24,40,.08);
-      padding: 1.25rem;
-      transition: box-shadow .2s ease, transform .2s ease;
-    }
-    #reviews .card:hover { box-shadow: 0 14px 34px rgba(16,24,40,.12); }
-    #reviews .avatar {
-      font-size: 1.75rem;
-      display:flex;align-items:center;justify-content:center;
-      width: 2.5rem;height: 2.5rem;
-      background:#0f172a;color:#fff;border-radius:50%;
-      box-shadow:0 0 0 1px #e2e8f0;
-      font-weight:700;
-      font-size:1rem;
-    }
-    #reviews .collapsible {
-      position: relative;
-      max-height: 6.5rem;
-      overflow: hidden;
-    }
-    #reviews .collapsible::after{
-      content:"";
-      position:absolute;left:0;right:0;bottom:0;height:3rem;
-      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
-    }
-    #reviews .collapsible.expanded { max-height: none; }
-    #reviews .collapsible.expanded::after{ display: none; }
-    #reviews .toggle-btn{
-      margin-top:.5rem;
-      display:inline-block;
-      padding:.4rem .8rem;
-      border-radius:.6rem;
-      border:1px solid #e2e8f0;
-      background:#fff;
-      font-size:.875rem;
-      color:#0f172a;
-      transition: background .15s ease, border-color .15s ease;
-    }
-    #reviews .toggle-btn:hover{ background:#f8fafc; border-color:#cbd5e1; }
-  </style>
-
-  <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center">Отзывы клиентов</h2>
-
-  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">MR</div>
-          <div>
-            <div class="font-semibold text-lg">Марина и Роман</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">+7% к цене · 19 дней</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed">Семён помог продать нашу квартиру за 19 дней. Получили на 7% больше, чем ожидали.</div>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">AP</div>
-          <div>
-            <div class="font-semibold text-lg">Александр П.</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">27 показов · выходные</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed">27 показов за выходные, выбрали лучшего покупателя.</div>
-    </div>
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">IK</div>
-          <div>
-            <div class="font-semibold text-lg">Ирина К.</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Безопасные расчёты</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed">Безопасные расчёты и полное сопровождение. Спокойно на сделке.</div>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">DN</div>
-          <div>
-            <div class="font-semibold text-lg">Дмитрий и Наталья</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Полный цикл</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed">Организовал всё от фото до ключей. Мы только подписали.</div>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">AS</div>
-          <div>
-            <div class="font-semibold text-lg">Анна С.</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">+500 тыс к ожиданию</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed">Финальная цена выше на 500 тыс.</div>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">OT</div>
-          <div>
-            <div class="font-semibold text-lg">Олег Т.</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">2 недели</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed">Покупатель найден за 2 недели, сделка быстро и безопасно.</div>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">MS</div>
-          <div>
-            <div class="font-semibold text-lg">Маргарита Страшенко</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Продажа с ипотекой</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
-        Большое спасибо Семену за помощь в продаже квартиры, которая находилась в ипотеке. Сделка состоялась быстро, Семен помог собрать все документы, консультировал по всем вопросам. Очень грамотный и ответственный специалист.
-      </div>
-      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">N</div>
-          <div>
-            <div class="font-semibold text-lg">Наталья</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Покупка</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
-        Спасибо огромное Семену за труд и терпение. Грамотный, отзывчивый, пунктуальный, добросовестный, профессионал своего дела. Я купила квартиру и довольна результатом.
-      </div>
-      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">EG</div>
-          <div>
-            <div class="font-semibold text-lg">Елена Григорьева</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">21 день</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
-        Продавала квартиру более года, пришлось сменить риэлторов. С Семёном покупатель найден за 21 день. Сложная сделка с ипотеками и опекой — всё прошло.
-      </div>
-      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">RF</div>
-          <div>
-            <div class="font-semibold text-lg">redflag18</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Подбор первички</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed">Работали на подбор по первичке. За 6 дней определились с выбором, Семён нашёл лучшую в рынке квартиру. ЖК Чёрная Речка.</div>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">SA</div>
-          <div>
-            <div class="font-semibold text-lg">Сергей и Анна</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Сервис</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed collapsible js-collapsible">
-        Очень понравилось, как Семён с командой проводят работу. Когда будем продавать свою квартиру — обратимся к нему.
-      </div>
-      <button class="toggle-btn js-toggle" type="button">Показать ещё</button>
-    </div>
-
-    <div class="card">
-      <div class="flex items-center justify-between mb-3">
-        <div class="flex items-center gap-3">
-          <div class="avatar">T</div>
-          <div>
-            <div class="font-semibold text-lg">Татьяна</div>
-            <div class="text-xs uppercase tracking-[0.08em] text-slate-500">Сложная сделка</div>
-          </div>
-        </div>
-      </div>
-      <div class="text-slate-700 leading-relaxed">Спасибо Семену, помог осуществить мечту о новой квартире. Несмотря на сложности сделки — всё прошло быстро и по выгодной цене.</div>
-    </div>
-
-  </div>
-
-  <script>
-    (function(){
-      const cards = document.querySelectorAll('#reviews .card');
-      cards.forEach(card => {
-        const text = card.querySelector('.js-collapsible');
-        const btn  = card.querySelector('.js-toggle');
-        if (!text || !btn) return;
-        requestAnimationFrame(() => {
-          if (text.scrollHeight <= text.clientHeight + 4) {
-            btn.style.display = 'none';
-            text.classList.add('expanded');
-          }
-        });
-        btn.addEventListener('click', () => {
-          const expanded = text.classList.toggle('expanded');
-          btn.textContent = expanded ? 'Свернуть' : 'Показать ещё';
-        });
-      });
-    })();
-  </script>
-</section>
-
-
+  <div class="bottom-gradient mt-12">
   <!-- FAQ -->
   <section id="faq" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <h2 class="text-3xl md:text-4xl font-bold">FAQ</h2>
-    <div class="mt-8 divide-y divide-slate-200 faq-list">
+    <div class="mb-10">
+      <h2 class="text-3xl md:text-4xl font-bold">FAQ</h2>
+      <p class="mt-2 text-slate-600">Частые вопросы — развёрнутые ответы.</p>
+    </div>
+
+    <div class="space-y-1">
       <div class="faq-row">
         <button class="faq-btn">
           <span class="faq-dot"></span>
-          <span class="faq-title">Как работает аукционный подход?</span>
+          <span class="faq-title">Что такое аукцион и чем он отличается?</span>
         </button>
         <div class="faq-answer">
-          Мы задаём чёткие сроки выхода в продажу и дни показов, после чего привлекаем максимально большой поток покупателей. Все смотрят объект в один период и понимают, что они не единственные, что создаёт честную конкуренцию. Покупатели делают предложения и могут повышать их — поэтому объект продаётся дороже и в заранее понятные сроки. Если объяснить проще, это как рыбалка сетью, а не удочкой: мы собираем весь спрос сразу и выбираем «самую крупную рыбу» — идеального покупателя с лучшими условиями. И важно: это не залоговый и не судебный аукцион по ГК РФ. Это современный аукционный метод продажи — добровольный, прозрачный и полностью контролируемый собственником..
+          Аукционная модель — когда мы заранее готовим объект, создаём ажиотажный спрос и в коротком окне показов собираем предложения. Покупатели конкурируют, и собственник выбирает лучшее по цене и условиям. Это быстрее, безопаснее и обычно дороже, чем классическая продажа.
         </div>
       </div>
 
       <div class="faq-row">
         <button class="faq-btn">
           <span class="faq-dot"></span>
-          <span class="faq-title">Что, если не продадим за 21 день?</span>
+          <span class="faq-title">Сколько стоит ваша работа?</span>
         </button>
         <div class="faq-answer">
-          Пересобираем стратегию: расширяем каналы, корректируем подачу/цену, добавляем доп. окна показов.
+          Вознаграждение обсуждаем индивидуально. Чётко закрепляется в договоре и привязано к результату. Ориентируемся на рыночные ставки, но фокус — на итоговой выгоде для клиента.
         </div>
       </div>
 
       <div class="faq-row">
         <button class="faq-btn">
           <span class="faq-dot"></span>
-          <span class="faq-title">Какая комиссия и что входит?</span>
+          <span class="faq-title">Как быстро выйдете в продажу?</span>
         </button>
         <div class="faq-answer">
-          Маркетинг, показы, переговоры, юр. сопровождение и закрытие сделки. Весь процесс сделки под ключ.  Комиссия — в рынке. Её размер зависит от выбранного формата продажи: аукцион или классическая модель. Мы обсуждаем условия на встрече, без скрытых платежей — всё прозрачно и понятно.
+          Старт возможен за 7–10 дней: диагностика, подготовка, фото/визуал, договорённости по рекламе и окнам показов.
         </div>
       </div>
 
       <div class="faq-row">
         <button class="faq-btn">
           <span class="faq-dot"></span>
-          <span class="faq-title">Как проходят взаиморасчёты?</span>
+          <span class="faq-title">Как работаете с задатками/авансами?</span>
         </button>
         <div class="faq-answer">
-          Подбираем удобную и безопасную форму расчётов под сделку и стороны.
+          Предлагаем безопасные схемы: эскроу/аккредитив, нотариальные договоры. Все условия прописываем заранее, чтобы исключить риски.
         </div>
       </div>
 
       <div class="faq-row">
         <button class="faq-btn">
           <span class="faq-dot"></span>
-          <span class="faq-title">Работаете с альтернативой/ипотекой?</span>
+          <span class="faq-title">Работаете ли с покупкой?</span>
         </button>
         <div class="faq-answer">
-          Да. Сопровождаю сделки с альтернативой, помогаю с ипотекой и субсидиями. Работаю в паре с ипотечным брокером и юристом.
+          Да. Полный цикл: подбор, переговоры, проверка объекта, ипотека и сопровождение до передачи ключей.
         </div>
       </div>
 
@@ -1166,7 +1114,6 @@
     </div>
   </section>
 
-  <div class="bottom-gradient mt-12">
     <section id="contact" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-[#0f172a]">
       <div class="grid md:grid-cols-2 gap-8 items-start">
         <div class="card-luxe">
@@ -1238,7 +1185,7 @@
     // Переключение цвета топ-бара в зависимости от фона
     (function() {
       const topbar = document.getElementById('topbar');
-      const wrapper = document.querySelector('.gradient-wrapper');
+      const wrapper = document.getElementById('gradient-zone');
       if (!topbar || !wrapper) return;
       const update = () => {
         const threshold = wrapper.offsetTop + wrapper.offsetHeight - 80;
@@ -1248,6 +1195,62 @@
       window.addEventListener('scroll', update, { passive: true });
       window.addEventListener('resize', update);
       update();
+    })();
+
+    // Плавное изменение цвета текста и пилюль по мере скролла градиентной зоны
+    (function() {
+      const zone = document.getElementById('gradient-zone');
+      if (!zone) return;
+      const root = document.documentElement;
+
+      const lerp = (a, b, t) => a + (b - a) * t;
+      const mixRgb = (a, b, t) => `rgb(${Math.round(lerp(a[0], b[0], t))}, ${Math.round(lerp(a[1], b[1], t))}, ${Math.round(lerp(a[2], b[2], t))})`;
+      const mixRgba = (a, b, t) => `rgba(${Math.round(lerp(a[0], b[0], t))}, ${Math.round(lerp(a[1], b[1], t))}, ${Math.round(lerp(a[2], b[2], t))}, ${lerp(a[3], b[3], t).toFixed(3)})`;
+
+      const inkLight = [233, 237, 247];
+      const inkDark = [15, 23, 42];
+      const pillBgLight = [255, 255, 255, 0.10];
+      const pillBgDark  = [15, 23, 42, 0.04];
+      const pillBorderLight = [255, 255, 255, 0];
+      const pillBorderDark  = [15, 23, 42, 0];
+      const pillTextLight = [255, 255, 255, 0.92];
+      const pillTextDark  = [15, 23, 42, 0.88];
+
+      let ticking = false;
+
+      const setVars = () => {
+        const zoneTop = zone.getBoundingClientRect().top + window.scrollY;
+        const zoneHeight = zone.offsetHeight || 1;
+        const progress = Math.min(1, Math.max(0, (window.scrollY - zoneTop) / zoneHeight));
+
+        const ink = mixRgb(inkLight, inkDark, progress);
+        const shadowStrength = 0.26 * (1 - progress);
+
+        const bg = mixRgba(pillBgLight, pillBgDark, progress);
+        const bd = mixRgba(pillBorderLight, pillBorderDark, progress);
+        const txt = mixRgba(pillTextLight, pillTextDark, progress);
+
+        zone.style.setProperty('--ink', ink);
+        zone.style.setProperty('--pill-bg', bg);
+        zone.style.setProperty('--pill-border', bd);
+        zone.style.setProperty('--pill-text', txt);
+        zone.style.setProperty('--ink-shadow', `0 0 18px rgba(0,0,0,${shadowStrength.toFixed(3)})`);
+
+        root.style.setProperty('--ink', ink);
+      };
+
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          setVars();
+          ticking = false;
+        });
+      };
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      setVars();
     })();
 
     // Vanilla slider logic
@@ -1371,7 +1374,9 @@
       rows.forEach(row => {
         const btn = row.querySelector('.faq-btn');
         btn.addEventListener('click', () => {
-          row.classList.toggle('open');
+          const isOpen = row.classList.contains('open');
+          rows.forEach(r => r.classList.remove('open'));
+          if (!isOpen) row.classList.add('open');
         });
       });
     })();
