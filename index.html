@@ -37,6 +37,8 @@
       --radius-pill: 9999px;
       --shadow-soft: 0 8px 30px rgba(0,0,0,0.06);
     }
+
+    section[id] { scroll-margin-top: calc(var(--header-h) + 16px); }
     html { scroll-behavior: smooth; }
     html, body {
       position: relative;
@@ -287,18 +289,13 @@
       --pill-border: transparent;
       --pill-text: rgba(255,255,255,0.92);
       --ink-shadow: 0 0 12px rgba(0,0,0,0.18);
-    }
-    :root {
-      --nav-offset: 96px;
-    }
-    @media (max-width: 767px) {
-      :root { --nav-offset: 72px; }
+      --header-h: 80px;
     }
     .gradient-wrap {
       position: relative;
       overflow: clip;
-      min-height: 360vh;
-      padding-top: var(--nav-offset);
+      min-height: 220vh;
+      padding-top: var(--header-h);
       background:
         radial-gradient(900px 600px at 80% 30%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 55%),
         radial-gradient(700px 500px at 20% 70%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 60%),
@@ -311,7 +308,7 @@
           #ffffff 100%
         );
       background-repeat: no-repeat;
-      background-size: 100% 360vh;
+      background-size: 100% 220vh;
       color: var(--ink);
       isolation: isolate;
     }
@@ -342,8 +339,8 @@
     /* Pinned stack */
     #pinned-stack {
       position: sticky;
-      top: var(--nav-offset);
-      height: calc(100vh - var(--nav-offset));
+      top: var(--header-h);
+      height: calc(100vh - var(--header-h));
       isolation: isolate;
     }
     .pinned-panel {
@@ -425,6 +422,39 @@
       color: #0f172a !important;
       text-shadow: none;
     }
+    .burger { display: none; cursor: pointer; }
+    .mobile-nav { display: none; }
+    @media (max-width: 900px) {
+      .nav-links { display: none !important; }
+      .burger { display: inline-flex; flex-direction: column; justify-content: center; }
+      .mobile-nav {
+        display: block;
+        position: fixed;
+        top: var(--header-h);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9998;
+        background: rgba(10,12,18,0.72);
+        backdrop-filter: blur(14px);
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-8px);
+        transition: .25s ease;
+        padding: 18px;
+      }
+      .mobile-nav.is-open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+      .mobile-nav a {
+        display: block;
+        padding: 14px 0;
+        color: #ffffff;
+        font-size: 16px;
+      }
+    }
     header, .header, .top-bar, .navbar, .nav, .header-inner,
     header::before, header::after,
     .header::before, .header::after {
@@ -433,14 +463,13 @@
       box-shadow: none !important;
       border: 0 !important;
       content: none !important;
-      display: block;
     }
     .top-shell {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      z-index: 60;
+      z-index: 9999;
       background: transparent;
       backdrop-filter: none;
       border: none !important;
@@ -659,27 +688,13 @@
   <div id="gradient-zone" class="gradient-wrap">
 
   <div class="top-shell">
-    <div id="topbar" class="topbar text-white text-xs transition-colors"
-         style="background: transparent !important; box-shadow: none !important; backdrop-filter: none !important;">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[42px] flex items-center justify-between">
-        <div class="topbar-text text-[#f8fafc] font-medium text-[12px] sm:text-[13px]" style="font-family:'IBM Plex Serif',serif;">
-          Первичная консультация и план продажи — в Telegram
-        </div>
-        <a href="https://t.me/semengme" target="_blank" rel="noreferrer"
-           class="topbar-btn inline-flex items-center justify-center rounded-full bg-[#0ea5e9] hover:bg-[#0d94d2] text-white font-semibold px-4 py-1.5 text-xs sm:text-sm transition"
-           style="font-family:'IBM Plex Serif',serif;">
-          Telegram
-        </a>
-      </div>
-    </div>
-
     <header style="background: transparent !important; box-shadow: none !important; backdrop-filter: none !important;">
       <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12">
 <a href="#top"
    class="brand-logo brand-link text-2xl tracking-[-0.02em] text-white font-extrabold" style="font-family:'IBM Plex Serif',serif; color:#ffffff;">
   Гончаров&nbsp;Семён
 </a>
-        <div class="hidden md:flex items-center gap-8 text-[14px]" style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.01em; color:#ffffff;">
+        <div class="hidden md:flex items-center gap-8 text-[14px] nav-links" style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.01em; color:#ffffff;">
           <a href="#services" class="hover:text-white transition nav-link" style="color:#ffffff;">Польза</a>
           <a href="#process" class="hover:text-white transition nav-link" style="color:#ffffff;">Как работаю</a>
           <a href="#cases" class="hover:text-white transition nav-link" style="color:#ffffff;">Кейсы</a>
@@ -690,9 +705,27 @@
           <a href="#faq" class="hover:text-white transition nav-link" style="color:#ffffff;">FAQ</a>
           <a href="#contact" class="hover:text-white transition nav-link" style="color:#ffffff;">Контакты</a>
         </div>
-        <div class="flex items-center gap-3"></div>
+        <div class="flex items-center gap-3">
+          <button class="burger md:hidden text-white" aria-label="Меню">
+            <span class="w-6 h-[2px] bg-white block mb-[5px]"></span>
+            <span class="w-6 h-[2px] bg-white block mb-[5px]"></span>
+            <span class="w-6 h-[2px] bg-white block"></span>
+          </button>
+        </div>
       </nav>
     </header>
+  </div>
+
+  <div class="mobile-nav">
+    <a href="#services" class="nav-link">Польза</a>
+    <a href="#process" class="nav-link">Как работаю</a>
+    <a href="#cases" class="nav-link">Кейсы</a>
+    <a href="#reviews" class="nav-link">Отзывы</a>
+    <a href="#advantages-sellers" class="nav-link">Преимущества</a>
+    <a href="#newbuild" class="nav-link">Новостройки</a>
+    <a href="#about" class="nav-link">Обо мне</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="#contact" class="nav-link">Контакты</a>
   </div>
 
   <div id="pinned-stack">
@@ -1429,28 +1462,26 @@
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Обновляем отступ под фиксированную шапку
-    (function() {
-      const root = document.documentElement;
-      const shell = document.querySelector('.top-shell');
-      const setOffset = () => {
-        if (!shell) return;
-        root.style.setProperty('--nav-offset', `${shell.offsetHeight}px`);
+    // Обновляем высоту шапки для отступов и якорей
+    (() => {
+      const header = document.querySelector('header');
+      if (!header) return;
+      const setH = () => {
+        document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
       };
-      window.addEventListener('resize', setOffset);
-      setOffset();
+      window.addEventListener('load', setH);
+      window.addEventListener('resize', setH);
+      setH();
     })();
 
-    // Переключение цвета топ-бара в зависимости от фона
+    // Переключение цвета хедера в зависимости от фона
     (function() {
-      const topbar = document.getElementById('topbar');
       const wrapper = document.getElementById('gradient-zone');
       const headerEl = document.querySelector('header');
-      if (!topbar || !wrapper || !headerEl) return;
+      if (!wrapper || !headerEl) return;
       const update = () => {
         const threshold = wrapper.offsetTop + wrapper.offsetHeight - 80;
         const onLight = window.scrollY >= threshold;
-        topbar.classList.toggle('light', onLight);
         headerEl.classList.toggle('light', onLight);
       };
       window.addEventListener('scroll', update, { passive: true });
@@ -1520,8 +1551,6 @@
       const stack = document.getElementById('pinned-stack');
       const panels = Array.from(document.querySelectorAll('.pinned-panel'));
       if (!zone || !stack || !panels.length) return;
-
-      const offset = () => parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-offset')) || 96;
 
       let current = 0;
       const seen = new Set();
@@ -1661,6 +1690,17 @@
           rows.forEach(r => r.classList.remove('open'));
           if (!isOpen) row.classList.add('open');
         });
+      });
+    })();
+
+    // Бургер-меню
+    (() => {
+      const b = document.querySelector('.burger');
+      const m = document.querySelector('.mobile-nav');
+      if (!b || !m) return;
+      b.addEventListener('click', () => m.classList.toggle('is-open'));
+      m.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') m.classList.remove('is-open');
       });
     })();
   </script>
