@@ -38,7 +38,7 @@
       --shadow-soft: 0 8px 30px rgba(0,0,0,0.06);
     }
     html { scroll-behavior: smooth; }
-    body {
+    html, body {
       position: relative;
       min-height: 100vh;
       margin: 0;
@@ -50,6 +50,7 @@
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       font-smooth: antialiased;
+      padding-top: 0;
     }
     h1,h2,h3,h4,h5,h6 {
       font-family: "IBM Plex Serif", serif;
@@ -112,21 +113,21 @@
     .card-soft::after { content: none; }
     .card-soft > * { position: relative; z-index: 1; }
     .faq-row {
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 0.35px solid rgba(255,255,255,0.24);
     }
     .faq-btn {
       width: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 18px 0;
+      gap: 8px;
+      padding: 10px 0;
       cursor: pointer;
     }
     .faq-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #111827;
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.92);
       text-align: left;
     }
     .faq-answer {
@@ -135,9 +136,9 @@
       opacity: 0;
       transform: translateY(4px);
       transition: max-height 280ms ease, opacity 280ms ease, transform 280ms ease;
-      color: #6b7280;
-      font-size: 15px;
-      line-height: 1.6;
+      color: rgba(255,255,255,0.78);
+      font-size: 13.5px;
+      line-height: 1.5;
       padding-right: 8px;
     }
     .faq-row.open .faq-answer {
@@ -151,7 +152,8 @@
       width: 9px;
       height: 9px;
       border-radius: 999px;
-      border: 1.5px solid #9ca3af;
+      border: 1px solid rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.95);
       transition: background-color 220ms ease, border-color 220ms ease, transform 220ms ease;
     }
     .faq-row.open .faq-dot {
@@ -296,21 +298,20 @@
       position: relative;
       overflow: clip;
       min-height: 360vh;
+      padding-top: var(--nav-offset);
       background:
-        radial-gradient(900px 600px at 85% 35%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 55%),
-        radial-gradient(700px 500px at 15% 70%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 60%),
+        radial-gradient(900px 600px at 80% 30%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 55%),
+        radial-gradient(700px 500px at 20% 70%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 60%),
         linear-gradient(
-          to bottom,
-          #2A140E 0%,
-          #2B1712 10%,
-          #0E1B33 28%,
-          #5F7597 52%,
-          #A9B6C7 68%,
-          #E9E2D8 82%,
-          #F6F3EE 100%
+          180deg,
+          #2a1a16 0%,
+          #1f2c3f 24%,
+          #3b4f6e 48%,
+          #f4efe8 78%,
+          #ffffff 100%
         );
       background-repeat: no-repeat;
-      background-size: 100% 320vh;
+      background-size: 100% 360vh;
       color: var(--ink);
       isolation: isolate;
     }
@@ -350,7 +351,7 @@
       inset: 0;
       opacity: 0;
       transform: translateY(12px);
-      transition: opacity .6s ease, transform .6s ease;
+      transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1);
       pointer-events: none;
       display: flex;
       align-items: center;
@@ -383,16 +384,29 @@
       }
     }
     .bottom-gradient {
+      position: relative;
       background: linear-gradient(
         180deg,
         #ffffff 0%,
-        #f2efea 30%,
-        #c9d2df 55%,
-        #3f5575 80%,
-        #0b1220 100%
+        #f4efe8 15%,
+        #e6d6c3 30%,
+        #9aa8bc 55%,
+        #1f2c3f 75%,
+        #2a1a16 100%
       );
       padding-top: 80px;
       padding-bottom: 80px;
+      overflow: hidden;
+    }
+    .bottom-gradient::before {
+      content: "";
+      position: absolute;
+      inset: -10%;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      opacity: 0.05;
+      mix-blend-mode: soft-light;
+      transform: translateZ(0);
     }
     .section-gap { height: 48px; }
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 1s ease, transform 1s ease; }
@@ -402,17 +416,42 @@
       letter-spacing: -0.02em;
       font-weight: 800;
     }
+    header, header a, .brand-link, .nav-link {
+      color: #ffffff !important;
+      transition: color .3s ease;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.28);
+    }
+    header.light, header.light a, header.light .brand-link, header.light .nav-link {
+      color: #0f172a !important;
+      text-shadow: none;
+    }
+    header, .header, .top-bar, .navbar, .nav, .header-inner,
+    header::before, header::after,
+    .header::before, .header::after {
+      background: transparent !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+      border: 0 !important;
+      content: none !important;
+      display: block;
+    }
     .top-shell {
-      position: sticky;
+      position: fixed;
       top: 0;
-      z-index: 50;
+      left: 0;
+      right: 0;
+      z-index: 60;
       background: transparent;
+      backdrop-filter: none;
+      border: none !important;
+      box-shadow: none !important;
     }
     .topbar, .topbar::before, .topbar::after {
       background: transparent !important;
       backdrop-filter: none !important;
       box-shadow: none !important;
       border: none !important;
+      content: none !important;
     }
     .topbar.light .topbar-text { color: #0f172a; }
     .topbar.light .topbar-btn { background: #0ea5e9; color: #ffffff; }
@@ -435,6 +474,185 @@
     @media (max-width: 767px) {
       body { background-attachment: scroll; }
     }
+
+    /* Контакты — минимализм на градиенте */
+    .contact-section {
+      position: relative;
+      padding: clamp(56px, 8vw, 110px) 0;
+      background: transparent;
+      overflow: hidden;
+    }
+    .contact-section::before {
+      content: none;
+    }
+    .contact-grid {
+      position: relative;
+      z-index: 1;
+      width: min(1100px, 92vw);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap: clamp(24px, 4vw, 56px);
+      align-items: start;
+    }
+    @media (max-width: 880px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+    .form-card {
+      background: linear-gradient(90deg, #f6f3ee 0%, #f2ebe2 35%, #efd3b7 70%, #ecb57f 100%);
+      border-radius: 26px;
+      padding: clamp(16px, 2.4vw, 24px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+      border: none;
+      display: grid;
+      gap: 14px;
+      color: #1f232a;
+      width: min(520px, 100%);
+    }
+    .form-card .kicker {
+      margin: 0;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 12px;
+      opacity: 0.65;
+    }
+    .form-card h2 {
+      margin: 4px 0 2px 0;
+      color: #0f172a;
+      font-size: clamp(26px, 3vw, 32px);
+      line-height: 1.25;
+    }
+    .form-card .subtext {
+      margin: 0 0 8px 0;
+      color: rgba(15, 23, 42, 0.72);
+      line-height: 1.5;
+      font-size: 15px;
+    }
+    .minimal-form {
+      display: grid;
+      gap: 14px;
+      margin-top: 6px;
+    }
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+    .field .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(15, 23, 42, 0.65);
+    }
+    .form-control {
+      width: 100%;
+      border: none;
+      background: rgba(240,240,244,0.72);
+      border-radius: 999px;
+      padding: 12px 16px;
+      color: rgba(15, 23, 42, 0.82);
+      font-size: 15px;
+      line-height: 1.5;
+      outline: none;
+      transition: background .2s ease, transform .2s ease;
+    }
+    .form-control::placeholder { color: rgba(15, 23, 42, 0.55); }
+    .form-control:focus {
+      background: rgba(240,240,244,0.9);
+      transform: translateY(-1px);
+    }
+    .form-control.textarea {
+      min-height: 96px;
+      resize: vertical;
+      border-radius: 18px;
+    }
+    .btn-submit {
+      margin-top: 6px;
+      width: fit-content;
+      padding: 12px 18px;
+      border-radius: 999px;
+      align-self: center;
+      justify-self: center;
+      border: none;
+      background: rgba(15,23,42,0.10);
+      color: rgba(15,23,42,0.82);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      box-shadow: none;
+      transition: transform .2s ease, opacity .2s ease, background .2s ease;
+    }
+    .btn-submit:hover { transform: translateY(-1px); background: rgba(15,23,42,0.16); }
+    .btn-submit:active { transform: translateY(0); opacity: 0.85; }
+
+    .contact-info {
+      position: relative;
+      z-index: 1;
+      color: rgba(255,255,255,0.9);
+      display: grid;
+      gap: 18px;
+    }
+    .contact-info h3 {
+      margin: 0;
+      font-size: clamp(22px, 3vw, 26px);
+      color: rgba(255,255,255,0.95);
+    }
+    .info-block { display: grid; gap: 6px; }
+    .info-label {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+    .info-phone {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #1f232a;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .info-address {
+      margin: 0;
+      color: rgba(255,255,255,0.85);
+      line-height: 1.55;
+    }
+    .messenger-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    .btn-mini {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 10px;
+      height: 28px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      color: rgba(255,255,255,0.82);
+      background: rgba(255,255,255,0.08);
+      border: none;
+      transition: transform .15s ease, box-shadow .15s ease, opacity .2s ease, background .2s ease, color .2s ease;
+    }
+    .btn-mini:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+      background: var(--btn-hover, rgba(255,255,255,0.16));
+      border-color: transparent;
+      color: #ffffff;
+    }
+    .btn-wa { --btn-hover: rgba(37,211,102,0.8); }
+    .btn-tg { --btn-hover: rgba(42,171,238,0.8); }
+    .btn-phone { --btn-hover: rgba(15,23,42,0.8); }
+    .btn-email { --btn-hover: rgba(255,255,255,0.8); color: rgba(255,255,255,0.9); }
   </style>
 </head>
 <body class="text-slate-900">
@@ -1001,6 +1219,7 @@
     </div>
   </section>
 
+  <div class="bottom-gradient mt-12">
   <div class="h-8"></div>
 
   <!-- About Me -->
@@ -1013,7 +1232,7 @@
     <div class="grid md:grid-cols-2 gap-8 items-center">
 
       <div class="order-1 md:order-none w-full max-w-md lg:max-w-lg mx-auto md:mx-0 relative z-10">
-        <div class="card-soft rounded-3xl overflow-hidden shadow-[0_24px_60px_rgba(15,23,42,0.14)] border border-slate-100">
+        <div class="rounded-3xl overflow-hidden">
           <img src="processed_images/bwhero.png" alt="Семён Гончаров"
                class="w-full h-auto block object-cover aspect-[3/4]">
         </div>
@@ -1035,8 +1254,6 @@
   </section>
 
   <div class="h-8"></div>
-
-  <div class="bottom-gradient mt-12">
   <!-- FAQ -->
   <section id="faq" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
     <div class="mb-10">
@@ -1138,56 +1355,62 @@
     </div>
   </section>
 
-    <section id="contact" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-[#0f172a]">
-      <div class="grid md:grid-cols-2 gap-8 items-start">
-        <div class="card-luxe">
-          <div class="text-xs uppercase tracking-[0.14em] text-slate-500">Быстрая заявка</div>
-          <h2 class="text-3xl md:text-4xl font-semibold mt-2" style="letter-spacing:-0.02em;">Свяжитесь со мной</h2>
-          <p class="mt-3 text-slate-600">Быстрая связь, консультация или оценка стоимости — отвечу сразу после заявки.</p>
+    <section id="contact" class="contact-section">
+      <div class="contact-grid">
+        <div class="contact-form">
+          <div class="form-card">
+            <p class="kicker">БЫСТРАЯ ЗАЯВКА</p>
+            <h2>Свяжитесь со мной</h2>
+            <p class="subtext">Быстрая связь, консультация или оценка стоимости — отвечу сразу после заявки.</p>
 
-          <form id="leadForm" action="https://api.web3forms.com/submit" method="POST" class="mt-6 flex flex-col gap-4">
-            <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
+            <form id="leadForm" action="https://api.web3forms.com/submit" method="POST" class="minimal-form">
+              <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
 
-            <input type="text" name="name" placeholder="Ваше имя" required
-                   class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300 focus:border-slate-300 transition" />
+              <label class="field">
+                <span class="label">Ваше имя</span>
+                <input class="form-control" type="text" name="name" placeholder="Иван" required />
+              </label>
 
-            <input type="text" name="contact" placeholder="Ваш телефон или Telegram" required
-                   class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300 focus:border-slate-300 transition" />
+              <label class="field">
+                <span class="label">Телефон или Telegram</span>
+                <input class="form-control" type="text" name="contact" placeholder="+7 ___ ___-__-__ / @username" required />
+              </label>
 
-            <textarea name="comment" rows="3"
-                      class="w-full rounded-2xl border border-slate-200 bg-white/80 px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300 focus:border-slate-300 transition"
-                      placeholder="Хочу продать квартиру за 21 день">Хочу пообщаться по вопросу недвижимости</textarea>
+              <label class="field">
+                <span class="label">Сообщение</span>
+                <textarea class="form-control textarea" name="comment" rows="3">Хочу пообщаться по вопросу недвижимости</textarea>
+              </label>
 
-            <input type="hidden" name="from_name" value="fastbroker21.ru">
-            <input type="hidden" name="subject" value="Заявка с сайта fastbroker21.ru">
-            <input type="checkbox" name="botcheck" class="hidden" style="display:none;">
+              <input type="hidden" name="from_name" value="fastbroker21.ru">
+              <input type="hidden" name="subject" value="Заявка с сайта fastbroker21.ru">
+              <input type="checkbox" name="botcheck" class="hidden" style="display:none;">
 
-            <button type="submit" class="btn-premium mt-2">
-              Отправить
-            </button>
+              <button class="btn-submit" type="submit">Отправить</button>
 
-            <p id="formMessage"
-               class="hidden text-green-700 bg-green-50 border border-green-200 rounded-xl p-3 text-center mt-2"></p>
-          </form>
-        </div>
-
-        <div class="card-luxe">
-          <div class="flex items-center justify-between mb-4">
-            <div class="text-lg font-semibold" style="letter-spacing:-0.02em;">Мои контакты</div>
-            <div class="text-xs uppercase tracking-[0.14em] text-slate-500">Всегда на связи</div>
-          </div>
-          <div class="space-y-3">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              <a href="tel:+79118461965" class="rounded-full border border-slate-200 bg-slate-900 text-white px-4 py-3 text-sm font-medium text-center transition hover:bg-slate-800">+7 911 846-19-65</a>
-              <a href="https://wa.me/79118461965" target="_blank" rel="noreferrer" class="rounded-full border border-transparent bg-[#25D366] text-white px-4 py-3 text-sm font-medium text-center transition hover:bg-[#1ebe57]">WhatsApp</a>
-              <a href="https://t.me/semengme" target="_blank" rel="noreferrer" class="rounded-full border border-transparent bg-[#229ED9] text-white px-4 py-3 text-sm font-medium text-center transition hover:bg-[#1f8fc5]">Telegram</a>
-            </div>
-            <div class="rounded-full border border-slate-200 bg-slate-100 text-slate-700 px-4 py-3 text-sm font-medium flex items-center justify-center gap-2 w-full">
-              <span class="h-2 w-2 rounded-full bg-slate-400"></span>
-              <span>Санкт-Петербург и ЛО</span>
-            </div>
+              <p id="formMessage"
+                 class="hidden text-green-100 bg-green-800/20 border border-green-600/30 rounded-xl p-3 text-center mt-2"></p>
+            </form>
           </div>
         </div>
+
+        <aside class="contact-info">
+          <h3>Мои контакты</h3>
+
+          <div class="info-block">
+            <div class="info-label">Связь</div>
+            <div class="messenger-row">
+              <a class="btn-mini btn-phone" href="tel:+79118461965">+7 911 846-19-65</a>
+              <a class="btn-mini btn-wa" href="https://wa.me/79118461965" target="_blank" rel="noopener">WhatsApp</a>
+              <a class="btn-mini btn-tg" href="https://t.me/semengme" target="_blank" rel="noopener">Telegram</a>
+              <a class="btn-mini btn-email" href="mailto:goncharov.trend@gmail.com">goncharov.trend@gmail.com</a>
+            </div>
+          </div>
+
+          <div class="info-block">
+            <div class="info-label">Адрес</div>
+            <p class="info-address">Санкт-Петербург, наб. р. Мойки, д. 36, БЦ «Сенатор»</p>
+          </div>
+        </aside>
       </div>
     </section>
 
@@ -1206,15 +1429,29 @@
     // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Обновляем отступ под фиксированную шапку
+    (function() {
+      const root = document.documentElement;
+      const shell = document.querySelector('.top-shell');
+      const setOffset = () => {
+        if (!shell) return;
+        root.style.setProperty('--nav-offset', `${shell.offsetHeight}px`);
+      };
+      window.addEventListener('resize', setOffset);
+      setOffset();
+    })();
+
     // Переключение цвета топ-бара в зависимости от фона
     (function() {
       const topbar = document.getElementById('topbar');
       const wrapper = document.getElementById('gradient-zone');
-      if (!topbar || !wrapper) return;
+      const headerEl = document.querySelector('header');
+      if (!topbar || !wrapper || !headerEl) return;
       const update = () => {
         const threshold = wrapper.offsetTop + wrapper.offsetHeight - 80;
         const onLight = window.scrollY >= threshold;
         topbar.classList.toggle('light', onLight);
+        headerEl.classList.toggle('light', onLight);
       };
       window.addEventListener('scroll', update, { passive: true });
       window.addEventListener('resize', update);
