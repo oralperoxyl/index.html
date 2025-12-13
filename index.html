@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
 
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -53,6 +53,34 @@
       -webkit-font-smoothing: antialiased;
       font-smooth: antialiased;
       padding-top: 0;
+    }
+    body.no-motion {
+      scroll-behavior: auto;
+    }
+    body.no-motion *, body.no-motion *::before, body.no-motion *::after {
+      animation: none !important;
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+    body.no-motion .reveal,
+    body.no-motion .visible,
+    body.no-motion .reveal-text {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+    body.no-motion .pinned-panel {
+      position: static !important;
+      opacity: 1 !important;
+      transform: none !important;
+      pointer-events: auto !important;
+    }
+    body.no-motion #pinned-stack {
+      position: static !important;
+      height: auto !important;
+      top: 0 !important;
     }
     h1,h2,h3,h4,h5,h6 {
       font-family: "IBM Plex Serif", serif;
@@ -328,6 +356,210 @@
     .gradient-wrap main {
       background: transparent !important;
     }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .hero-primary {
+      padding: 12px 20px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      color: #ffffff;
+      border: none;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      transition: background .25s ease, transform .2s ease, opacity .2s ease;
+      box-shadow: none;
+    }
+    .hero-primary:hover { background: rgba(255,255,255,0.16); transform: translateY(-1px); }
+    .hero-link {
+      color: rgba(255,255,255,0.82);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      text-decoration: none;
+      transition: color .2s ease, opacity .2s ease, text-decoration-color .2s ease;
+    }
+    .hero-link:hover { color: rgba(255,255,255,1); text-decoration: underline; text-decoration-color: rgba(255,255,255,0.6); }
+    /* Editorial list for "Чем я помогу" */
+    .help-section h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      color: rgba(15,23,42,0.88);
+    }
+    .help-intro {
+      max-width: min(520px, 82vw);
+      color: rgba(15, 23, 42, 0.75);
+      line-height: 1.5;
+      margin-bottom: 28px;
+      font-family: "IBM Plex Serif", serif;
+      font-weight: 400;
+      font-size: 16px;
+    }
+    .help-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 26px;
+    }
+    .help-item {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 14px;
+      row-gap: 8px;
+      align-items: start;
+    }
+    .help-number {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 300;
+      font-size: 19px;
+      letter-spacing: 0.2em;
+      color: rgba(15,23,42,0.48);
+      margin-top: 2px;
+    }
+    .help-title {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 400;
+      font-size: clamp(20px, 2vw, 26px);
+      letter-spacing: -0.01em;
+      color: rgba(15,23,42,0.94);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .help-desc {
+      grid-column: 1 / -1;
+      font-family: "IBM Plex Serif", serif;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.42;
+      color: rgba(15, 23, 42, 0.82);
+      max-width: 640px;
+    }
+    @media (max-width: 640px) {
+      .help-item {
+        grid-template-columns: 1fr;
+      }
+      .help-number {
+        order: 1;
+        margin-bottom: 4px;
+      }
+      .help-title {
+        order: 2;
+        margin-bottom: 10px;
+      }
+      .help-desc {
+        order: 3;
+      }
+      .help-list { gap: 32px; }
+      .help-intro { margin-bottom: 32px; }
+    }
+    .help-compact {
+      padding: clamp(32px, 6vw, 60px) 0;
+      min-height: auto;
+    }
+    .help-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.9fr) 1.1fr;
+      gap: clamp(18px, 4vw, 36px);
+      align-items: start;
+    }
+    .help-points {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px 24px;
+    }
+    @media (max-width: 880px) {
+      .help-grid { grid-template-columns: 1fr; }
+      .help-points { grid-template-columns: 1fr; }
+    }
+    /* Pinned scenes */
+    :root { --hold: 1; }
+    .pin-scene {
+      position: relative;
+      min-height: calc((1 + var(--hold)) * 100vh);
+      padding: 0 0 24px 0;
+    }
+    .pin-inner {
+      position: sticky;
+      top: var(--header-h);
+      min-height: calc(100vh - var(--header-h));
+      display: flex;
+      align-items: center;
+      z-index: 1;
+      padding: 0 clamp(18px, 4vw, 64px);
+    }
+    .pin-surface {
+      position: relative;
+      z-index: 2;
+      padding: clamp(18px, 4vw, 32px) 0;
+      --pin-progress: 1;
+      transform: translateY(calc((1 - var(--pin-progress)) * 10px));
+      opacity: calc(0.72 + 0.28 * var(--pin-progress));
+    }
+    .pin-surface::before {
+      content: "";
+      position: absolute;
+      inset: -12% -10%;
+      background: radial-gradient(60% 60% at 32% 38%, rgba(0,0,0,0.22), transparent 65%);
+      opacity: 0.14;
+      filter: blur(18px);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .pin-surface * {
+      text-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    }
+    .hero-block.on-light .hero-title {
+      color: rgba(15,23,42,0.92);
+      text-shadow: none;
+    }
+    .hero-block.on-light .hero-subtitle {
+      color: rgba(15,23,42,0.78);
+      text-shadow: none;
+    }
+    .hero-block.on-light .hero-primary {
+      background: rgba(15,23,42,0.12);
+      color: rgba(15,23,42,0.9);
+    }
+    .hero-block.on-light .hero-link {
+      color: rgba(15,23,42,0.82);
+    }
+    .services-lite {
+      background: #ffffff;
+      color: #0f172a;
+    }
+    .services-lite h2 { margin: 0 0 12px 0; }
+    .services-lite ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+    .services-lite li {
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(15,23,42,0.08);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    .services-lite li:last-child { border-bottom: none; }
+    .hero-title {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 300;
+      font-size: clamp(56px, 6.6vw, 118px);
+      line-height: 0.98;
+      letter-spacing: -0.015em;
+      max-width: min(1400px, 92vw);
+      color: rgba(255,255,255,0.92);
+      text-wrap: balance;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+      text-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    }
+    .hero-subtitle {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 400;
+      font-size: clamp(20px, 1.9vw, 30px);
+      line-height: 1.38;
+      color: rgba(255,255,255,0.84);
+      margin-top: 26px;
+      max-width: min(65ch, 86vw);
+      text-wrap: balance;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+      text-shadow: 0 6px 28px rgba(0,0,0,0.2);
+    }
     #gradient-zone .pill,
     #gradient-zone .btn-cta,
     #gradient-zone .btn-ghost-light,
@@ -338,47 +570,24 @@
     }
     /* Pinned stack */
     #pinned-stack {
-      position: sticky;
-      top: var(--header-h);
-      height: calc(100vh - var(--header-h));
-      isolation: isolate;
+      position: static;
+      height: auto;
+      isolation: auto;
     }
     .pinned-panel {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transform: translateY(12px);
-      transition: opacity .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1);
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: static;
+      opacity: 1;
+      transform: none;
+      transition: none;
+      pointer-events: auto;
+      display: block;
       padding: 0 1rem;
     }
-    .pinned-panel.is-active {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
     .pinned-panel .reveal-text {
-      opacity: 0;
-      transform: translateY(10px);
-      filter: blur(8px);
-      transition: opacity .9s ease, transform .9s ease, filter .9s ease;
-    }
-    .pinned-panel.is-active .reveal-text {
       opacity: 1;
-      transform: translateY(0);
-      filter: blur(0);
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .pinned-panel,
-      .pinned-panel .reveal-text {
-        transition: none !important;
-        opacity: 1 !important;
-        transform: none !important;
-        filter: none !important;
-      }
+      transform: none;
+      filter: none;
+      transition: none;
     }
     .bottom-gradient {
       position: relative;
@@ -411,16 +620,27 @@
     .brand-logo {
       font-family: "SF Pro Display","SF Pro Text",-apple-system,"Helvetica Neue",Arial,sans-serif;
       letter-spacing: -0.02em;
-      font-weight: 800;
+      font-weight: 700;
+    }
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: transparent !important;
+      border: 0 !important;
+      box-shadow: none !important;
     }
     header, header a, .brand-link, .nav-link {
       color: #ffffff !important;
-      transition: color .3s ease;
-      text-shadow: 0 1px 8px rgba(0,0,0,0.28);
+      transition: color .25s ease, opacity .2s ease;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.22);
+      opacity: 0.9;
     }
+    header a:hover { opacity: 1; }
     header.light, header.light a, header.light .brand-link, header.light .nav-link {
       color: #0f172a !important;
       text-shadow: none;
+      opacity: 0.88;
     }
     .burger { display: none; cursor: pointer; }
     .mobile-nav { display: none; }
@@ -435,7 +655,7 @@
         right: 0;
         bottom: 0;
         z-index: 9998;
-        background: rgba(10,12,18,0.72);
+        background: rgba(10,12,18,0.82);
         backdrop-filter: blur(14px);
         opacity: 0;
         pointer-events: none;
@@ -452,7 +672,9 @@
         display: block;
         padding: 14px 0;
         color: #ffffff;
-        font-size: 16px;
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: -0.01em;
       }
     }
     header, .header, .top-bar, .navbar, .nav, .header-inner,
@@ -728,118 +950,100 @@
     <a href="#contact" class="nav-link">Контакты</a>
   </div>
 
-  <div id="pinned-stack">
-    <div class="pinned-panel" data-panel="1">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="md:max-w-[70%] lg:max-w-[62%] space-y-6">
-          <h1 class="text-4xl md:text-6xl font-extrabold leading-[1.2] reveal-text"
-              style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.02em; color:var(--ink);">
-            Ваш человек в мире недвижимости СПб
+  <div class="pin-scene hero-scene">
+    <div class="pin-inner">
+      <div class="pin-surface hero-block">
+        <div class="md:max-w-[72%] lg:max-w-[60%] space-y-6">
+          <p class="text-sm uppercase tracking-[0.16em] text-white/70">Санкт-Петербург</p>
+          <h1 class="hero-title">
+            Ваш человек в мире недвижимости.
           </h1>
-          <p class="text-lg reveal-text"
-             style="font-family:'IBM Plex Serif',serif; font-weight:500; letter-spacing:-0.01em; color:var(--ink); line-height:1.45;">
-            Помогаю собственникам продавать дороже и быстрее за счёт аукционной модели.
-            Полное сопровождение до сделки.
+          <p class="hero-subtitle">
+            Рядом на каждом этапе — от первого разговора до сделки. Спокойно, прозрачно и в ваших интересах.
           </p>
-          <div class="flex flex-wrap gap-3 reveal-text">
+          <div class="hero-actions">
             <a href="#contact">
-              <button class="inline-flex items-center justify-center rounded-full btn-cta btn-ghost-light text-sm font-semibold px-6 py-3">
-                Бесплатная консультация →
+              <button class="hero-primary">
+                Начать с консультации
               </button>
             </a>
-            <a href="#badges">
-              <button class="inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium bg-white/10 backdrop-blur" style="border:none; box-shadow:none; color:var(--pill-text);">
-                Посмотреть услуги
-              </button>
-            </a>
-          </div>
-          <section id="badges" class="pt-2">
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Продажа аукционом за 21 день</div>
-              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатный подбор новостроек</div>
-              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Работа на покупку</div>
-              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Сопровождение сделки</div>
-              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Одобрение ипотеки</div>
-              <div class="badge-ghost rounded-2xl p-3 text-center font-semibold">Бесплатная первичная консультация</div>
-            </div>
-          </section>
-        </div>
-      </div>
-    </div>
-
-    <div class="pinned-panel" data-panel="2">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="space-y-4 reveal-text">
-          <h2 class="text-3xl md:text-4xl font-bold" style="color:var(--ink);">Чем я помогу</h2>
-          <p style="color:var(--ink);">Нацелен на то, чтобы ваша недвижимость была продана дороже, чем самостоятельно или с другим агентом. Сфокусирован на результате, юридической безопасности и комфорте клиента.</p>
-        </div>
-        <div class="mt-8 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="card-soft rounded-2xl p-5 reveal-text">
-            <div class="flex items-center gap-3">
-              <div class="font-semibold">Продажа за 21 день</div>
-            </div>
-            <div class="pt-2 text-sm text-slate-700">Аукционный подход: концентрируем спрос и находим идеального покупателя по максимальной цене.</div>
-          </div>
-          <div class="card-soft rounded-2xl p-5 reveal-text">
-            <div class="flex items-center gap-3">
-              <div class="font-semibold">Юридическая чистота</div>
-            </div>
-            <div class="pt-2 text-sm text-slate-700">Проверка документов и полное сопровождение сделки в связке с профессиональным юристом.</div>
-          </div>
-          <div class="card-soft rounded-2xl p-5 reveal-text">
-            <div class="flex items-center gap-3">
-              <div class="font-semibold">Экономия времени</div>
-            </div>
-            <div class="pt-2 text-sm text-slate-700">Беру на себя весь процесс: звонки, показы, заявки и переговоры.</div>
-          </div>
-          <div class="card-soft rounded-2xl p-5 reveal-text">
-            <div class="flex items-center gap-3">
-              <div class="font-semibold">Работаю и на покупку</div>
-            </div>
-            <div class="pt-2 text-sm text-slate-700">Подбор лучшего объекта под ваш запрос, переговоры, безопасность, ипотека/субсидии — до ключей.</div>
+            <a class="hero-link" href="#services">Посмотреть услуги</a>
           </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="pinned-panel" data-panel="3">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-12 space-y-2 reveal-text">
+  <section class="help-compact max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="help-grid">
+      <div class="space-y-4 help-section">
+        <h2 class="text-3xl md:text-4xl" style="color:var(--ink);">Чем я помогу</h2>
+        <p class="help-intro">Помогаю продавать и покупать недвижимость спокойнее и выгоднее. Без суеты, с прозрачностью и контролем на каждом этапе.</p>
+      </div>
+      <div class="help-points">
+        <div class="help-item">
+          <div class="help-number">01</div>
+          <div class="help-title">Продажа за 21 день</div>
+          <div class="help-desc">Концентрирую спрос, создаю конкуренцию между покупателями, а вы — выбираете лучшего среди них по условиям.</div>
+        </div>
+        <div class="help-item">
+          <div class="help-number">02</div>
+          <div class="help-title">Юридическая чистота</div>
+          <div class="help-desc">Проверка документов, контроль рисков и сопровождение сделки с юристом до передачи ключей.</div>
+        </div>
+        <div class="help-item">
+          <div class="help-number">03</div>
+          <div class="help-title">Экономия вашего времени</div>
+          <div class="help-desc">Беру на себя звонки, показы и переговоры. Вы видите только решения и прогресс.</div>
+        </div>
+        <div class="help-item">
+          <div class="help-number">04</div>
+          <div class="help-title">Работаю и на покупку</div>
+          <div class="help-desc">Подбор объекта, переговоры, ипотека и сопровождение — до оптимального результата.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="pin-scene">
+    <div class="pin-inner">
+      <div class="pin-surface">
+        <div class="mb-12 space-y-2">
           <p class="text-xs uppercase tracking-[0.2em]" style="color:var(--ink);">Процесс</p>
           <h2 class="text-3xl md:text-4xl font-bold" style="color:var(--ink);">Как проходит продажа</h2>
           <p class="text-sm" style="color:var(--ink);">Чёткие шаги с прозрачными сроками и ответственностью.</p>
         </div>
 
         <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+          <div class="card-soft rounded-2xl p-4 text-left">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">1</div>
               <div class="font-semibold text-slate-900">Диагностика</div>
             </div>
             <p class="mt-3 text-sm text-slate-600">Оценка рынка, сценарий цены, календарь запуска.</p>
           </div>
-          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+          <div class="card-soft rounded-2xl p-4 text-left">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">2</div>
               <div class="font-semibold text-slate-900">Подготовка</div>
             </div>
             <p class="mt-3 text-sm text-slate-600">Документы, визуал, объявление, фильтр покупателей.</p>
           </div>
-          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+          <div class="card-soft rounded-2xl p-4 text-left">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">3</div>
               <div class="font-semibold text-slate-900">Выход в продажу</div>
             </div>
             <p class="mt-3 text-sm text-slate-600">Запуск рекламы, окна показов, контроль спроса.</p>
           </div>
-          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+          <div class="card-soft rounded-2xl p-4 text-left">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">4</div>
               <div class="font-semibold text-slate-900">Торги</div>
             </div>
             <p class="mt-3 text-sm text-slate-600">Переговоры, повышение офферов, выбор лучшего.</p>
           </div>
-          <div class="card-soft rounded-2xl p-4 text-left reveal-text">
+          <div class="card-soft rounded-2xl p-4 text-left">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">5</div>
               <div class="font-semibold text-slate-900">Сделка</div>
@@ -853,8 +1057,21 @@
   </div>
 
 
+<!-- Services list -->
+<section id="services" class="services-lite max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+  <h2 class="text-2xl md:text-3xl font-bold">Услуги</h2>
+  <ul>
+    <li>Продажа аукционом за 21 день</li>
+    <li>Бесплатный подбор новостроек</li>
+    <li>Работа на покупку</li>
+    <li>Сопровождение сделки</li>
+    <li>Одобрение ипотеки</li>
+    <li>Бесплатная первичная консультация</li>
+  </ul>
+</section>
+
 <!-- Cases Slider -->
-<section id="cases" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+  <section id="cases" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
   <div class="flex items-end justify-between gap-4 mb-6">
     <h2 class="text-3xl md:text-4xl font-bold">Примеры кейсов</h2>
   </div>
@@ -1474,118 +1691,25 @@
       setH();
     })();
 
-    // Переключение цвета хедера в зависимости от фона
-    (function() {
-      const wrapper = document.getElementById('gradient-zone');
-      const headerEl = document.querySelector('header');
-      if (!wrapper || !headerEl) return;
+    // Прогресс для pinned-сцен (равномерный hold) + смена контраста hero
+    (() => {
+      const scenes = Array.from(document.querySelectorAll('.pin-scene'));
       const update = () => {
-        const threshold = wrapper.offsetTop + wrapper.offsetHeight - 80;
-        const onLight = window.scrollY >= threshold;
-        headerEl.classList.toggle('light', onLight);
+        const vh = window.innerHeight || 1;
+        scenes.forEach(scene => {
+          const surface = scene.querySelector('.pin-surface');
+          if (!surface) return;
+          const rect = scene.getBoundingClientRect();
+          const progress = Math.max(0, Math.min(1, (vh / 2 - rect.top) / Math.max(1, rect.height - vh)));
+          surface.style.setProperty('--pin-progress', progress.toFixed(3));
+          if (scene.classList.contains('hero-scene')) {
+            surface.classList.toggle('on-light', progress > 0.55);
+          }
+        });
       };
       window.addEventListener('scroll', update, { passive: true });
       window.addEventListener('resize', update);
       update();
-    })();
-
-    // Плавное изменение цвета текста и пилюль по мере скролла градиентной зоны
-    (function() {
-      const zone = document.getElementById('gradient-zone');
-      if (!zone) return;
-      const root = document.documentElement;
-
-      const lerp = (a, b, t) => a + (b - a) * t;
-      const mixRgb = (a, b, t) => `rgb(${Math.round(lerp(a[0], b[0], t))}, ${Math.round(lerp(a[1], b[1], t))}, ${Math.round(lerp(a[2], b[2], t))})`;
-      const mixRgba = (a, b, t) => `rgba(${Math.round(lerp(a[0], b[0], t))}, ${Math.round(lerp(a[1], b[1], t))}, ${Math.round(lerp(a[2], b[2], t))}, ${lerp(a[3], b[3], t).toFixed(3)})`;
-
-      const inkLight = [233, 237, 247];
-      const inkDark = [15, 23, 42];
-      const pillBgLight = [255, 255, 255, 0.10];
-      const pillBgDark  = [15, 23, 42, 0.04];
-      const pillBorderLight = [255, 255, 255, 0];
-      const pillBorderDark  = [15, 23, 42, 0];
-      const pillTextLight = [255, 255, 255, 0.92];
-      const pillTextDark  = [15, 23, 42, 0.88];
-
-      let ticking = false;
-
-      const setVars = () => {
-        const zoneTop = zone.getBoundingClientRect().top + window.scrollY;
-        const zoneHeight = zone.offsetHeight || 1;
-        const progress = Math.min(1, Math.max(0, (window.scrollY - zoneTop) / zoneHeight));
-
-        const ink = mixRgb(inkLight, inkDark, progress);
-        const shadowStrength = 0.26 * (1 - progress);
-
-        const bg = mixRgba(pillBgLight, pillBgDark, progress);
-        const bd = mixRgba(pillBorderLight, pillBorderDark, progress);
-        const txt = mixRgba(pillTextLight, pillTextDark, progress);
-
-        zone.style.setProperty('--ink', ink);
-        zone.style.setProperty('--pill-bg', bg);
-        zone.style.setProperty('--pill-border', bd);
-        zone.style.setProperty('--pill-text', txt);
-        zone.style.setProperty('--ink-shadow', `0 0 18px rgba(0,0,0,${shadowStrength.toFixed(3)})`);
-
-        root.style.setProperty('--ink', ink);
-      };
-
-      const onScroll = () => {
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          setVars();
-          ticking = false;
-        });
-      };
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll);
-      setVars();
-    })();
-
-    // Pinned panels (hero → help → process)
-    (function() {
-      const zone = document.getElementById('gradient-zone');
-      const stack = document.getElementById('pinned-stack');
-      const panels = Array.from(document.querySelectorAll('.pinned-panel'));
-      if (!zone || !stack || !panels.length) return;
-
-      let current = 0;
-      const seen = new Set();
-
-      const applyState = (idx) => {
-        panels.forEach((p, i) => {
-          const active = i === idx;
-          p.classList.toggle('is-active', active);
-          if (active && !seen.has(i)) {
-            seen.add(i);
-            p.classList.add('is-revealed');
-          }
-        });
-      };
-
-      const onScroll = () => {
-        const start = zone.offsetTop;
-        const end = start + zone.offsetHeight - window.innerHeight;
-        const y = window.scrollY;
-        if (y < start) {
-          applyState(0);
-          return;
-        }
-        const progress = Math.min(1, Math.max(0, (y - start) / Math.max(1, end - start)));
-        const idx = Math.min(panels.length - 1, Math.floor(progress * panels.length));
-        if (idx !== current) {
-          current = idx;
-          applyState(current);
-        }
-      };
-
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll);
-      applyState(0);
-      onScroll();
     })();
 
     // Vanilla slider logic
@@ -1651,34 +1775,8 @@
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     });
 
-    // Анимации появления при скролле
-    (function() {
-      const sections = Array.from(document.querySelectorAll('section'));
-
-      // Фолбэк, если IntersectionObserver недоступен
-      if (!('IntersectionObserver' in window)) {
-        sections.forEach(el => el.classList.add('visible'));
-        return;
-      }
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      }, { threshold: 0.15 });
-
-      sections.forEach(el => {
-        el.classList.add('reveal');
-        observer.observe(el);
-
-        // Быстрее показываем на мобильных, если наблюдатель не успел
-        if (window.innerWidth < 768) {
-          setTimeout(() => el.classList.add('visible'), 400);
-        }
-      });
-    })();
+    // Анимации появления при скролле отключены
+    (function(){})();
 
     // FAQ: аккордеон с плавным раскрытием
     (function() {
