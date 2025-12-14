@@ -1,8 +1,6 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
-
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="theme-color" content="#0f172a">
@@ -322,21 +320,22 @@
     .gradient-wrap {
       position: relative;
       overflow: clip;
-      min-height: 220vh;
+      min-height: 260vh;
       padding-top: var(--header-h);
       background:
         radial-gradient(900px 600px at 80% 30%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.00) 55%),
         radial-gradient(700px 500px at 20% 70%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.00) 60%),
         linear-gradient(
           180deg,
-          #2a1a16 0%,
-          #1f2c3f 24%,
-          #3b4f6e 48%,
-          #f4efe8 78%,
-          #ffffff 100%
+          #2b1a12 0%,
+          #0e2038 35%,
+          #314a72 60%,
+          #7d9ac1 78%,
+          #c8d6e6 90%,
+          #f5f6f9 100%
         );
       background-repeat: no-repeat;
-      background-size: 100% 220vh;
+      background-size: 100% 100%;
       color: var(--ink);
       isolation: isolate;
     }
@@ -469,6 +468,100 @@
       .help-grid { grid-template-columns: 1fr; }
       .help-points { grid-template-columns: 1fr; }
     }
+    /* Process editorial */
+    .process-section {
+      padding: clamp(48px, 8vw, 88px) 0;
+    }
+    .process-header {
+      max-width: min(540px, 86vw);
+      margin-bottom: clamp(28px, 5vw, 40px);
+    }
+    .process-header h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 300;
+      letter-spacing: -0.02em;
+      font-size: clamp(30px, 3vw, 42px);
+      color: rgba(15,23,42,0.9);
+      margin: 0 0 8px 0;
+    }
+    .process-header p {
+      font-family: "IBM Plex Serif", serif;
+      font-size: 16px;
+      line-height: 1.5;
+      color: rgba(15,23,42,0.7);
+      margin: 0;
+      max-width: 52ch;
+    }
+    .process-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 18px 24px;
+    }
+    .process-step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      column-gap: 14px;
+      row-gap: 8px;
+      align-items: start;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 520ms ease-out, transform 520ms ease-out;
+    }
+    .process-step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .process-num {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 300;
+      font-size: 18px;
+      letter-spacing: 0.2em;
+      color: rgba(15,23,42,0.48);
+      margin-top: 2px;
+    }
+    .process-title {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 400;
+      font-size: clamp(20px, 1.9vw, 26px);
+      letter-spacing: -0.01em;
+      color: rgba(15,23,42,0.9);
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+    .process-desc {
+      grid-column: 1 / -1;
+      font-family: "IBM Plex Serif", serif;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.46;
+      color: rgba(15,23,42,0.82);
+      max-width: 60ch;
+    }
+    .process-narrative {
+      display: grid;
+      gap: 24px;
+      max-width: 64ch;
+      color: rgba(15,23,42,0.78);
+      font-family: "IBM Plex Serif", serif;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+    .process-narrative p {
+      margin: 0;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 520ms ease-out, transform 520ms ease-out;
+    }
+    .process-narrative p.visible { opacity: 1; transform: translateY(0); }
+    .process-narrative strong {
+      font-weight: 600;
+      color: rgba(15,23,42,0.9);
+    }
+    @media (max-width: 880px) {
+      .process-list { grid-template-columns: 1fr; gap: 22px; }
+      .process-step { grid-template-columns: 1fr; }
+      .process-num { margin-bottom: 4px; }
+    }
     /* Pinned scenes */
     :root { --hold: 1; }
     .pin-scene {
@@ -503,12 +596,10 @@
       z-index: -1;
       pointer-events: none;
     }
-    .pin-surface * {
-      text-shadow: 0 8px 40px rgba(0,0,0,0.25);
-    }
-    .hero-block.on-light .hero-title {
-      color: rgba(15,23,42,0.92);
-      text-shadow: none;
+    .pin-surface * { text-shadow: none; }
+    .hero-block.on-light .hero-title { color: rgba(15,23,42,0.92); }
+    .hero-block.on-light .hero-kicker {
+      color: rgba(15,23,42,0.6);
     }
     .hero-block.on-light .hero-subtitle {
       color: rgba(15,23,42,0.78);
@@ -534,31 +625,8 @@
       letter-spacing: -0.01em;
     }
     .services-lite li:last-child { border-bottom: none; }
-    .hero-title {
-      font-family: "Cormorant Garamond", serif;
-      font-weight: 300;
-      font-size: clamp(56px, 6.6vw, 118px);
-      line-height: 0.98;
-      letter-spacing: -0.015em;
-      max-width: min(1400px, 92vw);
-      color: rgba(255,255,255,0.92);
-      text-wrap: balance;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
-      text-shadow: 0 8px 40px rgba(0,0,0,0.25);
-    }
-    .hero-subtitle {
-      font-family: "Cormorant Garamond", serif;
-      font-weight: 400;
-      font-size: clamp(20px, 1.9vw, 30px);
-      line-height: 1.38;
-      color: rgba(255,255,255,0.84);
-      margin-top: 26px;
-      max-width: min(65ch, 86vw);
-      text-wrap: balance;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
-      text-shadow: 0 6px 28px rgba(0,0,0,0.2);
+    .hero-kicker {
+      color: rgba(255,255,255,0.72);
     }
     #gradient-zone .pill,
     #gradient-zone .btn-cta,
@@ -904,6 +972,49 @@
     .btn-tg { --btn-hover: rgba(42,171,238,0.8); }
     .btn-phone { --btn-hover: rgba(15,23,42,0.8); }
     .btn-email { --btn-hover: rgba(255,255,255,0.8); color: rgba(255,255,255,0.9); }
+
+    /* Subtle scrollbar */
+    :root { scrollbar-color: rgba(255,255,255,0.15) transparent; scrollbar-width: thin; }
+    *::-webkit-scrollbar { width: 8px; }
+    *::-webkit-scrollbar-track { background: transparent; }
+    *::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+    }
+    *::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.18);
+    }
+
+    /* Hero typography lock (last, overrides everything) */
+    .hero-title{
+      font-family: Georgia,"Times New Roman",serif !important;
+      font-weight: 400 !important;
+      font-style: normal !important;
+      font-size: clamp(56px, 5.6vw, 94px) !important;
+      line-height: 1.03 !important;
+      letter-spacing: -0.02em !important;
+      color: rgba(236,236,236,0.92) !important;
+      margin: 0 !important;
+      white-space: nowrap !important;
+      max-width: none !important;
+      text-shadow: none !important;
+    }
+    .hero-subtitle{
+      font-family: Georgia,"Times New Roman",serif !important;
+      font-weight: 400 !important;
+      font-style: normal !important;
+      font-size: clamp(56px, 5.6vw, 94px) !important;
+      line-height: 1.08 !important;
+      letter-spacing: -0.01em !important;
+      color: rgba(236,236,236,0.58) !important;
+      margin-top: 12px !important;
+      max-width: none !important;
+      white-space: normal !important;
+      text-shadow: none !important;
+    }
+    @media (max-width: 640px){
+      .hero-title{ white-space: normal !important; }
+    }
   </style>
 </head>
 <body class="text-slate-900">
@@ -953,12 +1064,12 @@
   <div class="pin-scene hero-scene">
     <div class="pin-inner">
       <div class="pin-surface hero-block">
-        <div class="md:max-w-[72%] lg:max-w-[60%] space-y-6">
-          <p class="text-sm uppercase tracking-[0.16em] text-white/70">Санкт-Петербург</p>
-          <h1 class="hero-title">
-            Ваш человек в мире недвижимости.
+        <div class="w-full max-w-none space-y-6">
+          <p class="text-sm uppercase tracking-[0.16em] hero-kicker">Санкт-Петербург</p>
+          <h1 class="hero-title" style="font-family:Georgia,'Times New Roman',serif !important;">
+            Ваш человек в мире недвижимости
           </h1>
-          <p class="hero-subtitle">
+          <p class="hero-subtitle" style="font-family:Georgia,'Times New Roman',serif !important;">
             Рядом на каждом этапе — от первого разговора до сделки. Спокойно, прозрачно и в ваших интересах.
           </p>
           <div class="hero-actions">
@@ -967,7 +1078,6 @@
                 Начать с консультации
               </button>
             </a>
-            <a class="hero-link" href="#services">Посмотреть услуги</a>
           </div>
         </div>
       </div>
@@ -1005,55 +1115,19 @@
     </div>
   </section>
 
-  <div class="pin-scene">
-    <div class="pin-inner">
-      <div class="pin-surface">
-        <div class="mb-12 space-y-2">
-          <p class="text-xs uppercase tracking-[0.2em]" style="color:var(--ink);">Процесс</p>
-          <h2 class="text-3xl md:text-4xl font-bold" style="color:var(--ink);">Как проходит продажа</h2>
-          <p class="text-sm" style="color:var(--ink);">Чёткие шаги с прозрачными сроками и ответственностью.</p>
-        </div>
-
-        <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
-          <div class="card-soft rounded-2xl p-4 text-left">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">1</div>
-              <div class="font-semibold text-slate-900">Диагностика</div>
-            </div>
-            <p class="mt-3 text-sm text-slate-600">Оценка рынка, сценарий цены, календарь запуска.</p>
-          </div>
-          <div class="card-soft rounded-2xl p-4 text-left">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">2</div>
-              <div class="font-semibold text-slate-900">Подготовка</div>
-            </div>
-            <p class="mt-3 text-sm text-slate-600">Документы, визуал, объявление, фильтр покупателей.</p>
-          </div>
-          <div class="card-soft rounded-2xl p-4 text-left">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">3</div>
-              <div class="font-semibold text-slate-900">Выход в продажу</div>
-            </div>
-            <p class="mt-3 text-sm text-slate-600">Запуск рекламы, окна показов, контроль спроса.</p>
-          </div>
-          <div class="card-soft rounded-2xl p-4 text-left">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">4</div>
-              <div class="font-semibold text-slate-900">Торги</div>
-            </div>
-            <p class="mt-3 text-sm text-slate-600">Переговоры, повышение офферов, выбор лучшего.</p>
-          </div>
-          <div class="card-soft rounded-2xl p-4 text-left">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-slate-900 text-white grid place-items-center text-lg font-semibold">5</div>
-              <div class="font-semibold text-slate-900">Сделка</div>
-            </div>
-            <p class="mt-3 text-sm text-slate-600">Договор, расчёты, сопровождение до передачи ключей.</p>
-          </div>
-        </div>
-      </div>
+  <section id="process" class="process-section max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="process-header">
+      <h2>Как проходит продажа</h2>
+      <p>Продажа — это выстроенный процесс без суеты и лишних шагов.</p>
     </div>
-  </div>
+    <div class="process-narrative">
+      <p><strong>Сначала мы разбираем ситуацию.</strong> Объект, рынок и вашу задачу. Оцениваем реальную цену и сценарии продажи — без завышенных ожиданий и «пробных» размещений.</p>
+      <p><strong>Дальше готовим объект к выходу.</strong> Документы, подача, визуал и текст — всё, что влияет на интерес и итоговую цену, приводится в порядок заранее.</p>
+      <p><strong>Когда объект выходит в продажу, мы работаем со спросом.</strong> Запускаем рекламу, контролируем показы и отсекаем случайных покупателей. Важно не количество звонков, а качество интереса.</p>
+      <p><strong>В переговорах задача — выбрать оптимальный вариант.</strong> По цене, условиям и срокам. Без давления и спешки.</p>
+      <p><strong>Сделку доводим до конца спокойно и последовательно.</strong> Документы, расчёты, сопровождение — до момента, когда ключи переданы, а вопросы закрыты.</p>
+    </div>
+  </section>
   </div>
 
 
@@ -1694,6 +1768,14 @@
     // Прогресс для pinned-сцен (равномерный hold) + смена контраста hero
     (() => {
       const scenes = Array.from(document.querySelectorAll('.pin-scene'));
+      const applyHeroFade = () => {
+        const y = window.scrollY || 0;
+        const t = Math.max(0, Math.min(1, y / 260));
+        const titleAlpha = 0.92 - 0.18 * t;
+        const subAlpha   = 0.55 - 0.15 * t;
+        document.documentElement.style.setProperty('--hero-title-a', titleAlpha.toFixed(3));
+        document.documentElement.style.setProperty('--hero-sub-a', subAlpha.toFixed(3));
+      };
       const update = () => {
         const vh = window.innerHeight || 1;
         scenes.forEach(scene => {
@@ -1702,14 +1784,29 @@
           const rect = scene.getBoundingClientRect();
           const progress = Math.max(0, Math.min(1, (vh / 2 - rect.top) / Math.max(1, rect.height - vh)));
           surface.style.setProperty('--pin-progress', progress.toFixed(3));
-          if (scene.classList.contains('hero-scene')) {
-            surface.classList.toggle('on-light', progress > 0.55);
-          }
+          // no color toggle needed; keep hero text stable over gradient
         });
+        applyHeroFade();
       };
       window.addEventListener('scroll', update, { passive: true });
       window.addEventListener('resize', update);
       update();
+    })();
+
+    // Reveal process narrative as a whole
+    (() => {
+      const container = document.querySelector('.process-narrative');
+      if (!container) return;
+      const paras = Array.from(container.querySelectorAll('p'));
+      const reveal = () => paras.forEach(p => p.classList.add('visible'));
+      if (!('IntersectionObserver' in window)) {
+        reveal();
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) reveal(); });
+      }, { threshold: 0.1 });
+      observer.observe(container);
     })();
 
     // Vanilla slider logic
