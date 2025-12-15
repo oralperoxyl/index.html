@@ -759,10 +759,30 @@
       max-width: 58ch;
     }
     @media (max-width: 880px){
+      .services-scene{
+        height: auto;
+        margin-top: clamp(32px, 6vh, 60px);
+      }
+      .services-sticky{
+        position: static;
+        height: auto;
+      }
+      .services-stack{
+        position: static;
+        overflow: visible;
+      }
       .svc-card{
+        position: relative;
+        left: 0;
+        transform: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+        width: 100%;
         min-height: clamp(520px, 78vh, 640px);
         padding: clamp(24px, 5vw, 36px);
+        margin-bottom: 18px;
       }
+      .svc-card:last-child{ margin-bottom: 0; }
     }
     @media (max-width: 640px){
       .services-stack{
@@ -779,6 +799,9 @@
         padding: clamp(20px, 5vw, 28px);
         box-shadow: none;
         margin-bottom: 16px;
+        display: block;
+        left: 0;
+        width: 100%;
       }
       .svc-card:last-child{ margin-bottom: 0; }
       .svc-media{
@@ -2099,6 +2122,16 @@
       const stack = document.querySelector('.services-stack');
       const cards = Array.from(document.querySelectorAll('.services-stack .svc-card'));
       if (!scene || !stack || !cards.length) return;
+
+      // На мобильных показываем статику без анимации
+      const isMobile = () => window.innerWidth <= 880;
+      if (isMobile()) {
+        cards.forEach(card => {
+          card.style.transform = 'none';
+          card.classList.add('is-visible');
+        });
+        return;
+      }
 
       const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const n = cards.length;
