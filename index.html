@@ -686,6 +686,20 @@
       transition: opacity 580ms cubic-bezier(0.2,0.8,0.2,1), transform 580ms cubic-bezier(0.2,0.8,0.2,1), filter 580ms ease;
       z-index: 1;
     }
+    .svc-media{
+      flex: 0 0 34%;
+      max-width: 34%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .svc-media img{
+      width: 100%;
+      height: auto;
+      border-radius: 28px;
+      object-fit: cover;
+      display: block;
+    }
     .svc-card.is-visible{
       opacity: 1;
       filter: blur(0);
@@ -695,7 +709,7 @@
     .svc-card:nth-child(3){ background:#b69ee7; z-index: 8; }
     .svc-card:nth-child(4){ background:#80aef4; z-index: 9; }
     .svc-card:nth-child(5){ background:#e3a3ab; z-index: 10; }
-    .svc-card:nth-child(6){ background:#f3e7c8; z-index: 11; }
+    .svc-card:nth-child(6){ background:#f3e7c8; z-index: 11; padding-bottom: calc(clamp(32px, 4vw, 48px) + 20px); }
 
     .svc-number{
       flex: 0 0 auto;
@@ -1262,6 +1276,7 @@
       <div class="services-stack">
         <article class="svc-card">
           <div class="svc-number">01</div>
+          <div class="svc-media"><img src="processed_images/service_1.png" alt="Продажа аукционом" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Продажа аукционом за 21 день</h3>
             <p class="svc-desc">Создаю конкуренцию между покупателями, чтобы вы выбрали лучшие условия.</p>
@@ -1269,6 +1284,7 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">02</div>
+          <div class="svc-media"><img src="processed_images/service_2.png" alt="Подбор новостроек" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Бесплатный подбор новостроек</h3>
             <p class="svc-desc">Подбор, сравнение и проверка условий от застройщиков без переплат.</p>
@@ -1276,6 +1292,7 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">03</div>
+          <div class="svc-media"><img src="processed_images/service_3.png" alt="Работа на покупку" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Работа на покупку</h3>
             <p class="svc-desc">Подбор объекта, торг, проверка документов и сопровождение до ключей.</p>
@@ -1283,6 +1300,7 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">04</div>
+          <div class="svc-media"><img src="processed_images/service_4.png" alt="Сопровождение сделки" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Сопровождение сделки</h3>
             <p class="svc-desc">Контроль договора, расчётов и рисков — чтобы всё прошло безопасно.</p>
@@ -1290,6 +1308,7 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">05</div>
+          <div class="svc-media"><img src="processed_images/service_5.png" alt="Одобрение ипотеки" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Одобрение ипотеки</h3>
             <p class="svc-desc">Помогаю с одобрением и выбором программы под вашу ситуацию.</p>
@@ -1297,6 +1316,7 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">06</div>
+          <div class="svc-media"><img src="processed_images/service_6.png" alt="Первичная консультация" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Бесплатная первичная консультация</h3>
             <p class="svc-desc">Разберём вашу задачу и план действий — без давления и “продаж”.</p>
@@ -1996,7 +2016,7 @@
         targets = recomputeTargets();
         const rect = scene.getBoundingClientRect();
         const vh = window.innerHeight || 1;
-        const total = Math.max(1, rect.height - vh);
+        const total = Math.max(1, rect.height - vh * 0.5); // меньше хвоста после 6-й
         const pxProgress = Math.max(0, -rect.top);
         const segment = vh * 0.9;
 
