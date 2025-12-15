@@ -272,16 +272,29 @@
     .collapsible {
       position: relative;
       overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      --clamp-lines: 4;
+      -webkit-line-clamp: var(--clamp-lines);
+      line-clamp: var(--clamp-lines);
     }
     .collapsible:not(.expanded)::after {
       content:"";
       position:absolute;
       left:0; right:0; bottom:0;
-      height:2.2rem;
-      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
+      height:2.4rem;
+      background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.96));
       pointer-events:none;
     }
-    .collapsible.expanded { overflow: visible; }
+    .collapsible.expanded {
+      display: block;
+      overflow: visible;
+      -webkit-line-clamp: unset;
+      line-clamp: unset;
+    }
+    @media (max-width: 720px) {
+      .collapsible:not(.expanded)::after { display: none; }
+    }
     .toggle-btn {
       margin-top:.35rem;
       display:inline-block;
@@ -749,6 +762,37 @@
       .svc-card{
         min-height: clamp(520px, 78vh, 640px);
         padding: clamp(24px, 5vw, 36px);
+      }
+    }
+    @media (max-width: 640px){
+      .services-stack{
+        position: static;
+      }
+      .svc-card{
+        position: relative;
+        left: auto;
+        width: 100%;
+        transform: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+        min-height: clamp(360px, 85vh, 520px);
+        padding: clamp(20px, 5vw, 28px);
+        box-shadow: none;
+        margin-bottom: 16px;
+      }
+      .svc-card:last-child{ margin-bottom: 0; }
+      .svc-media{
+        flex: 1 1 auto;
+        max-width: 100%;
+        width: 100%;
+      }
+      .svc-media img{
+        border-radius: 20px;
+      }
+      .svc-number{
+        width: 52px;
+        height: 52px;
+        font-size: 16px;
       }
     }
     @media (max-width: 640px){
@@ -1643,16 +1687,43 @@
   <script>
     (function(){
       const cards = Array.from(document.querySelectorAll('#reviews .card-soft'));
+      if (!cards.length) return;
       let openCard = null;
+      const mq = window.matchMedia('(max-width: 720px)');
+
+      const clampValue = () => (mq.matches ? 7 : 4);
+
+      const applyClamp = (text) => {
+        const lines = clampValue();
+        text.style.setProperty('--clamp-lines', lines);
+        text.style.setProperty('-webkit-line-clamp', lines);
+        if (!text.classList.contains('expanded')) {
+          text.style.display = '-webkit-box';
+        }
+      };
 
       const collapse = (card) => {
         const text = card.querySelector('.js-collapsible');
         const btn  = card.querySelector('.js-toggle');
         if (!text || !btn) return;
-        const base = text.dataset.maxh;
-        text.style.maxHeight = base ? `${base}px` : '';
         text.classList.remove('expanded');
+        applyClamp(text);
+        text.dataset.state = 'collapsed';
+        text.style.maxHeight = '';
+        text.style.display = '-webkit-box';
         btn.textContent = 'Показать ещё';
+      };
+
+      const expand = (card) => {
+        const text = card.querySelector('.js-collapsible');
+        const btn  = card.querySelector('.js-toggle');
+        if (!text || !btn) return;
+        text.classList.add('expanded');
+        text.style.setProperty('-webkit-line-clamp', 'none');
+        text.style.display = 'block';
+        text.dataset.state = 'expanded';
+        text.style.maxHeight = 'none';
+        btn.textContent = 'Свернуть';
       };
 
       cards.forEach(card => {
@@ -1660,36 +1731,43 @@
         const btn  = card.querySelector('.js-toggle');
         if (!text || !btn) return;
 
-        // вычисляем высоту 4 строк для усечения
-        const lineHeight = parseFloat(getComputedStyle(text).lineHeight) || 22;
-        const maxH = lineHeight * 4;
-        text.dataset.maxh = maxH;
-        text.style.maxHeight = `${maxH}px`;
+        // меряем полную высоту до усечения
+        text.classList.add('expanded');
+        text.style.webkitLineClamp = 'unset';
+        const fullHeight = text.scrollHeight;
 
-        // прячем кнопку если текст короткий
+        collapse(card);
+
+        // прячем кнопку если текст короткий даже без усечения
         requestAnimationFrame(() => {
-          if (text.scrollHeight <= maxH + 2) {
+          const visibleH = text.getBoundingClientRect().height;
+          if (fullHeight <= visibleH + 4) {
             btn.style.display = 'none';
-            text.classList.add('expanded');
+            expand(card);
           }
         });
 
         btn.addEventListener('click', () => {
           const isOpen = text.classList.contains('expanded');
-          // сворачиваем открытый
           if (openCard && openCard !== card) collapse(openCard);
-          // переключаем текущий
-          if (!isOpen) {
-            text.style.maxHeight = 'none';
-            text.classList.add('expanded');
+          if (isOpen) {
+            collapse(card);
+            openCard = null;
           } else {
-            text.style.maxHeight = `${text.dataset.maxh}px`;
-            text.classList.remove('expanded');
+            expand(card);
+            openCard = card;
           }
-          btn.textContent = !isOpen ? 'Свернуть' : 'Показать ещё';
-          openCard = !isOpen ? card : null;
         });
       });
+
+      const onChange = () => {
+        cards.forEach(card => {
+          const text = card.querySelector('.js-collapsible');
+          if (text && !text.classList.contains('expanded')) applyClamp(text);
+        });
+      };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else mq.addListener(onChange);
     })();
   </script>
 </section>
