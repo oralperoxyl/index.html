@@ -761,49 +761,37 @@
     @media (max-width: 880px){
       .services-scene{
         height: auto;
-        margin-top: clamp(32px, 6vh, 60px);
+        margin-top: clamp(28px, 6vh, 52px);
       }
       .services-sticky{
         position: static;
         height: auto;
       }
       .services-stack{
-        position: static;
+        position: relative;
         overflow: visible;
       }
       .svc-card{
-        position: relative;
+        position: sticky;
+        top: calc(var(--header-h, 80px) + 14px);
         left: 0;
         transform: none !important;
         opacity: 1 !important;
         filter: none !important;
         width: 100%;
-        min-height: clamp(520px, 78vh, 640px);
-        padding: clamp(24px, 5vw, 36px);
-        margin-bottom: 18px;
+        min-height: clamp(460px, 82vh, 620px);
+        padding: clamp(22px, 5vw, 34px);
+        margin-bottom: 38px;
+        box-shadow: 0 12px 32px rgba(0,0,0,0.08);
       }
       .svc-card:last-child{ margin-bottom: 0; }
     }
     @media (max-width: 640px){
-      .services-stack{
-        position: static;
-      }
       .svc-card{
-        position: relative;
-        left: auto;
-        width: 100%;
-        transform: none !important;
-        opacity: 1 !important;
-        filter: none !important;
-        min-height: clamp(360px, 85vh, 520px);
-        padding: clamp(20px, 5vw, 28px);
-        box-shadow: none;
-        margin-bottom: 16px;
-        display: block;
-        left: 0;
-        width: 100%;
+        min-height: clamp(380px, 86vh, 520px);
+        padding: clamp(18px, 5vw, 28px);
+        margin-bottom: 30px;
       }
-      .svc-card:last-child{ margin-bottom: 0; }
       .svc-media{
         flex: 1 1 auto;
         max-width: 100%;
