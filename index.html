@@ -298,25 +298,22 @@
 
       /* Process: number + title inline, body under title */
       .process-narrative p{
-        display: grid;
-        grid-template-columns: 2.6em 1fr;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
         column-gap: 10px;
         row-gap: 6px;
-        align-items: start;
         padding: 0;
       }
       .process-narrative p::before{
         position: static;
-        grid-column: 1;
-        grid-row: 1;
         white-space: nowrap;
         width: auto;
         height: auto;
         transform: none;
+        margin-right: 10px;
       }
       .process-narrative .proc-title{
-        grid-column: 2;
-        grid-row: 1;
         display: block;
         font-weight: 500;
         color: #1a1a1a;
@@ -325,13 +322,12 @@
         margin-bottom: 4px;
       }
       .process-narrative .proc-body{
-        grid-column: 2;
-        grid-row: 2;
         display: block;
+        width: 100%;
         font-size: clamp(16px, 1.9vw, 17.5px);
         line-height: 1.72;
         color: #6a6a6a;
-        padding-left: 0;
+        padding-left: calc(2.6em + 10px);
       }
       .process-header h2{
         font-size: clamp(30px, 7vw, 36px);
