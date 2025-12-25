@@ -37,9 +37,9 @@
     }
 
     @media (max-width: 768px){
-      /* Smoother mobile animation for services cards */
+      /* Mobile: direct transforms without transition for 1:1 scroll feel */
       .services-stack .svc-card{
-        transition: transform 420ms ease-out, opacity 320ms ease-out, filter 320ms ease-out;
+        transition: none;
       }
     }
 
@@ -2495,6 +2495,7 @@
         const total = Math.max(1, rect.height - vh * 0.5); // меньше хвоста после 6-й
         const pxProgress = Math.max(0, -rect.top);
         const segment = vh * 0.9;
+        const linearMobile = window.innerWidth <= 768;
 
         cards.forEach((card, i) => {
           if (prefersReduce) {
@@ -2504,8 +2505,8 @@
           }
           const start = i * segment;
           const local = Math.max(0, Math.min(1, (pxProgress - start) / segment));
-          const eased = 1 - Math.pow(1 - local, 3); // easeOutCubic
-          const y = (1 - eased) * (vh) + eased * targets[i];
+          const progress = linearMobile ? local : (1 - Math.pow(1 - local, 3)); // easeOutCubic desktop, linear mobile
+          const y = (1 - progress) * (vh) + progress * targets[i];
           card.style.transform = `translate(-50%, ${y}px)`;
           if (local > 0) card.classList.add('is-visible'); else card.classList.remove('is-visible');
         });
