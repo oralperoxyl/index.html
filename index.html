@@ -201,11 +201,11 @@
     }
     .adv-column h2{
       font-family: "IBM Plex Serif", serif;
-      font-weight: 600;
+      font-weight: 500;
       letter-spacing: -0.015em;
-      font-size: clamp(27.5px, 2.7vw, 36.5px);
+      font-size: clamp(32px, 3.2vw, 44px);
       line-height: 1.08;
-      color: rgba(17,16,20,0.88);
+      color: rgba(15,23,42,0.86);
       margin: 0 0 clamp(28px, 3.4vw, 36px) 0;
     }
     .adv-list{
@@ -240,15 +240,6 @@
       color: rgba(17,16,20,0.8);
       max-width: 520px;
     }
-    .adv-item + .adv-item::before{
-      content:"";
-      display: block;
-      width: 60%;
-      max-width: 520px;
-      height: 1px;
-      background: rgba(17,16,20,0.08);
-      margin: 32px 0;
-    }
     @media (max-width: 900px){
       .advantages-grid{
         grid-template-columns: 1fr;
@@ -261,7 +252,6 @@
         border-left: none;
         padding-left: 0;
         padding-top: clamp(56px, 8vw, 72px);
-        border-top: 1px solid rgba(17,16,20,0.06);
       }
       .adv-column{
         padding-right: 0;
@@ -279,10 +269,6 @@
       .adv-item + .adv-item{
         margin-top: 0;
         padding-top: 0;
-      }
-      .adv-item + .adv-item::before{
-        width: 70%;
-        max-width: 520px;
       }
     }
 
@@ -1236,6 +1222,22 @@
       backdrop-filter: none;
       border: 1px solid rgba(15,23,42,0.08);
       box-shadow: none;
+    }
+    #reviews h2{
+      font-family: "IBM Plex Serif", serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      font-size: clamp(32px, 3.2vw, 44px);
+      color: rgba(15,23,42,0.86);
+    }
+    #newbuild h2,
+    #about h2,
+    #faq h2{
+      font-family: "IBM Plex Serif", serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      font-size: clamp(32px, 3.2vw, 44px);
+      color: rgba(15,23,42,0.86);
     }
     .topbar, .topbar::before, .topbar::after {
       background: transparent !important;
