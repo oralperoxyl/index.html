@@ -333,6 +333,22 @@
       .process-narrative{
         gap: clamp(18px, 5vw, 26px);
       }
+
+      /* Advantages: single column full-width, no left gutter */
+      .advantages-grid{
+        grid-template-columns: 1fr;
+        gap: clamp(24px, 5vw, 32px);
+      }
+      .advantages-grid::after{
+        display: none;
+      }
+      .adv-column,
+      .adv-column:first-child,
+      .adv-column + .adv-column{
+        padding-left: 0;
+        padding-right: 0;
+        border-left: none;
+      }
     }
     /* Reviews cards match advantages style */
     #reviews .card-soft{
