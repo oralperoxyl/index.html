@@ -36,6 +36,13 @@
       --shadow-soft: 0 8px 30px rgba(0,0,0,0.06);
     }
 
+    @media (max-width: 768px){
+      /* Smoother mobile animation for services cards */
+      .services-stack .svc-card{
+        transition: transform 420ms ease-out, opacity 320ms ease-out, filter 320ms ease-out;
+      }
+    }
+
     section[id] { scroll-margin-top: calc(var(--header-h) + 16px); }
     html { scroll-behavior: smooth; }
     html, body {
