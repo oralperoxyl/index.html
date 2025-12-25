@@ -271,6 +271,49 @@
         padding-top: 0;
       }
     }
+
+    @media (max-width: 768px){
+      /* Help: keep number + title on one line, description under title */
+      .help-item{
+        grid-template-columns: 1fr;
+      }
+      .help-item .item-head{
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+      }
+      .help-number{
+        white-space: nowrap;
+        min-width: 42px;
+      }
+      .help-desc{
+        padding-left: calc(42px + 10px);
+      }
+
+      /* Process: number + title inline, body under title */
+      .process-narrative p{
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 0;
+      }
+      .process-narrative p::before{
+        position: static;
+        white-space: nowrap;
+        width: auto;
+        height: auto;
+        transform: none;
+      }
+      .process-narrative .proc-title{
+        display: block;
+        font-weight: 600;
+        color: rgba(15,23,42,0.92);
+      }
+      .process-narrative .proc-body{
+        display: block;
+        color: rgba(15,23,42,0.78);
+      }
+    }
     /* Reviews cards match advantages style */
     #reviews .card-soft{
       background: #fbfaf8;
@@ -596,6 +639,9 @@
       row-gap: 8px;
       align-items: start;
     }
+    .help-item .item-head{
+      display: contents;
+    }
     .help-number {
       font-family: "IBM Plex Serif", serif;
       font-weight: 500;
@@ -627,18 +673,26 @@
     }
     @media (max-width: 640px) {
       .help-item {
-        grid-template-columns: 1fr;
+      grid-template-columns: 1fr;
+    }
+      .help-item .item-head{
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
       }
-      .help-number {
+      .help-number{
+        order: 0;
+        margin-bottom: 0;
+        white-space: nowrap;
+        min-width: 42px;
+      }
+      .help-title{
+        order: 0;
+        margin-bottom: 6px;
+      }
+      .help-desc{
         order: 1;
-        margin-bottom: 4px;
-      }
-      .help-title {
-        order: 2;
-        margin-bottom: 10px;
-      }
-      .help-desc {
-        order: 3;
+        padding-left: calc(42px + 10px);
       }
       .help-list { gap: 32px; }
       .help-intro { margin-bottom: 32px; }
@@ -734,7 +788,19 @@
     }
     @media (max-width: 880px) {
       .process-narrative { grid-template-columns: 1fr; }
-      .process-narrative p { padding-left: clamp(52px, 12vw, 70px); }
+      .process-narrative p {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        padding: 0;
+      }
+      .process-narrative p::before{
+        position: static;
+        white-space: nowrap;
+        width: auto;
+        height: auto;
+        transform: none;
+      }
     }
     /* Pinned scenes */
     :root { --hold: 1; }
@@ -1449,23 +1515,31 @@
       </div>
       <div class="help-points">
         <div class="help-item">
-          <div class="help-number">01</div>
-          <div class="help-title">Продажа за 21 день</div>
+          <div class="item-head">
+            <div class="help-number">01</div>
+            <div class="help-title">Продажа за 21 день</div>
+          </div>
           <div class="help-desc">Концентрирую спрос, создаю конкуренцию между покупателями, а вы — выбираете лучшего среди них по условиям.</div>
         </div>
         <div class="help-item">
-          <div class="help-number">02</div>
-          <div class="help-title">Юридическая чистота</div>
+          <div class="item-head">
+            <div class="help-number">02</div>
+            <div class="help-title">Юридическая чистота</div>
+          </div>
           <div class="help-desc">Проверка документов, контроль рисков и сопровождение сделки с юристом до передачи ключей.</div>
         </div>
         <div class="help-item">
-          <div class="help-number">03</div>
-          <div class="help-title">Экономия вашего времени</div>
+          <div class="item-head">
+            <div class="help-number">03</div>
+            <div class="help-title">Экономия вашего времени</div>
+          </div>
           <div class="help-desc">Беру на себя звонки, показы и переговоры. Вы видите только решения и прогресс.</div>
         </div>
         <div class="help-item">
-          <div class="help-number">04</div>
-          <div class="help-title">Работаю и на покупку</div>
+          <div class="item-head">
+            <div class="help-number">04</div>
+            <div class="help-title">Работаю и на покупку</div>
+          </div>
           <div class="help-desc">Подбор объекта, переговоры, ипотека и сопровождение — до оптимального результата.</div>
         </div>
       </div>
@@ -1478,11 +1552,11 @@
       <p>Продажа — это выстроенный процесс без суеты и лишних шагов.</p>
     </div>
     <div class="process-narrative">
-      <p><strong>Сначала мы разбираем ситуацию.</strong> Объект, рынок и вашу задачу. Оцениваем реальную цену и сценарии продажи — без завышенных ожиданий и «пробных» размещений.</p>
-      <p><strong>Дальше готовим объект к выходу.</strong> Документы, подача, визуал и текст — всё, что влияет на интерес и итоговую цену, приводится в порядок заранее.</p>
-      <p><strong>Когда объект выходит в продажу, мы работаем со спросом.</strong> Запускаем рекламу, контролируем показы и отсекаем случайных покупателей. Важно не количество звонков, а качество интереса.</p>
-      <p><strong>В переговорах задача — выбрать оптимальный вариант.</strong> По цене, условиям и срокам. Без давления и спешки.</p>
-      <p><strong>Сделку доводим до конца спокойно и последовательно.</strong> Документы, расчёты, сопровождение — до момента, когда ключи переданы, а вопросы закрыты.</p>
+      <p><span class="proc-title">Сначала мы разбираем ситуацию.</span><span class="proc-body">Объект, рынок и вашу задачу. Оцениваем реальную цену и сценарии продажи — без завышенных ожиданий и «пробных» размещений.</span></p>
+      <p><span class="proc-title">Дальше готовим объект к выходу.</span><span class="proc-body">Документы, подача, визуал и текст — всё, что влияет на интерес и итоговую цену, приводится в порядок заранее.</span></p>
+      <p><span class="proc-title">Когда объект выходит в продажу, мы работаем со спросом.</span><span class="proc-body">Запускаем рекламу, контролируем показы и отсекаем случайных покупателей. Важно не количество звонков, а качество интереса.</span></p>
+      <p><span class="proc-title">В переговорах задача — выбрать оптимальный вариант.</span><span class="proc-body">По цене, условиям и срокам. Без давления и спешки.</span></p>
+      <p><span class="proc-title">Сделку доводим до конца спокойно и последовательно.</span><span class="proc-body">Документы, расчёты, сопровождение — до момента, когда ключи переданы, а вопросы закрыты.</span></p>
     </div>
   </section>
   </div>
