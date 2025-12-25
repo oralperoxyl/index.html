@@ -934,77 +934,6 @@
       line-height: 1.55;
       max-width: 58ch;
     }
-    @media (max-width: 880px){
-      .services-scene{
-        height: auto;
-        margin-top: clamp(28px, 6vh, 52px);
-      }
-      .services-sticky{
-        position: static;
-        height: auto;
-      }
-      .services-stack{
-        position: relative;
-        overflow: visible;
-      }
-      .svc-card{
-        position: sticky;
-        top: calc(var(--header-h, 80px) + 14px);
-        left: 0;
-        transform: none !important;
-        opacity: 1 !important;
-        filter: none !important;
-        width: 100%;
-        min-height: clamp(460px, 82vh, 620px);
-        padding: clamp(22px, 5vw, 34px);
-        margin-bottom: 38px;
-        box-shadow: none;
-      }
-      .svc-card:last-child{ margin-bottom: 0; }
-    }
-    @media (max-width: 640px){
-      .svc-card{
-        min-height: clamp(380px, 86vh, 520px);
-        padding: clamp(18px, 5vw, 28px);
-        margin-bottom: 30px;
-      }
-      .svc-media{
-        flex: 1 1 auto;
-        max-width: 100%;
-        width: 100%;
-      }
-      .svc-media img{
-        border-radius: 20px;
-      }
-      .svc-number{
-        width: 52px;
-        height: 52px;
-        font-size: 16px;
-      }
-    }
-    @media (max-width: 640px){
-      .svc-card{
-        width: 96vw;
-        min-height: clamp(480px, 82vh, 600px);
-        padding: clamp(18px, 5vw, 28px);
-        flex-direction: column;
-        gap: 12px;
-      }
-      .svc-number{
-        width: 52px;
-        height: 52px;
-        font-size: 16px;
-      }
-      .svc-media{
-        flex: 1 1 auto;
-        max-width: 100%;
-        width: 100%;
-      }
-      .svc-media img{
-        width: 100%;
-        border-radius: 22px;
-      }
-    }
     @media (prefers-reduced-motion: reduce){
       .svc-card{
         opacity: 1 !important;
@@ -2407,16 +2336,6 @@
       const stack = document.querySelector('.services-stack');
       const cards = Array.from(document.querySelectorAll('.services-stack .svc-card'));
       if (!scene || !stack || !cards.length) return;
-
-      // На мобильных показываем статику без анимации
-      const isMobile = () => window.innerWidth <= 880;
-      if (isMobile()) {
-        cards.forEach(card => {
-          card.style.transform = 'none';
-          card.classList.add('is-visible');
-        });
-        return;
-      }
 
       const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const n = cards.length;
