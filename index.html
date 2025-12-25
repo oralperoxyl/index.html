@@ -289,29 +289,49 @@
       .help-desc{
         padding-left: calc(42px + 10px);
       }
+      .help-list{
+        gap: 24px;
+      }
+      .help-section h2{
+        font-size: clamp(26px, 7vw, 32px);
+      }
 
       /* Process: number + title inline, body under title */
       .process-narrative p{
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: minmax(36px, 4ch) 1fr;
+        column-gap: 10px;
+        row-gap: 6px;
+        align-items: start;
         padding: 0;
       }
       .process-narrative p::before{
         position: static;
+        grid-column: 1;
+        grid-row: 1;
         white-space: nowrap;
         width: auto;
         height: auto;
         transform: none;
       }
       .process-narrative .proc-title{
+        grid-column: 2;
+        grid-row: 1;
         display: block;
         font-weight: 600;
         color: rgba(15,23,42,0.92);
       }
       .process-narrative .proc-body{
+        grid-column: 2;
+        grid-row: 2;
         display: block;
         color: rgba(15,23,42,0.78);
+      }
+      .process-header h2{
+        font-size: clamp(30px, 7vw, 36px);
+      }
+      .process-narrative{
+        gap: clamp(18px, 5vw, 26px);
       }
     }
     /* Reviews cards match advantages style */
