@@ -728,6 +728,19 @@
       color: rgba(15,23,42,0.75);
       max-width: 520px;
     }
+    /* About photo responsiveness */
+    .about-photo-wrapper{
+      width: 100%;
+      height: auto;
+    }
+    .about-photo{
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      object-fit: contain !important;
+      aspect-ratio: auto !important;
+      display: block;
+    }
     @media (max-width: 640px) {
       .help-item {
       grid-template-columns: 1fr;
@@ -967,74 +980,53 @@
       transform: translate(-50%, 100vh);
       border-radius: 26px;
       padding: clamp(32px, 4vw, 48px);
-      min-height: clamp(700px, 76vh, 860px);
-      background: linear-gradient(90deg, #f6f3ee 0%, #f2ebe2 35%, #efd3b7 70%, #ecb57f 100%);
+      min-height: clamp(640px, 70vh, 820px);
+      background: linear-gradient(180deg, #f8f6f3 0%, #f4f2ef 100%);
       box-shadow: none;
       opacity: 0;
       filter: blur(14px);
       display: flex;
-      gap: clamp(18px, 3vw, 40px);
+      gap: clamp(18px, 3vw, 28px);
       align-items: flex-start;
       transition: opacity 580ms cubic-bezier(0.2,0.8,0.2,1), transform 580ms cubic-bezier(0.2,0.8,0.2,1), filter 580ms ease;
       z-index: 1;
       border: none;
     }
-    .svc-media{
-      flex: 0 0 34%;
-      max-width: 34%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .svc-card:nth-child(1){
+      background: linear-gradient(180deg, #f6f8fb 0%, #f5f3ee 100%);
     }
-    .svc-media img{
-      width: 100%;
-      height: auto;
-      border-radius: 28px;
-      object-fit: cover;
-      display: block;
+    .svc-card:nth-child(2){
+      background: linear-gradient(180deg, #fbf3ed 0%, #f8f5f0 100%);
+    }
+    .svc-card:nth-child(3){
+      background: linear-gradient(180deg, #f5f4f9 0%, #f8f7fb 100%);
+    }
+    .svc-card:nth-child(4){
+      background: linear-gradient(180deg, #f7f1f3 0%, #f5f2ed 100%);
+    }
+    .svc-card:nth-child(5){
+      background: linear-gradient(180deg, #f1f8f5 0%, #f2f5f9 100%);
+    }
+    .svc-card:nth-child(6){
+      background: linear-gradient(180deg, #f8f4eb 0%, #f6f3ee 100%);
     }
     .svc-card.is-visible{
       opacity: 1;
       filter: blur(0);
     }
-    .svc-card:nth-child(1){ 
-      background: linear-gradient(120deg, #f6f3ee 0%, #f0e3c8 40%, #dfcba2 70%, #d1b27a 100%);
-      z-index: 6; 
-    }
-    .svc-card:nth-child(2){ 
-      background: linear-gradient(120deg, #f1f5f0 0%, #dfe8d2 40%, #cddab6 70%, #b7c79a 100%);
-      z-index: 7; 
-    }
-    .svc-card:nth-child(3){ 
-      background: linear-gradient(120deg, #f4f3f8 0%, #e1dcf0 40%, #cdc6e3 70%, #b6adcf 100%);
-      z-index: 8; 
-    }
-    .svc-card:nth-child(4){ 
-      background: linear-gradient(120deg, #eef4f7 0%, #d9e5ef 40%, #c3d3e4 70%, #acc1d8 100%);
-      z-index: 9; 
-    }
-    .svc-card:nth-child(5){ 
-      background: linear-gradient(120deg, #f7f0ed 0%, #edd9d1 40%, #e1c0b6 70%, #d5a69c 100%);
-      z-index: 10; 
-    }
-    .svc-card:nth-child(6){ 
-      background: linear-gradient(120deg, #f7f4ee 0%, #ede2cf 40%, #e1cfae 70%, #d6be93 100%);
-      z-index: 11; 
-      padding-bottom: calc(clamp(32px, 4vw, 48px) + 20px); 
-    }
 
     .svc-number{
       flex: 0 0 auto;
-      width: 64px;
-      height: 64px;
+      width: 44px;
+      height: 44px;
       border-radius: 999px;
       display: grid;
       place-items: center;
-      font-weight: 700;
-      font-size: 18px;
-      color: rgba(17,16,20,0.9);
+      font-weight: 500;
+      font-size: 15px;
+      color: rgba(26,26,26,0.9);
       background: transparent;
-      border: 2px solid rgba(17,16,20,0.8);
+      border: 1px solid rgba(26,26,26,0.28);
       box-shadow: none;
     }
     .svc-body{
@@ -1045,17 +1037,17 @@
     }
     .svc-name{
       margin: 0;
-      font-size: clamp(22px, 2.2vw, 28px);
-      line-height: 1.22;
-      color: rgba(17,16,20,0.92);
-      font-weight: 600;
+      font-size: clamp(18px, 2vw, 20px);
+      line-height: 1.3;
+      color: #1a1a1a;
+      font-weight: 500;
     }
     .svc-desc{
       margin: 0;
-      color: rgba(17,16,20,0.82);
-      font-size: 16px;
-      line-height: 1.55;
-      max-width: 58ch;
+      color: #6a6a6a;
+      font-size: clamp(16px, 1.9vw, 17.5px);
+      line-height: 1.72;
+      max-width: 520px;
     }
     @media (prefers-reduced-motion: reduce){
       .svc-card{
@@ -1650,7 +1642,6 @@
       <div class="services-stack">
         <article class="svc-card">
           <div class="svc-number">01</div>
-          <div class="svc-media"><img src="processed_images/service_1.png" alt="Продажа аукционом" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Продажа за 21 день</h3>
             <p class="svc-desc">Создаю конкуренцию между покупателями, чтобы вы выбрали лучшие условия.</p>
@@ -1658,7 +1649,6 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">02</div>
-          <div class="svc-media"><img src="processed_images/service_2.png" alt="Подбор новостроек" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Бесплатный подбор новостроек</h3>
             <p class="svc-desc">Подбор, сравнение и проверка условий от застройщиков без переплат.</p>
@@ -1666,7 +1656,6 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">03</div>
-          <div class="svc-media"><img src="processed_images/service_3.png" alt="Работа на покупку" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Работа на покупку</h3>
             <p class="svc-desc">Подбор объекта, торг, проверка документов и сопровождение до ключей.</p>
@@ -1674,7 +1663,6 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">04</div>
-          <div class="svc-media"><img src="processed_images/service_4.png" alt="Сопровождение сделки" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Сопровождение сделки</h3>
             <p class="svc-desc">Контроль договора, расчётов и рисков — чтобы всё прошло безопасно.</p>
@@ -1682,7 +1670,6 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">05</div>
-          <div class="svc-media"><img src="processed_images/service_5.png" alt="Одобрение ипотеки" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Одобрение ипотеки</h3>
             <p class="svc-desc">Помогаю с одобрением и выбором программы под вашу ситуацию.</p>
@@ -1690,7 +1677,6 @@
         </article>
         <article class="svc-card">
           <div class="svc-number">06</div>
-          <div class="svc-media"><img src="processed_images/service_6.png" alt="Первичная консультация" loading="lazy"></div>
           <div class="svc-body">
             <h3 class="svc-name">Бесплатная первичная консультация</h3>
             <p class="svc-desc">Разберём вашу задачу и план действий — без давления и “продаж”.</p>
@@ -2151,10 +2137,10 @@
 
     <div class="grid md:grid-cols-2 gap-8 items-center">
 
-      <div class="order-1 md:order-none w-full max-w-md lg:max-w-lg mx-auto md:mx-0 relative z-10">
+      <div class="order-1 md:order-none w-full max-w-md lg:max-w-lg mx-auto md:mx-0 relative z-10 about-photo-wrapper">
         <div class="rounded-3xl overflow-hidden">
           <img src="processed_images/bwhero.png" alt="Семён Гончаров"
-               class="w-full h-auto block object-cover aspect-[3/4]">
+               class="about-photo w-full h-auto block object-contain">
         </div>
       </div>
 
