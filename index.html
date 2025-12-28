@@ -653,7 +653,7 @@
     .hero-primary {
       padding: 12px 20px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
       color: #ffffff;
       border: none;
       font-weight: 600;
@@ -661,7 +661,7 @@
       transition: background .25s ease, transform .2s ease, opacity .2s ease;
       box-shadow: none;
     }
-    .hero-primary:hover { background: rgba(255,255,255,0.16); transform: translateY(-1px); }
+    .hero-primary:hover { background: rgba(255,255,255,0.12); transform: translateY(-1px); }
     .hero-link {
       color: rgba(255,255,255,0.82);
       font-weight: 500;
@@ -979,36 +979,40 @@
       width: min(1100px, 92vw);
       transform: translate(-50%, 100vh);
       border-radius: 26px;
-      padding: clamp(32px, 4vw, 48px);
+      padding: clamp(36px, 4.5vw, 54px);
       min-height: clamp(640px, 70vh, 820px);
       background: linear-gradient(180deg, #f8f6f3 0%, #f4f2ef 100%);
-      box-shadow: none;
+      box-shadow: 0 0 0 rgba(0,0,0,0);
       opacity: 0;
       filter: blur(14px);
       display: flex;
-      gap: clamp(18px, 3vw, 28px);
+      gap: clamp(20px, 3.2vw, 30px);
       align-items: flex-start;
       transition: opacity 580ms cubic-bezier(0.2,0.8,0.2,1), transform 580ms cubic-bezier(0.2,0.8,0.2,1), filter 580ms ease;
       z-index: 1;
       border: none;
     }
+    .svc-card:hover{
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+      filter: brightness(1.03);
+    }
     .svc-card:nth-child(1){
-      background: linear-gradient(180deg, #f6f8fb 0%, #f5f3ee 100%);
+      background: linear-gradient(180deg, #F7F3EC 0%, #EAE6F2 100%);
     }
     .svc-card:nth-child(2){
-      background: linear-gradient(180deg, #fbf3ed 0%, #f8f5f0 100%);
+      background: linear-gradient(180deg, #EEF7F1 0%, #E3EFEA 100%);
     }
     .svc-card:nth-child(3){
-      background: linear-gradient(180deg, #f5f4f9 0%, #f8f7fb 100%);
+      background: linear-gradient(180deg, #F5F1FA 0%, #EDE7F4 100%);
     }
     .svc-card:nth-child(4){
-      background: linear-gradient(180deg, #f7f1f3 0%, #f5f2ed 100%);
+      background: linear-gradient(180deg, #F0F4FA 0%, #E7EEF8 100%);
     }
     .svc-card:nth-child(5){
-      background: linear-gradient(180deg, #f1f8f5 0%, #f2f5f9 100%);
+      background: linear-gradient(180deg, #F8F3F5 0%, #EFE7EB 100%);
     }
     .svc-card:nth-child(6){
-      background: linear-gradient(180deg, #f8f4eb 0%, #f6f3ee 100%);
+      background: linear-gradient(180deg, #FFF7EC 0%, #F2EADB 100%);
     }
     .svc-card.is-visible{
       opacity: 1;
@@ -1022,7 +1026,7 @@
       border-radius: 999px;
       display: grid;
       place-items: center;
-      font-weight: 500;
+      font-weight: 400;
       font-size: 15px;
       color: rgba(26,26,26,0.9);
       background: transparent;
@@ -1118,9 +1122,11 @@
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 1s ease, transform 1s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
     .brand-logo {
-      font-family: "SF Pro Display","SF Pro Text",-apple-system,"Helvetica Neue",Arial,sans-serif;
-      letter-spacing: -0.02em;
-      font-weight: 700;
+      font-family: "Cormorant Garamond","Inter","SF Pro Display","SF Pro Text",-apple-system,"Helvetica Neue",Arial,sans-serif;
+      font-variant: small-caps;
+      font-weight: 600;
+      font-size: clamp(17px, 2vw, 19px);
+      letter-spacing: 0.5px;
     }
     header {
       position: fixed;
@@ -1268,6 +1274,15 @@
     .nav-link:hover { opacity: 1; }
     .brand-link { opacity: 1; transition: opacity .2s ease; }
     .brand-link:hover { opacity: 1; }
+    /* Global selection */
+    ::selection {
+      background: #000000;
+      color: #ffffff;
+    }
+    ::-moz-selection {
+      background: #000000;
+      color: #ffffff;
+    }
     header,
     header::before,
     header::after,
@@ -1516,7 +1531,7 @@
     <header style="background: transparent !important; box-shadow: none !important; backdrop-filter: none !important;">
       <nav class="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-12">
 <a href="#top"
-   class="brand-logo brand-link text-2xl tracking-[-0.02em] text-white font-extrabold" style="font-family:'IBM Plex Serif',serif; color:#ffffff;">
+   class="brand-logo brand-link text-2xl tracking-[-0.02em] text-white font-extrabold" style="font-family:'Cormorant Garamond','Inter','SF Pro Display','SF Pro Text',-apple-system,'Helvetica Neue',Arial,sans-serif; font-variant:small-caps; color:#ffffff; letter-spacing:0.5px; font-weight:600; font-size:17px;">
   Гончаров&nbsp;Семён
 </a>
         <div class="hidden md:flex items-center gap-8 text-[14px] nav-links" style="font-family:'IBM Plex Serif',serif; letter-spacing:-0.01em; color:#ffffff;">
@@ -1524,7 +1539,7 @@
           <a href="#process" class="hover:text-white transition nav-link" style="color:#ffffff;">Как работаю</a>
           <a href="#cases" class="hover:text-white transition nav-link" style="color:#ffffff;">Кейсы</a>
           <a href="#reviews" class="hover:text-white transition nav-link" style="color:#ffffff;">Отзывы</a>
-          <a href="#advantages-sellers" class="hover:text-white transition nav-link" style="color:#ffffff;">Преимущества</a>
+          <a href="#advantages" class="hover:text-white transition nav-link" style="color:#ffffff;">Преимущества</a>
           <a href="#newbuild" class="hover:text-white transition nav-link" style="color:#ffffff;">Новостройки</a>
           <a href="#about" class="hover:text-white transition nav-link" style="color:#ffffff;">Обо мне</a>
           <a href="#faq" class="hover:text-white transition nav-link" style="color:#ffffff;">FAQ</a>
@@ -1546,7 +1561,7 @@
     <a href="#process" class="nav-link">Как работаю</a>
     <a href="#cases" class="nav-link">Кейсы</a>
     <a href="#reviews" class="nav-link">Отзывы</a>
-    <a href="#advantages-sellers" class="nav-link">Преимущества</a>
+    <a href="#advantages" class="nav-link">Преимущества</a>
     <a href="#newbuild" class="nav-link">Новостройки</a>
     <a href="#about" class="nav-link">Обо мне</a>
     <a href="#faq" class="nav-link">FAQ</a>
