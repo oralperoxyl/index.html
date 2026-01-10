@@ -1881,6 +1881,9 @@
         gap: 8px;
         align-items: center;
       }
+      .contact-info {
+        margin-top: 28px;
+      }
       .contact-info .btn-mini {
         display: inline-flex;
         align-items: center;
