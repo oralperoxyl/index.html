@@ -227,55 +227,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!services.length) return;
         const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
-        const closeAll = () => {
-          services.forEach(item => {
-            item.classList.remove('open');
-            const detail = item.querySelector('.service-detail');
-            if (detail) detail.style.maxHeight = '';
-          });
-        };
-
         const bind = () => {
           services.forEach(item => {
             const trigger = item.querySelector('.service-trigger');
-            const detail = item.querySelector('.service-detail');
-            if (!trigger || !detail || trigger.dataset.bound) return;
+            if (!trigger || trigger.dataset.bound) return;
             trigger.dataset.bound = 'true';
-            let touched = false;
-            const toggle = () => {
+            trigger.addEventListener('click', () => {
               if (!isMobile()) return;
-              services.forEach(other => {
-                if (other === item) return;
-                other.classList.remove('open');
-                const otherDetail = other.querySelector('.service-detail');
-                if (otherDetail) otherDetail.style.maxHeight = '';
-              });
-              const willOpen = !item.classList.contains('open');
-              item.classList.toggle('open', willOpen);
-              requestAnimationFrame(() => {
-                detail.style.maxHeight = willOpen ? `${detail.scrollHeight}px` : '';
-              });
-            };
-            trigger.addEventListener('click', toggle);
-            trigger.addEventListener('touchstart', (e) => {
-              if (!isMobile()) return;
-              e.preventDefault();
-              touched = true;
-              toggle();
-              setTimeout(() => { touched = false; }, 250);
-            }, { passive: false });
-            trigger.addEventListener('click', (e) => {
-              if (touched) {
-                e.preventDefault();
-                return;
-              }
+              const isOpen = item.classList.contains('open');
+              services.forEach(other => other.classList.remove('open'));
+              if (!isOpen) item.classList.add('open');
             });
           });
         };
 
         bind();
         window.addEventListener('resize', () => {
-          if (!isMobile()) closeAll();
+          if (!isMobile()) {
+            services.forEach(item => item.classList.remove('open'));
+          }
         });
       })();
   
