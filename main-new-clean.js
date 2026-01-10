@@ -241,6 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const detail = item.querySelector('.service-detail');
             if (!trigger || !detail || trigger.dataset.bound) return;
             trigger.dataset.bound = 'true';
+            let touched = false;
             const toggle = () => {
               if (!isMobile()) return;
               services.forEach(other => {
@@ -249,15 +250,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 const otherDetail = other.querySelector('.service-detail');
                 if (otherDetail) otherDetail.style.maxHeight = '';
               });
-              const isOpen = item.classList.toggle('open');
-              detail.style.maxHeight = isOpen ? `${detail.scrollHeight}px` : '';
+              const willOpen = !item.classList.contains('open');
+              item.classList.toggle('open', willOpen);
+              requestAnimationFrame(() => {
+                detail.style.maxHeight = willOpen ? `${detail.scrollHeight}px` : '';
+              });
             };
             trigger.addEventListener('click', toggle);
             trigger.addEventListener('touchstart', (e) => {
               if (!isMobile()) return;
               e.preventDefault();
+              touched = true;
               toggle();
+              setTimeout(() => { touched = false; }, 250);
             }, { passive: false });
+            trigger.addEventListener('click', (e) => {
+              if (touched) {
+                e.preventDefault();
+                return;
+              }
+            });
           });
         };
 
