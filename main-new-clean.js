@@ -219,6 +219,38 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         tick();
       })();
+
+      // Mobile accordion for "О чём моя работа"
+      (() => {
+        const services = Array.from(document.querySelectorAll('.service-item'));
+        if (!services.length) return;
+        const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
+        const closeAll = () => {
+          services.forEach(item => item.classList.remove('open'));
+        };
+
+        const bind = () => {
+          services.forEach(item => {
+            const trigger = item.querySelector('.service-trigger');
+            const detail = item.querySelector('.service-detail');
+            if (!trigger || !detail || trigger.dataset.bound) return;
+            trigger.dataset.bound = 'true';
+            trigger.addEventListener('click', () => {
+              if (!isMobile()) return;
+              services.forEach(other => {
+                if (other !== item) other.classList.remove('open');
+              });
+              item.classList.toggle('open');
+            });
+          });
+        };
+
+        bind();
+        window.addEventListener('resize', () => {
+          if (!isMobile()) closeAll();
+        });
+      })();
   
       // Year
       document.getElementById('year').textContent = new Date().getFullYear();
