@@ -1283,15 +1283,18 @@
         line-height: 1.65;
         font-size: 15px;
         color: rgba(15,23,42,0.7);
-        transition: max-height 0.45s ease, opacity 0.35s ease;
+        transform: translateY(4px);
+        transition: max-height 280ms ease, opacity 280ms ease, transform 280ms ease;
         border-top: 1px solid rgba(0,0,0,0.05);
         padding-top: 0;
-        transform: none;
+        padding-bottom: 0;
       }
       .service-item.open .service-detail{
-        max-height: 400px;
+        max-height: 420px;
         opacity: 1;
         padding-top: 10px;
+        padding-bottom: 12px;
+        transform: translateY(0);
       }
       .service-item.open .service-trigger{
         color: #0b5fcc;
