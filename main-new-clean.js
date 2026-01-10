@@ -203,7 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Services intro typewriter
       (() => {
         const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (prefersReduce) return;
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+        if (prefersReduce || isMobile) return;
         const el = document.querySelector('.services-intro');
         if (!el) return;
         const full = (el.textContent || '').trim();
