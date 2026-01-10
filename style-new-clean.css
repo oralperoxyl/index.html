@@ -1877,55 +1877,49 @@
     @media (max-width: 768px) {
       .contact-info .messenger-row {
         display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 14px;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
       }
       .contact-info .btn-mini {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        border-radius: 9999px;
-        padding: 14px 20px;
+        padding: 5px 10px;
+        height: 28px;
+        border-radius: 999px;
         font-family: "Noto Sans", sans-serif;
-        font-size: 15px;
-        font-weight: 500;
+        font-size: 13px;
+        font-weight: 600;
         text-align: center;
-        width: 100%;
+        width: auto;
         box-shadow: none;
         border: none;
-        transition: transform .2s ease, box-shadow .25s ease;
+        background: var(--btn-hover, rgba(255,255,255,0.12));
+        color: #ffffff;
+        transition: transform .2s ease, opacity .2s ease, background .2s ease, color .2s ease;
       }
       .contact-info .btn-phone {
-        background: #2f3541;
-        color: #ffffff;
-        box-shadow: 0 8px 20px rgba(47, 53, 65, 0.25);
+        background: var(--btn-hover, rgba(15,23,42,0.8));
       }
       .contact-info .btn-wa {
-        background: #25D366;
-        color: #ffffff;
-        box-shadow: 0 8px 20px rgba(37, 211, 102, 0.25);
+        background: var(--btn-hover, rgba(37,211,102,0.8));
       }
       .contact-info .btn-tg,
       .contact-info .btn-channel {
-        background: #29a9eb;
-        color: #ffffff;
-        box-shadow: 0 8px 20px rgba(41, 169, 235, 0.25);
+        background: var(--btn-hover, rgba(42,171,238,0.8));
       }
       .contact-info .btn-email {
-        background: #ffffff;
-        color: #0f172a;
-        border: 1px solid rgba(15,23,42,0.08);
-        box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+        background: var(--btn-hover, rgba(245,245,245,0.9));
+        color: #111111;
       }
       .contact-info .btn-mini:active {
         transform: scale(0.97);
-        box-shadow: none;
       }
       .contact-label-mobile {
-        text-align: center;
+        text-align: left;
         opacity: 0.7;
-        margin: 16px 0 12px;
+        margin: 12px 0 8px;
       }
     }
 
