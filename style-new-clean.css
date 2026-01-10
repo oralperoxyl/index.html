@@ -1299,11 +1299,6 @@
       .service-item.open .service-trigger{
         color: #0b5fcc;
       }
-      .service-item:hover .service-detail,
-      .service-item:focus-within .service-detail{
-        max-height: 0;
-        opacity: 0;
-      }
     }
     @media (hover: none) and (max-width: 768px){
       .service-item:not(.open) .service-detail{
