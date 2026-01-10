@@ -228,7 +228,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
         const closeAll = () => {
-          services.forEach(item => item.classList.remove('open'));
+          services.forEach(item => {
+            item.classList.remove('open');
+            const detail = item.querySelector('.service-detail');
+            if (detail) detail.style.maxHeight = '';
+          });
         };
 
         const bind = () => {
@@ -237,13 +241,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const detail = item.querySelector('.service-detail');
             if (!trigger || !detail || trigger.dataset.bound) return;
             trigger.dataset.bound = 'true';
-            trigger.addEventListener('click', () => {
+            const toggle = () => {
               if (!isMobile()) return;
               services.forEach(other => {
-                if (other !== item) other.classList.remove('open');
+                if (other === item) return;
+                other.classList.remove('open');
+                const otherDetail = other.querySelector('.service-detail');
+                if (otherDetail) otherDetail.style.maxHeight = '';
               });
-              item.classList.toggle('open');
-            });
+              const isOpen = item.classList.toggle('open');
+              detail.style.maxHeight = isOpen ? `${detail.scrollHeight}px` : '';
+            };
+            trigger.addEventListener('click', toggle);
+            trigger.addEventListener('touchstart', (e) => {
+              if (!isMobile()) return;
+              e.preventDefault();
+              toggle();
+            }, { passive: false });
           });
         };
 
