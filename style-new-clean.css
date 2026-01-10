@@ -571,26 +571,12 @@
       position: static;
       margin-top: 1.5rem;
       z-index: 3;
-      position: relative;
-      padding-right: 2.6rem;
-      transition: padding-right 0.7s ease, background 0.45s ease;
     }
     .review-button::after{
-      content: "➔";
-      position: absolute;
-      right: 1.1rem;
-      top: 50%;
-      transform: translateY(-50%) translateX(-6px);
-      opacity: 0;
-      transition: opacity 0.5s ease, transform 0.5s ease;
+      content: "";
     }
     .review-button.btn-cta-light:hover{
       transform: none !important;
-      padding-right: 3.4rem;
-    }
-    .review-button.btn-cta-light:hover::after{
-      opacity: 1;
-      transform: translateY(-50%) translateX(0);
     }
     .review-modal{
       position: fixed;
@@ -977,12 +963,19 @@
       .about-photo-frame{
         clip-path: none;
         border-radius: 28px;
-        overflow: hidden;
+        overflow: visible;
         height: auto;
       }
       .about-photo{
         height: auto;
         object-fit: contain !important;
+      }
+      .bottom-gradient::before{
+        z-index: 0;
+      }
+      .bottom-gradient > *{
+        position: relative;
+        z-index: 1;
       }
     }
     @media (max-width: 640px) {
@@ -1665,7 +1658,8 @@
       border: none;
       background: rgba(15,23,42,0.10);
       color: rgba(15,23,42,0.82);
-      font-weight: 600;
+      font-weight: 400;
+      font-family: "Noto Sans", sans-serif;
       letter-spacing: -0.01em;
       cursor: pointer;
       box-shadow: none;
