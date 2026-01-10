@@ -1303,7 +1303,7 @@
       }
     }
     @media (hover: none) and (max-width: 768px){
-      .service-detail{
+      .service-item:not(.open) .service-detail{
         max-height: 0;
         opacity: 0;
       }
