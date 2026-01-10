@@ -1898,22 +1898,25 @@
         width: auto;
         box-shadow: none;
         border: none;
-        background: var(--btn-hover, rgba(255,255,255,0.12));
-        color: #ffffff;
+        background: rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.82);
         transition: transform .2s ease, opacity .2s ease, background .2s ease, color .2s ease;
       }
-      .contact-info .btn-phone {
-        background: var(--btn-hover, rgba(15,23,42,0.8));
+      .contact-info.is-colored .btn-phone {
+        background: rgba(15,23,42,0.8);
+        color: #ffffff;
       }
-      .contact-info .btn-wa {
-        background: var(--btn-hover, rgba(37,211,102,0.8));
+      .contact-info.is-colored .btn-wa {
+        background: rgba(37,211,102,0.8);
+        color: #ffffff;
       }
-      .contact-info .btn-tg,
-      .contact-info .btn-channel {
-        background: var(--btn-hover, rgba(42,171,238,0.8));
+      .contact-info.is-colored .btn-tg,
+      .contact-info.is-colored .btn-channel {
+        background: rgba(42,171,238,0.8);
+        color: #ffffff;
       }
-      .contact-info .btn-email {
-        background: var(--btn-hover, rgba(245,245,245,0.9));
+      .contact-info.is-colored .btn-email {
+        background: rgba(245,245,245,0.9);
         color: #111111;
       }
       .contact-info .btn-mini:active {

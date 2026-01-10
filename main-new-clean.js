@@ -248,6 +248,50 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         });
       })();
+
+      // Mobile contact buttons: periodic color pulse when in view
+      (() => {
+        const contactInfo = document.querySelector('.contact-info');
+        if (!contactInfo) return;
+        const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+        let intervalId = null;
+
+        const startPulse = () => {
+          if (intervalId || !isMobile()) return;
+          contactInfo.classList.add('is-colored');
+          intervalId = window.setInterval(() => {
+            contactInfo.classList.toggle('is-colored');
+          }, 10000);
+        };
+
+        const stopPulse = () => {
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+          contactInfo.classList.remove('is-colored');
+        };
+
+        if (!('IntersectionObserver' in window)) {
+          startPulse();
+          return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              startPulse();
+            } else {
+              stopPulse();
+            }
+          });
+        }, { threshold: 0.2 });
+
+        observer.observe(contactInfo);
+        window.addEventListener('resize', () => {
+          if (!isMobile()) stopPulse();
+        });
+      })();
   
       // Year
       document.getElementById('year').textContent = new Date().getFullYear();
