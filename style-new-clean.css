@@ -68,6 +68,17 @@ button,
 small {
   font-family: var(--font-sans);
 }
+button,
+a,
+input,
+textarea,
+.nav-link,
+.btn-mini,
+.hero-primary {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0;
+}
     body.no-motion {
       scroll-behavior: auto;
     }
@@ -618,14 +629,14 @@ small {
   border: none;
   cursor: pointer;
 }
-    .faq-title {
-      font-family: var(--font-serif);
-      font-size: 16px;
-      font-weight: 500;
-      color: rgba(15,23,42,0.88);
-      text-align: left;
-      opacity: 0.85;
-    }
+.faq-title {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(15,23,42,0.88);
+  text-align: left;
+  opacity: 0.85;
+}
     .faq-row.open .faq-title {
       opacity: 1;
     }
@@ -697,7 +708,7 @@ small {
       backdrop-filter: blur(6px);
       transition: background .2s ease, transform .25s ease;
       padding: 10px 18px;
-      font-weight: 600;
+      font-weight: 500;
       border-radius: var(--radius-pill);
     }
     .badge-cutout {
@@ -834,7 +845,7 @@ small {
     /* Editorial list for "Чем я помогу" */
 .help-section h2 {
   font-family: var(--font-serif);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 1.2;
   margin-bottom: 16px;
@@ -991,7 +1002,7 @@ small {
     }
 .process-header h2 {
   font-family: var(--font-serif);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.02em;
   font-size: clamp(34px, 3.6vw, 48px);
   line-height: 1.2;
@@ -1053,7 +1064,7 @@ small {
     }
     .process-narrative p.visible { opacity: 1; transform: translateY(0); }
     .process-narrative strong {
-      font-weight: 600;
+      font-weight: 500;
       color: rgba(15,23,42,0.92);
     }
     @media (max-width: 880px) {
@@ -1137,7 +1148,7 @@ small {
     }
 .hero-title {
   font-family: var(--font-serif);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(40px, 5.4vw, 84px);
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -1678,22 +1689,22 @@ small {
       box-shadow: none !important;
     }
     /* Unified section headings */
-    .help-compact h2,
-    .process-header h2,
-    .services-title,
-    .cases-header h2,
-    #reviews h2,
-    #advantages h2,
-    #newbuild h2,
-    #about h2,
-    #faq h2{
-      font-family: var(--font-serif);
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      font-size: clamp(30px, 3.2vw, 38px);
-      line-height: 1.2;
-      color: rgba(15,23,42,0.86);
-    }
+.help-compact h2,
+.process-header h2,
+.services-title,
+.cases-header h2,
+#reviews h2,
+#advantages h2,
+#newbuild h2,
+#about h2,
+#faq h2{
+  font-family: var(--font-serif);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: clamp(30px, 3.2vw, 38px);
+  line-height: 1.2;
+  color: rgba(15,23,42,0.86);
+}
     #about p{
       font-family: var(--font-sans);
     }
@@ -1901,7 +1912,7 @@ small {
       background: #1f232a;
       color: #ffffff;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 500;
       border: 1px solid rgba(255,255,255,0.12);
     }
     .info-address {
@@ -1922,7 +1933,7 @@ small {
       padding: 5px 10px;
       height: 28px;
       border-radius: 999px;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 13px;
       letter-spacing: -0.01em;
       text-decoration: none;
@@ -1937,6 +1948,17 @@ small {
       background: var(--btn-hover, rgba(255,255,255,0.16));
       border-color: transparent;
       color: #ffffff;
+    }
+    .btn-mini:active,
+    .btn-submit:active,
+    .hero-primary:active,
+    .btn-cta:active,
+    .btn-cta-light:active,
+    .btn-ghost-light:active,
+    .nav-link:active,
+    .hero-link:active {
+      transform: none;
+      opacity: 0.85;
     }
     footer #year { color: inherit; }
     footer, footer a {
@@ -2108,36 +2130,20 @@ small {
         border-radius: 999px;
         font-family: var(--font-sans);
         font-size: 13px;
-        font-weight: 600;
+        font-weight: 500;
         text-align: center;
         width: auto;
         box-shadow: none;
-        border: none;
+        border: 1px solid rgba(255,255,255,0.12);
         background: rgba(255,255,255,0.08);
         color: rgba(255,255,255,0.82);
         transition: transform .2s ease, opacity .2s ease, background .2s ease, color .2s ease;
-      }
-      .contact-info .btn-phone {
-        background: rgba(15,23,42,0.8);
-        color: #ffffff;
-      }
-      .contact-info .btn-wa {
-        background: rgba(37,211,102,0.8);
-        color: #ffffff;
-      }
-      .contact-info .btn-tg,
-      .contact-info .btn-channel {
-        background: rgba(42,171,238,0.8);
-        color: #ffffff;
-      }
-      .contact-info .btn-email {
-        background: rgba(245,245,245,0.9);
-        color: #111111;
       }
       .contact-info.is-highlight .btn-mini {
         filter: brightness(1.06);
       }
       .contact-info .btn-mini:active {
-        transform: scale(0.97);
+        transform: none;
+        opacity: 0.9;
       }
     }
