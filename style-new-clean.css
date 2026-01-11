@@ -365,7 +365,7 @@ textarea,
       }
     }
 
-    @media (max-width: 768px){
+@media (max-width: 768px){
       /* Help: keep number + title on one line, description under title */
       .help-item{
         grid-template-columns: 2.6em 1fr;
@@ -395,12 +395,14 @@ textarea,
         grid-template-columns: 2.6em 1fr;
         grid-template-rows: auto auto;
         column-gap: 14px;
-        row-gap: 6px;
+        row-gap: 4px;
+        align-items: start;
         padding: 0;
       }
       .process-narrative p::before{
         grid-column: 1;
-        grid-row: 1;
+        grid-row: 1 / span 2;
+        align-self: start;
         position: static;
         width: auto;
         height: auto;
@@ -411,8 +413,8 @@ textarea,
       .process-narrative .proc-title{
         grid-column: 2;
         grid-row: 1;
-        display: block;
         margin: 0;
+        display: block;
         white-space: normal;
         font-weight: 400;
         color: #1a1a1a;
@@ -422,6 +424,7 @@ textarea,
       .process-narrative .proc-body{
         grid-column: 2;
         grid-row: 2;
+        margin-top: 2px;
         width: auto;
         padding-left: 0;
         font-size: clamp(16px, 1.9vw, 17.5px);
@@ -2160,5 +2163,28 @@ textarea,
       .contact-info .btn-mini:active {
         transform: none;
         opacity: 0.9;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .contact-form,
+      .feedback-form,
+      .form-card {
+        position: relative;
+        z-index: 2;
+        margin-bottom: 64px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      }
+      .contact-section {
+        position: relative;
+        z-index: 1;
+        padding-top: 72px;
+      }
+      .contact-section,
+      .contact-section::before,
+      .contact-section::after {
+        backdrop-filter: none;
+        filter: none;
+        opacity: 1;
       }
     }
