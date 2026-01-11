@@ -1178,15 +1178,15 @@ textarea,
     }
     .services-more{
       margin-top: 16px;
-      padding: 0;
+      padding: 0 0 2px 0;
       background: none;
       border: none;
       font-family: var(--font-sans);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 400;
-      opacity: 0.55;
-      text-decoration: underline;
-      text-underline-offset: 4px;
+      opacity: 0.75;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(15,23,42,0.35);
       cursor: pointer;
       display: none;
     }
@@ -1295,36 +1295,17 @@ textarea,
       .service-detail{
         margin: 0;
         max-width: none;
-        overflow: hidden;
-        max-height: 0;
-        opacity: 0;
+        overflow: visible;
+        max-height: none;
+        opacity: 1;
         line-height: 1.65;
         font-size: 15px;
         color: rgba(15,23,42,0.7);
-        transform: translateY(4px);
-        transition: max-height 280ms ease, opacity 280ms ease, transform 280ms ease;
-        border-top: 1px solid rgba(0,0,0,0.05);
-        padding-top: 0;
+        transform: none;
+        transition: none;
+        border-top: none;
+        padding-top: 8px;
         padding-bottom: 0;
-      }
-      .service-item.open .service-detail{
-        max-height: 420px;
-        opacity: 1;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        transform: translateY(0);
-      }
-      .service-item.open .service-trigger{
-        color: #111111;
-      }
-      .service-item.open .service-index{
-        color: rgba(17,17,17,0.5);
-      }
-    }
-    @media (hover: none) and (max-width: 768px){
-      .service-item:not(.open) .service-detail{
-        max-height: 0;
-        opacity: 0;
       }
     }
     #gradient-zone .pill,
@@ -2152,33 +2133,36 @@ textarea,
         z-index: 1;
       }
       .contact-section .messenger-row{
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
       }
       .contact-info .messenger-row {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
         align-items: stretch;
       }
       .contact-info {
         margin-top: 28px;
       }
       .contact-info .btn-mini {
-        display: block;
+        display: flex;
         width: 100%;
-        padding: 14px;
-        border-radius: 14px;
+        height: 48px;
+        padding: 0;
+        border-radius: 16px;
+        align-items: center;
+        justify-content: center;
         font-family: var(--font-sans);
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 400;
         text-align: center;
         box-shadow: none;
-        border: 1px solid rgba(255,255,255,.16);
-        background: rgba(255,255,255,.06);
-        color: rgba(255,255,255,.88);
-        transition: transform .2s ease, opacity .2s ease, background .2s ease, color .2s ease;
+        border: 1px solid rgba(255,255,255,0.16);
+        background: rgba(255,255,255,0.06);
+        color: rgba(255,255,255,0.88);
+        transition: opacity .2s ease;
       }
       .contact-info.is-highlight .btn-mini {
         filter: brightness(1.06);

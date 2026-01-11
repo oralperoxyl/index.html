@@ -219,33 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tick();
       })();
 
-      // Mobile accordion for "О чём моя работа"
-      (() => {
-        const services = Array.from(document.querySelectorAll('.service-item'));
-        if (!services.length) return;
-        const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
-
-        const bind = () => {
-          services.forEach(item => {
-            const trigger = item.querySelector('.service-trigger');
-            if (!trigger || trigger.dataset.bound) return;
-            trigger.dataset.bound = 'true';
-            trigger.addEventListener('click', () => {
-              if (!isMobile()) return;
-              const isOpen = item.classList.contains('open');
-              services.forEach(other => other.classList.remove('open'));
-              if (!isOpen) item.classList.add('open');
-            });
-          });
-        };
-
-        bind();
-        window.addEventListener('resize', () => {
-          if (!isMobile()) {
-            services.forEach(item => item.classList.remove('open'));
-          }
-        });
-      })();
+      // Mobile services accordion removed (CSS-only toggle)
 
       // Contact buttons: single gentle highlight on first appearance (mobile)
       (() => {
