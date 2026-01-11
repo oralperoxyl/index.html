@@ -151,15 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
       })();
     
 
-      // Hero typewriter effect
+      // Hero typewriter effect (kicker only)
       (() => {
         const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (prefersReduce) return;
   
         const sequence = [
-          { sel: '.hero-kicker', speed: 18 },
-          { sel: '.hero-title', speed: 22 },
-          { sel: '.hero-subtitle', speed: 16 }
+          { sel: '.hero-kicker', speed: 18 }
         ];
   
         const items = sequence
@@ -249,49 +247,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       })();
 
-      // Mobile contact buttons: periodic color pulse when in view
+      // Contact buttons: single gentle highlight on first appearance (mobile)
       (() => {
         const contactInfo = document.querySelector('.contact-info');
-        if (!contactInfo) return;
-        const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
-        let intervalId = null;
-
-        const startPulse = () => {
-          if (intervalId || !isMobile()) return;
-          contactInfo.classList.add('is-colored');
-          intervalId = window.setInterval(() => {
-            contactInfo.classList.toggle('is-colored');
-          }, 10000);
-        };
-
-        const stopPulse = () => {
-          if (intervalId) {
-            clearInterval(intervalId);
-            intervalId = null;
-          }
-          contactInfo.classList.remove('is-colored');
-        };
-
-        if (!('IntersectionObserver' in window)) {
-          startPulse();
-          return;
-        }
-
+        if (!contactInfo || !('IntersectionObserver' in window)) return;
+        let fired = false;
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              startPulse();
-            } else {
-              stopPulse();
+            if (!fired && entry.isIntersecting && window.matchMedia('(max-width: 768px)').matches) {
+              fired = true;
+              contactInfo.classList.add('is-highlight');
+              setTimeout(() => contactInfo.classList.remove('is-highlight'), 1200);
+              observer.disconnect();
             }
           });
         }, { threshold: 0.2 });
-
         observer.observe(contactInfo);
-        window.addEventListener('resize', () => {
-          if (!isMobile()) stopPulse();
-        });
       })();
+
   
       // Year
       document.getElementById('year').textContent = new Date().getFullYear();
@@ -308,33 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setH();
       })();
   
-      // Прячем шапку после блока "Чем я помогу"
-      (() => {
-        const header = document.querySelector('header');
-        const target = document.querySelector('.help-compact');
-        if (!header || !target) return;
-  
-        const getHeaderH = () => {
-          const raw = getComputedStyle(document.documentElement).getPropertyValue('--header-h').trim();
-          const num = parseFloat(raw);
-          return Number.isFinite(num) ? num : header.offsetHeight || 0;
-        };
-  
-        let hidden = false;
-        const update = () => {
-          const trigger = target.getBoundingClientRect().top + (window.scrollY || 0) - getHeaderH();
-          const shouldHide = (window.scrollY || 0) >= trigger;
-          if (shouldHide !== hidden) {
-            hidden = shouldHide;
-            header.classList.toggle('is-hidden', shouldHide);
-          }
-        };
-  
-        window.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update);
-        update();
-      })();
-
       // Прогресс для pinned-сцен (равномерный hold) + смена контраста hero
       (() => {
         const scenes = Array.from(document.querySelectorAll('.pin-scene'));
@@ -449,11 +395,11 @@ document.addEventListener('DOMContentLoaded', () => {
       // Бургер-меню
       (() => {
         const b = document.querySelector('.burger');
-        const m = document.querySelector('.mobile-nav');
-        if (!b || !m) return;
-        b.addEventListener('click', () => m.classList.toggle('is-open'));
-        m.addEventListener('click', (e) => {
-          if (e.target.tagName === 'A') m.classList.remove('is-open');
+        const header = document.querySelector('.site-header');
+        if (!b || !header) return;
+        b.addEventListener('click', () => header.classList.toggle('nav-open'));
+        header.addEventListener('click', (e) => {
+          if (e.target.tagName === 'A') header.classList.remove('nav-open');
         });
       })();
     
