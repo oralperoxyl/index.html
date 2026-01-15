@@ -179,6 +179,15 @@ p {
   color: rgba(15,23,42,0.68);
 }
 
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
 .hero {
   background: #f3f3f1;
   padding: 140px 0 80px;
@@ -804,6 +813,12 @@ p {
 
   .about-grid {
     grid-template-columns: 1fr;
+    gap: 48px;
+  }
+
+  .about-photo {
+    max-width: 420px;
+    margin: 0 auto 48px;
   }
 
   .about-header {
@@ -957,28 +972,30 @@ textarea.form-control {
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: 48px;
+  gap: 64px;
 }
 
 .about-header {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 24px;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 0;
+  margin-bottom: 40px;
 }
 
 .about-badge {
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
   border: none;
-  color: var(--text-main);
-  padding: 6px 12px;
-  border-radius: 999px;
+  color: var(--text-muted);
+  padding: 0;
+  border-radius: 0;
   font-size: 13px;
   font-family: var(--font-sans);
   font-weight: 400;
-  background: var(--accent);
+  background: transparent;
+  opacity: 0.6;
+  letter-spacing: 0.02em;
+  margin-left: 16px;
 }
 
 .about-photo {
@@ -990,7 +1007,15 @@ textarea.form-control {
 
 .about-text {
   font-size: 16px;
-  line-height: 1.7;
+  line-height: 1.75;
+}
+
+.about-text p {
+  margin: 0 0 24px 0;
+}
+
+.about-text p:last-child {
+  margin-bottom: 0;
 }
 
 .faq-item {
@@ -1332,18 +1357,88 @@ textarea.contact-form-control {
     min-height: 56px;
   }
 
-  /* Navigation */
+  /* Mobile Navigation */
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .menu-toggle-icon {
+    position: relative;
+    width: 24px;
+    height: 2px;
+    background: var(--text-main);
+    transition: background 0.3s ease;
+  }
+
+  .menu-toggle-icon::before,
+  .menu-toggle-icon::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    background: var(--text-main);
+    transition: transform 0.3s ease;
+  }
+
+  .menu-toggle-icon::before {
+    top: -8px;
+  }
+
+  .menu-toggle-icon::after {
+    top: 8px;
+  }
+
+  .menu-toggle[aria-expanded="true"] .menu-toggle-icon {
+    background: transparent;
+  }
+
+  .menu-toggle[aria-expanded="true"] .menu-toggle-icon::before {
+    transform: rotate(45deg) translate(5px, 6px);
+  }
+
+  .menu-toggle[aria-expanded="true"] .menu-toggle-icon::after {
+    transform: rotate(-45deg) translate(5px, -6px);
+  }
+
   .site-nav {
-    flex-wrap: wrap;
-    gap: 12px 16px;
-    font-size: 14px;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    background: var(--bg-main);
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    border-bottom: 1px solid rgba(15,23,42,0.12);
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+  }
+
+  .site-nav.is-open {
+    max-height: 400px;
+    opacity: 1;
   }
 
   .site-nav a {
-    padding: 8px 12px;
-    min-height: 44px;
-    display: inline-flex;
+    padding: 20px 24px;
+    min-height: 64px;
+    display: flex;
     align-items: center;
+    font-size: 16px;
+    border-bottom: 1px solid rgba(15,23,42,0.06);
+    color: var(--text-main);
+    font-weight: 400;
+  }
+
+  .site-nav a:last-child {
+    border-bottom: none;
   }
 
   .brand {
@@ -1472,21 +1567,35 @@ textarea.contact-form-control {
   }
 
   /* About section */
+  .about-grid {
+    gap: 40px;
+  }
+
   .about-photo {
-    border-radius: 12px;
-    margin-bottom: 32px;
+    max-width: 340px;
+    margin: 0 auto 40px;
+    border-radius: 16px;
   }
 
   .about-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  .about-badge {
+    margin-left: 0;
+    margin-top: 4px;
   }
 
   .about-text {
     font-size: 15px;
-    line-height: 1.7;
+    line-height: 1.75;
+  }
+
+  .about-text p {
+    margin-bottom: 20px;
   }
 
   /* Services/Help section */

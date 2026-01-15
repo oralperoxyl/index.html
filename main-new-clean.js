@@ -133,4 +133,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Mobile menu toggle
+  const menuToggle = document.querySelector('.menu-toggle');
+  const siteNav = document.querySelector('.site-nav');
+
+  if (menuToggle && siteNav) {
+    menuToggle.addEventListener('click', () => {
+      const isOpen = siteNav.classList.toggle('is-open');
+      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      menuToggle.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+    });
+
+    // Close menu when clicking a link
+    const navLinks = Array.from(siteNav.querySelectorAll('a'));
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        siteNav.classList.remove('is-open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Открыть меню');
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!menuToggle.contains(e.target) && !siteNav.contains(e.target)) {
+        if (siteNav.classList.contains('is-open')) {
+          siteNav.classList.remove('is-open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+          menuToggle.setAttribute('aria-label', 'Открыть меню');
+        }
+      }
+    });
+  }
+
 });
