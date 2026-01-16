@@ -512,7 +512,7 @@ p {
 
 .work-name {
   font-family: var(--font-sans);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 500;
   color: #1A1A1A;
 }
@@ -571,8 +571,8 @@ p {
 }
 
 .process-subtitle {
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: 26px;
+  line-height: 1.5;
   font-weight: var(--fw-medium);
   margin: 0;
   color: var(--text-main);
@@ -670,9 +670,9 @@ p {
 
 .help-item h3 {
   font-family: var(--font-sans);
-  font-size: 18px;
+  font-size: 24px;
   font-weight: var(--fw-medium);
-  margin: 0 0 8px 0;
+  margin: 0 0 12px 0;
   color: var(--text-main);
 }
 
@@ -719,9 +719,9 @@ p {
 
 .adv-item h4 {
   font-family: var(--font-sans);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: var(--fw-medium);
-  margin: 0 0 8px 0;
+  margin: 0 0 12px 0;
 }
 
 .adv-item p {
@@ -1937,7 +1937,7 @@ textarea.contact-form-control {
   }
 
   .work-name {
-    font-size: 17px;
+    font-size: 20px;
   }
 
   .work-content p {
@@ -1961,9 +1961,9 @@ textarea.contact-form-control {
   }
 
   .step-title {
-    font-size: 19px;
+    font-size: 22px;
     line-height: 1.4;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .step-description {
@@ -2028,7 +2028,7 @@ textarea.contact-form-control {
   }
 
   .help-item h3 {
-    font-size: 18px;
+    font-size: 21px;
   }
 
   .help-item p {
@@ -2052,7 +2052,7 @@ textarea.contact-form-control {
   }
 
   .adv-item h4 {
-    font-size: 17px;
+    font-size: 20px;
   }
 
   .adv-item p {
@@ -2220,7 +2220,7 @@ textarea.contact-form-control {
   }
 
   .step-title {
-    font-size: 18px;
+    font-size: 21px;
   }
 
   .process-conclusion {
