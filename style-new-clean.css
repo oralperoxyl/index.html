@@ -518,7 +518,7 @@ p {
 }
 
 .work-header::after {
-  content: '—';
+  content: 'вЂ”';
   font-family: var(--font-sans);
   font-size: 18px;
   color: var(--text-muted);
@@ -751,7 +751,7 @@ p {
 }
 
 .case-pill:not(:last-child)::after {
-  content: '•';
+  content: 'вЂў';
   position: absolute;
   right: -10px;
   color: var(--text-muted);
@@ -1310,7 +1310,7 @@ textarea.form-control {
 }
 
 .faq-question::after {
-  content: '—';
+  content: 'вЂ”';
   font-family: var(--font-sans);
   font-size: 18px;
   color: var(--text-muted);
@@ -2165,7 +2165,7 @@ textarea.contact-form-control {
   }
 }
 
-/* Small phones (≤480px) */
+/* Small phones (в‰¤480px) */
 @media (max-width: 480px) {
   /* Header even more compact */
   .header-inner {
