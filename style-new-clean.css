@@ -86,7 +86,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--bg-main);
+  background: #0F0F10;
   color: var(--text-main);
   font-family: var(--font-sans);
   font-size: var(--fs-body);
@@ -827,6 +827,28 @@ p {
   opacity: 1;
 }
 
+.case-details ul {
+  margin: 16px 0 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.case-details li {
+  margin-bottom: 8px;
+}
+
+.case-details li:last-child {
+  margin-bottom: 0;
+}
+
+.case-details strong {
+  font-weight: var(--fw-medium);
+  color: var(--text-main);
+}
+
 
 .reviews-track {
   display: flex;
@@ -995,6 +1017,7 @@ p {
   z-index: 999;
   text-decoration: none;
   cursor: pointer;
+  opacity: 0.85;
 }
 
 .floating-telegram:hover {
@@ -1343,6 +1366,96 @@ textarea.form-control {
   letter-spacing: -0.01em;
 }
 
+/* ============================================
+   DARK CONTACT SECTION (LAYER 1)
+   ============================================ */
+
+.contact-dark {
+  background: #1C1C1E;
+  color: #E5E5E5;
+}
+
+.contact-dark h2 {
+  color: #E5E5E5;
+}
+
+.contact-dark .contact-subtitle {
+  color: rgba(229, 229, 229, 0.7);
+}
+
+.contact-dark .contact-label {
+  color: rgba(229, 229, 229, 0.5);
+}
+
+.contact-dark .contact-link {
+  color: #E5E5E5;
+}
+
+.contact-dark .contact-link:hover {
+  opacity: 0.7;
+}
+
+.contact-dark .contact-form-title {
+  color: rgba(229, 229, 229, 0.5);
+}
+
+.contact-dark .contact-form-control {
+  color: #E5E5E5;
+  border-bottom-color: rgba(229, 229, 229, 0.15);
+  background: transparent;
+}
+
+.contact-dark .contact-form-control::placeholder {
+  color: rgba(229, 229, 229, 0.3);
+}
+
+.contact-dark .contact-form-control:focus {
+  border-bottom-color: rgba(229, 229, 229, 0.4);
+}
+
+.contact-dark .contact-form-submit {
+  background: transparent;
+  color: rgba(229, 229, 229, 0.7);
+  border: 1px solid rgba(229, 229, 229, 0.3);
+}
+
+.contact-dark .contact-form-submit:hover {
+  background: rgba(229, 229, 229, 0.9);
+  color: #1C1C1E;
+  border-color: rgba(229, 229, 229, 0.9);
+}
+
+.contact-dark .contact-form-submit:active {
+  background: rgba(229, 229, 229, 1);
+  color: #1C1C1E;
+  border-color: rgba(229, 229, 229, 1);
+}
+
+.contact-dark .contact-divider {
+  background: rgba(229, 229, 229, 0.1);
+}
+
+.contact-dark .channel-intro {
+  color: rgba(229, 229, 229, 0.7);
+}
+
+.contact-dark .channel-link {
+  border-color: rgba(0, 136, 204, 0.4);
+}
+
+.contact-dark .channel-link:hover {
+  background: #0088cc;
+  border-color: #0088cc;
+}
+
+.contact-dark .channel-name {
+  color: #E5E5E5;
+}
+
+.contact-dark .channel-meta {
+  color: rgba(229, 229, 229, 0.5);
+}
+
 .contact-subtitle {
   font-family: var(--font-sans);
   font-size: 16px;
@@ -1350,6 +1463,51 @@ textarea.form-control {
   color: var(--text-muted);
   margin: 0 0 48px 0;
   max-width: 560px;
+}
+
+/* ============================================
+   EDITORIAL PAUSE (LAYER 2)
+   ============================================ */
+
+.editorial-pause {
+  background: #0F0F10;
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl) var(--space-lg) 0;
+}
+
+.pause-text {
+  font-family: var(--font-sans);
+  font-size: clamp(20px, 3vw, 32px);
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: #C8C8C8;
+  text-align: center;
+  margin: 0;
+  max-width: 640px;
+}
+
+.site-footer-dark {
+  background: transparent;
+  border-top: 1px solid rgba(229, 229, 229, 0.08);
+  margin-top: auto;
+  width: 100%;
+}
+
+.site-footer-dark .footer-inner {
+  color: rgba(229, 229, 229, 0.4);
+}
+
+.site-footer-dark .footer-links a {
+  color: rgba(229, 229, 229, 0.4);
+}
+
+.site-footer-dark .footer-links a:hover {
+  color: rgba(229, 229, 229, 0.6);
 }
 
 .contact-main-grid {
@@ -1974,6 +2132,23 @@ textarea.contact-form-control {
     padding: 14px 32px;
     font-size: 13px;
     width: 100%;
+  }
+
+  .contact-dark .contact-form-submit {
+    background: rgba(229, 229, 229, 0.9);
+    color: #1C1C1E;
+    border-color: rgba(229, 229, 229, 0.9);
+  }
+
+  /* Editorial pause mobile */
+  .editorial-pause {
+    min-height: 60vh;
+    padding: var(--space-xl) 24px;
+  }
+
+  .pause-text {
+    font-size: clamp(18px, 5vw, 24px);
+    line-height: 1.5;
   }
 
   /* Footer */
