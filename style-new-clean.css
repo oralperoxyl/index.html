@@ -65,7 +65,7 @@
 
   /* Line heights */
   --lh-tight: 1.05;
-  --lh-normal: 1.6;
+  --lh-normal: 1.75;
   --lh-relaxed: 1.7;
 
   /* Font weights */
@@ -157,7 +157,7 @@ p {
 .section-frame {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: var(--space-2xl) var(--space-lg);
+  padding: 160px var(--space-lg);
   border-top: none;
 }
 
@@ -259,7 +259,7 @@ p {
 
 .hero {
   background: var(--bg-main);
-  padding: clamp(48px, 8vh, 96px) 0 clamp(64px, 10vh, 128px);
+  padding: clamp(48px, 8vh, 96px) 0 clamp(80px, 12vh, 160px);
   position: relative;
   overflow: hidden;
 }
@@ -301,7 +301,7 @@ p {
 .hero-subtitle {
   font-family: var(--font-sans);
   font-size: clamp(18px, 2.5vw, 24px);
-  line-height: var(--lh-normal);
+  line-height: 1.7;
   color: var(--text-muted);
   max-width: 720px;
   margin-bottom: clamp(32px, 5vw, 56px);
@@ -1265,7 +1265,7 @@ textarea.form-control {
 
 .about-text {
   font-size: 16px;
-  line-height: 1.75;
+  line-height: 1.8;
 }
 
 .about-text p {
@@ -1362,7 +1362,7 @@ textarea.form-control {
   max-width: var(--measure);
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.75;
+  line-height: 1.8;
   letter-spacing: -0.01em;
 }
 
@@ -1868,20 +1868,20 @@ textarea.contact-form-control {
 
   /* Layout */
   .section-frame {
-    padding: var(--space-lg) 24px;
+    padding: 120px 32px;
   }
 
   .container {
-    padding: 0 24px;
+    padding: 0 32px;
   }
 
   /* Hero */
   .hero {
-    padding: clamp(40px, 8vh, 72px) 0 clamp(48px, 10vh, 80px);
+    padding: clamp(56px, 10vh, 88px) 0 clamp(64px, 12vh, 96px);
   }
 
   .hero-inner {
-    padding: 0 24px;
+    padding: 0 32px;
   }
 
   .hero-title {
@@ -1922,8 +1922,8 @@ textarea.contact-form-control {
   }
 
   .text-narrow {
-    font-size: 15px;
-    line-height: 1.65;
+    font-size: 18px;
+    line-height: 1.7;
   }
 
   /* Work accordion */
@@ -1941,8 +1941,8 @@ textarea.contact-form-control {
   }
 
   .work-content p {
-    padding: 16px 0 24px 28px;
-    font-size: 15px;
+    padding: 16px 0 24px 32px;
+    font-size: 18px;
     line-height: 1.7;
   }
 
@@ -1967,20 +1967,20 @@ textarea.contact-form-control {
   }
 
   .step-description {
-    font-size: 15px;
-    line-height: 1.65;
+    font-size: 18px;
+    line-height: 1.7;
   }
 
   .process-bridge {
-    font-size: 15px;
+    font-size: 18px;
     line-height: 1.7;
     margin-top: 56px;
   }
 
   .process-conclusion {
-    font-size: 15px;
+    font-size: 18px;
     line-height: 1.7;
-    margin-top: 56px;
+    margin-top: 48px;
     margin-bottom: 0;
   }
 
@@ -1992,7 +1992,7 @@ textarea.contact-form-control {
 
   .about-photo {
     max-width: 340px;
-    margin: 0 auto 40px;
+    margin: 0 auto 48px;
     border-radius: 16px;
     order: -1;
   }
@@ -2014,8 +2014,8 @@ textarea.contact-form-control {
   }
 
   .about-text {
-    font-size: 15px;
-    line-height: 1.75;
+    font-size: 18px;
+    line-height: 1.7;
   }
 
   .about-text p {
@@ -2032,7 +2032,7 @@ textarea.contact-form-control {
   }
 
   .help-item p {
-    font-size: 15px;
+    font-size: 18px;
     line-height: 1.7;
   }
 
@@ -2056,7 +2056,7 @@ textarea.contact-form-control {
   }
 
   .adv-item p {
-    font-size: 15px;
+    font-size: 18px;
     line-height: 1.7;
   }
 
@@ -2089,7 +2089,7 @@ textarea.contact-form-control {
 
   .review-expand {
     min-height: 44px;
-    padding: 8px 0;
+    padding: 10px 0;
     font-size: 13px;
   }
 
@@ -2098,10 +2098,11 @@ textarea.contact-form-control {
     font-size: 17px;
     padding: 18px 0;
     gap: 24px;
+    min-height: 60px;
   }
 
   .faq-answer p {
-    font-size: 15px;
+    font-size: 18px;
     line-height: 1.7;
   }
 
@@ -2129,7 +2130,7 @@ textarea.contact-form-control {
 
   .contact-form-submit {
     min-height: 48px;
-    padding: 14px 32px;
+    padding: 16px 32px;
     font-size: 13px;
     width: 100%;
   }
@@ -2143,7 +2144,7 @@ textarea.contact-form-control {
   /* Editorial pause mobile */
   .editorial-pause {
     min-height: 60vh;
-    padding: var(--space-xl) 24px;
+    padding: var(--space-xl) 32px;
   }
 
   .pause-text {
