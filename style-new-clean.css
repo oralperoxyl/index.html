@@ -518,7 +518,7 @@ p {
 }
 
 .work-header::after {
-  content: 'вЂ”';
+  content: '—';
   font-family: var(--font-sans);
   font-size: 18px;
   color: var(--text-muted);
@@ -751,7 +751,7 @@ p {
 }
 
 .case-pill:not(:last-child)::after {
-  content: 'вЂў';
+  content: '•';
   position: absolute;
   right: -10px;
   color: var(--text-muted);
@@ -1310,7 +1310,7 @@ textarea.form-control {
 }
 
 .faq-question::after {
-  content: 'вЂ”';
+  content: '—';
   font-family: var(--font-sans);
   font-size: 18px;
   color: var(--text-muted);
@@ -1937,7 +1937,7 @@ textarea.contact-form-control {
   }
 
   .work-name {
-    font-size: 24px;
+    font-size: 28px;
   }
 
   .work-content p {
@@ -1961,7 +1961,7 @@ textarea.contact-form-control {
   }
 
   .step-title {
-    font-size: 26px;
+    font-size: 30px;
     line-height: 1.4;
     margin-bottom: 12px;
   }
@@ -2028,7 +2028,7 @@ textarea.contact-form-control {
   }
 
   .help-item h3 {
-    font-size: 24px;
+    font-size: 28px;
   }
 
   .help-item p {
@@ -2052,7 +2052,7 @@ textarea.contact-form-control {
   }
 
   .adv-item h4 {
-    font-size: 23px;
+    font-size: 27px;
   }
 
   .adv-item p {
@@ -2165,7 +2165,7 @@ textarea.contact-form-control {
   }
 }
 
-/* Small phones (в‰¤480px) */
+/* Small phones (≤480px) */
 @media (max-width: 480px) {
   /* Header even more compact */
   .header-inner {
