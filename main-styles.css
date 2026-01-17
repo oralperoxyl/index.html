@@ -512,7 +512,7 @@ p {
 
 .work-name {
   font-family: var(--font-sans);
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 500;
   color: #1A1A1A;
 }
@@ -1937,7 +1937,7 @@ textarea.contact-form-control {
   }
 
   .work-name {
-    font-size: 32px;
+    font-size: 17px;
   }
 
   .work-content p {
