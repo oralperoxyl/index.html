@@ -2211,7 +2211,7 @@ textarea.contact-form-control {
   }
 
   h2 {
-    font-size: 24px;
+    font-size: clamp(40px, 10vw, 48px);
   }
 
   /* Process steps tighter */
