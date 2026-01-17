@@ -1917,7 +1917,7 @@ textarea.contact-form-control {
 
   /* Typography adjustments */
   h2 {
-    font-size: clamp(32px, 6vw, 36px);
+    font-size: clamp(40px, 8vw, 48px);
     margin-bottom: 24px;
   }
 
