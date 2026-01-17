@@ -518,7 +518,7 @@ p {
 }
 
 .work-header::after {
-  content: '—';
+  content: '\2014';
   font-family: var(--font-sans);
   font-size: 18px;
   color: var(--text-muted);
@@ -1310,7 +1310,7 @@ textarea.form-control {
 }
 
 .faq-question::after {
-  content: '—';
+  content: '\2014';
   font-family: var(--font-sans);
   font-size: 18px;
   color: var(--text-muted);
@@ -1917,7 +1917,7 @@ textarea.contact-form-control {
 
   /* Typography adjustments */
   h2 {
-    font-size: clamp(24px, 5vw, 28px);
+    font-size: clamp(32px, 6vw, 36px);
     margin-bottom: 24px;
   }
 
@@ -1937,7 +1937,7 @@ textarea.contact-form-control {
   }
 
   .work-name {
-    font-size: 28px;
+    font-size: 32px;
   }
 
   .work-content p {
@@ -1961,8 +1961,8 @@ textarea.contact-form-control {
   }
 
   .step-title {
-    font-size: 30px;
-    line-height: 1.4;
+    font-size: 34px;
+    line-height: 1.3;
     margin-bottom: 12px;
   }
 
@@ -2028,7 +2028,7 @@ textarea.contact-form-control {
   }
 
   .help-item h3 {
-    font-size: 28px;
+    font-size: 32px;
   }
 
   .help-item p {
@@ -2052,7 +2052,7 @@ textarea.contact-form-control {
   }
 
   .adv-item h4 {
-    font-size: 27px;
+    font-size: 30px;
   }
 
   .adv-item p {
