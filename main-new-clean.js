@@ -179,6 +179,24 @@ document.addEventListener('DOMContentLoaded', () => {
   // Detect if user prefers reduced motion
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // Typewriter effect for headings
+  function typewriterEffect(element, speed = 50) {
+    const text = element.textContent;
+    element.textContent = '';
+    element.style.opacity = '1';
+
+    let charIndex = 0;
+    const typeNextChar = () => {
+      if (charIndex < text.length) {
+        element.textContent += text.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeNextChar, speed);
+      }
+    };
+
+    typeNextChar();
+  }
+
   // Only initialize animations if user hasn't requested reduced motion
   if (!prefersReducedMotion) {
     // Create Intersection Observer
@@ -189,7 +207,11 @@ document.addEventListener('DOMContentLoaded', () => {
           const element = entry.target;
           const animationType = element.getAttribute('data-animate');
 
-          if (animationType) {
+          // Check if element is a heading (h1, h2)
+          if (element.tagName === 'H1' || element.tagName === 'H2') {
+            // Apply typewriter effect to headings
+            setTimeout(() => typewriterEffect(element, 30), 200);
+          } else if (animationType) {
             element.classList.add(`animate-${animationType}`);
           }
 

@@ -378,6 +378,10 @@ p {
   outline-offset: 2px;
 }
 
+#newbuild .btn {
+  margin-top: 32px;
+}
+
 .case-toggle {
   padding: 0;
   margin-top: 12px;
@@ -684,7 +688,7 @@ p {
 }
 
 .help-item:first-child h3 {
-  font-size: 19px;
+  font-size: 24px;
   color: var(--text-main);
 }
 
@@ -858,16 +862,6 @@ p {
   scroll-snap-type: x mandatory;
   padding: 8px 0 24px;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  cursor: grab;
-}
-
-.reviews-track::-webkit-scrollbar {
-  display: none;
-}
-
-.reviews-track.is-dragging {
-  cursor: grabbing;
   scrollbar-width: none;
   cursor: grab;
 }
