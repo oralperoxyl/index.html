@@ -166,4 +166,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ============================================
+  // PREMIUM SCROLL ANIMATIONS (React Bits Style)
+  // ============================================
+
+  // Configuration
+  const animationConfig = {
+    threshold: 0.15,  // Trigger when 15% of element is visible
+    rootMargin: '0px 0px -50px 0px'  // Slight offset for better timing
+  };
+
+  // Detect if user prefers reduced motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Only initialize animations if user hasn't requested reduced motion
+  if (!prefersReducedMotion) {
+    // Create Intersection Observer
+    const scrollObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Add animation class when element enters viewport
+          const element = entry.target;
+          const animationType = element.getAttribute('data-animate');
+
+          if (animationType) {
+            element.classList.add(`animate-${animationType}`);
+          }
+
+          // Stop observing this element (animation only triggers once)
+          scrollObserver.unobserve(element);
+        }
+      });
+    }, animationConfig);
+
+    // Select all elements to animate
+    const animateElements = Array.from(document.querySelectorAll('.animate-on-scroll'));
+
+    // Observe each element
+    animateElements.forEach(element => {
+      scrollObserver.observe(element);
+    });
+  } else {
+    // If reduced motion is preferred, immediately show all elements
+    const animateElements = Array.from(document.querySelectorAll('.animate-on-scroll'));
+    animateElements.forEach(element => {
+      element.style.opacity = '1';
+    });
+  }
+
 });
