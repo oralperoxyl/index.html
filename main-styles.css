@@ -512,7 +512,7 @@ p {
 
 .work-name {
   font-family: var(--font-sans);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 500;
   color: #1A1A1A;
 }
@@ -858,6 +858,16 @@ p {
   scroll-snap-type: x mandatory;
   padding: 8px 0 24px;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.reviews-track::-webkit-scrollbar {
+  display: none;
+}
+
+.reviews-track.is-dragging {
+  cursor: grabbing;
   scrollbar-width: none;
   cursor: grab;
 }
@@ -1917,7 +1927,7 @@ textarea.contact-form-control {
 
   /* Typography adjustments */
   h2 {
-    font-size: clamp(40px, 8vw, 48px);
+    font-size: clamp(32px, 6vw, 36px);
     margin-bottom: 24px;
   }
 
@@ -1937,7 +1947,7 @@ textarea.contact-form-control {
   }
 
   .work-name {
-    font-size: 17px;
+    font-size: 32px;
   }
 
   .work-content p {
@@ -2028,7 +2038,7 @@ textarea.contact-form-control {
   }
 
   .help-item h3 {
-    font-size: 20px;
+    font-size: 32px;
   }
 
   .help-item p {
@@ -2052,7 +2062,7 @@ textarea.contact-form-control {
   }
 
   .adv-item h4 {
-    font-size: 20px;
+    font-size: 30px;
   }
 
   .adv-item p {
@@ -2211,7 +2221,7 @@ textarea.contact-form-control {
   }
 
   h2 {
-    font-size: clamp(40px, 10vw, 48px);
+    font-size: 24px;
   }
 
   /* Process steps tighter */
@@ -2220,7 +2230,7 @@ textarea.contact-form-control {
   }
 
   .step-title {
-    font-size: 22px;
+    font-size: 24px;
   }
 
   .process-conclusion {
@@ -2258,5 +2268,97 @@ textarea.contact-form-control {
 
   .adv-column + .adv-column {
     padding-top: 40px;
+  }
+}
+
+/* ============================================
+   PREMIUM SCROLL ANIMATIONS (React Bits Style)
+   ============================================ */
+
+/* Initial state - elements are hidden before animation */
+.animate-on-scroll {
+  opacity: 0;
+}
+
+/* Fade In Up - Main animation for sections */
+.animate-fade-in-up {
+  animation: fadeInUp 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade In - Subtle fade without movement */
+.animate-fade-in {
+  animation: fadeIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Slide In Left - For work items */
+.animate-slide-in-left {
+  animation: slideInLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Scale In - For cards and images */
+.animate-scale-in {
+  animation: scaleIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Stagger delay classes for sequential animations */
+.animate-delay-1 { animation-delay: 0.1s; }
+.animate-delay-2 { animation-delay: 0.2s; }
+.animate-delay-3 { animation-delay: 0.3s; }
+.animate-delay-4 { animation-delay: 0.4s; }
+.animate-delay-5 { animation-delay: 0.5s; }
+.animate-delay-6 { animation-delay: 0.6s; }
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .animate-on-scroll,
+  .animate-fade-in-up,
+  .animate-fade-in,
+  .animate-slide-in-left,
+  .animate-scale-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
