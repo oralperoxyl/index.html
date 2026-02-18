@@ -1713,6 +1713,7 @@ textarea.contact-form-control {
 
 .contact-form-submit {
   align-self: flex-start;
+  display: inline-block;
   margin-top: var(--space-3);
   padding: 12px 28px;
   border: none;
@@ -2140,8 +2141,12 @@ textarea.contact-form-control {
     min-height: 48px;
     padding: 14px 24px;
     font-size: 13px;
-    width: auto;
-    display: inline-block;
+  }
+
+  .contact-dark .contact-form-submit {
+    background: transparent;
+    color: rgba(229, 229, 229, 0.7);
+    border: 1px solid rgba(229, 229, 229, 0.3);
   }
 
   /* Editorial pause mobile */
