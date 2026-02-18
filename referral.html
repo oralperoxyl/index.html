@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Рекомендовать агента — Семён Гончаров</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #F7F6F2;
+      font-family: "Inter", sans-serif;
+      color: #111;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px 64px;
+    }
+
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #999;
+      text-decoration: none;
+      margin-bottom: 48px;
+      transition: color 0.2s;
+      align-self: flex-start;
+      width: 100%;
+      max-width: 520px;
+    }
+    .back:hover { color: #111; }
+    .back svg { flex-shrink: 0; }
+
+    .card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 10px;
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .card-heading {
+      font-family: "Playfair Display", serif;
+      font-weight: 300;
+      font-size: clamp(28px, 5vw, 40px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: #111;
+      margin-bottom: 12px;
+    }
+
+    .card-sub {
+      font-size: 15px;
+      line-height: 1.65;
+      color: #777;
+      margin-bottom: 36px;
+      max-width: 380px;
+    }
+
+    .reward {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: #111;
+      background: #F0EDE6;
+      border-radius: 999px;
+      padding: 5px 14px;
+      margin-bottom: 32px;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(0,0,0,0.08);
+      margin-bottom: 32px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 20px;
+    }
+
+    .fields {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      margin-bottom: 28px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+
+    .field input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      border-radius: 0;
+      padding: 0 0 10px;
+      font-family: "Inter", sans-serif;
+      font-size: 16px;
+      color: #111;
+      transition: border-color 0.2s;
+      width: 100%;
+      min-height: 44px;
+    }
+
+    .field input::placeholder { color: #bbb; }
+    .field input:focus { outline: none; border-bottom-color: #111; }
+    .field input.err { border-bottom-color: #c0392b; }
+
+    .field-error {
+      font-size: 12px;
+      color: #c0392b;
+      min-height: 14px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .field-error.show { opacity: 1; }
+
+    .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 32px;
+      cursor: pointer;
+    }
+
+    .consent input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+
+    .check-box {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 3px;
+      margin-top: 2px;
+      position: relative;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .consent input:checked + .check-box {
+      background: #111;
+      border-color: #111;
+    }
+
+    .consent input:checked + .check-box::after {
+      content: '';
+      position: absolute;
+      left: 4px; top: 1px;
+      width: 6px; height: 10px;
+      border: 2px solid #fff;
+      border-left: none;
+      border-top: none;
+      transform: rotate(45deg);
+    }
+
+    .consent-text {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #888;
+    }
+
+    .consent-error {
+      font-size: 12px;
+      color: #c0392b;
+      margin-bottom: 20px;
+      margin-top: -16px;
+      min-height: 14px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .consent-error.show { opacity: 1; }
+
+    .btn-submit {
+      width: 100%;
+      padding: 15px 24px;
+      border: none;
+      border-radius: 999px;
+      background: #111;
+      color: #fff;
+      font-family: "Inter", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s;
+      min-height: 52px;
+    }
+    .btn-submit:hover { background: #2a2a2a; }
+    .btn-submit:active { background: #000; }
+    .btn-submit:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* Success state */
+    .success-wrap {
+      display: none;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .success-wrap.show { display: flex; }
+
+    .success-title {
+      font-family: "Playfair Display", serif;
+      font-weight: 300;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      color: #111;
+    }
+
+    .success-hint {
+      font-size: 15px;
+      line-height: 1.65;
+      color: #777;
+    }
+
+    .link-box {
+      background: #F7F6F2;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: 6px;
+      padding: 14px 16px;
+      word-break: break-all;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .share-row {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-share {
+      width: 100%;
+      padding: 13px 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.15);
+      background: transparent;
+      color: #111;
+      font-family: "Inter", sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      min-height: 48px;
+      text-align: center;
+    }
+    .btn-share:hover { background: #111; color: #fff; border-color: #111; }
+    .btn-share.copied { background: #111; color: #fff; }
+
+    .btn-new {
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: "Inter", sans-serif;
+      font-size: 13px;
+      color: #aaa;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      cursor: pointer;
+      transition: color 0.2s;
+      align-self: flex-start;
+    }
+    .btn-new:hover { color: #111; }
+
+    .rules {
+      margin-top: 32px;
+      padding-top: 28px;
+      border-top: 1px solid rgba(0,0,0,0.07);
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .rules li {
+      list-style: none;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #aaa;
+      padding-left: 14px;
+      position: relative;
+    }
+    .rules li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+    }
+
+    @media (max-width: 560px) {
+      .card { padding: 32px 24px; }
+      .back { margin-bottom: 32px; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <a class="back" href="/">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    На главную
+  </a>
+
+  <div class="card">
+
+    <!-- Форма -->
+    <div id="form-wrap">
+      <p class="card-heading">Рекомендовать меня</p>
+      <p class="card-sub">Заполните данные — я зафиксирую рекомендацию и свяжусь с клиентом.</p>
+      <span class="reward">Вознаграждение 50 000 ₽ после сделки</span>
+
+      <div class="divider"></div>
+
+      <form id="ref-form" novalidate>
+        <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
+
+        <p class="section-label">Вы — кто рекомендует</p>
+        <div class="fields">
+          <div class="field">
+            <label for="r-name">Ваше имя</label>
+            <input id="r-name" type="text" placeholder="Иван Петров" autocomplete="name">
+            <span class="field-error" id="e-r-name"></span>
+          </div>
+          <div class="field">
+            <label for="r-phone">Ваш телефон</label>
+            <input id="r-phone" type="tel" placeholder="+7 900 000-00-00" autocomplete="tel">
+            <span class="field-error" id="e-r-phone"></span>
+          </div>
+        </div>
+
+        <p class="section-label">Клиент — кого рекомендуете</p>
+        <div class="fields">
+          <div class="field">
+            <label for="c-name">Имя клиента</label>
+            <input id="c-name" type="text" placeholder="Мария Иванова" autocomplete="off">
+            <span class="field-error" id="e-c-name"></span>
+          </div>
+          <div class="field">
+            <label for="c-phone">Телефон клиента</label>
+            <input id="c-phone" type="tel" placeholder="+7 900 000-00-00" autocomplete="off">
+            <span class="field-error" id="e-c-phone"></span>
+          </div>
+          <div class="field">
+            <label for="c-comment">Комментарий <span style="text-transform:none;letter-spacing:0;font-weight:400">(необязательно)</span></label>
+            <input id="c-comment" type="text" placeholder="квартира / район / задача" autocomplete="off">
+          </div>
+        </div>
+
+        <label class="consent">
+          <input type="checkbox" id="consent">
+          <span class="check-box"></span>
+          <span class="consent-text">Согласен(на) на обработку данных для фиксации рекомендации.</span>
+        </label>
+        <span class="consent-error" id="e-consent"></span>
+
+        <button class="btn-submit" type="submit" id="submit-btn">Зафиксировать рекомендацию</button>
+      </form>
+    </div>
+
+    <!-- Успех -->
+    <div class="success-wrap" id="success-wrap">
+      <p class="success-title">Готово. Рекомендация зафиксирована.</p>
+      <p class="success-hint">Отправьте ссылку клиенту — по ней будет видно, что он пришёл от вас.</p>
+      <div class="link-box" id="link-box"></div>
+      <div class="share-row">
+        <button class="btn-share" id="btn-tg">Отправить в Telegram</button>
+        <button class="btn-share" id="btn-wa">Отправить в WhatsApp</button>
+        <button class="btn-share" id="btn-copy">Скопировать ссылку</button>
+      </div>
+      <button class="btn-new" id="btn-new">Создать новую рекомендацию</button>
+    </div>
+
+  </div>
+
+  <ul class="rules">
+    <li>Рекомендация фиксируется по телефону клиента.</li>
+    <li>Вознаграждение выплачивается после фактического закрытия сделки.</li>
+    <li>Если клиент уже в работе или обращался ранее — рекомендация не засчитывается.</li>
+    <li>Срок действия фиксации: 6 месяцев.</li>
+  </ul>
+
+</div>
+
+<script>
+  const BASE = "https://fastbroker21.ru";
+  const W3KEY = "15cc9dfa-af27-418a-aae7-5a195d354206";
+
+  function norm(raw) {
+    const d = raw.replace(/\D/g, "");
+    if (!d) return raw;
+    let n = d.startsWith("8") && d.length === 11 ? "7" + d.slice(1) : d;
+    if (!n.startsWith("7")) n = "7" + n;
+    return n.length >= 11 ? "+7" + n.slice(1) : raw;
+  }
+
+  function err(inputId, errId, msg) {
+    const i = document.getElementById(inputId);
+    const e = document.getElementById(errId);
+    if (i) i.classList.toggle("err", !!msg);
+    if (e) { e.textContent = msg; e.classList.toggle("show", !!msg); }
+  }
+
+  function clearAll() {
+    ["r-name","r-phone","c-name","c-phone"].forEach(id => err(id, "e-"+id, ""));
+    const ce = document.getElementById("e-consent");
+    if (ce) { ce.textContent = ""; ce.classList.remove("show"); }
+  }
+
+  // Restore from localStorage
+  const savedId = localStorage.getItem("ref_id");
+  if (savedId) showSuccess(BASE + "/?ref=" + savedId);
+
+  document.getElementById("ref-form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+    clearAll();
+
+    const rName    = document.getElementById("r-name").value.trim();
+    const rPhoneR  = document.getElementById("r-phone").value.trim();
+    const cName    = document.getElementById("c-name").value.trim();
+    const cPhoneR  = document.getElementById("c-phone").value.trim();
+    const comment  = document.getElementById("c-comment").value.trim();
+    const consent  = document.getElementById("consent").checked;
+
+    let ok = true;
+    if (!rName)   { err("r-name",  "e-r-name",  "Введите ваше имя");         ok = false; }
+    if (!rPhoneR) { err("r-phone", "e-r-phone", "Введите ваш телефон");       ok = false; }
+    if (!cName)   { err("c-name",  "e-c-name",  "Введите имя клиента");       ok = false; }
+    if (!cPhoneR) { err("c-phone", "e-c-phone", "Введите телефон клиента");   ok = false; }
+    if (!consent) {
+      const ce = document.getElementById("e-consent");
+      ce.textContent = "Необходимо согласие"; ce.classList.add("show");
+      ok = false;
+    }
+    if (!ok) return;
+
+    const btn = document.getElementById("submit-btn");
+    btn.disabled = true;
+    btn.textContent = "Отправляю…";
+
+    const refId = Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    const link  = BASE + "/?ref=" + refId;
+
+    const fd = new FormData();
+    fd.append("access_key", W3KEY);
+    fd.append("subject", "Новая рекомендация от " + rName);
+    fd.append("Рекомендатель", rName + " / " + norm(rPhoneR));
+    fd.append("Клиент",        cName + " / " + norm(cPhoneR));
+    fd.append("Комментарий",   comment || "—");
+    fd.append("Реф. ссылка",   link);
+    fd.append("Дата",          new Date().toLocaleString("ru-RU"));
+
+    try {
+      await fetch("https://api.web3forms.com/submit", { method: "POST", body: fd });
+    } catch(ex) { /* продолжаем */ }
+
+    localStorage.setItem("ref_id", refId);
+    showSuccess(link);
+  });
+
+  function showSuccess(link) {
+    document.getElementById("form-wrap").style.display = "none";
+    document.getElementById("link-box").textContent = link;
+    document.getElementById("success-wrap").classList.add("show");
+
+    const tg   = document.getElementById("btn-tg");
+    const wa   = document.getElementById("btn-wa");
+    const copy = document.getElementById("btn-copy");
+
+    tg.onclick = () => window.open(
+      "https://t.me/share/url?url=" + encodeURIComponent(link) +
+      "&text=" + encodeURIComponent("Рекомендую агента по недвижимости Семёна Гончарова 🏠"),
+      "_blank", "noopener"
+    );
+
+    wa.onclick = () => window.open(
+      "https://wa.me/?text=" + encodeURIComponent("Рекомендую агента по недвижимости Семёна Гончарова. Ссылка: " + link),
+      "_blank", "noopener"
+    );
+
+    copy.onclick = () => {
+      const done = () => {
+        copy.textContent = "Скопировано ✓";
+        copy.classList.add("copied");
+        setTimeout(() => { copy.textContent = "Скопировать ссылку"; copy.classList.remove("copied"); }, 2000);
+      };
+      if (navigator.clipboard && location.protocol === "https:") {
+        navigator.clipboard.writeText(link).then(done);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = link;
+        ta.style.cssText = "position:fixed;opacity:0";
+        document.body.appendChild(ta);
+        ta.focus(); ta.select();
+        try { document.execCommand("copy"); done(); } catch(x) {}
+        document.body.removeChild(ta);
+      }
+    };
+  }
+
+  document.getElementById("btn-new").addEventListener("click", () => {
+    localStorage.removeItem("ref_id");
+    document.getElementById("form-wrap").style.display = "";
+    document.getElementById("success-wrap").classList.remove("show");
+    document.getElementById("ref-form").reset();
+    clearAll();
+    const btn = document.getElementById("submit-btn");
+    btn.disabled = false;
+    btn.textContent = "Зафиксировать рекомендацию";
+  });
+</script>
+</body>
+</html>
