@@ -245,7 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const update = (now) => {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = Math.round(eased * target);
       el.textContent = current + suffix;
@@ -254,36 +253,25 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(update);
   }
 
-  function parseCounter(text) {
-    // Извлекаем число и суффикс из строки типа "13+ лет в продажах", "200+ закрытых сделок"
-    const match = text.match(/^(\d+)(\+?)(.*)$/);
-    if (!match) return null;
-    return {
-      target: parseInt(match[1]),
-      suffix: match[2] + match[3]
-    };
-  }
-
-  if (!prefersReducedMotion) {
-    const badgeObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        const el = entry.target;
-        const original = el.dataset.original || el.textContent;
-        el.dataset.original = original;
-        const parsed = parseCounter(original.trim());
-        if (parsed) {
-          animateCounter(el, parsed.target, parsed.suffix, 1200);
-        }
-        badgeObserver.unobserve(el);
-      });
-    }, { threshold: 0.5 });
-
-    // Анимируем badges в секции "Обо мне"
-    document.querySelectorAll('.about-badge').forEach(el => {
-      badgeObserver.observe(el);
+  const badgeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const original = el.dataset.original || el.textContent.trim();
+      el.dataset.original = original;
+      const match = original.match(/^(\d+)(\+?\s*.*)$/);
+      if (match) {
+        const target = parseInt(match[1]);
+        const suffix = match[2];
+        animateCounter(el, target, suffix, 1400);
+      }
+      badgeObserver.unobserve(el);
     });
-  }
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.about-badge').forEach(el => {
+    badgeObserver.observe(el);
+  });
 
   // ============================================
   // REFERRAL SYSTEM
