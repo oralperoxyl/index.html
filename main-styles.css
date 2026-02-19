@@ -1727,8 +1727,9 @@ textarea.contact-form-control {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  transition: none;
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .contact-form-submit:hover {
