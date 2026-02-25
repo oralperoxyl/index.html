@@ -1591,10 +1591,8 @@ textarea.form-control {
   border-radius: 999px;
   text-decoration: none;
   background: transparent;
-  transition: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
   position: relative;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
 }
 
 .channel-link:hover {
@@ -1729,10 +1727,8 @@ textarea.contact-form-control {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
 }
 
 .contact-form-submit:hover {
@@ -2366,4 +2362,21 @@ textarea.contact-form-control {
     opacity: 1;
     transform: none;
   }
+}
+
+/* Мгновенное закрашивание при касании */
+.contact-form-submit.is-touched {
+  background: rgba(229, 229, 229, 0.9);
+  color: #1C1C1E;
+  border-color: rgba(229, 229, 229, 0.9);
+}
+
+.channel-link.is-touched {
+  background: #0088cc;
+  border-color: #0088cc;
+}
+
+.channel-link.is-touched .channel-name,
+.channel-link.is-touched .channel-meta {
+  color: #fff;
 }

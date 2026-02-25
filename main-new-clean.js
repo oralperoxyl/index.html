@@ -442,4 +442,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ============================================
+  // МГНОВЕННОЕ КАСАНИЕ — кнопки в контактах
+  // ============================================
+
+  document.querySelectorAll('.contact-form-submit, .channel-link').forEach(btn => {
+    btn.addEventListener('touchstart', () => {
+      btn.style.transition = 'none';
+      btn.classList.add('is-touched');
+    }, { passive: true });
+
+    btn.addEventListener('touchend', () => {
+      btn.style.transition = 'background 0.5s ease, border-color 0.5s ease, color 0.5s ease';
+      btn.classList.remove('is-touched');
+    }, { passive: true });
+
+    btn.addEventListener('touchcancel', () => {
+      btn.style.transition = 'background 0.5s ease, border-color 0.5s ease, color 0.5s ease';
+      btn.classList.remove('is-touched');
+    }, { passive: true });
+  });
+
 });
