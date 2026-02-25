@@ -1591,8 +1591,10 @@ textarea.form-control {
   border-radius: 999px;
   text-decoration: none;
   background: transparent;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: none;
   position: relative;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .channel-link:hover {
@@ -1730,6 +1732,7 @@ textarea.contact-form-control {
   transition: none;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .contact-form-submit:hover {
