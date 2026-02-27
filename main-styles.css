@@ -2416,29 +2416,16 @@ textarea.contact-form-control {
   .hero-photo { height: 420px; }
 }
 @media (max-width: 768px) {
-  .hero-with-photo {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 0;
-  }
+  .hero-with-photo { display: flex; flex-direction: column-reverse; gap: 0; }
   .hero-photo-wrap {
-    width: 100%;
+    width: calc(100% + 2 * var(--space-lg));
+    margin-left: calc(-1 * var(--space-lg));
   }
-  .hero-photo {
-    height: auto;
-    max-height: 85vh;
-    width: 100%;
-    border-radius: 0;
-    object-fit: contain;
-    object-position: center top;
-    background: #f5f5f0;
-  }
-  .hero-content { padding-top: 36px; }
+  .hero-photo { height: 380px; border-radius: 0; width: 100%; }
+  .hero-content { padding-top: 40px; }
 }
 @media (max-width: 480px) {
-  .hero-photo {
-    max-height: 75vh;
-  }
+  .hero-photo { height: 300px; }
 }
 
 /* =============================================
@@ -2694,37 +2681,20 @@ textarea.contact-form-control {
 }
 
 @media (max-width: 768px) {
-  /* На мобиле — горизонтальный скролл вместо абсолютного позиционирования */
   .freecards-stage {
-    height: auto;
-    overflow-x: auto;
-    overflow-y: visible;
-    display: flex;
-    flex-direction: row;
-    gap: 16px;
-    padding: 24px 20px 32px;
-    background: #F7F7F4;
-    border-radius: 12px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
+    height: 460px;
+    overflow: hidden;
+    display: block;
+    position: relative;
   }
-  .freecards-stage::-webkit-scrollbar { display: none; }
-
-  .freecard {
-    position: relative !important;
-    left: auto !important;
-    top: auto !important;
-    transform: none !important;
-    flex: 0 0 280px;
-    width: 280px;
-    padding: 24px 22px 20px;
-    align-self: flex-start;
+  .freecards-stage.stack-mode .freecard {
+    width: min(300px, 80vw);
   }
   .freecard-quote { font-size: 15px; }
 }
 
 @media (max-width: 480px) {
-  .freecard { flex: 0 0 260px; width: 260px; }
+  .freecards-stage { height: 420px; }
   .freecard-quote { font-size: 14px; }
 }
 
@@ -2774,4 +2744,9 @@ textarea.contact-form-control {
 }
 .freecard.is-expanded {
   z-index: 500;
+}
+
+/* Stack mode swipe hint */
+.freecards-stage.stack-mode ~ .freecards-hint::after {
+  content: ' · свайп влево или вправо';
 }

@@ -464,149 +464,224 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================
-  // СВОБОДНЫЕ ПЕРЕТАСКИВАЕМЫЕ КАРТОЧКИ — с инерцией
+  // КАРТОЧКИ ОТЗЫВОВ — десктоп: свободное перетаскивание с инерцией
+  //                    мобиле: стопка со свайпом
   // ============================================
   const stage = document.getElementById('freecards-stage');
   if (stage) {
     const freecards = Array.from(stage.querySelectorAll('.freecard'));
+    const isMobile = () => window.innerWidth <= 768;
 
-    freecards.forEach(card => {
-      const jx = (Math.random() - 0.5) * 20;
-      const jy = (Math.random() - 0.5) * 16;
-      card.style.left = (parseFloat(card.dataset.x) + jx) + 'px';
-      card.style.top  = (parseFloat(card.dataset.y) + jy) + 'px';
-    });
+    // ── МОБИЛЕ: стопка ──────────────────────────────────────────
+    function initStack() {
+      stage.classList.add('stack-mode');
+      const cards = [...freecards];
+      const total = cards.length;
 
-    let activeCard = null;
-    let offsetX = 0, offsetY = 0;
-    let zCounter = 10;
-
-    // Для инерции
-    let lastX = 0, lastY = 0;
-    let velX = 0, velY = 0;
-    let lastTime = 0;
-    let inertiaFrame = null;
-
-    function getPoint(e) {
-      return e.touches ? e.touches[0] : e;
-    }
-
-    function clamp(card) {
-      const stageW = stage.offsetWidth;
-      const stageH = stage.offsetHeight;
-      let x = parseFloat(card.style.left) || 0;
-      let y = parseFloat(card.style.top) || 0;
-      x = Math.max(0, Math.min(stageW - card.offsetWidth, x));
-      y = Math.max(0, Math.min(stageH - card.offsetHeight, y));
-      card.style.left = x + 'px';
-      card.style.top  = y + 'px';
-      return { x, y };
-    }
-
-    function startDrag(e) {
-      if (e.target.classList.contains('freecard-expand')) return;
-      if (inertiaFrame) { cancelAnimationFrame(inertiaFrame); inertiaFrame = null; }
-      activeCard = e.currentTarget;
-      activeCard.classList.add('is-dragging');
-      activeCard.style.transition = 'box-shadow 0.2s ease';
-      zCounter++;
-      activeCard.style.zIndex = zCounter;
-      const point = getPoint(e);
-      const rect = activeCard.getBoundingClientRect();
-      offsetX = point.clientX - rect.left;
-      offsetY = point.clientY - rect.top;
-      lastX = point.clientX;
-      lastY = point.clientY;
-      lastTime = Date.now();
-      velX = 0; velY = 0;
-      e.preventDefault();
-    }
-
-    function moveDrag(e) {
-      if (!activeCard) return;
-      const point = getPoint(e);
-      const stageRect = stage.getBoundingClientRect();
-      let x = point.clientX - stageRect.left - offsetX;
-      let y = point.clientY - stageRect.top - offsetY;
-      // Clamp
-      x = Math.max(0, Math.min(stageRect.width - activeCard.offsetWidth, x));
-      y = Math.max(0, Math.min(stageRect.height - activeCard.offsetHeight, y));
-      activeCard.style.left = x + 'px';
-      activeCard.style.top  = y + 'px';
-
-      // Считаем скорость
-      const now = Date.now();
-      const dt = now - lastTime || 16;
-      velX = (point.clientX - lastX) / dt * 16;
-      velY = (point.clientY - lastY) / dt * 16;
-      lastX = point.clientX;
-      lastY = point.clientY;
-      lastTime = now;
-      e.preventDefault();
-    }
-
-    function endDrag() {
-      if (!activeCard) return;
-      const card = activeCard;
-      card.classList.remove('is-dragging');
-      activeCard = null;
-
-      // Инерция
-      let vx = velX * 0.8;
-      let vy = velY * 0.8;
-      const friction = 0.88;
-
-      function inertia() {
-        if (Math.abs(vx) < 0.2 && Math.abs(vy) < 0.2) {
-          clamp(card);
-          return;
-        }
-        let x = parseFloat(card.style.left) + vx;
-        let y = parseFloat(card.style.top) + vy;
-        const stageW = stage.offsetWidth;
-        const stageH = stage.offsetHeight;
-        const cardW = card.offsetWidth;
-        const cardH = card.offsetHeight;
-        // Bounce off walls
-        if (x <= 0) { x = 0; vx = Math.abs(vx) * 0.4; }
-        if (x >= stageW - cardW) { x = stageW - cardW; vx = -Math.abs(vx) * 0.4; }
-        if (y <= 0) { y = 0; vy = Math.abs(vy) * 0.4; }
-        if (y >= stageH - cardH) { y = stageH - cardH; vy = -Math.abs(vy) * 0.4; }
-        card.style.left = x + 'px';
-        card.style.top  = y + 'px';
-        vx *= friction;
-        vy *= friction;
-        inertiaFrame = requestAnimationFrame(inertia);
-      }
-      inertiaFrame = requestAnimationFrame(inertia);
-    }
-
-    freecards.forEach(card => {
-      card.addEventListener('mousedown', startDrag);
-      card.addEventListener('touchstart', startDrag, { passive: false });
-
-      const expandBtn = card.querySelector('.freecard-expand');
-      const quoteEl = card.querySelector('.freecard-quote');
-      if (expandBtn && quoteEl) {
-        expandBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = card.classList.toggle('is-expanded');
-          expandBtn.textContent = isExpanded ? 'Свернуть' : 'Читать';
-          setTimeout(() => {
-            const stageH = stage.offsetHeight;
-            const cardBottom = card.offsetTop + card.offsetHeight;
-            if (cardBottom > stageH) {
-              card.style.top = Math.max(0, stageH - card.offsetHeight) + 'px';
-            }
-          }, 320);
+      function layoutStack() {
+        cards.forEach((card, i) => {
+          card.style.position = 'absolute';
+          card.style.left = '50%';
+          card.style.top = '50%';
+          const offset = i * 6;
+          const rot = i === 0 ? 0 : (i % 2 === 0 ? -(i * 1.5) : (i * 1.5));
+          const scale = 1 - i * 0.04;
+          card.style.transform = `translate(-50%, calc(-50% + ${offset}px)) rotate(${rot}deg) scale(${scale})`;
+          card.style.zIndex = total - i;
+          card.style.opacity = i > 4 ? '0' : '1';
+          card.style.transition = i === 0 ? 'none' : 'transform 0.35s ease, opacity 0.35s ease';
+          card.style.pointerEvents = i === 0 ? 'auto' : 'none';
+          card.style.width = '';
+          card.style.flex = '';
         });
       }
-    });
 
-    window.addEventListener('mousemove', moveDrag);
-    window.addEventListener('touchmove', moveDrag, { passive: false });
-    window.addEventListener('mouseup', endDrag);
-    window.addEventListener('touchend', endDrag);
+      layoutStack();
+
+      let startX = 0, startY = 0, dragging = false, moved = false;
+
+      function onTouchStart(e) {
+        if (e.target.classList.contains('freecard-expand')) return;
+        const t = e.touches[0];
+        startX = t.clientX;
+        startY = t.clientY;
+        dragging = true;
+        moved = false;
+        cards[0].style.transition = 'none';
+      }
+
+      function onTouchMove(e) {
+        if (!dragging || !cards[0]) return;
+        const t = e.touches[0];
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+        if (Math.abs(dx) > Math.abs(dy)) {
+          e.preventDefault();
+          moved = true;
+        } else return;
+        const rot = dx * 0.12;
+        const fade = Math.max(0, 1 - Math.abs(dx) / 220);
+        cards[0].style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy * 0.3}px)) rotate(${rot}deg)`;
+        cards[0].style.opacity = fade;
+        // Следующая карточка чуть приближается
+        if (cards[1]) {
+          const prog = Math.min(Math.abs(dx) / 120, 1);
+          const s = 0.96 + prog * 0.04;
+          cards[1].style.transform = `translate(-50%, calc(-50% + 6px)) rotate(${cards[1].dataset.baseRot || 1.5}deg) scale(${s})`;
+        }
+      }
+
+      function onTouchEnd(e) {
+        if (!dragging) return;
+        dragging = false;
+        if (!moved || !cards[0]) return;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - startX;
+        if (Math.abs(dx) > 80) {
+          // Улетает
+          const dir = dx > 0 ? 1 : -1;
+          cards[0].style.transition = 'transform 0.4s ease, opacity 0.3s ease';
+          cards[0].style.transform = `translate(calc(-50% + ${dir * 500}px), -50%) rotate(${dir * 25}deg)`;
+          cards[0].style.opacity = '0';
+          setTimeout(() => {
+            cards.push(cards.shift());
+            layoutStack();
+          }, 420);
+        } else {
+          // Возврат
+          cards[0].style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+          layoutStack();
+        }
+      }
+
+      stage.addEventListener('touchstart', onTouchStart, { passive: true });
+      stage.addEventListener('touchmove', onTouchMove, { passive: false });
+      stage.addEventListener('touchend', onTouchEnd);
+
+      // Expand кнопки
+      freecards.forEach(card => {
+        const btn = card.querySelector('.freecard-expand');
+        if (btn) {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const expanded = card.classList.toggle('is-expanded');
+            btn.textContent = expanded ? 'Свернуть' : 'Читать';
+          });
+        }
+      });
+    }
+
+    // ── ДЕСКТОП: свободное перетаскивание с инерцией ──────────────
+    function initFree() {
+      stage.classList.remove('stack-mode');
+      freecards.forEach(card => {
+        card.style.position = 'absolute';
+        card.style.left = (parseFloat(card.dataset.x) + (Math.random() - 0.5) * 20) + 'px';
+        card.style.top  = (parseFloat(card.dataset.y) + (Math.random() - 0.5) * 16) + 'px';
+        card.style.transform = `rotate(${card.style.getPropertyValue('--rot') || '0deg'})`;
+        card.style.zIndex = '1';
+        card.style.opacity = '1';
+        card.style.width = '';
+        card.style.transition = 'box-shadow 0.2s ease';
+        card.style.pointerEvents = 'auto';
+      });
+
+      let activeCard = null, offsetX = 0, offsetY = 0, zCounter = 10;
+      let lastX = 0, lastY = 0, velX = 0, velY = 0, lastTime = 0, inertiaFrame = null;
+
+      function getPoint(e) { return e.touches ? e.touches[0] : e; }
+
+      function startDrag(e) {
+        if (e.target.classList.contains('freecard-expand')) return;
+        if (inertiaFrame) { cancelAnimationFrame(inertiaFrame); inertiaFrame = null; }
+        activeCard = e.currentTarget;
+        activeCard.classList.add('is-dragging');
+        activeCard.style.transition = 'box-shadow 0.2s ease';
+        zCounter++;
+        activeCard.style.zIndex = zCounter;
+        const point = getPoint(e);
+        const rect = activeCard.getBoundingClientRect();
+        offsetX = point.clientX - rect.left;
+        offsetY = point.clientY - rect.top;
+        lastX = point.clientX; lastY = point.clientY;
+        lastTime = Date.now(); velX = 0; velY = 0;
+        e.preventDefault();
+      }
+
+      function moveDrag(e) {
+        if (!activeCard) return;
+        const point = getPoint(e);
+        const sr = stage.getBoundingClientRect();
+        let x = Math.max(0, Math.min(sr.width - activeCard.offsetWidth, point.clientX - sr.left - offsetX));
+        let y = Math.max(0, Math.min(sr.height - activeCard.offsetHeight, point.clientY - sr.top - offsetY));
+        activeCard.style.left = x + 'px';
+        activeCard.style.top  = y + 'px';
+        const now = Date.now(), dt = now - lastTime || 16;
+        velX = (point.clientX - lastX) / dt * 16;
+        velY = (point.clientY - lastY) / dt * 16;
+        lastX = point.clientX; lastY = point.clientY; lastTime = now;
+        e.preventDefault();
+      }
+
+      function endDrag() {
+        if (!activeCard) return;
+        const card = activeCard;
+        card.classList.remove('is-dragging');
+        activeCard = null;
+        let vx = velX * 0.8, vy = velY * 0.8;
+        const friction = 0.88;
+        function inertia() {
+          if (Math.abs(vx) < 0.2 && Math.abs(vy) < 0.2) return;
+          const sw = stage.offsetWidth, sh = stage.offsetHeight;
+          const cw = card.offsetWidth, ch = card.offsetHeight;
+          let x = parseFloat(card.style.left) + vx;
+          let y = parseFloat(card.style.top) + vy;
+          if (x <= 0) { x = 0; vx = Math.abs(vx) * 0.4; }
+          if (x >= sw - cw) { x = sw - cw; vx = -Math.abs(vx) * 0.4; }
+          if (y <= 0) { y = 0; vy = Math.abs(vy) * 0.4; }
+          if (y >= sh - ch) { y = sh - ch; vy = -Math.abs(vy) * 0.4; }
+          card.style.left = x + 'px'; card.style.top = y + 'px';
+          vx *= friction; vy *= friction;
+          inertiaFrame = requestAnimationFrame(inertia);
+        }
+        inertiaFrame = requestAnimationFrame(inertia);
+      }
+
+      freecards.forEach(card => {
+        card.addEventListener('mousedown', startDrag);
+        const btn = card.querySelector('.freecard-expand');
+        if (btn) {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const expanded = card.classList.toggle('is-expanded');
+            btn.textContent = expanded ? 'Свернуть' : 'Читать';
+            setTimeout(() => {
+              const sh = stage.offsetHeight;
+              if (card.offsetTop + card.offsetHeight > sh)
+                card.style.top = Math.max(0, sh - card.offsetHeight) + 'px';
+            }, 320);
+          });
+        }
+      });
+
+      window.addEventListener('mousemove', moveDrag);
+      window.addEventListener('mouseup', endDrag);
+    }
+
+    // ── Инициализация в зависимости от ширины экрана ──────────────
+    if (isMobile()) {
+      initStack();
+    } else {
+      initFree();
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (isMobile()) initStack(); else initFree();
+      }, 200);
+    });
   }
 
 
