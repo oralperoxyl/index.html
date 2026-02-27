@@ -283,12 +283,12 @@ p {
 
 .hero-title {
   font-family: var(--font-serif);
-  font-size: var(--fs-h1);
-  line-height: var(--lh-tight);
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1.15;
   font-weight: var(--fw-light);
   color: var(--text-main);
-  max-width: 1100px;
-  margin-bottom: clamp(48px, 8vw, 96px);
+  max-width: 800px;
+  margin-bottom: clamp(32px, 5vw, 64px);
   letter-spacing: -0.025em;
 }
 
@@ -1184,8 +1184,9 @@ p {
   line-height: 1.6;
   background: #ffffff;
   color: var(--text-main);
-  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
-  transition: box-shadow 0.2s ease;
+  box-shadow: none;
+  outline: none;
+  transition: background 0.2s ease;
 }
 
 .form-control::placeholder {
@@ -2278,7 +2279,7 @@ textarea.contact-form-control {
 
 /* Initial state - elements are hidden before animation */
 .animate-on-scroll {
-  opacity: 0;
+  /* opacity managed by JS animations only */
 }
 
 /* Fade In Up - Main animation for sections */
@@ -2351,6 +2352,14 @@ textarea.contact-form-control {
 .animate-delay-5 { animation-delay: 0.5s; }
 .animate-delay-6 { animation-delay: 0.6s; }
 
+/* Ensure animated elements start visible if JS hasn't run */
+.animate-fade-in-up,
+.animate-fade-in,
+.animate-slide-in-left,
+.animate-scale-in {
+  opacity: 1;
+}
+
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   .animate-on-scroll,
@@ -2379,4 +2388,354 @@ textarea.contact-form-control {
 .channel-link.is-touched .channel-name,
 .channel-link.is-touched .channel-meta {
   color: #fff;
+}
+
+
+/* =============================================
+   HERO WITH PHOTO
+   ============================================= */
+.hero-with-photo {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 80px;
+  align-items: center;
+}
+.hero-content { min-width: 0; }
+.hero-photo-wrap { flex-shrink: 0; }
+.hero-photo {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: 4px;
+  display: block;
+  filter: grayscale(100%);
+}
+@media (max-width: 1024px) {
+  .hero-with-photo { grid-template-columns: 1fr 260px; gap: 48px; }
+  .hero-photo { height: 420px; }
+}
+@media (max-width: 768px) {
+  .hero-with-photo { display: flex; flex-direction: column-reverse; gap: 0; }
+  .hero-photo-wrap {
+    width: calc(100% + 2 * var(--space-lg));
+    margin-left: calc(-1 * var(--space-lg));
+  }
+  .hero-photo { height: 380px; border-radius: 0; width: 100%; }
+  .hero-content { padding-top: 40px; }
+}
+@media (max-width: 480px) {
+  .hero-photo { height: 300px; }
+}
+
+/* =============================================
+   ЧЕМ Я ПОМОГАЮ — формат 01/02/03
+   ============================================= */
+.help-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px 40px;
+  margin-top: 48px;
+}
+.help-stat {
+  border-top: 1px solid var(--color-gray-200);
+  padding-top: 24px;
+}
+.help-num {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 48px;
+  font-weight: 300;
+  color: var(--text-main);
+  opacity: 0.15;
+  line-height: 1;
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+.help-stat h3 {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+.help-stat p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+@media (max-width: 1024px) {
+  .help-grid { grid-template-columns: repeat(2, 1fr); gap: 36px 32px; }
+}
+@media (max-width: 600px) {
+  .help-grid { grid-template-columns: 1fr; gap: 28px; }
+  .help-num { font-size: 36px; }
+}
+
+/* =============================================
+   HERO ОТЗЫВ
+   ============================================= */
+.review-hero {
+  margin: 48px 0 56px;
+  padding: 48px 0;
+  border-top: 1px solid var(--color-gray-200);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+.review-hero-text {
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--text-main);
+  max-width: 860px;
+  margin: 0 0 24px;
+  font-style: italic;
+}
+.review-hero-author {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.review-hero-author span {
+  opacity: 0.6;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+
+/* =============================================
+   FIXES
+   ============================================= */
+
+/* About without photo */
+.about-no-photo {
+  grid-template-columns: 1fr;
+  max-width: 760px;
+}
+
+/* Убрать дёрганые анимации - плавнее */
+.animate-on-scroll {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Telegram button fix */
+.floating-telegram {
+  position: fixed !important;
+  z-index: 9999;
+}
+
+
+/* =============================================
+   КАРТОЧКИ ОТЗЫВОВ — стек с перетаскиванием
+   ============================================= */
+.reviews-stack {
+  position: relative;
+  height: 380px;
+  margin: 48px 0 24px;
+  user-select: none;
+}
+
+.reviews-stack .review-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: min(480px, 100%);
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  cursor: grab;
+  transform-origin: center bottom;
+  transition: box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+.reviews-stack .review-card:active { cursor: grabbing; }
+
+.reviews-stack .review-card .review-quote {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.65;
+  color: #1c1c1e;
+  margin-bottom: 24px;
+  max-height: none;
+  -webkit-line-clamp: unset;
+  display: block;
+  overflow: visible;
+}
+
+.reviews-stack .review-author {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 14px;
+  color: #1c1c1e;
+  margin: 0 0 4px;
+}
+
+.reviews-stack .review-role {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #8a8a8a;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.reviews-stack .review-expand { display: none; }
+
+.reviews-stack-hint {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: #aaa;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 600px) {
+  .reviews-stack { height: 420px; }
+  .reviews-stack .review-card { padding: 28px 24px; }
+  .reviews-stack .review-card .review-quote { font-size: 15px; }
+}
+
+
+/* =============================================
+   SCATTERED DRAGGABLE CARDS — Bajgart style
+   ============================================= */
+.freecards-stage {
+  position: relative;
+  width: 100%;
+  height: 860px;
+  overflow: hidden;
+  margin: 40px 0 16px;
+  border-radius: 12px;
+  background: #F7F7F4;
+  cursor: default;
+}
+
+.freecard {
+  position: absolute;
+  width: 300px;
+  border-radius: 16px;
+  padding: 26px 24px 20px;
+  transform: rotate(var(--rot, 0deg));
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  will-change: transform;
+  z-index: 1;
+}
+
+.freecard:hover {
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18), 0 4px 16px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+.freecard.is-dragging {
+  cursor: grabbing;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.22), 0 8px 24px rgba(0,0,0,0.12);
+  transform: rotate(var(--rot, 0deg)) scale(1.03);
+  z-index: 999;
+  transition: box-shadow 0.2s ease;
+}
+
+.freecard-quote {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.6;
+  margin: 0 0 20px;
+  color: inherit;
+}
+
+.freecard-author {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.7;
+  margin: 0;
+}
+
+.freecard-role {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.8;
+}
+
+.freecards-hint {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin: 0 0 40px;
+}
+
+@media (max-width: 768px) {
+  .freecards-stage { height: 600px; }
+  .freecard { width: 260px; padding: 24px 22px 20px; }
+  .freecard-quote { font-size: 15px; }
+}
+
+@media (max-width: 480px) {
+  .freecards-stage { height: 520px; }
+  .freecard { width: 220px; padding: 20px 18px 16px; }
+  .freecard-quote { font-size: 14px; }
+}
+
+
+/* =============================================
+   FREECARD — сворачивание длинных отзывов
+   ============================================= */
+
+/* Длинные карточки — обрезать текст */
+.freecard--long .freecard-quote {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: none;
+}
+
+/* Развёрнутое состояние */
+.freecard--long.is-expanded .freecard-quote {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+
+/* Кнопка раскрытия */
+.freecard-expand {
+  display: inline-block;
+  margin-top: 12px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.5;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.freecard-expand:hover { opacity: 1; }
+
+/* Плавная анимация высоты карточки */
+.freecard {
+  transition: box-shadow 0.2s ease, transform 0.15s ease, height 0.3s ease;
+}
+.freecard.is-expanded {
+  z-index: 500;
 }
