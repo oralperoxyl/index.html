@@ -566,6 +566,14 @@ document.addEventListener('DOMContentLoaded', () => {
             e.stopPropagation();
             const expanded = card.classList.toggle('is-expanded');
             btn.textContent = expanded ? 'Свернуть' : 'Читать';
+            setTimeout(() => {
+              const cardH = card.offsetHeight + 80;
+              if (expanded) {
+                stage.style.height = Math.max(stage.offsetHeight, cardH) + 'px';
+              } else {
+                stage.style.height = '';
+              }
+            }, 50);
           });
         }
       });

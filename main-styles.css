@@ -2410,6 +2410,7 @@ textarea.contact-form-control {
   border-radius: 4px;
   display: block;
   filter: grayscale(100%);
+  background: #f0f0ec;
 }
 @media (max-width: 1024px) {
   .hero-with-photo { grid-template-columns: 1fr 260px; gap: 48px; }
@@ -2421,11 +2422,11 @@ textarea.contact-form-control {
     width: calc(100% + 2 * var(--space-lg));
     margin-left: calc(-1 * var(--space-lg));
   }
-  .hero-photo { height: 380px; border-radius: 0; width: 100%; }
+  .hero-photo { height: auto; max-height: none; min-height: 60vw; border-radius: 0; width: 100%; object-fit: contain; object-position: top center; }
   .hero-content { padding-top: 40px; }
 }
 @media (max-width: 480px) {
-  .hero-photo { height: 300px; }
+  .hero-photo { min-height: 50vw; }
 }
 
 /* =============================================
@@ -2682,7 +2683,7 @@ textarea.contact-form-control {
 
 @media (max-width: 768px) {
   .freecards-stage {
-    height: 460px;
+    height: 520px;
     overflow: hidden;
     display: block;
     position: relative;
@@ -2694,7 +2695,7 @@ textarea.contact-form-control {
 }
 
 @media (max-width: 480px) {
-  .freecards-stage { height: 420px; }
+  .freecards-stage { height: 480px; }
   .freecard-quote { font-size: 14px; }
 }
 
@@ -2749,4 +2750,12 @@ textarea.contact-form-control {
 /* Stack mode swipe hint */
 .freecards-stage.stack-mode ~ .freecards-hint::after {
   content: ' · свайп влево или вправо';
+}
+
+
+/* Stack mode — expanded card: stage grows to fit */
+@media (max-width: 768px) {
+  .freecards-stage.stack-mode {
+    transition: height 0.35s ease;
+  }
 }
