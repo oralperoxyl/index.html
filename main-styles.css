@@ -2417,8 +2417,8 @@ textarea.contact-form-control {
 @media (max-width: 768px) {
   .hero-with-photo { display: flex; flex-direction: column-reverse; gap: 0; }
   .hero-photo-wrap {
-    width: calc(100% + 2 * var(--space-lg));
-    margin-left: calc(-1 * var(--space-lg));
+    width: 100vw;
+    margin-left: -32px;
   }
   .hero-photo { height: 380px; border-radius: 0; width: 100%; }
   .hero-content { padding-top: 40px; }
@@ -2756,11 +2756,14 @@ textarea.contact-form-control {
 /* HERO PHOTO MOBILE */
 @media (max-width:768px) {
   .hero-with-photo { display:flex; flex-direction:column-reverse; gap:0; }
-  .hero-photo-wrap { width:calc(100% + 64px); margin-left:-32px; }
-  .hero-photo { height:auto; max-height:none; min-height:55vw; border-radius:0; width:100%; object-fit:contain; object-position:top center; }
+  .hero-photo-wrap { width:100vw; margin-left:-32px; margin-right:0; }
+  .hero-photo { height:auto; max-height:none; min-height:60vw; border-radius:0; width:100vw; object-fit:cover; object-position:center top; display:block; }
   .hero-content { padding-top:40px; }
 }
-@media (max-width:480px) { .hero-photo { min-height:50vw; } }
+@media (max-width:480px) {
+  .hero-photo-wrap { margin-left:-20px; }
+  .hero-photo { min-height:70vw; }
+}
 
 /* FREECARDS MOBILE STACK */
 @media (max-width:768px) {
