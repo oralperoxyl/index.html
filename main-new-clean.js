@@ -71,267 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // reviews-track removed (now freecards-stage)
-
-  // Review expand/collapse logic
-  const reviewCards = Array.from(document.querySelectorAll('.review-card'));
-  reviewCards.forEach(card => {
-    const quote = card.querySelector('.review-quote');
-    const expandBtn = card.querySelector('.review-expand');
-
-    if (!quote || !expandBtn) return;
-
-    // Check if content is truncated
-    const checkTruncation = () => {
-      if (quote.scrollHeight > quote.clientHeight + 5) {
-        expandBtn.removeAttribute('hidden');
-      }
-    };
-
-    // Check on load and after fonts load
-    checkTruncation();
-    if (document.fonts) {
-      document.fonts.ready.then(checkTruncation);
-    }
-
-    // Toggle expand/collapse
-    expandBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isExpanded = card.classList.toggle('is-expanded');
-      expandBtn.textContent = isExpanded ? 'Свернуть' : 'Читать полностью';
-      expandBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-    });
-  });
-
-  // Mobile menu toggle
-  const menuToggle = document.querySelector('.menu-toggle');
-  const siteNav = document.querySelector('.site-nav');
-
-  if (menuToggle && siteNav) {
-    menuToggle.addEventListener('click', () => {
-      const isOpen = siteNav.classList.toggle('is-open');
-      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      menuToggle.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
-    });
-
-    // Close menu when clicking a link
-    const navLinks = Array.from(siteNav.querySelectorAll('a'));
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        siteNav.classList.remove('is-open');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        menuToggle.setAttribute('aria-label', 'Открыть меню');
-      });
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!menuToggle.contains(e.target) && !siteNav.contains(e.target)) {
-        if (siteNav.classList.contains('is-open')) {
-          siteNav.classList.remove('is-open');
-          menuToggle.setAttribute('aria-expanded', 'false');
-          menuToggle.setAttribute('aria-label', 'Открыть меню');
-        }
-      }
-    });
-  }
-
-  // ============================================
-  // PREMIUM SCROLL ANIMATIONS (React Bits Style)
-  // ============================================
-
-  // Configuration
-  const animationConfig = {
-    threshold: 0.15,  // Trigger when 15% of element is visible
-    rootMargin: '0px 0px -50px 0px'  // Slight offset for better timing
-  };
-
-  // Detect if user prefers reduced motion
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Typewriter effect for headings
-  function typewriterEffect(element, speed = 50) {
-    const text = element.textContent;
-    element.textContent = '';
-    element.style.opacity = '1';
-
-    let charIndex = 0;
-    const typeNextChar = () => {
-      if (charIndex < text.length) {
-        element.textContent += text.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeNextChar, speed);
-      }
-    };
-
-    typeNextChar();
-  }
-
-  // Only initialize animations if user hasn't requested reduced motion
-  if (!prefersReducedMotion) {
-    // Create Intersection Observer
-    const scrollObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          // Add animation class when element enters viewport
-          const element = entry.target;
-          const animationType = element.getAttribute('data-animate');
-
-          // Check if element is a heading (h1, h2)
-          if (element.tagName === 'H1' || element.tagName === 'H2') {
-            // Apply typewriter effect to headings
-            setTimeout(() => typewriterEffect(element, 30), 200);
-          } else if (animationType) {
-            element.classList.add(`animate-${animationType}`);
-          }
-
-          // Stop observing this element (animation only triggers once)
-          scrollObserver.unobserve(element);
-        }
-      });
-    }, animationConfig);
-
-    // Select all elements to animate
-    const animateElements = Array.from(document.querySelectorAll('.animate-on-scroll'));
-
-    // Observe each element
-    animateElements.forEach(element => {
-      scrollObserver.observe(element);
-    });
-  } else {
-    // If reduced motion is preferred, immediately show all elements
-    const animateElements = Array.from(document.querySelectorAll('.animate-on-scroll'));
-    animateElements.forEach(element => {
-      element.style.opacity = '1';
-    });
-  }
-
-  // ============================================
-  // ЧИСЛО АНИМАЦИЯ (счётчик)
-  // ============================================
-
-  function animateCounter(el, target, suffix, duration) {
-    const start = performance.now();
-    const update = (now) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(eased * target);
-      el.textContent = current + suffix;
-      if (progress < 1) requestAnimationFrame(update);
-    };
-    requestAnimationFrame(update);
-  }
-
-  function runCounter(el) {
-    if (el.dataset.counted) return;
-    el.dataset.counted = '1';
-    if (el.dataset.target) {
-      animateCounter(el, parseInt(el.dataset.target), el.dataset.suffix || '', 1600);
-    } else {
-      const orig = el.textContent.trim();
-      const m = orig.match(/^(\d+)(.*)/);
-      if (m) animateCounter(el, parseInt(m[1]), m[2], 1400);
-    }
-  }
-
-  const statObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      runCounter(entry.target);
-      statObserver.unobserve(entry.target);
-    });
-  }, { threshold: 0 });
-
-  document.querySelectorAll('.about-stat-num, .about-badge').forEach(el => {
-    statObserver.observe(el);
-  });
-
-  // ============================================
-  // REFERRAL SYSTEM
-  // ============================================
-
-  const WEB3FORMS_KEY = "15cc9dfa-af27-418a-aae7-5a195d354206";
-  const REFERRAL_BASE_URL = "https://fastbroker21.ru";
-
-  function refGenerateId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-  }
-
-  function refNormalizePhone(raw) {
-    const digits = raw.replace(/\D/g, "");
-    if (!digits) return raw;
-    let d = digits;
-    if (d.startsWith("8") && d.length === 11) d = "7" + d.slice(1);
-    if (!d.startsWith("7")) d = "7" + d;
-    if (d.length < 11) return raw;
-    return "+7" + d.slice(1);
-  }
-
-  function refShowError(id, msg) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.textContent = msg;
-    el.classList.toggle("is-visible", !!msg);
-  }
-
-  function refClearErrors() {
-    document.querySelectorAll(".referral-error").forEach(e => {
-      e.textContent = "";
-      e.classList.remove("is-visible");
-    });
-    document.querySelectorAll(".referral-input").forEach(i => i.classList.remove("is-error"));
-  }
-
-  function refMarkError(inputId, errId, msg) {
-    const input = document.getElementById(inputId);
-    if (input) input.classList.add("is-error");
-    refShowError(errId, msg);
-  }
-
-  function refSetupShareButtons(link) {
-    const text = "Рекомендую агента по недвижимости Семёна Гончарова. Ссылка: " + link;
-    const tgBtn = document.getElementById("share-tg");
-    const waBtn = document.getElementById("share-wa");
-    const copyBtn = document.getElementById("share-copy");
-
-    if (tgBtn) {
-      tgBtn.onclick = () => window.open(
-        "https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent("Рекомендую агента по недвижимости Семёна Гончарова 🏠"),
-        "_blank", "noopener"
-      );
-    }
-    if (waBtn) {
-      waBtn.onclick = () => window.open(
-        "https://wa.me/?text=" + encodeURIComponent(text),
-        "_blank", "noopener"
-      );
-    }
-    if (copyBtn) {
-      copyBtn.onclick = () => {
-        const done = () => {
-          copyBtn.textContent = "Скопировано";
-          copyBtn.classList.add("copied");
-          setTimeout(() => {
-            copyBtn.textContent = "Скопировать ссылку";
-            copyBtn.classList.remove("copied");
-          }, 2000);
-        };
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(link).then(done);
-        } else {
-          const ta = document.createElement("textarea");
-          ta.value = link;
-          ta.style.cssText = "position:fixed;opacity:0";
-          document.body.appendChild(ta);
-          ta.focus(); ta.select();
-          try { document.execCommand("copy"); done(); } catch(e) {}
-          document.body.removeChild(ta);
-        }
-      };
-    }
-  }
-
   const refForm = document.getElementById("referral-form");
   const refFormCard = document.getElementById("referral-form-card");
   const refSuccessCard = document.getElementById("referral-success-card");
@@ -437,182 +176,179 @@ document.addEventListener('DOMContentLoaded', () => {
     }, { passive: true });
   });
 
+
+  // ============================================
+  // СЧЁТЧИКИ СТАТИСТИКИ
+  // ============================================
+  function animateCount(el) {
+    if (el.dataset.counted) return;
+    el.dataset.counted = '1';
+    var target = parseInt(el.dataset.target);
+    var suffix = el.dataset.suffix || '';
+    var duration = 1600;
+    var start = performance.now();
+    function tick(now) {
+      var p = Math.min((now - start) / duration, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(eased * target) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  var cObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        animateCount(entry.target);
+        cObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0 });
+
+  document.querySelectorAll('.about-stat-num').forEach(function(el) {
+    cObs.observe(el);
+  });
+
   // ============================================
   // КАРТОЧКИ ОТЗЫВОВ
   // ============================================
-  const stage = document.getElementById('freecards-stage');
-  if (stage) {
-    const allCards = Array.from(stage.querySelectorAll('.freecard'));
+  (function() {
+    var stage = document.getElementById('freecards-stage');
+    if (!stage) return;
+    var allCards = Array.from(stage.querySelectorAll('.freecard'));
+    if (!allCards.length) return;
 
-    function isMobile() { return window.innerWidth <= 768; }
+    // Expand кнопки
+    allCards.forEach(function(card) {
+      var btn = card.querySelector('.freecard-expand');
+      if (!btn) return;
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var exp = card.classList.toggle('is-expanded');
+        btn.textContent = exp ? 'Свернуть' : 'Читать';
+        if (window.innerWidth <= 768) {
+          setTimeout(function() {
+            var h = card.offsetHeight + 100;
+            stage.style.height = exp ? Math.max(stage.offsetHeight, h) + 'px' : '';
+          }, 50);
+        }
+      });
+    });
 
-    // ── МОБИЛЕ: стопка со свайпом ──────────────────────
+    // МОБИЛЕ: стопка со свайпом
     function initStack() {
       stage.classList.add('stack-mode');
-      const cards = [...allCards];
+      stage.style.height = '';
+      var cards = allCards.slice();
 
-      // Сброс стилей
-      cards.forEach((card, i) => {
-        card.style.cssText = '';
-        card.style.position = 'absolute';
-        card.style.width = Math.min(300, window.innerWidth * 0.82) + 'px';
-        card.style.left = '50%';
-        card.style.top = '50%';
-        card.style.zIndex = cards.length - i;
-        card.style.pointerEvents = i === 0 ? 'auto' : 'none';
-        const rot = i === 0 ? 0 : (i % 2 === 0 ? -(i * 2) : (i * 2));
-        const offset = i * 8;
-        card.style.transform = `translate(-50%, calc(-50% + ${offset}px)) rotate(${rot}deg) scale(${1 - i * 0.04})`;
-        card.style.opacity = i > 4 ? '0' : '1';
-        card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
-      });
-
-      let startX = 0, startY = 0, isDragging = false, hasMoved = false;
-
-      function onStart(e) {
-        if (e.target.classList.contains('freecard-expand')) return;
-        const pt = e.touches ? e.touches[0] : e;
-        startX = pt.clientX; startY = pt.clientY;
-        isDragging = true; hasMoved = false;
-        cards[0].style.transition = 'none';
-      }
-
-      function onMove(e) {
-        if (!isDragging) return;
-        const pt = e.touches ? e.touches[0] : e;
-        const dx = pt.clientX - startX;
-        const dy = pt.clientY - startY;
-        if (Math.abs(dx) < Math.abs(dy) && !hasMoved) return;
-        hasMoved = true;
-        if (e.cancelable) e.preventDefault();
-        const rot = dx * 0.1;
-        const fade = Math.max(0, 1 - Math.abs(dx) / 250);
-        cards[0].style.transform = `translate(calc(-50% + ${dx}px), calc(-50% + ${dy * 0.2}px)) rotate(${rot}deg)`;
-        cards[0].style.opacity = fade;
-        if (cards[1]) {
-          const prog = Math.min(Math.abs(dx) / 120, 1);
-          const i = 1;
-          const rot2 = i % 2 === 0 ? -(i * 2) : (i * 2);
-          const sc = (1 - i * 0.04) + prog * 0.04;
-          cards[1].style.transform = `translate(-50%, calc(-50% + ${i * 8}px)) rotate(${rot2}deg) scale(${sc})`;
-          cards[1].style.transition = 'none';
-        }
-      }
-
-      function onEnd(e) {
-        if (!isDragging) return;
-        isDragging = false;
-        if (!hasMoved) return;
-        const pt = e.changedTouches ? e.changedTouches[0] : e;
-        const dx = pt.clientX - startX;
-        if (Math.abs(dx) > 80) {
-          const dir = dx > 0 ? 1 : -1;
-          cards[0].style.transition = 'transform 0.4s ease, opacity 0.3s ease';
-          cards[0].style.transform = `translate(calc(-50% + ${dir * 600}px), -50%) rotate(${dir * 20}deg)`;
-          cards[0].style.opacity = '0';
-          setTimeout(() => {
-            cards.push(cards.shift());
-            reinitStack();
-          }, 420);
-        } else {
-          reinitStack();
-        }
-      }
-
-      function reinitStack() {
-        cards.forEach((card, i) => {
-          card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
-          card.style.zIndex = cards.length - i;
+      function layout() {
+        cards.forEach(function(card, i) {
+          card.style.position = 'absolute';
+          card.style.width = Math.min(300, window.innerWidth * 0.82) + 'px';
+          card.style.left = '50%';
+          card.style.top = '50%';
+          card.style.zIndex = String(cards.length - i);
           card.style.pointerEvents = i === 0 ? 'auto' : 'none';
-          const rot = i === 0 ? 0 : (i % 2 === 0 ? -(i * 2) : (i * 2));
-          const offset = i * 8;
-          card.style.transform = `translate(-50%, calc(-50% + ${offset}px)) rotate(${rot}deg) scale(${1 - i * 0.04})`;
+          var rot = i === 0 ? 0 : (i % 2 === 0 ? -(i * 2) : (i * 2));
+          card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+          card.style.transform = 'translate(-50%, calc(-50% + ' + (i * 8) + 'px)) rotate(' + rot + 'deg) scale(' + (1 - i * 0.04) + ')';
           card.style.opacity = i > 4 ? '0' : '1';
         });
       }
+      layout();
 
-      // Touch + mouse events на stage
-      stage.addEventListener('mousedown', onStart);
-      stage.addEventListener('touchstart', onStart, { passive: true });
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('touchmove', onMove, { passive: false });
-      document.addEventListener('mouseup', onEnd);
-      document.addEventListener('touchend', onEnd);
+      var sx = 0, sy = 0, touching = false, moved = false;
 
-      // Expand кнопки
-      allCards.forEach(card => {
-        const btn = card.querySelector('.freecard-expand');
-        if (!btn) return;
-        btn.onclick = (e) => {
-          e.stopPropagation();
-          const exp = card.classList.toggle('is-expanded');
-          btn.textContent = exp ? 'Свернуть' : 'Читать';
-          setTimeout(() => {
-            const cardH = card.offsetHeight + 100;
-            stage.style.height = exp ? Math.max(stage.offsetHeight, cardH) + 'px' : '';
-          }, 50);
-        };
+      stage.addEventListener('touchstart', function(e) {
+        if (e.target.classList.contains('freecard-expand')) return;
+        var t = e.touches[0];
+        sx = t.clientX; sy = t.clientY;
+        touching = true; moved = false;
+        cards[0].style.transition = 'none';
+      }, { passive: true });
+
+      document.addEventListener('touchmove', function(e) {
+        if (!touching) return;
+        var t = e.touches[0];
+        var dx = t.clientX - sx, dy = t.clientY - sy;
+        if (!moved && Math.abs(dy) > Math.abs(dx)) { touching = false; return; }
+        moved = true;
+        if (e.cancelable) e.preventDefault();
+        cards[0].style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + (dy * 0.2) + 'px)) rotate(' + (dx * 0.1) + 'deg)';
+        cards[0].style.opacity = String(Math.max(0, 1 - Math.abs(dx) / 250));
+      }, { passive: false });
+
+      document.addEventListener('touchend', function(e) {
+        if (!touching) return;
+        touching = false;
+        if (!moved) return;
+        var dx = e.changedTouches[0].clientX - sx;
+        if (Math.abs(dx) > 80) {
+          var dir = dx > 0 ? 1 : -1;
+          cards[0].style.transition = 'transform 0.4s ease, opacity 0.3s ease';
+          cards[0].style.transform = 'translate(calc(-50% + ' + (dir * 600) + 'px), -50%) rotate(' + (dir * 20) + 'deg)';
+          cards[0].style.opacity = '0';
+          setTimeout(function() { cards.push(cards.shift()); layout(); }, 420);
+        } else {
+          layout();
+        }
       });
     }
 
-    // ── ДЕСКТОП: свободное перетаскивание с инерцией ──────────────
+    // ДЕСКТОП: свободное перетаскивание с инерцией
     function initFree() {
       stage.classList.remove('stack-mode');
-      allCards.forEach(card => {
+      allCards.forEach(function(card) {
         card.style.cssText = '';
         card.style.position = 'absolute';
-        const baseX = parseFloat(card.dataset.x) + (Math.random() - 0.5) * 20;
-        const baseY = parseFloat(card.dataset.y) + (Math.random() - 0.5) * 16;
-        card.style.left = baseX + 'px';
-        card.style.top = baseY + 'px';
-        card.style.transform = `rotate(${card.getAttribute('data-rot') || '0deg'})`;
+        card.style.left = (parseFloat(card.dataset.x || 0) + (Math.random() - 0.5) * 20) + 'px';
+        card.style.top  = (parseFloat(card.dataset.y || 0) + (Math.random() - 0.5) * 16) + 'px';
         card.style.zIndex = '1';
         card.style.opacity = '1';
         card.style.pointerEvents = 'auto';
+        card.style.cursor = 'grab';
       });
 
-      let active = null, ox = 0, oy = 0, zC = 10;
-      let lx = 0, ly = 0, vx = 0, vy = 0, lt = 0, raf = null;
+      var active = null, ox = 0, oy = 0, zC = 10;
+      var lx = 0, ly = 0, vx = 0, vy = 0, lt = 0, raf = null;
 
-      function startDrag(e) {
-        if (e.target.classList.contains('freecard-expand')) return;
-        if (raf) { cancelAnimationFrame(raf); raf = null; }
-        active = e.currentTarget;
-        active.classList.add('is-dragging');
-        zC++; active.style.zIndex = zC;
-        const pt = e.touches ? e.touches[0] : e;
-        const r = active.getBoundingClientRect();
-        ox = pt.clientX - r.left; oy = pt.clientY - r.top;
-        lx = pt.clientX; ly = pt.clientY; lt = Date.now();
-        vx = 0; vy = 0;
-        e.preventDefault();
-      }
+      allCards.forEach(function(card) {
+        card.addEventListener('mousedown', function(e) {
+          if (e.target.classList.contains('freecard-expand')) return;
+          if (raf) { cancelAnimationFrame(raf); raf = null; }
+          active = card;
+          card.style.cursor = 'grabbing';
+          zC++; card.style.zIndex = String(zC);
+          ox = e.clientX - card.getBoundingClientRect().left;
+          oy = e.clientY - card.getBoundingClientRect().top;
+          lx = e.clientX; ly = e.clientY;
+          lt = Date.now(); vx = 0; vy = 0;
+          e.preventDefault();
+        });
+      });
 
-      function moveDrag(e) {
+      window.addEventListener('mousemove', function(e) {
         if (!active) return;
-        const pt = e.touches ? e.touches[0] : e;
-        const sr = stage.getBoundingClientRect();
-        const x = Math.max(0, Math.min(sr.width - active.offsetWidth, pt.clientX - sr.left - ox));
-        const y = Math.max(0, Math.min(sr.height - active.offsetHeight, pt.clientY - sr.top - oy));
-        active.style.left = x + 'px'; active.style.top = y + 'px';
-        const now = Date.now(), dt = now - lt || 16;
-        vx = (pt.clientX - lx) / dt * 16;
-        vy = (pt.clientY - ly) / dt * 16;
-        lx = pt.clientX; ly = pt.clientY; lt = now;
+        var sr = stage.getBoundingClientRect();
+        active.style.left = Math.max(0, Math.min(sr.width - active.offsetWidth, e.clientX - sr.left - ox)) + 'px';
+        active.style.top  = Math.max(0, Math.min(sr.height - active.offsetHeight, e.clientY - sr.top - oy)) + 'px';
+        var now = Date.now(), dt = now - lt || 16;
+        vx = (e.clientX - lx) / dt * 16;
+        vy = (e.clientY - ly) / dt * 16;
+        lx = e.clientX; ly = e.clientY; lt = now;
         e.preventDefault();
-      }
+      });
 
-      function endDrag() {
+      window.addEventListener('mouseup', function() {
         if (!active) return;
-        const card = active;
-        card.classList.remove('is-dragging');
-        active = null;
-        let cvx = vx * 0.8, cvy = vy * 0.8;
+        var card = active; active = null;
+        card.style.cursor = 'grab';
+        var cvx = vx * 0.8, cvy = vy * 0.8;
         function step() {
           if (Math.abs(cvx) < 0.2 && Math.abs(cvy) < 0.2) return;
-          const sw = stage.offsetWidth, sh = stage.offsetHeight;
-          let x = parseFloat(card.style.left) + cvx;
-          let y = parseFloat(card.style.top) + cvy;
+          var x = parseFloat(card.style.left) + cvx;
+          var y = parseFloat(card.style.top) + cvy;
+          var sw = stage.offsetWidth, sh = stage.offsetHeight;
           if (x <= 0) { x = 0; cvx = Math.abs(cvx) * 0.4; }
           if (x >= sw - card.offsetWidth) { x = sw - card.offsetWidth; cvx = -Math.abs(cvx) * 0.4; }
           if (y <= 0) { y = 0; cvy = Math.abs(cvy) * 0.4; }
@@ -622,35 +358,10 @@ document.addEventListener('DOMContentLoaded', () => {
           raf = requestAnimationFrame(step);
         }
         raf = requestAnimationFrame(step);
-      }
-
-      allCards.forEach(card => {
-        card.addEventListener('mousedown', startDrag);
-        const btn = card.querySelector('.freecard-expand');
-        if (!btn) return;
-        btn.onclick = (e) => {
-          e.stopPropagation();
-          const exp = card.classList.toggle('is-expanded');
-          btn.textContent = exp ? 'Свернуть' : 'Читать';
-          setTimeout(() => {
-            if (exp && card.offsetTop + card.offsetHeight > stage.offsetHeight)
-              card.style.top = Math.max(0, stage.offsetHeight - card.offsetHeight) + 'px';
-          }, 320);
-        };
       });
-
-      window.addEventListener('mousemove', moveDrag);
-      window.addEventListener('mouseup', endDrag);
     }
 
-    // ── Запуск ──────────────────────────────────────────────────────
-    if (isMobile()) initStack(); else initFree();
-
-    let resizeT;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeT);
-      resizeT = setTimeout(() => { if (isMobile()) initStack(); else initFree(); }, 200);
-    });
-  }
+    if (window.innerWidth <= 768) initStack(); else initFree();
+  })();
 
 });
