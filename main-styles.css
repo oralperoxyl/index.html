@@ -1184,9 +1184,8 @@ p {
   line-height: 1.6;
   background: #ffffff;
   color: var(--text-main);
-  box-shadow: none;
-  outline: none;
-  transition: background 0.2s ease;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s ease;
 }
 
 .form-control::placeholder {
@@ -2410,7 +2409,6 @@ textarea.contact-form-control {
   border-radius: 4px;
   display: block;
   filter: grayscale(100%);
-  background: #f0f0ec;
 }
 @media (max-width: 1024px) {
   .hero-with-photo { grid-template-columns: 1fr 260px; gap: 48px; }
@@ -2422,11 +2420,11 @@ textarea.contact-form-control {
     width: calc(100% + 2 * var(--space-lg));
     margin-left: calc(-1 * var(--space-lg));
   }
-  .hero-photo { height: auto; max-height: none; min-height: 60vw; border-radius: 0; width: 100%; object-fit: contain; object-position: top center; }
+  .hero-photo { height: 380px; border-radius: 0; width: 100%; }
   .hero-content { padding-top: 40px; }
 }
 @media (max-width: 480px) {
-  .hero-photo { min-height: 50vw; }
+  .hero-photo { height: 300px; }
 }
 
 /* =============================================
@@ -2682,20 +2680,14 @@ textarea.contact-form-control {
 }
 
 @media (max-width: 768px) {
-  .freecards-stage {
-    height: 520px;
-    overflow: hidden;
-    display: block;
-    position: relative;
-  }
-  .freecards-stage.stack-mode .freecard {
-    width: min(300px, 80vw);
-  }
+  .freecards-stage { height: 600px; }
+  .freecard { width: 260px; padding: 24px 22px 20px; }
   .freecard-quote { font-size: 15px; }
 }
 
 @media (max-width: 480px) {
-  .freecards-stage { height: 480px; }
+  .freecards-stage { height: 520px; }
+  .freecard { width: 220px; padding: 20px 18px 16px; }
   .freecard-quote { font-size: 14px; }
 }
 
@@ -2745,83 +2737,4 @@ textarea.contact-form-control {
 }
 .freecard.is-expanded {
   z-index: 500;
-}
-
-/* Stack mode swipe hint */
-.freecards-stage.stack-mode ~ .freecards-hint::after {
-  content: ' · свайп влево или вправо';
-}
-
-
-/* Stack mode — expanded card: stage grows to fit */
-@media (max-width: 768px) {
-  .freecards-stage.stack-mode {
-    transition: height 0.35s ease;
-  }
-}
-
-
-/* =============================================
-   ABOUT STATS — крупные цифры
-   ============================================= */
-.about-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-  margin: 48px 0 64px;
-  border-top: 1px solid var(--color-gray-200);
-}
-
-.about-stat {
-  padding: 32px 24px 32px 0;
-  border-right: 1px solid var(--color-gray-200);
-}
-.about-stat:last-child {
-  border-right: none;
-  padding-right: 0;
-}
-.about-stat:first-child {
-  padding-left: 0;
-}
-
-.about-stat-num {
-  display: block;
-  font-family: var(--font-serif);
-  font-size: clamp(40px, 5vw, 64px);
-  font-weight: 300;
-  color: var(--text-main);
-  line-height: 1;
-  letter-spacing: -0.03em;
-  margin-bottom: 10px;
-}
-
-.about-stat-label {
-  display: block;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  line-height: 1.4;
-}
-
-@media (max-width: 768px) {
-  .about-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .about-stat:nth-child(2) { border-right: none; }
-  .about-stat:nth-child(3) {
-    border-top: 1px solid var(--color-gray-200);
-    padding-top: 28px;
-  }
-  .about-stat:nth-child(4) {
-    border-right: none;
-    border-top: 1px solid var(--color-gray-200);
-    padding-top: 28px;
-  }
-}
-
-@media (max-width: 480px) {
-  .about-stat-num { font-size: 40px; }
 }
