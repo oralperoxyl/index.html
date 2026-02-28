@@ -71,100 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const reviewsTrack = document.querySelector('.reviews-track');
-  if (reviewsTrack) {
-    let isDown = false;
-    let startX = 0;
-    let scrollLeft = 0;
-
-    reviewsTrack.addEventListener('mousedown', (event) => {
-      isDown = true;
-      reviewsTrack.classList.add('is-dragging');
-      startX = event.pageX - reviewsTrack.offsetLeft;
-      scrollLeft = reviewsTrack.scrollLeft;
-    });
-
-    reviewsTrack.addEventListener('mouseleave', () => {
-      isDown = false;
-      reviewsTrack.classList.remove('is-dragging');
-    });
-
-    reviewsTrack.addEventListener('mouseup', () => {
-      isDown = false;
-      reviewsTrack.classList.remove('is-dragging');
-    });
-
-    reviewsTrack.addEventListener('mousemove', (event) => {
-      if (!isDown) return;
-      event.preventDefault();
-      const x = event.pageX - reviewsTrack.offsetLeft;
-      const walk = (x - startX) * 1.2;
-      reviewsTrack.scrollLeft = scrollLeft - walk;
-    });
-  }
-
-  // Review expand/collapse logic
-  const reviewCards = Array.from(document.querySelectorAll('.review-card'));
-  reviewCards.forEach(card => {
-    const quote = card.querySelector('.review-quote');
-    const expandBtn = card.querySelector('.review-expand');
-
-    if (!quote || !expandBtn) return;
-
-    // Check if content is truncated
-    const checkTruncation = () => {
-      if (quote.scrollHeight > quote.clientHeight + 5) {
-        expandBtn.removeAttribute('hidden');
-      }
-    };
-
-    // Check on load and after fonts load
-    checkTruncation();
-    if (document.fonts) {
-      document.fonts.ready.then(checkTruncation);
-    }
-
-    // Toggle expand/collapse
-    expandBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isExpanded = card.classList.toggle('is-expanded');
-      expandBtn.textContent = isExpanded ? 'Свернуть' : 'Читать полностью';
-      expandBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
-    });
-  });
-
-  // Mobile menu toggle
-  const menuToggle = document.querySelector('.menu-toggle');
-  const siteNav = document.querySelector('.site-nav');
-
-  if (menuToggle && siteNav) {
-    menuToggle.addEventListener('click', () => {
-      const isOpen = siteNav.classList.toggle('is-open');
-      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      menuToggle.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
-    });
-
-    // Close menu when clicking a link
-    const navLinks = Array.from(siteNav.querySelectorAll('a'));
-    navLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        siteNav.classList.remove('is-open');
-        menuToggle.setAttribute('aria-expanded', 'false');
-        menuToggle.setAttribute('aria-label', 'Открыть меню');
-      });
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!menuToggle.contains(e.target) && !siteNav.contains(e.target)) {
-        if (siteNav.classList.contains('is-open')) {
-          siteNav.classList.remove('is-open');
-          menuToggle.setAttribute('aria-expanded', 'false');
-          menuToggle.setAttribute('aria-label', 'Открыть меню');
-        }
-      }
-    });
-  }
 
   // ============================================
   // PREMIUM SCROLL ANIMATIONS (React Bits Style)
@@ -464,92 +370,164 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================
-  // СВОБОДНЫЕ ПЕРЕТАСКИВАЕМЫЕ КАРТОЧКИ
+  // СЧЁТЧИКИ СТАТИСТИКИ
   // ============================================
-  const stage = document.getElementById('freecards-stage');
-  if (stage) {
-    const freecards = Array.from(stage.querySelectorAll('.freecard'));
+  function animateCount(el) {
+    if (el.dataset.counted) return;
+    el.dataset.counted = '1';
+    var target = parseInt(el.dataset.target);
+    var suffix = el.dataset.suffix || '';
+    var duration = 1600;
+    var startT = performance.now();
+    function tick(now) {
+      var p = Math.min((now - startT) / duration, 1);
+      el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target) + suffix;
+      if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  var cObs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) { animateCount(entry.target); cObs.unobserve(entry.target); }
+    });
+  }, { threshold: 0 });
+  document.querySelectorAll('.about-stat-num').forEach(function(el) { cObs.observe(el); });
 
-    // Лёгкий случайный jitter начальных позиций
-    freecards.forEach(card => {
-      const jx = (Math.random() - 0.5) * 20;
-      const jy = (Math.random() - 0.5) * 16;
-      card.style.left = (parseFloat(card.dataset.x) + jx) + 'px';
-      card.style.top  = (parseFloat(card.dataset.y) + jy) + 'px';
+  // ============================================
+  // КАРТОЧКИ ОТЗЫВОВ
+  // ============================================
+  (function() {
+    var stage = document.getElementById('freecards-stage');
+    if (!stage) return;
+    var allCards = Array.from(stage.querySelectorAll('.freecard'));
+    if (!allCards.length) return;
+
+    // Expand кнопки
+    allCards.forEach(function(card) {
+      var btn = card.querySelector('.freecard-expand');
+      if (!btn) return;
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var exp = card.classList.toggle('is-expanded');
+        btn.textContent = exp ? 'Свернуть' : 'Читать';
+        if (window.innerWidth <= 768) {
+          setTimeout(function() {
+            var h = card.offsetHeight + 100;
+            stage.style.height = exp ? Math.max(stage.offsetHeight, h) + 'px' : '';
+          }, 50);
+        }
+      });
     });
 
-    let activeCard = null;
-    let offsetX = 0, offsetY = 0;
-    let zCounter = 10;
-
-    function getPoint(e) {
-      return e.touches ? e.touches[0] : e;
-    }
-
-    function startDrag(e) {
-      // Если клик по кнопке expand — не перетаскивать
-      if (e.target.classList.contains('freecard-expand')) return;
-      activeCard = e.currentTarget;
-      activeCard.classList.add('is-dragging');
-      zCounter++;
-      activeCard.style.zIndex = zCounter;
-      const point = getPoint(e);
-      const rect = activeCard.getBoundingClientRect();
-      offsetX = point.clientX - rect.left;
-      offsetY = point.clientY - rect.top;
-      e.preventDefault();
-    }
-
-    function moveDrag(e) {
-      if (!activeCard) return;
-      const point = getPoint(e);
-      const stageRect = stage.getBoundingClientRect();
-      const cardW = activeCard.offsetWidth;
-      const cardH = activeCard.offsetHeight;
-      let x = point.clientX - stageRect.left - offsetX;
-      let y = point.clientY - stageRect.top - offsetY;
-      // Жёсткое ограничение внутри stage
-      x = Math.max(0, Math.min(stageRect.width - cardW, x));
-      y = Math.max(0, Math.min(stageRect.height - cardH, y));
-      activeCard.style.left = x + 'px';
-      activeCard.style.top  = y + 'px';
-      e.preventDefault();
-    }
-
-    function endDrag() {
-      if (!activeCard) return;
-      activeCard.classList.remove('is-dragging');
-      activeCard = null;
-    }
-
-    freecards.forEach(card => {
-      card.addEventListener('mousedown', startDrag);
-      card.addEventListener('touchstart', startDrag, { passive: false });
-
-      // Разворачивание длинных карточек
-      const expandBtn = card.querySelector('.freecard-expand');
-      const quoteEl = card.querySelector('.freecard-quote');
-      if (expandBtn && quoteEl) {
-        expandBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const isExpanded = card.classList.toggle('is-expanded');
-          expandBtn.textContent = isExpanded ? 'Свернуть' : 'Читать';
-          // После разворота — убедиться что карточка не вылезает за stage
-          setTimeout(() => {
-            const stageH = stage.offsetHeight;
-            const cardBottom = card.offsetTop + card.offsetHeight;
-            if (cardBottom > stageH) {
-              card.style.top = Math.max(0, stageH - card.offsetHeight) + 'px';
-            }
-          }, 320);
+    // МОБИЛЕ: стопка со свайпом
+    function initStack() {
+      stage.classList.add('stack-mode');
+      stage.style.height = '';
+      var cards = allCards.slice();
+      function layout() {
+        cards.forEach(function(card, i) {
+          card.style.position = 'absolute';
+          card.style.width = Math.min(300, window.innerWidth * 0.82) + 'px';
+          card.style.left = '50%';
+          card.style.top = '50%';
+          card.style.zIndex = String(cards.length - i);
+          card.style.pointerEvents = i === 0 ? 'auto' : 'none';
+          var rot = i === 0 ? 0 : (i % 2 === 0 ? -(i * 2) : (i * 2));
+          card.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+          card.style.transform = 'translate(-50%, calc(-50% + ' + (i * 8) + 'px)) rotate(' + rot + 'deg) scale(' + (1 - i * 0.04) + ')';
+          card.style.opacity = i > 4 ? '0' : '1';
         });
       }
-    });
+      layout();
+      var sx = 0, sy = 0, touching = false, moved = false;
+      stage.addEventListener('touchstart', function(e) {
+        if (e.target.classList.contains('freecard-expand')) return;
+        var t = e.touches[0]; sx = t.clientX; sy = t.clientY;
+        touching = true; moved = false; cards[0].style.transition = 'none';
+      }, { passive: true });
+      document.addEventListener('touchmove', function(e) {
+        if (!touching) return;
+        var t = e.touches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+        if (!moved && Math.abs(dy) > Math.abs(dx)) { touching = false; return; }
+        moved = true;
+        if (e.cancelable) e.preventDefault();
+        cards[0].style.transform = 'translate(calc(-50% + ' + dx + 'px), calc(-50% + ' + (dy * 0.2) + 'px)) rotate(' + (dx * 0.1) + 'deg)';
+        cards[0].style.opacity = String(Math.max(0, 1 - Math.abs(dx) / 250));
+      }, { passive: false });
+      document.addEventListener('touchend', function(e) {
+        if (!touching) return; touching = false;
+        if (!moved) return;
+        var dx = e.changedTouches[0].clientX - sx;
+        if (Math.abs(dx) > 80) {
+          var dir = dx > 0 ? 1 : -1;
+          cards[0].style.transition = 'transform 0.4s ease, opacity 0.3s ease';
+          cards[0].style.transform = 'translate(calc(-50% + ' + (dir*600) + 'px), -50%) rotate(' + (dir*20) + 'deg)';
+          cards[0].style.opacity = '0';
+          setTimeout(function() { cards.push(cards.shift()); layout(); }, 420);
+        } else { layout(); }
+      });
+    }
 
-    window.addEventListener('mousemove', moveDrag);
-    window.addEventListener('touchmove', moveDrag, { passive: false });
-    window.addEventListener('mouseup', endDrag);
-    window.addEventListener('touchend', endDrag);
-  }
+    // ДЕСКТОП: перетаскивание с инерцией
+    function initFree() {
+      stage.classList.remove('stack-mode');
+      stage.style.height = '';
+      allCards.forEach(function(card) {
+        // Восстанавливаем позиции из data-атрибутов, НЕ сбрасываем background/color
+        card.style.position = 'absolute';
+        card.style.width = '300px';
+        card.style.left = (parseFloat(card.dataset.x || 0) + (Math.random()-0.5)*20) + 'px';
+        card.style.top  = (parseFloat(card.dataset.y || 0) + (Math.random()-0.5)*16) + 'px';
+        card.style.transform = 'rotate(var(--rot, 0deg))';
+        card.style.zIndex = '1';
+        card.style.opacity = '1';
+        card.style.pointerEvents = 'auto';
+        card.style.cursor = 'grab';
+        card.style.transition = '';
+      });
+      var active = null, ox = 0, oy = 0, zC = 10;
+      var lx = 0, ly = 0, vx = 0, vy = 0, lt = 0, raf = null;
+      allCards.forEach(function(card) {
+        card.addEventListener('mousedown', function(e) {
+          if (e.target.classList.contains('freecard-expand')) return;
+          if (raf) { cancelAnimationFrame(raf); raf = null; }
+          active = card; card.style.cursor = 'grabbing'; card.style.transition = '';
+          zC++; card.style.zIndex = String(zC);
+          ox = e.clientX - card.getBoundingClientRect().left;
+          oy = e.clientY - card.getBoundingClientRect().top;
+          lx = e.clientX; ly = e.clientY; lt = Date.now(); vx = 0; vy = 0;
+          e.preventDefault();
+        });
+      });
+      window.addEventListener('mousemove', function(e) {
+        if (!active) return;
+        var sr = stage.getBoundingClientRect();
+        active.style.left = Math.max(0, Math.min(sr.width - active.offsetWidth, e.clientX - sr.left - ox)) + 'px';
+        active.style.top  = Math.max(0, Math.min(sr.height - active.offsetHeight, e.clientY - sr.top - oy)) + 'px';
+        var now = Date.now(), dt = now - lt || 16;
+        vx = (e.clientX - lx) / dt * 16; vy = (e.clientY - ly) / dt * 16;
+        lx = e.clientX; ly = e.clientY; lt = now;
+        e.preventDefault();
+      });
+      window.addEventListener('mouseup', function() {
+        if (!active) return;
+        var card = active; active = null; card.style.cursor = 'grab';
+        var cvx = vx * 0.8, cvy = vy * 0.8;
+        function step() {
+          if (Math.abs(cvx) < 0.2 && Math.abs(cvy) < 0.2) return;
+          var x = parseFloat(card.style.left) + cvx, y = parseFloat(card.style.top) + cvy;
+          var sw = stage.offsetWidth, sh = stage.offsetHeight;
+          if (x<=0){x=0;cvx=Math.abs(cvx)*0.4;} if(x>=sw-card.offsetWidth){x=sw-card.offsetWidth;cvx=-Math.abs(cvx)*0.4;}
+          if (y<=0){y=0;cvy=Math.abs(cvy)*0.4;} if(y>=sh-card.offsetHeight){y=sh-card.offsetHeight;cvy=-Math.abs(cvy)*0.4;}
+          card.style.left = x+'px'; card.style.top = y+'px'; cvx*=0.88; cvy*=0.88;
+          raf = requestAnimationFrame(step);
+        }
+        raf = requestAnimationFrame(step);
+      });
+    }
+
+    if (window.innerWidth <= 768) initStack(); else initFree();
+  })();
+
 
 });

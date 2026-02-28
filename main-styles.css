@@ -2738,3 +2738,34 @@ textarea.contact-form-control {
 .freecard.is-expanded {
   z-index: 500;
 }
+
+/* ABOUT STATS */
+.about-stats { display: grid; grid-template-columns: repeat(4,1fr); gap:0; margin:48px 0 64px; }
+.about-stat { padding:32px 24px 32px 0; }
+.about-stat:last-child { padding-right:0; }
+.about-stat:first-child { padding-left:0; }
+.about-stat-num { display:block; font-family:var(--font-serif); font-size:clamp(40px,5vw,64px); font-weight:300; color:var(--text-main); line-height:1; letter-spacing:-0.03em; margin-bottom:10px; }
+.about-stat-label { display:block; font-family:var(--font-sans); font-size:12px; color:var(--text-muted); letter-spacing:0.02em; line-height:1.4; }
+@media (max-width:768px) {
+  .about-stats { grid-template-columns:repeat(2,1fr); }
+  .about-stat:nth-child(2) { border-right:none; }
+  .about-stat:nth-child(3), .about-stat:nth-child(4) { padding-top:28px; }
+}
+@media (max-width:480px) { .about-stat-num { font-size:40px; } }
+
+/* HERO PHOTO MOBILE */
+@media (max-width:768px) {
+  .hero-with-photo { display:flex; flex-direction:column-reverse; gap:0; }
+  .hero-photo-wrap { width:calc(100% + 64px); margin-left:-32px; }
+  .hero-photo { height:auto; max-height:none; min-height:55vw; border-radius:0; width:100%; object-fit:contain; object-position:top center; }
+  .hero-content { padding-top:40px; }
+}
+@media (max-width:480px) { .hero-photo { min-height:50vw; } }
+
+/* FREECARDS MOBILE STACK */
+@media (max-width:768px) {
+  .freecards-stage { height:520px; }
+  .freecards-stage.stack-mode { transition:height 0.35s ease; }
+  .freecard-quote { font-size:15px; }
+}
+@media (max-width:480px) { .freecards-stage { height:480px; } .freecard-quote { font-size:14px; } }
