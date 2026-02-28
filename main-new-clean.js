@@ -96,9 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
 
   // Configuration
+  const isMobileDevice = window.innerWidth <= 768;
   const animationConfig = {
-    threshold: 0.15,  // Trigger when 15% of element is visible
-    rootMargin: '0px 0px -50px 0px'  // Slight offset for better timing
+    threshold: isMobileDevice ? 0.05 : 0.15,
+    rootMargin: isMobileDevice ? '0px 0px -10px 0px' : '0px 0px -50px 0px'
   };
 
   // Detect if user prefers reduced motion
@@ -132,9 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const element = entry.target;
           const animationType = element.getAttribute('data-animate');
 
-          // Check if element is a heading (h1, h2)
-          if (element.tagName === 'H1' || element.tagName === 'H2') {
-            // Apply typewriter effect to headings
+          // На мобиле typewriter не используем — слишком дёргано
+          if ((element.tagName === 'H1' || element.tagName === 'H2') && !isMobileDevice) {
             setTimeout(() => typewriterEffect(element, 30), 200);
           } else if (animationType) {
             element.classList.add(`animate-${animationType}`);
