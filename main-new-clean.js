@@ -253,35 +253,41 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(update);
   }
 
+  function runCounter(el) {
+    if (el.dataset.counted) return;
+    el.dataset.counted = '1';
+
+    if (el.dataset.target) {
+      const target = parseInt(el.dataset.target);
+      const suffix = el.dataset.suffix || '';
+      animateCounter(el, target, suffix, 1600);
+      return;
+    }
+    // Old badges fallback
+    const original = el.dataset.original || el.textContent.trim();
+    el.dataset.original = original;
+    const match = original.match(/^(\d+)(\+?\s*.*)$/);
+    if (match) {
+      animateCounter(el, parseInt(match[1]), match[2], 1400);
+    }
+  }
+
   const statObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      const el = entry.target;
-
-      // New stat nums with data-target
-      if (el.dataset.target) {
-        const target = parseInt(el.dataset.target);
-        const suffix = el.dataset.suffix || '';
-        animateCounter(el, target, suffix, 1600);
-        statObserver.unobserve(el);
-        return;
-      }
-
-      // Old badges fallback
-      const original = el.dataset.original || el.textContent.trim();
-      el.dataset.original = original;
-      const match = original.match(/^(\d+)(\+?\s*.*)$/);
-      if (match) {
-        const target = parseInt(match[1]);
-        const suffix = match[2];
-        animateCounter(el, target, suffix, 1400);
-      }
-      statObserver.unobserve(el);
+      runCounter(entry.target);
+      statObserver.unobserve(entry.target);
     });
-  }, { threshold: 0.3 });
+  }, { threshold: 0, rootMargin: '0px 0px -20px 0px' });
 
   document.querySelectorAll('.about-stat-num, .about-badge').forEach(el => {
-    statObserver.observe(el);
+    // If already visible on load — run immediately
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) {
+      setTimeout(() => runCounter(el), 300);
+    } else {
+      statObserver.observe(el);
+    }
   });
 
   // ============================================
