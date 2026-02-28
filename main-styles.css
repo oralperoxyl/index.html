@@ -2759,3 +2759,69 @@ textarea.contact-form-control {
     transition: height 0.35s ease;
   }
 }
+
+
+/* =============================================
+   ABOUT STATS — крупные цифры
+   ============================================= */
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  margin: 48px 0 64px;
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.about-stat {
+  padding: 32px 24px 32px 0;
+  border-right: 1px solid var(--color-gray-200);
+}
+.about-stat:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+.about-stat:first-child {
+  padding-left: 0;
+}
+
+.about-stat-num {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: clamp(40px, 5vw, 64px);
+  font-weight: 300;
+  color: var(--text-main);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+
+.about-stat-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+  .about-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .about-stat:nth-child(2) { border-right: none; }
+  .about-stat:nth-child(3) {
+    border-top: 1px solid var(--color-gray-200);
+    padding-top: 28px;
+  }
+  .about-stat:nth-child(4) {
+    border-right: none;
+    border-top: 1px solid var(--color-gray-200);
+    padding-top: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-stat-num { font-size: 40px; }
+}
