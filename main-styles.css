@@ -429,9 +429,9 @@ p {
 }
 
 .work-container {
-  max-width: 980px;
+  max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 var(--space-3);
+  padding: 160px var(--space-lg);
 }
 
 .work-title {
@@ -2403,12 +2403,13 @@ textarea.contact-form-control {
 .hero-photo {
   width: 100%;
   height: 100%;
-  min-height: 520px;
-  object-fit: cover;
-  object-position: center 15%;
+  min-height: 480px;
+  object-fit: contain;
+  object-position: center top;
   border-radius: 4px;
   display: block;
   filter: grayscale(100%);
+  background: #f0efec;
 }
 @media (max-width: 1024px) {
   .hero-with-photo { grid-template-columns: 1fr 260px; gap: 48px; }
@@ -2416,7 +2417,7 @@ textarea.contact-form-control {
 }
 @media (max-width: 768px) {
   .hero-with-photo { display: flex; flex-direction: column-reverse; gap: 0; }
-.hero-content { padding-top: 40px; }
+  .hero-content { padding-top: 40px; }
 }
 @media (max-width: 480px) {
 }
@@ -2794,33 +2795,22 @@ textarea.contact-form-control {
   .animate-delay-6 { animation-delay: 0.1s; }
 }
 
-/* =============================================
-   HERO PHOTO — мобиле (единственное правило)
-   ============================================= */
+/* HERO PHOTO — mobile */
 @media (max-width: 768px) {
-  .hero-with-photo {
-    display: flex;
-    flex-direction: column-reverse;
-    gap: 0;
-  }
-  .hero-photo-wrap {
-    width: 100vw;
-    margin-left: -32px;
-    overflow: hidden;
-  }
+  .hero-with-photo { display: flex; flex-direction: column-reverse; gap: 0; }
+  .hero-photo-wrap { width: 100vw; margin-left: -32px; overflow: hidden; }
   .hero-photo {
     width: 100%;
     height: auto;
-    min-height: 70vw;
-    border-radius: 0;
+    min-height: 72vw;
     object-fit: cover;
     object-position: center 10%;
+    border-radius: 0;
+    background: #f0efec;
   }
-  .hero-content {
-    padding-top: 40px;
-  }
+  .hero-content { padding-top: 40px; }
 }
 @media (max-width: 480px) {
   .hero-photo-wrap { margin-left: -20px; }
-  .hero-photo { min-height: 80vw; }
+  .hero-photo { min-height: 85vw; }
 }
