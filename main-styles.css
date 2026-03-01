@@ -436,10 +436,11 @@ p {
 
 .work-title {
   font-family: var(--font-serif);
-  font-size: 44px;
-  line-height: 1.2;
-  font-weight: 400;
-  margin-bottom: 32px;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-tight);
+  font-weight: var(--fw-regular);
+  letter-spacing: -0.015em;
+  margin-bottom: clamp(24px, 4vw, 48px);
 }
 
 .work-intro {
@@ -451,24 +452,22 @@ p {
 }
 
 .work-manifest {
-  font-size: 20px;
-  line-height: 1.4;
-  font-weight: 500;
-  color: #1A1A1A;
-  max-width: 640px;
-  margin: 0 0 38px 0;
+  font-size: 26px;
+  line-height: 1.5;
+  font-weight: var(--fw-medium);
+  color: var(--text-main);
+  max-width: var(--measure);
+  margin: 0 0 32px 0;
 }
 
 .work-body {
-  border-left: 1px solid var(--border-soft);
-  padding-left: 24px;
   max-width: var(--measure);
 }
 
 .work-body p {
-  margin: 0 0 22px 0;
+  margin: 0 0 20px 0;
   font-size: 16px;
-  line-height: 1.75;
+  line-height: 1.65;
   color: var(--text-muted);
 }
 
@@ -2403,9 +2402,10 @@ textarea.contact-form-control {
 .hero-photo-wrap { flex-shrink: 0; }
 .hero-photo {
   width: 100%;
-  height: 520px;
+  height: 100%;
+  min-height: 520px;
   object-fit: cover;
-  object-position: center top;
+  object-position: center 15%;
   border-radius: 4px;
   display: block;
   filter: grayscale(100%);
@@ -2416,15 +2416,9 @@ textarea.contact-form-control {
 }
 @media (max-width: 768px) {
   .hero-with-photo { display: flex; flex-direction: column-reverse; gap: 0; }
-  .hero-photo-wrap {
-    width: 100vw;
-    margin-left: -32px;
-  }
-  .hero-photo { height: 380px; border-radius: 0; width: 100%; }
-  .hero-content { padding-top: 40px; }
+.hero-content { padding-top: 40px; }
 }
 @media (max-width: 480px) {
-  .hero-photo { height: 300px; }
 }
 
 /* =============================================
@@ -2754,15 +2748,12 @@ textarea.contact-form-control {
 @media (max-width:480px) { .about-stat-num { font-size:40px; } }
 
 /* HERO PHOTO MOBILE */
-@media (max-width:768px) {
-  .hero-with-photo { display:flex; flex-direction:column-reverse; gap:0; }
-  .hero-photo-wrap { width:100vw; margin-left:-32px; margin-right:0; }
-  .hero-photo { height:auto; max-height:none; min-height:60vw; border-radius:0; width:100vw; object-fit:cover; object-position:center top; display:block; }
-  .hero-content { padding-top:40px; }
+@media (max-width: 768px) {
+  .hero-with-photo { display: flex; flex-direction: column-reverse; gap: 0; }
+  .hero-content { padding-top: 40px; }
 }
-@media (max-width:480px) {
-  .hero-photo-wrap { margin-left:-20px; }
-  .hero-photo { min-height:70vw; }
+@media (max-width: 480px) {
+}
 }
 
 /* FREECARDS MOBILE STACK */
@@ -2801,4 +2792,35 @@ textarea.contact-form-control {
   .animate-delay-4 { animation-delay: 0.1s; }
   .animate-delay-5 { animation-delay: 0.1s; }
   .animate-delay-6 { animation-delay: 0.1s; }
+}
+
+/* =============================================
+   HERO PHOTO — мобиле (единственное правило)
+   ============================================= */
+@media (max-width: 768px) {
+  .hero-with-photo {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0;
+  }
+  .hero-photo-wrap {
+    width: 100vw;
+    margin-left: -32px;
+    overflow: hidden;
+  }
+  .hero-photo {
+    width: 100%;
+    height: auto;
+    min-height: 70vw;
+    border-radius: 0;
+    object-fit: cover;
+    object-position: center 10%;
+  }
+  .hero-content {
+    padding-top: 40px;
+  }
+}
+@media (max-width: 480px) {
+  .hero-photo-wrap { margin-left: -20px; }
+  .hero-photo { min-height: 80vw; }
 }
