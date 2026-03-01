@@ -341,6 +341,26 @@ p {
   outline-offset: 2px;
 }
 
+.cta-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: -4px;
+}
+
+.cta-wrap .cta-primary {
+  margin-left: 0;
+}
+
+.cta-micro {
+  margin-top: 10px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
 .hero-note {
   margin-top: 20px;
   font-size: 12px;
@@ -1882,6 +1902,15 @@ textarea.contact-form-control {
     padding: 0 32px;
   }
 
+  /* Work section mobile */
+  .section-work {
+    padding: 0;
+  }
+
+  .work-container {
+    padding: 120px 32px;
+  }
+
   /* Hero */
   .hero {
     padding: clamp(56px, 10vh, 88px) 0 clamp(64px, 12vh, 96px);
@@ -2200,6 +2229,10 @@ textarea.contact-form-control {
 
   /* Ultra-compact spacing */
   .section-frame {
+    padding: var(--space-md) 20px;
+  }
+
+  .work-container {
     padding: var(--space-md) 20px;
   }
 
