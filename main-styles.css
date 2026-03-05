@@ -2847,3 +2847,67 @@ textarea.contact-form-control {
   .hero-photo-wrap { margin-left: -20px; }
   .hero-photo { min-height: 85vw; }
 }
+
+/* =============================================
+   CTA MID — между отзывами и Обо мне
+   ============================================= */
+.cta-mid {
+  background: #1C1C1E;
+  color: #E5E5E5;
+}
+.cta-mid-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+.cta-mid-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(229,229,229,0.45);
+  margin: 0 0 24px;
+}
+.cta-mid-title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #E5E5E5;
+  margin: 0 0 20px;
+  max-width: 700px;
+}
+.cta-mid-sub {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(229,229,229,0.55);
+  margin: 0 0 48px;
+  max-width: 520px;
+}
+.cta-mid-btn {
+  display: inline-block;
+  padding: 16px 36px;
+  background: #E5E5E5;
+  color: #1C1C1E;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 100px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.cta-mid-btn:hover {
+  background: #fff;
+  color: #1C1C1E;
+}
+@media (max-width: 768px) {
+  .cta-mid-inner { padding-top: 80px; padding-bottom: 80px; }
+  .cta-mid-title { font-size: clamp(28px, 7vw, 40px); }
+}
