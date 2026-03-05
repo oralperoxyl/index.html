@@ -2905,10 +2905,12 @@ textarea.contact-form-control {
   border: 1px solid rgba(229,229,229,0.4);
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
-.cta-mid-btn:hover {
-  background: #0088cc;
-  border-color: #0088cc;
-  color: #fff;
+@media (hover: hover) {
+  .cta-mid-btn:hover {
+    background: #0088cc;
+    border-color: #0088cc;
+    color: #fff;
+  }
 }
 @media (max-width: 768px) {
   .cta-mid-inner { padding-top: 80px; padding-bottom: 80px; }
