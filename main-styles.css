@@ -783,7 +783,7 @@ p {
 
 .cases-track {
   display: flex;
-  gap: 24px;
+  gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   padding-bottom: 8px;
@@ -807,9 +807,9 @@ p {
 
 .case-card {
   scroll-snap-align: start;
-  max-width: 340px;
-  min-width: 300px;
-  padding: 0 24px 24px 24px;
+  max-width: 240px;
+  min-width: 200px;
+  padding: 0 16px 16px 16px;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -819,8 +819,8 @@ p {
 
 .case-media {
   overflow: hidden;
-  border-radius: 16px;
-  margin: 0 -24px 20px -24px;
+  border-radius: 12px;
+  margin: 0 -16px 16px -16px;
   position: relative;
 }
 
