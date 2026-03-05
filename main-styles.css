@@ -2855,6 +2855,7 @@ textarea.contact-form-control {
   background: #1C1C1E;
   color: #E5E5E5;
 }
+.cta-mid * { color: inherit; }
 .cta-mid-inner {
   display: flex;
   flex-direction: column;
@@ -2892,8 +2893,8 @@ textarea.contact-form-control {
 .cta-mid-btn {
   display: inline-block;
   padding: 16px 36px;
-  background: #E5E5E5;
-  color: #1C1C1E;
+  background: transparent;
+  color: #E5E5E5;
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 500;
@@ -2901,11 +2902,13 @@ textarea.contact-form-control {
   text-transform: uppercase;
   text-decoration: none;
   border-radius: 100px;
-  transition: background 0.2s ease, color 0.2s ease;
+  border: 1px solid rgba(229,229,229,0.4);
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 .cta-mid-btn:hover {
-  background: #fff;
-  color: #1C1C1E;
+  background: #0088cc;
+  border-color: #0088cc;
+  color: #fff;
 }
 @media (max-width: 768px) {
   .cta-mid-inner { padding-top: 80px; padding-bottom: 80px; }
