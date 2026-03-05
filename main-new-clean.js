@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // МГНОВЕННОЕ КАСАНИЕ — кнопки в контактах
   // ============================================
 
-  document.querySelectorAll('.contact-form-submit, .channel-link').forEach(btn => {
+  document.querySelectorAll('.contact-form-submit, .channel-link, .cta-mid-btn').forEach(btn => {
     btn.addEventListener('touchstart', () => {
       btn.style.transition = 'none';
       btn.classList.add('is-touched');

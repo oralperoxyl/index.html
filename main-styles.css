@@ -2912,6 +2912,12 @@ textarea.contact-form-control {
     color: #fff;
   }
 }
+.cta-mid-btn:active,
+.cta-mid-btn.is-touched {
+  background: #0088cc;
+  border-color: #0088cc;
+  color: #fff;
+}
 @media (max-width: 768px) {
   .cta-mid-inner { padding-top: 80px; padding-bottom: 80px; }
   .cta-mid-title { font-size: clamp(28px, 7vw, 40px); }
