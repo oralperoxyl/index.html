@@ -296,20 +296,29 @@
       .stair-step {
         grid-template-columns: 48px 1fr;
       }
-      .stair-left { display: none; }
-      .stair-center { order: 1; }
-      .stair-right { order: 2; text-align: left; padding: 20px 0 20px 16px; }
+      /* По умолчанию скрываем обе колонки */
+      .stair-left,
+      .stair-right { display: none; }
 
-      /* Чётные шаги: контент был слева — переносим в правую колонку */
-      .stair-step:nth-child(even) .stair-left {
+      /* Нечётные: контент справа */
+      .stair-step[data-side="right"] .stair-right {
         display: block;
-        order: 2;
         text-align: left;
-        padding: 20px 0 20px 16px;
-        grid-column: 2;
+        padding: 16px 0 16px 16px;
       }
-      .stair-step:nth-child(even) .stair-right { display: none; }
-      .stair-step:nth-child(even) .stair-center { order: 1; grid-column: 1; }
+
+      /* Чётные: контент слева — показываем его как правую */
+      .stair-step[data-side="left"] .stair-left {
+        display: block;
+        text-align: left;
+        padding: 16px 0 16px 16px;
+        grid-column: 2;
+        grid-row: 1;
+      }
+      .stair-step[data-side="left"] .stair-center {
+        grid-column: 1;
+        grid-row: 1;
+      }
     }
 
     /* ── CHECKLIST ── */
@@ -576,12 +585,12 @@
   <div class="staircase">
 
     <!-- START -->
-    <div class="stair-start" style="padding:0 0 32px;">
+    <div class="stair-start" style="padding:0 0 0;">
       <div class="stair-start-badge">Подписание эксклюзивного договора</div>
-      <div style="width:2px;height:24px;background:var(--border);margin-top:0;"></div>
+      <div style="width:2px;height:32px;background:var(--border);margin:0 auto;"></div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="right">
       <div class="stair-left"></div>
       <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">01</div><div class="stair-line-bottom"></div></div>
       <div class="stair-right">
@@ -595,7 +604,7 @@
       </div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="left">
       <div class="stair-left">
         <div class="stair-title">Контрольная встреча на объекте</div>
         <div class="stair-items">
@@ -609,7 +618,7 @@
       <div class="stair-right"></div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="right">
       <div class="stair-left"></div>
       <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">03</div><div class="stair-line-bottom"></div></div>
       <div class="stair-right">
@@ -623,7 +632,7 @@
       </div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="left">
       <div class="stair-left">
         <div class="stair-title">Профессиональные фото и видео</div>
         <div class="stair-items">
@@ -636,7 +645,7 @@
       <div class="stair-right"></div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="right">
       <div class="stair-left"></div>
       <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">05</div><div class="stair-line-bottom"></div></div>
       <div class="stair-right">
@@ -650,7 +659,7 @@
       </div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="left">
       <div class="stair-left">
         <div class="stair-title">Рекламная кампания</div>
         <div class="stair-items">
@@ -667,7 +676,7 @@
       <div class="stair-right"></div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="right">
       <div class="stair-left"></div>
       <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">07</div><div class="stair-line-bottom"></div></div>
       <div class="stair-right">
@@ -681,7 +690,7 @@
       </div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="left">
       <div class="stair-left">
         <div class="stair-title">Показы конкурентов покупателям</div>
         <div class="stair-items">
@@ -695,7 +704,7 @@
       <div class="stair-right"></div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="right">
       <div class="stair-left"></div>
       <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">09</div><div class="stair-line-bottom"></div></div>
       <div class="stair-right">
@@ -709,7 +718,7 @@
       </div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="left">
       <div class="stair-left">
         <div class="stair-title">Организация показов покупателям</div>
         <div class="stair-items">
@@ -724,7 +733,7 @@
       <div class="stair-right"></div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="right">
       <div class="stair-left"></div>
       <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">11</div><div class="stair-line-bottom"></div></div>
       <div class="stair-right">
@@ -738,7 +747,7 @@
       </div>
     </div>
 
-    <div class="stair-step">
+    <div class="stair-step" data-side="left">
       <div class="stair-left">
         <div class="stair-title">Продажа по максимальной цене</div>
         <div class="stair-items">
