@@ -430,6 +430,53 @@
       .doc-nav { display: none; }
       .nav-burger { display: flex; }
     }
+    /* ── ANIMATIONS ── */
+    .rule,
+    .process-step {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .rule.visible,
+    .process-step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* ── COLLAPSIBLE GROUPS ON MOBILE ── */
+    @media (max-width: 640px) {
+      .check-group-title {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        user-select: none;
+      }
+      .check-group-title::after {
+        content: '';
+        width: 10px;
+        height: 10px;
+        border-right: 1.5px solid var(--muted);
+        border-bottom: 1.5px solid var(--muted);
+        transform: rotate(45deg);
+        transition: transform 0.25s ease;
+        flex-shrink: 0;
+        margin-bottom: 3px;
+      }
+      .check-group.collapsed .check-group-title::after {
+        transform: rotate(-135deg);
+        margin-bottom: -3px;
+      }
+      .check-group .check-items {
+        overflow: hidden;
+        max-height: 2000px;
+        transition: max-height 0.35s ease, opacity 0.3s ease;
+        opacity: 1;
+      }
+      .check-group.collapsed .check-items {
+        max-height: 0;
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -811,6 +858,36 @@
 
   window.addEventListener('DOMContentLoaded', () => {
     updateProgress('check');
+  });
+
+  // Collapsible checklist groups on mobile
+  if (window.innerWidth <= 640) {
+    document.querySelectorAll('.check-group-title').forEach(title => {
+      // Collapse all except first by default
+      const group = title.closest('.check-group');
+      const isFirst = group === group.parentElement.firstElementChild;
+      if (!isFirst) group.classList.add('collapsed');
+
+      title.addEventListener('click', () => {
+        group.classList.toggle('collapsed');
+      });
+    });
+  }
+
+  // Scroll animations
+  const animItems = document.querySelectorAll('.rule, .process-step');
+  const animObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        animObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  animItems.forEach((el, i) => {
+    el.style.transitionDelay = `${i % 6 * 0.06}s`;
+    animObserver.observe(el);
   });
 
   // Burger menu
