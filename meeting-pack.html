@@ -338,7 +338,69 @@
       }
     }
 
-    /* ── CHECKLIST ── */
+    /* ── STAIRCASE ANIMATIONS ── */
+    .stair-step {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .stair-step.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .stair-num {
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .stair-step.pulse .stair-num {
+      animation: numPulse 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes numPulse {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.18); }
+      100% { transform: scale(1); }
+    }
+
+    /* Линия рисуется сверху вниз */
+    .staircase {
+      position: relative;
+    }
+    .staircase::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 0;
+      background: var(--border);
+      transition: height 0.8s ease;
+      z-index: 0;
+    }
+    .staircase.line-drawn::before {
+      height: 100%;
+    }
+    /* Скрываем отдельные линии — используем псевдоэлемент */
+    .stair-line-top,
+    .stair-line-bottom {
+      background: transparent !important;
+    }
+
+    @media (max-width: 640px) {
+      .staircase::before {
+        left: 23px;
+        transform: none;
+      }
+    }
+
+    /* Фикс плашки на мобиле */
+    @media (max-width: 640px) {
+      .stair-start-badge {
+        font-size: 11px;
+        padding: 10px 16px;
+        letter-spacing: 0.08em;
+        white-space: nowrap;
+      }
+    }
     .checklist-groups { display: flex; flex-direction: column; gap: 40px; }
     .check-group {}
     .check-group-title {
@@ -1142,6 +1204,41 @@
   window.addEventListener('DOMContentLoaded', () => {
     updateProgress('prep');
     updateProgress('deal');
+  });
+
+  // Staircase animations
+  const staircase = document.querySelector('.staircase');
+  const steps = document.querySelectorAll('.stair-step');
+
+  // Draw the line when staircase enters view
+  const lineObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        staircase.classList.add('line-drawn');
+        lineObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.05 });
+  if (staircase) lineObserver.observe(staircase);
+
+  // Animate each step as it scrolls into view
+  const stepObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const step = entry.target;
+        step.classList.add('visible');
+        // Pulse the number circle
+        setTimeout(() => {
+          step.classList.add('pulse');
+        }, 300);
+        stepObserver.unobserve(step);
+      }
+    });
+  }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+
+  steps.forEach((step, i) => {
+    step.style.transitionDelay = `${i * 0.04}s`;
+    stepObserver.observe(step);
   });
 
   // Active nav on scroll
