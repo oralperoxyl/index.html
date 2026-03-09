@@ -5,27 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
   <title>Материалы для продавца — Семён Гончаров</title>
-  <script>
-    (function() {
-      var months = ['january','february','march','april','may','june',
-                    'july','august','september','october','november','december'];
-      var now = new Date();
-      var year = String(now.getFullYear()).slice(-2);
-      var currentKey = months[now.getMonth()] + year;
-
-      // Предыдущий месяц
-      var prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      var prevYear = String(prevDate.getFullYear()).slice(-2);
-      var prevKey = months[prevDate.getMonth()] + prevYear;
-
-      var params = new URLSearchParams(window.location.search);
-      var access = (params.get('access') || '').toLowerCase().trim();
-
-      if (access !== currentKey && access !== prevKey) {
-        window.location.replace('https://fastbroker21.ru');
-      }
-    })();
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -163,6 +142,80 @@
     }
     .doc-nav-item:hover,
     .doc-nav-item.active { color: var(--text); border-bottom-color: var(--text); }
+
+    /* Burger button — только мобиле */
+    .nav-burger {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 52px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .nav-burger-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .nav-burger-active {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .nav-burger-icon {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 20px;
+    }
+    .nav-burger-icon span {
+      display: block;
+      height: 1.5px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+      transform-origin: center;
+    }
+    .nav-burger.open .nav-burger-icon span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+    .nav-burger.open .nav-burger-icon span:nth-child(2) { opacity: 0; }
+    .nav-burger.open .nav-burger-icon span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+    /* Dropdown menu */
+    .nav-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(250,250,248,0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      z-index: 89;
+    }
+    .nav-dropdown.open { display: flex; }
+    .nav-dropdown .doc-nav-item {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      border-left: 2px solid transparent;
+      white-space: normal;
+    }
+    .nav-dropdown .doc-nav-item:last-child { border-bottom: none; }
+    .nav-dropdown .doc-nav-item.active {
+      border-left-color: var(--text);
+      border-bottom-color: var(--border);
+      color: var(--text);
+    }
+
+    @media (max-width: 640px) {
+      .doc-nav { display: none; }
+      .nav-burger { display: flex; }
+    }
 
     /* ── SECTIONS ── */
     .doc-section {
@@ -700,10 +753,6 @@
     /* ── MOBILE ── */
     @media (max-width: 768px) {
       .site-header { padding: 0 20px; }
-      .header-nav { display: none; }
-      .hero { padding: 64px 20px 56px; }
-      .doc-nav { padding: 0 20px; }
-      .doc-nav-item { padding: 16px 16px; font-size: 11px; }
       .doc-section { padding: 56px 20px; }
       .deal-grid { grid-template-columns: 1fr; }
       .phase { grid-template-columns: 36px 1fr; gap: 0 16px; }
@@ -727,13 +776,30 @@
 </section>
 
 <!-- DOC NAV -->
-<nav class="doc-nav">
-  <a class="doc-nav-item active" href="#plan">Маркетинговый план</a>
-  <a class="doc-nav-item" href="#prep">Подготовка к продаже</a>
-  <a class="doc-nav-item" href="#showings">Правила показов</a>
-  <a class="doc-nav-item" href="#mistakes">Ошибки продавцов</a>
-  <a class="doc-nav-item" href="#deal">Перед сделкой</a>
-</nav>
+<div class="nav-wrapper" style="position:sticky;top:64px;z-index:90;">
+  <!-- Десктоп: горизонтальные табы -->
+  <nav class="doc-nav">
+    <a class="doc-nav-item active" href="#plan">Маркетинговый план</a>
+    <a class="doc-nav-item" href="#prep">Подготовка к продаже</a>
+    <a class="doc-nav-item" href="#showings">Правила показов</a>
+    <a class="doc-nav-item" href="#mistakes">Ошибки продавцов</a>
+    <a class="doc-nav-item" href="#deal">Перед сделкой</a>
+  </nav>
+  <!-- Мобиле: бургер -->
+  <div class="nav-burger" id="navBurger">
+    <span class="nav-burger-active" id="navBurgerActive">Маркетинговый план</span>
+    <div class="nav-burger-icon">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <div class="nav-dropdown" id="navDropdown">
+    <a class="doc-nav-item active" href="#plan">Маркетинговый план</a>
+    <a class="doc-nav-item" href="#prep">Подготовка к продаже</a>
+    <a class="doc-nav-item" href="#showings">Правила показов</a>
+    <a class="doc-nav-item" href="#mistakes">Ошибки продавцов</a>
+    <a class="doc-nav-item" href="#deal">Перед сделкой</a>
+  </div>
+</div>
 
 <!-- 1. МАРКЕТИНГОВЫЙ ПЛАН -->
 <section class="doc-section" id="plan">
@@ -1404,6 +1470,25 @@
     stepObserver.observe(step);
   });
 
+  // Burger menu
+  const burger = document.getElementById('navBurger');
+  const dropdown = document.getElementById('navDropdown');
+  const burgerActive = document.getElementById('navBurgerActive');
+
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    dropdown.classList.toggle('open');
+  });
+
+  // Close dropdown on link click, update active label
+  dropdown.querySelectorAll('.doc-nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      burger.classList.remove('open');
+      dropdown.classList.remove('open');
+      burgerActive.textContent = item.textContent;
+    });
+  });
+
   // Active nav on scroll
   const sections = document.querySelectorAll('.doc-section');
   const navItems = document.querySelectorAll('.doc-nav-item');
@@ -1413,7 +1498,9 @@
       if (entry.isIntersecting) {
         const id = entry.target.id;
         navItems.forEach(item => {
-          item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+          const isActive = item.getAttribute('href') === '#' + id;
+          item.classList.toggle('active', isActive);
+          if (isActive && burgerActive) burgerActive.textContent = item.textContent;
         });
       }
     });
