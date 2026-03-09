@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Материалы для покупателя — Семён Гончаров</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    ::selection { background: #0066FF; color: #ffffff; }
+    ::-moz-selection { background: #0066FF; color: #ffffff; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
+      --bg: #FAFAF8;
+      --bg-dark: #1C1C1E;
+      --text: #1A1A1A;
+      --muted: #666;
+      --border: rgba(0,0,0,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250,250,248,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+    }
+    .header-brand {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      padding: 100px 40px 80px;
+    }
+    .hero-inner { max-width: 900px; margin: 0 auto; }
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(229,229,229,0.4);
+      margin-bottom: 28px;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: #E5E5E5;
+      margin-bottom: 24px;
+    }
+    .hero-title em { font-style: italic; color: rgba(229,229,229,0.6); }
+    .hero-sub {
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(229,229,229,0.55);
+      max-width: 560px;
+    }
+
+    /* ── NAV ── */
+    .nav-wrapper {
+      position: sticky;
+      top: 64px;
+      z-index: 90;
+    }
+    .doc-nav {
+      background: rgba(250,250,248,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .doc-nav::-webkit-scrollbar { display: none; }
+    .doc-nav-item {
+      padding: 18px 24px;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .doc-nav-item:hover,
+    .doc-nav-item.active { color: var(--text); border-bottom-color: var(--text); }
+
+    .nav-burger {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      height: 52px;
+      cursor: pointer;
+      user-select: none;
+      background: rgba(250,250,248,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-burger-active {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text);
+      font-weight: 500;
+    }
+    .nav-burger-icon {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 20px;
+    }
+    .nav-burger-icon span {
+      display: block;
+      height: 1.5px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+      transform-origin: center;
+    }
+    .nav-burger.open .nav-burger-icon span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+    .nav-burger.open .nav-burger-icon span:nth-child(2) { opacity: 0; }
+    .nav-burger.open .nav-burger-icon span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+    .nav-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(250,250,248,0.98);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column;
+      z-index: 89;
+    }
+    .nav-dropdown.open { display: flex; }
+    .nav-dropdown .doc-nav-item {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      border-left: 2px solid transparent;
+      white-space: normal;
+    }
+    .nav-dropdown .doc-nav-item:last-child { border-bottom: none; }
+    .nav-dropdown .doc-nav-item.active {
+      border-left-color: var(--text);
+      border-bottom-color: var(--border);
+      color: var(--text);
+    }
+
+    /* ── SECTIONS ── */
+    .doc-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .doc-section:last-child { border-bottom: none; }
+    .section-num {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      display: block;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .section-intro {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 620px;
+      margin-bottom: 52px;
+    }
+
+    /* ── RULES (для ошибок и рекомендаций) ── */
+    .rules { display: flex; flex-direction: column; gap: 0; }
+    .rule {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 0 24px;
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+    }
+    .rule:last-child { border-bottom: 1px solid var(--border); }
+    .rule-num {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 400;
+      color: rgba(0,0,0,0.12);
+      line-height: 1;
+      padding-top: 4px;
+    }
+    .rule-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .rule-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    /* ── CHECKLIST ── */
+    .checklist-groups { display: flex; flex-direction: column; gap: 40px; }
+    .check-group-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .check-items { display: flex; flex-direction: column; }
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-box {
+      width: 20px;
+      height: 20px;
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .check-item.checked .check-box {
+      background: var(--text);
+      border-color: var(--text);
+    }
+    .check-item.checked .check-box::after {
+      content: '';
+      width: 10px;
+      height: 6px;
+      border-left: 1.5px solid white;
+      border-bottom: 1.5px solid white;
+      transform: rotate(-45deg) translateY(-1px);
+      display: block;
+    }
+    .check-text { font-size: 15px; line-height: 1.5; flex: 1; }
+    .check-item.checked .check-text { color: var(--muted); text-decoration: line-through; }
+    .check-note { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap { margin-bottom: 40px; }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .progress-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .progress-count {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1;
+    }
+    .progress-count span { font-size: 13px; font-family: var(--font-sans); color: var(--muted); font-weight: 400; }
+    .progress-bar-track { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--text);
+      border-radius: 2px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 0%;
+    }
+    .progress-done-msg {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+      height: 18px;
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+    .progress-done-msg.visible { opacity: 1; }
+
+    /* ── HOW IT WORKS (подбор) ── */
+    .process-steps { display: flex; flex-direction: column; gap: 0; }
+    .process-step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 0 24px;
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+    }
+    .process-step:last-child { border-bottom: 1px solid var(--border); }
+    .process-num {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 400;
+      color: rgba(0,0,0,0.1);
+      line-height: 1;
+      padding-top: 2px;
+    }
+    .process-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .process-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    /* ── CTA FOOTER ── */
+    .cta-footer {
+      background: var(--bg-dark);
+      padding: 80px 40px;
+      text-align: center;
+    }
+    .cta-footer-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(229,229,229,0.4);
+      margin-bottom: 24px;
+    }
+    .cta-footer-title {
+      font-family: var(--font-serif);
+      font-size: clamp(24px, 4vw, 40px);
+      font-weight: 400;
+      color: #E5E5E5;
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .cta-footer-sub {
+      font-size: 15px;
+      color: rgba(229,229,229,0.45);
+      margin-bottom: 40px;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+    .cta-tg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      border: 1px solid #0088cc;
+      border-radius: 999px;
+      text-decoration: none;
+      background: transparent;
+      color: #E5E5E5;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      transition: background 0.2s ease, border-color 0.2s ease;
+    }
+    .cta-tg-btn:hover { background: #0088cc; border-color: #0088cc; }
+    .cta-footer-copy {
+      margin-top: 48px;
+      font-size: 12px;
+      color: rgba(229,229,229,0.2);
+    }
+    .cta-footer-copy a { color: rgba(229,229,229,0.3); text-decoration: none; }
+    .cta-footer-copy a:hover { color: rgba(229,229,229,0.6); }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .site-header { padding: 0 20px; }
+      .hero { padding: 64px 20px 56px; }
+      .doc-section { padding: 56px 20px; }
+      .cta-footer { padding: 60px 20px; }
+    }
+    @media (max-width: 640px) {
+      .doc-nav { display: none; }
+      .nav-burger { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Материалы для покупателя · Семён Гончаров</p>
+    <h1 class="hero-title">Как купить лучший объект<br><em>а не просто подходящий</em></h1>
+    <p class="hero-sub">Этот раздел я отправляю только тем, с кем виделся лично. На основном сайте его нет. Большинство сделок в которых я участвовал на стороне покупателя заканчивались лучше рынка — не потому что повезло, а потому что был план.</p>
+  </div>
+</section>
+
+<div class="nav-wrapper">
+  <nav class="doc-nav">
+    <a class="doc-nav-item active" href="#checklist">После просмотра</a>
+    <a class="doc-nav-item" href="#mistakes">Ошибки покупателей</a>
+    <a class="doc-nav-item" href="#market">Как читать рынок</a>
+    <a class="doc-nav-item" href="#selection">Подбор с агентом</a>
+  </nav>
+  <div class="nav-burger" id="navBurger">
+    <span class="nav-burger-active" id="navBurgerActive">После просмотра</span>
+    <div class="nav-burger-icon"><span></span><span></span><span></span></div>
+  </div>
+  <div class="nav-dropdown" id="navDropdown">
+    <a class="doc-nav-item active" href="#checklist">После просмотра</a>
+    <a class="doc-nav-item" href="#mistakes">Ошибки покупателей</a>
+    <a class="doc-nav-item" href="#market">Как читать рынок</a>
+    <a class="doc-nav-item" href="#selection">Подбор с агентом</a>
+  </div>
+</div>
+
+<!-- 1. ЧЕК-ЛИСТ ПОСЛЕ ПРОСМОТРА -->
+<section class="doc-section" id="checklist">
+  <span class="section-num">01 / 04</span>
+  <h2 class="section-title">Что проверить после просмотра</h2>
+  <p class="section-intro">Впечатления от квартиры остывают быстро — особенно если смотришь несколько объектов подряд. Этот чек-лист поможет зафиксировать важное пока свежо, и не упустить то, что не бросается в глаза с первого взгляда.</p>
+
+  <div class="progress-wrap">
+    <div class="progress-header">
+      <span class="progress-label">Проверено</span>
+      <div class="progress-count"><span id="check-done">0</span> <span>/ <span id="check-total">0</span></span></div>
+    </div>
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="check-bar"></div></div>
+    <div class="progress-done-msg" id="check-msg">✓ Объект проверен — можно принимать решение</div>
+  </div>
+
+  <div class="checklist-groups">
+    <div class="check-group">
+      <div class="check-group-title">Первое впечатление</div>
+      <div class="check-items">
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Войти в подъезд без хозяина — оценить состояние самостоятельно</div><div class="check-note">Запах, освещение, состояние лифта и мест общего пользования говорят о доме больше чем квартира</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Обойти квартиру без спешки — не идти за хозяином</div><div class="check-note">Свободный осмотр позволяет заметить то, что не покажут намеренно</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Оценить реальное освещение — открыть все шторы</div><div class="check-note">Тёмная квартира с закрытыми окнами может оказаться совсем другой при дневном свете</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Проверить слышимость — попросить на минуту тишины</div><div class="check-note">Шум от соседей, дороги или стройки рядом — то, что не упомянут в объявлении</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="check-group">
+      <div class="check-group-title">Техническое состояние</div>
+      <div class="check-items">
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Проверить углы и потолок на следы влаги и плесени</div><div class="check-note">Особенно в ванной, под окнами и в углах верхних этажей</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Открыть все краны — напор воды и цвет</div><div class="check-note">Слабый напор или ржавчина — сигнал о состоянии стояков</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Проверить розетки и выключатели</div><div class="check-note">Сколько розеток на кухне, есть ли заземление, не искрит ли свет</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Осмотреть окна — открываются ли, нет ли трещин в стёклах</div><div class="check-note">Продуваемые или неисправные окна — дополнительные расходы после покупки</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Проверить полы — нет ли скрипа, перепадов, вздутий</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Осмотреть трубы под раковиной и в санузле на предмет ржавчины и подтёков</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Уточнить когда последний раз менялись стояки и проводка</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="check-group">
+      <div class="check-group-title">Планировка и пространство</div>
+      <div class="check-items">
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Сравнить реальную планировку с планом в объявлении</div><div class="check-note">Несоответствие может означать незарегистрированную перепланировку</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Проверить высоту потолков — соответствует ли заявленной</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Оценить реальные размеры комнат — встанет ли ваша мебель</div><div class="check-note">Возьмите рулетку или используйте приложение на телефоне</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Посмотреть вид из всех окон — не только из гостиной</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="check-group">
+      <div class="check-group-title">Дом и район</div>
+      <div class="check-items">
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Уточнить управляющую компанию и тарифы на коммунальные услуги</div><div class="check-note">Разница между УК может быть существенной по стоимости и качеству обслуживания</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Посмотреть двор и парковку в реальном времени</div><div class="check-note">Фотографии в объявлении могут быть сделаны в выходной день или ранним утром</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Пройтись пешком до метро и магазинов</div><div class="check-note">«5 минут до метро» на практике часто оказывается 12–15</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Проверить наличие школы, детского сада, поликлиники если актуально</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="check-group">
+      <div class="check-group-title">Документы — первичная проверка</div>
+      <div class="check-items">
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Попросить свежую выписку из ЕГРН</div><div class="check-note">Кто собственник, есть ли обременения, аресты, ипотека</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Уточнить основание права собственности</div><div class="check-note">Купля-продажа, дарение, наследство — от этого зависят риски</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Спросить сколько собственников и есть ли среди них несовершеннолетние</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Уточнить кто прописан и когда будут выписаны</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'check')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Проверить нет ли задолженности по коммунальным платежам</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. ОШИБКИ ПОКУПАТЕЛЕЙ -->
+<section class="doc-section" id="mistakes">
+  <span class="section-num">02 / 04</span>
+  <h2 class="section-title">Типичные ошибки покупателей</h2>
+  <p class="section-intro">Покупка квартиры — эмоционально нагруженный процесс. Именно поэтому большинство ошибок совершается не от незнания, а от того что логика уступает место ощущениям в самый ответственный момент.</p>
+
+  <div class="rules">
+    <div class="rule">
+      <div class="rule-num">01</div>
+      <div class="rule-body">
+        <div class="rule-title">Покупают первое что понравилось</div>
+        <div class="rule-text">Эмоциональное решение с первого просмотра — один из самых распространённых сценариев. Квартира понравилась, возникло ощущение «моё» — и дальнейший поиск останавливается. При этом рынок может предлагать аналогичные или лучшие варианты по той же цене. Оптимальное количество для сравнения — 5–7 объектов в одном сегменте с чёткими критериями. Этого достаточно чтобы понять что за эти деньги реально получить — и принять решение без сожалений.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">02</div>
+      <div class="rule-body">
+        <div class="rule-title">Смотрят слишком много — «замыливается глаз»</div>
+        <div class="rule-text">Обратная ошибка: человек смотрит 20–30 объектов за несколько месяцев без системы и теряет ориентиры. Все квартиры начинают казаться одинаковыми, критерии размываются, усталость от процесса приводит к тому что берут «лишь бы закончить». Разница между «смотреть много» и «смотреть правильно» — в наличии чётких критериев до первого просмотра. Без них любое количество показов не приблизит к решению.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">03</div>
+      <div class="rule-body">
+        <div class="rule-title">Не торгуются или торгуются неправильно</div>
+        <div class="rule-text">Одни боятся обидеть продавца и не торгуются вовсе — в итоге платят больше рынка. Другие торгуются агрессивно и без аргументов — «хочу скидку 20%» — и теряют объект. Правильный торг строится на данных: сколько объект висит на рынке, были ли снижения цены, что предлагают конкуренты. Торг с аргументами работает — без них раздражает.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">04</div>
+      <div class="rule-body">
+        <div class="rule-title">Берут ипотеку не сравнив условия</div>
+        <div class="rule-text">Большинство покупателей обращаются в свой зарплатный банк и соглашаются на первое предложение. Разница в ставке 0.5–1% на 20-летней ипотеке — это сотни тысяч рублей переплаты. Правильный подход: получить одобрение в 3–4 банках, сравнить не только ставку но и страховку, комиссии и условия досрочного погашения.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">05</div>
+      <div class="rule-body">
+        <div class="rule-title">Идут с юристом вместо агента</div>
+        <div class="rule-text">Логика понятна: хочется защититься от рисков — берём юриста. Но задача юриста — обезопасить уже выбранную сделку. Он не оценивает рыночную стоимость объекта, не знает истории конкретного дома, не видел десятки аналогов в этом районе, не умеет торговаться с продавцом. Юрист и агент решают разные задачи. Один помогает найти лучший объект по лучшей цене — другой проверяет что сделка юридически чистая. Это не взаимозаменяемые роли.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">06</div>
+      <div class="rule-body">
+        <div class="rule-title">Не проверяют документы до задатка</div>
+        <div class="rule-text">«Всё понравилось, давайте быстро внесём задаток пока не ушло» — и документы смотрят уже после. Задаток внесён, эмоционально вы уже «в этой квартире» — и любые проблемы в документах воспринимаются как препятствие которое хочется преодолеть, а не как сигнал остановиться. Проверка документов должна предшествовать любым денежным обязательствам.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">07</div>
+      <div class="rule-body">
+        <div class="rule-title">Ориентируются на цену в объявлении, а не на цену сделки</div>
+        <div class="rule-text">Цена в объявлении — это цена желания продавца, а не цена рынка. Реальные сделки в большинстве случаев закрываются ниже. Не зная статистики сделок в конкретном сегменте и районе, покупатель воспринимает завышенную цену как справедливую — и переплачивает.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">08</div>
+      <div class="rule-body">
+        <div class="rule-title">Не думают о ликвидности</div>
+        <div class="rule-text">Покупают под себя — и не думают о том, как этот объект будет продаваться через 5–10 лет. Нестандартная планировка, первый или последний этаж, близость к промзоне, специфический район — всё это влияет на ликвидность. Хорошая квартира должна быть комфортной для жизни и понятной для рынка одновременно.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. КАК ЧИТАТЬ РЫНОК -->
+<section class="doc-section" id="market">
+  <span class="section-num">03 / 04</span>
+  <h2 class="section-title">Как читать рынок</h2>
+  <p class="section-intro">Большинство покупателей оценивают квартиру изолированно — нравится или нет, дорого или дёшево. Но квартира стоит ровно столько, сколько за неё готовы заплатить в конкретный момент на конкретном рынке. Понимание этого меняет переговорную позицию.</p>
+
+  <div class="rules">
+    <div class="rule">
+      <div class="rule-num">01</div>
+      <div class="rule-body">
+        <div class="rule-title">Цена предложения ≠ цена сделки</div>
+        <div class="rule-text">То что висит в объявлениях — это стартовая позиция продавца. Реальные сделки на вторичном рынке в большинстве сегментов закрываются на 3–10% ниже цены объявления. Чем дольше объект на рынке — тем больше пространство для торга. Объект появился неделю назад по рыночной цене — торговаться сложно. Висит четыре месяца — аргументы для дисконта очевидны.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">02</div>
+      <div class="rule-body">
+        <div class="rule-title">Почему две похожие квартиры стоят по-разному</div>
+        <div class="rule-text">Одинаковая площадь, один район, похожий ремонт — но цены отличаются на 10–15%. Причины: этаж, вид из окон, состояние дома и УК, юридическая история, срочность продавца, наличие обременений, качество самого ремонта. Понимание этих факторов позволяет аргументировать торг или наоборот — понять почему объект дороже и стоит ли он этого.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">03</div>
+      <div class="rule-body">
+        <div class="rule-title">Срок экспозиции — важный сигнал</div>
+        <div class="rule-text">Квартира на рынке больше 60 дней без снижения цены — значит либо цена завышена, либо есть скрытая проблема. Квартира появилась и исчезла несколько раз — скорее всего снималась и снова выставлялась, что говорит о сложной ситуации у продавца. Квартира висит давно и цена снижалась несколько раз — продавец мотивирован, это переговорное преимущество покупателя.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">04</div>
+      <div class="rule-body">
+        <div class="rule-title">Как понять что цена справедливая</div>
+        <div class="rule-text">Простой способ: найти 5–7 аналогичных объектов в том же доме или в 500 метрах, выписать цены и параметры. Если квартира в середине диапазона и без явных минусов — цена рыночная. Если в верхней части диапазона — нужны аргументы почему она стоит дороже. Агент делает этот анализ системно и видит не только объявления, но и закрытые сделки.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">05</div>
+      <div class="rule-body">
+        <div class="rule-title">Когда покупать — вопрос стратегии, не угадывания</div>
+        <div class="rule-text">«Подождём пока цены упадут» — популярная стратегия которая редко работает. Рынок недвижимости не падает предсказуемо и не даёт сигналов заранее. Правильный вопрос не «когда покупать», а «соответствует ли этот объект моим критериям по цене прямо сейчас». Если да — момент подходящий.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. ПОДБОР С АГЕНТОМ -->
+<section class="doc-section" id="selection">
+  <span class="section-num">04 / 04</span>
+  <h2 class="section-title">Как работает подбор с агентом</h2>
+  <p class="section-intro">Самостоятельный поиск кажется проще — зашёл на сайт, посмотрел объявления, позвонил. На деле это занимает месяцы, требует экспертизы которой нет, и часто заканчивается покупкой не лучшего объекта, а просто доступного. Я видел это много раз — и с каждым разом убеждаюсь что разница между «нашли сами» и «нашли с агентом» измеряется не только деньгами, но и качеством объекта.</p>
+
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="process-num">01</div>
+      <div>
+        <div class="process-title">Разбор ситуации и формирование критериев</div>
+        <div class="process-text">Начинаем не с объявлений, а с вашей ситуации. Для чего покупаете — жить, инвестировать, сдавать? Какой бюджет реальный, а не желаемый? Что критично, а что желательно? Этот разговор занимает час, но экономит месяцы поиска — потому что убирает всё лишнее и оставляет только то что имеет смысл смотреть.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">02</div>
+      <div>
+        <div class="process-title">Анализ рынка — не только то что видно в объявлениях</div>
+        <div class="process-text">Открытые площадки — это срез рынка, но не весь рынок. Часть объектов уходит через профессиональные контакты между агентами до того как попадает в рекламу. Часть продавцов принципиально не хотят широкой огласки. Агент который активно работает в конкретном сегменте знает о таких вариантах — и может предложить их раньше чем они станут публичными. Кроме того, я вижу реальный темп сделок и понимаю где цена в объявлении соответствует рынку, а где нет.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">03</div>
+      <div>
+        <div class="process-title">Отбор и фильтрация — вы смотрите только подходящее</div>
+        <div class="process-text">Я просматриваю десятки объектов самостоятельно прежде чем показать вам один. Отсеиваю завышенные по цене, с юридическими проблемами, в домах с плохой историей или слабой УК. Вы тратите время только на те объекты которые реально стоит рассматривать — и не «замыливаете глаз» на проходных вариантах.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">04</div>
+      <div>
+        <div class="process-title">Сравнительный анализ перед принятием решения</div>
+        <div class="process-text">Когда объект понравился — я делаю сравнительный анализ: что ещё есть в этом сегменте, как соотносится цена с рынком, есть ли аргументы для торга. Это убирает эмоциональное давление «надо брать пока не ушло» и даёт понятную картину: объект хороший и цена справедливая, или есть лучше.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">05</div>
+      <div>
+        <div class="process-title">Переговоры и торг</div>
+        <div class="process-text">Торг — отдельная профессиональная задача. Я знаю как долго объект на рынке, была ли история снижений, насколько мотивирован продавец. Торгуюсь с аргументами, а не просто прошу скидку. В большинстве случаев удаётся получить дисконт — иногда существенный. Эта разница, как правило, перекрывает стоимость работы агента.</div>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">06</div>
+      <div>
+        <div class="process-title">Проверка документов и сопровождение сделки</div>
+        <div class="process-text">После выбора объекта — проверка юридической чистоты: история перехода прав, обременения, прописанные, долги, дееспособность продавца. При необходимости привлекаю юриста для сложных случаев. Сопровождаю сделку до передачи ключей — включая организацию расчётов, подписание актов и регистрацию права собственности.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<footer class="cta-footer">
+  <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости</p>
+  <h2 class="cta-footer-title">Ищете квартиру?</h2>
+  <p class="cta-footer-sub">Напишите — расскажите что ищете. Я отвечу честно, даже если это не в мою пользу.</p>
+  <a class="cta-tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z" fill="currentColor"/>
+    </svg>
+    Написать в Telegram
+  </a>
+  <p style="margin-top:20px;font-size:13px;color:rgba(229,229,229,0.35);">или позвонить: <a href="tel:+79118461965" style="color:rgba(229,229,229,0.55);text-decoration:none;" onmouseover="this.style.color='rgba(229,229,229,0.9)'" onmouseout="this.style.color='rgba(229,229,229,0.55)'">+7 911 846-19-65</a></p>
+  <p class="cta-footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
+</footer>
+
+<script>
+  // Progress bar
+  function updateProgress(group) {
+    const section = document.getElementById(group === 'check' ? 'checklist' : group);
+    const allItems = section.querySelectorAll('[onclick*="' + group + '"]');
+    const checkedItems = section.querySelectorAll('[onclick*="' + group + '"].checked');
+    const total = allItems.length;
+    const done = checkedItems.length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    document.getElementById(group + '-done').textContent = done;
+    document.getElementById(group + '-total').textContent = total;
+    document.getElementById(group + '-bar').style.width = pct + '%';
+    const msg = document.getElementById(group + '-msg');
+    if (done === total && total > 0) msg.classList.add('visible');
+    else msg.classList.remove('visible');
+  }
+
+  function toggleCheck(el, group) {
+    el.classList.toggle('checked');
+    updateProgress(group);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    updateProgress('check');
+  });
+
+  // Burger menu
+  const burger = document.getElementById('navBurger');
+  const dropdown = document.getElementById('navDropdown');
+  const burgerActive = document.getElementById('navBurgerActive');
+
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    dropdown.classList.toggle('open');
+  });
+
+  dropdown.querySelectorAll('.doc-nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      burger.classList.remove('open');
+      dropdown.classList.remove('open');
+      burgerActive.textContent = item.textContent;
+    });
+  });
+
+  // Active nav on scroll
+  const sections = document.querySelectorAll('.doc-section');
+  const navItems = document.querySelectorAll('.doc-nav-item');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navItems.forEach(item => {
+          const isActive = item.getAttribute('href') === '#' + id;
+          item.classList.toggle('active', isActive);
+          if (isActive && burgerActive) burgerActive.textContent = item.textContent;
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
