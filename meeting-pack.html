@@ -48,12 +48,13 @@
       justify-content: space-between;
     }
     .header-brand {
-      font-family: var(--font-sans);
-      font-size: 14px;
+      font-family: var(--font-serif);
+      font-size: 16px;
       font-weight: 400;
       letter-spacing: 0.01em;
       text-decoration: none;
       color: var(--text);
+      line-height: 1.2;
     }
     .header-nav {
       display: flex;
@@ -294,11 +295,21 @@
     @media (max-width: 640px) {
       .stair-step {
         grid-template-columns: 48px 1fr;
-        grid-template-areas: 'center right';
       }
       .stair-left { display: none; }
-      .stair-center { grid-area: center; }
-      .stair-right { grid-area: right; text-align: left; padding: 20px 0 20px 16px; }
+      .stair-center { order: 1; }
+      .stair-right { order: 2; text-align: left; padding: 20px 0 20px 16px; }
+
+      /* Чётные шаги: контент был слева — переносим в правую колонку */
+      .stair-step:nth-child(even) .stair-left {
+        display: block;
+        order: 2;
+        text-align: left;
+        padding: 20px 0 20px 16px;
+        grid-column: 2;
+      }
+      .stair-step:nth-child(even) .stair-right { display: none; }
+      .stair-step:nth-child(even) .stair-center { order: 1; grid-column: 1; }
     }
 
     /* ── CHECKLIST ── */
