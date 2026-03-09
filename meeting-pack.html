@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Материалы для продавца — Семён Гончаров</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
+      --bg: #FAFAF8;
+      --bg-dark: #1C1C1E;
+      --text: #1A1A1A;
+      --muted: #666;
+      --border: rgba(0,0,0,0.08);
+      --accent: #1A1A1A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250,250,248,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-brand {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .header-nav {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .header-nav a {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .header-nav a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      padding: 100px 40px 80px;
+      max-width: 100%;
+    }
+    .hero-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(229,229,229,0.4);
+      margin-bottom: 28px;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(36px, 6vw, 72px);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: #E5E5E5;
+      margin-bottom: 24px;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: rgba(229,229,229,0.6);
+    }
+    .hero-sub {
+      font-size: 16px;
+      line-height: 1.7;
+      color: rgba(229,229,229,0.55);
+      max-width: 560px;
+    }
+
+    /* ── NAV TABS ── */
+    .doc-nav {
+      position: sticky;
+      top: 64px;
+      z-index: 90;
+      background: rgba(250,250,248,0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .doc-nav::-webkit-scrollbar { display: none; }
+    .doc-nav-item {
+      padding: 18px 24px;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .doc-nav-item:hover,
+    .doc-nav-item.active { color: var(--text); border-bottom-color: var(--text); }
+
+    /* ── SECTIONS ── */
+    .doc-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .doc-section:last-child { border-bottom: none; }
+
+    .section-num {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      display: block;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .section-intro {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--muted);
+      max-width: 620px;
+      margin-bottom: 52px;
+    }
+
+    /* ── STAIRCASE TIMELINE ── */
+    .staircase {
+      position: relative;
+      padding: 0;
+    }
+
+    .stair-step {
+      display: grid;
+      grid-template-columns: 1fr 72px 1fr;
+      align-items: start;
+      margin-bottom: 0;
+      position: relative;
+    }
+
+    /* Центральная колонка — номер */
+    .stair-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+    .stair-line-top {
+      width: 2px;
+      height: 24px;
+      background: var(--border);
+    }
+    .stair-step:first-child .stair-line-top { background: transparent; }
+    .stair-num {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 2;
+    }
+    .stair-line-bottom {
+      width: 2px;
+      flex: 1;
+      min-height: 40px;
+      background: var(--border);
+    }
+    .stair-step:last-child .stair-line-bottom { background: transparent; }
+
+    /* Левая и правая карточки */
+    .stair-left {
+      padding: 20px 28px 20px 0;
+      text-align: right;
+    }
+    .stair-right {
+      padding: 20px 0 20px 28px;
+      text-align: left;
+    }
+    .stair-left:empty,
+    .stair-right:empty { min-height: 80px; }
+
+    .stair-title {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .stair-items {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stair-item {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    /* START badge at bottom */
+    .stair-start {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 0 0;
+    }
+    .stair-start-badge {
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px 32px;
+      border-radius: 2px;
+    }
+    .stair-end-badge {
+      background: var(--bg-dark);
+      color: #E5E5E5;
+      font-family: var(--font-serif);
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 12px 32px;
+      border-radius: 2px;
+    }
+    .stair-badge-label {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .stair-step {
+        grid-template-columns: 48px 1fr;
+        grid-template-areas: 'center right';
+      }
+      .stair-left { display: none; }
+      .stair-center { grid-area: center; }
+      .stair-right { grid-area: right; text-align: left; padding: 20px 0 20px 16px; }
+    }
+
+    /* ── CHECKLIST ── */
+    .checklist-groups { display: flex; flex-direction: column; gap: 40px; }
+    .check-group {}
+    .check-group-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .check-items { display: flex; flex-direction: column; gap: 0; }
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-box {
+      width: 20px;
+      height: 20px;
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .check-item.checked .check-box {
+      background: var(--text);
+      border-color: var(--text);
+    }
+    .check-item.checked .check-box::after {
+      content: '';
+      width: 10px;
+      height: 6px;
+      border-left: 1.5px solid white;
+      border-bottom: 1.5px solid white;
+      transform: rotate(-45deg) translateY(-1px);
+      display: block;
+    }
+    .check-text {
+      font-size: 15px;
+      line-height: 1.5;
+      flex: 1;
+    }
+    .check-item.checked .check-text { color: var(--muted); text-decoration: line-through; }
+    .check-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── RULES (показы) ── */
+    .rules { display: flex; flex-direction: column; gap: 0; }
+    .rule {
+      display: grid;
+      grid-template-columns: 40px 1fr;
+      gap: 0 24px;
+      padding: 28px 0;
+      border-top: 1px solid var(--border);
+    }
+    .rule:last-child { border-bottom: 1px solid var(--border); }
+    .rule-num {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 400;
+      color: rgba(0,0,0,0.12);
+      line-height: 1;
+      padding-top: 4px;
+    }
+    .rule-body {}
+    .rule-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .rule-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    /* ── PROGRESS BAR ── */
+    .progress-wrap {
+      margin-bottom: 40px;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+    .progress-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .progress-count {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1;
+    }
+    .progress-count span {
+      font-size: 13px;
+      font-family: var(--font-sans);
+      color: var(--muted);
+      font-weight: 400;
+    }
+    .progress-bar-track {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--text);
+      border-radius: 2px;
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 0%;
+    }
+    .progress-done-msg {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 8px;
+      height: 18px;
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+    .progress-done-msg.visible { opacity: 1; }
+
+    /* ── DEAL CHECKLIST ── */
+    .deal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .deal-block {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+    }
+    .deal-block-title {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .deal-items { display: flex; flex-direction: column; gap: 0; }
+    .deal-item {
+      display: flex;
+      gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      align-items: flex-start;
+    }
+    .deal-item:last-child { border-bottom: none; }
+    .deal-box {
+      width: 18px;
+      height: 18px;
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .deal-item.checked .deal-box {
+      background: var(--text);
+      border-color: var(--text);
+    }
+    .deal-item.checked .deal-box::after {
+      content: '';
+      width: 9px;
+      height: 5px;
+      border-left: 1.5px solid white;
+      border-bottom: 1.5px solid white;
+      transform: rotate(-45deg) translateY(-1px);
+      display: block;
+    }
+    .deal-text {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .deal-item.checked .deal-text { color: var(--muted); text-decoration: line-through; }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: var(--bg-dark);
+      color: rgba(229,229,229,0.4);
+      padding: 48px 40px;
+      text-align: center;
+      font-size: 13px;
+    }
+    .site-footer a {
+      color: rgba(229,229,229,0.6);
+      text-decoration: none;
+    }
+    .site-footer a:hover { color: #E5E5E5; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .site-header { padding: 0 20px; }
+      .header-nav { display: none; }
+      .hero { padding: 64px 20px 56px; }
+      .doc-nav { padding: 0 20px; }
+      .doc-nav-item { padding: 16px 16px; font-size: 11px; }
+      .doc-section { padding: 56px 20px; }
+      .deal-grid { grid-template-columns: 1fr; }
+      .phase { grid-template-columns: 36px 1fr; gap: 0 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Материалы для продавца · Семён Гончаров</p>
+    <h1 class="hero-title">Всё, что нужно знать,<br><em>чтобы продать правильно</em></h1>
+    <p class="hero-sub">Четыре раздела, которые помогут вам понять процесс продажи — от подготовки квартиры до подписания договора.</p>
+  </div>
+</section>
+
+<!-- DOC NAV -->
+<nav class="doc-nav">
+  <a class="doc-nav-item active" href="#plan">Маркетинговый план</a>
+  <a class="doc-nav-item" href="#prep">Подготовка к продаже</a>
+  <a class="doc-nav-item" href="#showings">Правила показов</a>
+  <a class="doc-nav-item" href="#deal">Перед сделкой</a>
+</nav>
+
+<!-- 1. МАРКЕТИНГОВЫЙ ПЛАН -->
+<section class="doc-section" id="plan">
+  <span class="section-num">01 / 04</span>
+  <h2 class="section-title">Маркетинговый план продажи квартиры</h2>
+  <p class="section-intro">Это план срочной продажи за 21 день — с максимальной ценой на выходе. Он требует полной вовлечённости: подготовки объекта, рекламного бюджета и готовности действовать быстро. Подходит только самым мотивированным собственникам.</p>
+
+  <div class="staircase">
+
+    <!-- START -->
+    <div class="stair-start" style="padding:0 0 32px;">
+      <div class="stair-start-badge">Подписание эксклюзивного договора</div>
+      <div style="width:2px;height:24px;background:var(--border);margin-top:0;"></div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left"></div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">01</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right">
+        <div class="stair-title">Разработка маркетингового плана</div>
+        <div class="stair-items">
+          <div class="stair-item">Анализ ситуации и выбор стратегии</div>
+          <div class="stair-item">Определение сроков и контрольных точек</div>
+          <div class="stair-item">Выбор рекламных каналов под объект</div>
+          <div class="stair-item">Определение рекламного бюджета</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left">
+        <div class="stair-title">Контрольная встреча на объекте</div>
+        <div class="stair-items">
+          <div class="stair-item">Обсуждение подготовки к фото и показам</div>
+          <div class="stair-item">Согласование плана продажи</div>
+          <div class="stair-item">Список плюсов и минусов объекта</div>
+          <div class="stair-item">Согласование рекламного бюджета</div>
+        </div>
+      </div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">02</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right"></div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left"></div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">03</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right">
+        <div class="stair-title">Определение правильной начальной цены</div>
+        <div class="stair-items">
+          <div class="stair-item">Анализ рынка: обзвон и просмотр аналогов</div>
+          <div class="stair-item">Определение прямых конкурентов</div>
+          <div class="stair-item">Личный осмотр объектов-конкурентов</div>
+          <div class="stair-item">Определение стартовой цены по трём моделям</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left">
+        <div class="stair-title">Профессиональные фото и видео</div>
+        <div class="stair-items">
+          <div class="stair-item">Подготовка объекта к съёмке</div>
+          <div class="stair-item">Профессиональная фотосъёмка</div>
+          <div class="stair-item">Профессиональная видеосъёмка</div>
+        </div>
+      </div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">04</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right"></div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left"></div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">05</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right">
+        <div class="stair-title">Подготовка рекламных материалов</div>
+        <div class="stair-items">
+          <div class="stair-item">Продающий текст объявления</div>
+          <div class="stair-item">Дизайн листовок и расклейки</div>
+          <div class="stair-item">Презентация для агентств и покупателей</div>
+          <div class="stair-item">Лендинг объекта</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left">
+        <div class="stair-title">Рекламная кампания</div>
+        <div class="stair-items">
+          <div class="stair-item">ТОП-35 сайтов недвижимости</div>
+          <div class="stair-item">Обзвон базы агентств, SMS-рассылка</div>
+          <div class="stair-item">Баннер на объекте и по городу</div>
+          <div class="stair-item">Расклейка, хенгеры, листовки</div>
+          <div class="stair-item">Реклама в лифтах, кафе, супермаркетах</div>
+          <div class="stair-item">Таргет в соцсетях, видео на YouTube</div>
+          <div class="stair-item">Рассылка по агентствам и банкам</div>
+        </div>
+      </div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">06</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right"></div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left"></div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">07</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right">
+        <div class="stair-title">Звонки покупателей и агентов</div>
+        <div class="stair-items">
+          <div class="stair-item">Правильное описание объекта</div>
+          <div class="stair-item">Квалификация покупателей</div>
+          <div class="stair-item">Запись на показы</div>
+          <div class="stair-item">Предложение объектов-конкурентов для сравнения</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left">
+        <div class="stair-title">Показы конкурентов покупателям</div>
+        <div class="stair-items">
+          <div class="stair-item">Показ объектов-конкурентов</div>
+          <div class="stair-item">Сравнение плюсов и минусов</div>
+          <div class="stair-item">Акцент на преимуществах нашего объекта</div>
+          <div class="stair-item">Запись на показ и передача презентации</div>
+        </div>
+      </div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">08</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right"></div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left"></div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">09</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right">
+        <div class="stair-title">Подготовка к показам</div>
+        <div class="stair-items">
+          <div class="stair-item">Подготовка объекта к каждому показу</div>
+          <div class="stair-item">Информационные материалы для покупателей</div>
+          <div class="stair-item">Проверка готовности перед каждым днём</div>
+          <div class="stair-item">Проведение брокер-тура для агентов</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left">
+        <div class="stair-title">Организация показов покупателям</div>
+        <div class="stair-items">
+          <div class="stair-item">Показы только в запланированные дни</div>
+          <div class="stair-item">Помощник — формирует очередь у входа</div>
+          <div class="stair-item">Правильный интервал между покупателями</div>
+          <div class="stair-item">Фиксация предложений в таблицу</div>
+          <div class="stair-item">Объяснение условий переговоров</div>
+        </div>
+      </div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">10</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right"></div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left"></div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">11</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right">
+        <div class="stair-title">Проведение торгов / аукцион</div>
+        <div class="stair-items">
+          <div class="stair-item">Переговоры в запланированные часы</div>
+          <div class="stair-item">Торги на повышение цены</div>
+          <div class="stair-item">Определение наилучшего предложения</div>
+          <div class="stair-item">Отчёт продавцу</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stair-step">
+      <div class="stair-left">
+        <div class="stair-title">Продажа по максимальной цене</div>
+        <div class="stair-items">
+          <div class="stair-item">Оповещение о наилучшем предложении</div>
+          <div class="stair-item">Принятие решения собственником</div>
+          <div class="stair-item">Оформление задатка</div>
+          <div class="stair-item">Подготовка документов</div>
+        </div>
+      </div>
+      <div class="stair-center"><div class="stair-line-top"></div><div class="stair-num">12</div><div class="stair-line-bottom"></div></div>
+      <div class="stair-right"></div>
+    </div>
+
+    <!-- END -->
+    <div style="display:flex;flex-direction:column;align-items:center;padding-top:32px;">
+      <div style="width:2px;height:24px;background:var(--border);"></div>
+      <div class="stair-end-badge">Нотариальная сделка</div>
+    </div>
+
+  </div>
+
+  </div>
+</section>
+
+<!-- 2. ЧЕК-ЛИСТ ПОДГОТОВКИ -->
+<section class="doc-section" id="prep">
+  <span class="section-num">02 / 04</span>
+  <h2 class="section-title">Подготовка квартиры к продаже</h2>
+  <p class="section-intro">Цель подготовки — создать эффект гостиничного номера. Покупатель должен войти в квартиру и не видеть чужую жизнь — он должен видеть своё будущее. Нейтральное, чистое, ухоженное пространство позволяет ему абстрагироваться от текущего собственника и мысленно «заселиться»: представить, где будет стоять его диван, где будет завтракать ребёнок, как будет выглядеть утро в этой квартире. Именно это ощущение — а не квадратные метры — продаёт.</p>
+
+  <div class="progress-wrap" id="prep-progress">
+    <div class="progress-header">
+      <span class="progress-label">Выполнено</span>
+      <div class="progress-count"><span id="prep-done">0</span> <span>/ <span id="prep-total">0</span></span></div>
+    </div>
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="prep-bar"></div></div>
+    <div class="progress-done-msg" id="prep-msg">✓ Квартира готова к съёмке и показам</div>
+  </div>
+
+  <div class="checklist-groups">
+    <div class="check-group">
+      <div class="check-group-title">Визуальная подготовка (хоумстейджинг)</div>
+      <div class="check-items">
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Расчистить все поверхности от личных вещей</div><div class="check-note">Столешницы, подоконники, полки — должны быть пустыми или с минимумом предметов</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Убрать всё лишнее — деперсонализировать пространство</div><div class="check-note">Личные фото, сувениры, магниты на холодильнике — всё это мешает покупателю представить себя в квартире</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Заменить лампочки на холодный белый свет (4000–6500K)</div><div class="check-note">Холодный белый визуально расширяет пространство и создаёт ощущение чистоты и свежести</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Проверить и заменить все перегоревшие лампочки</div><div class="check-note">Тёмные углы и мигающий свет создают ощущение запущенности</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Убрать лишнюю мебель, которая загромождает пространство</div><div class="check-note">Меньше предметов — больше визуального пространства</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Добавить живые или качественные искусственные растения</div><div class="check-note">1–2 растения оживляют пространство и добавляют ощущение уюта</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Заменить старые шторы или убрать тяжёлые тёмные занавески</div><div class="check-note">Лёгкие светлые шторы добавляют воздух и свет</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Починить всё, что бросается в глаза: ручки, петли, плитка</div><div class="check-note">Мелкие дефекты снижают воспринимаемую стоимость непропорционально их реальной цене</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Привести в порядок балкон или лоджию</div><div class="check-note">Убрать хлам, старые вещи — балкон должен выглядеть как полезное пространство</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="check-group">
+      <div class="check-group-title">Генеральный клининг</div>
+      <div class="check-items">
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Генеральная уборка всей квартиры</div><div class="check-note">Включая плинтусы, углы, пространство под мебелью</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Помыть окна изнутри и снаружи</div><div class="check-note">Чистые окна визуально добавляют до 20% света в помещение</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Очистить плиту, духовку и вытяжку</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Отбелить или почистить швы плитки в ванной и на кухне</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Устранить посторонние запахи</div><div class="check-note">Проветрить квартиру за 1–2 часа до показа. Запах свежесваренного кофе или выпечки — работает</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Почистить или убрать ковры</div><div class="check-note">Старые ковры визуально уменьшают пространство и могут хранить запахи</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="check-group">
+      <div class="check-group-title">Документы</div>
+      <div class="check-items">
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Получить свежую выписку из ЕГРН</div><div class="check-note">Не старше 30 дней. Покупатель должен видеть актуальные данные об объекте и владельцах</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">По возможности выписаться из квартиры до сделки</div><div class="check-note">«Свободная» квартира стоит дороже и продаётся быстрее</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Подготовить оригинал правоустанавливающего документа</div><div class="check-note">Договор купли-продажи, дарения, свидетельство о наследстве и т.д.</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Проверить наличие технического паспорта и поэтажного плана</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Погасить все долги по коммунальным платежам</div><div class="check-note">Задолженность — стандартный повод для торга или отказа от сделки</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Если есть несовершеннолетние собственники — получить разрешение опеки</div><div class="check-note">Это занимает время, лучше начать заранее</div></div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this,'prep')">
+          <div class="check-box"></div>
+          <div><div class="check-text">Если квартира в ипотеке — запросить справку об остатке долга</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. ПРАВИЛА ПОКАЗОВ -->
+<section class="doc-section" id="showings">
+  <span class="section-num">03 / 04</span>
+  <h2 class="section-title">Правила показов</h2>
+  <p class="section-intro">Показ — это не экскурсия, это переговоры. То, как проходит просмотр, напрямую влияет на цену и скорость принятия решения покупателем.</p>
+
+  <div class="rules">
+    <div class="rule">
+      <div class="rule-num">01</div>
+      <div class="rule-body">
+        <div class="rule-title">Собственник не должен присутствовать на показе</div>
+        <div class="rule-text">Это самое важное правило. Когда хозяин находится в квартире во время просмотра, покупатель чувствует себя гостем — он не может свободно ходить, рассматривать, обсуждать с партнёром. Он не может сказать «мне не нравится эта стена» или «здесь слишком темно» — и уходит с нераскрытыми возражениями. Агент не может нейтрально работать с этими возражениями, пока рядом стоит эмоционально вовлечённый владелец. Кроме того, собственники часто реагируют на критику защитно — это убивает доверие и сделку.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">02</div>
+      <div class="rule-body">
+        <div class="rule-title">Показы — только в запланированные дни и часы</div>
+        <div class="rule-text">Хаотичные показы в любое время снижают ценность объекта. Концентрация показов в 1–2 дня создаёт ощущение спроса и конкуренции между покупателями. Это один из ключевых элементов аукционной стратегии.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">03</div>
+      <div class="rule-body">
+        <div class="rule-title">Квартира должна быть готова к показу</div>
+        <div class="rule-text">Чистота, свет, отсутствие посторонних запахов. Перед каждым показом — проветривание. Посуда убрана, вещи на местах. Квартира должна выглядеть так, как на фотографиях в объявлении.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">04</div>
+      <div class="rule-body">
+        <div class="rule-title">Домашние животные — убрать или вывезти</div>
+        <div class="rule-text">Даже если покупатель сам любит животных, их присутствие отвлекает и создаёт запахи. Это фактор, который снижает концентрацию на квартире.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">05</div>
+      <div class="rule-body">
+        <div class="rule-title">Не отвечать на вопросы покупателей напрямую</div>
+        <div class="rule-text">Если покупатель дозвонился до собственника напрямую — корректно переадресуйте к агенту. Прямой контакт с продавцом даёт покупателю возможность давить на эмоции и торговаться мимо агента.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">06</div>
+      <div class="rule-body">
+        <div class="rule-title">Не называть цену «на которую готовы согласиться»</div>
+        <div class="rule-text">Даже в частном разговоре. Любая нижняя граница, названная вами, становится стартовой точкой для торга покупателя — а не вашей финальной ценой.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">07</div>
+      <div class="rule-body">
+        <div class="rule-title">Правильный интервал между покупателями</div>
+        <div class="rule-text">Когда один покупатель видит в коридоре другого — это мощный психологический сигнал. Он понимает: объект востребован, нужно принимать решение быстро. Это работает лучше любых слов.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. ПЕРЕД СДЕЛКОЙ -->
+<section class="doc-section" id="deal">
+  <span class="section-num">04 / 04</span>
+  <h2 class="section-title">Что проверить перед сделкой</h2>
+  <p class="section-intro">Финальный этап — самый ответственный. Здесь чаще всего теряются деньги или срываются сделки. Пройдите по каждому пункту заранее.</p>
+
+  <div class="progress-wrap" id="deal-progress">
+    <div class="progress-header">
+      <span class="progress-label">Готово к сделке</span>
+      <div class="progress-count"><span id="deal-done">0</span> <span>/ <span id="deal-total">0</span></span></div>
+    </div>
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="deal-bar"></div></div>
+    <div class="progress-done-msg" id="deal-msg">✓ Всё готово — можно выходить на сделку</div>
+  </div>
+
+  <div class="deal-grid">
+    <div class="deal-block">
+      <div class="deal-block-title">Документы на объект</div>
+      <div class="deal-items">
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Свежая выписка из ЕГРН (не старше 30 дней)</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Правоустанавливающий документ (оригинал)</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Технический паспорт / поэтажный план</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Справка об отсутствии задолженности по ЖКУ</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Справка о прописанных (форма 9)</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Согласие супруга(и) на продажу (если в браке)</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Разрешение органов опеки (если есть дети-собственники)</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Справка об остатке ипотечного долга (если актуально)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deal-block">
+      <div class="deal-block-title">Юридическая чистота</div>
+      <div class="deal-items">
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Убедиться, что в квартире нет незарегистрированных перепланировок</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Проверить отсутствие арестов и обременений (ЕГРН)</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Проверить себя на банкротство</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Убедиться в отсутствии исполнительных производств (ФССП)</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Если квартира получена в наследство — проверить срок владения и возможных наследников</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Согласовать способ расчёта (наличные, аккредитив, ячейка)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deal-block">
+      <div class="deal-block-title">Личные документы продавца</div>
+      <div class="deal-items">
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Паспорт (действующий, без повреждений)</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">ИНН</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Свидетельство о браке / разводе (если применимо)</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Реквизиты счёта для перевода денег</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deal-block">
+      <div class="deal-block-title">Организационные вопросы</div>
+      <div class="deal-items">
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Согласовать дату и время сделки с нотариусом</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Уточнить сроки физического освобождения квартиры</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Подготовить акт приёма-передачи</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Передать покупателю все комплекты ключей</div>
+        </div>
+        <div class="deal-item" onclick="toggleCheck(this,'deal')">
+          <div class="deal-box"></div>
+          <div class="deal-text">Снять показания счётчиков и передать УК</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>Семён Гончаров · Агент по недвижимости · <a href="https://fastbroker21.ru">fastbroker21.ru</a> · <a href="https://t.me/semengme">Telegram</a></p>
+</footer>
+
+<script>
+  // Progress bars
+  function updateProgress(group) {
+    const section = document.getElementById(group === 'prep' ? 'prep' : 'deal');
+    const allItems = section.querySelectorAll('[onclick*="' + group + '"]');
+    const checkedItems = section.querySelectorAll('[onclick*="' + group + '"].checked');
+    const total = allItems.length;
+    const done = checkedItems.length;
+    const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+    document.getElementById(group + '-done').textContent = done;
+    document.getElementById(group + '-total').textContent = total;
+    document.getElementById(group + '-bar').style.width = pct + '%';
+
+    const msg = document.getElementById(group + '-msg');
+    if (done === total && total > 0) {
+      msg.classList.add('visible');
+    } else {
+      msg.classList.remove('visible');
+    }
+  }
+
+  function toggleCheck(el, group) {
+    el.classList.toggle('checked');
+    updateProgress(group);
+  }
+
+  // Init counts on load
+  window.addEventListener('DOMContentLoaded', () => {
+    updateProgress('prep');
+    updateProgress('deal');
+  });
+
+  // Active nav on scroll
+  const sections = document.querySelectorAll('.doc-section');
+  const navItems = document.querySelectorAll('.doc-nav-item');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navItems.forEach(item => {
+          item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
