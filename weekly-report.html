@@ -2,16 +2,17 @@
 <html lang="ru">
 <head>
   <!--
-  ЕЖЕНЕДЕЛЬНЫЙ ОТЧЁТ — ШАБЛОН
-  
-  Как использовать:
-  1. Скопируйте этот файл для каждого объекта: reports/адрес.html
-  2. Откройте с ?edit=1 или тройной клик по логотипу → появится кнопка «Редактировать»
-  3. Заполните данные в панели справа → страница обновится в реальном времени
-  4. Нажмите «Скопировать JSON данные» → вставьте в блок <script id="reportData"> ниже
-  5. Закоммитьте файл → отправьте клиенту обычную ссылку (без ?edit=1)
-  
-  Клиент видит только чистый отчёт, без кнопки редактирования.
+  ЕЖЕНЕДЕЛЬНЫЙ ОТЧЁТ — ОДИН ФАЙЛ НА ВСЕ ОБЪЕКТЫ
+
+  Для вас (агент):
+  1. Откройте weekly-report.html?edit=1 — увидите список объектов
+  2. Создайте новый объект (введите адрес)
+  3. Заполните отчёт в панели справа
+  4. Данные сохраняются автоматически в браузере
+
+  Для клиента:
+  Отправьте ссылку: weekly-report.html?id=slug-адреса
+  Клиент видит только отчёт, без кнопки редактирования
 -->
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -374,100 +375,6 @@
 </head>
 <body>
 
-<!-- DATA — edit this JSON block or use the panel -->
-<script id="reportData" type="application/json">
-{
-  "object": "ул. Кораблестроителей, 32, кв. 78",
-  "week": 2,
-  "period": "3–9 марта 2026",
-  "dayOnMarket": 14,
-  "price": "12 900 000 ₽",
-  "stats": {
-    "views": { "value": 847, "delta": "+12%", "direction": "up" },
-    "calls": { "value": 23, "delta": "+4", "direction": "up" },
-    "showings": { "value": 8, "delta": "—", "direction": "neutral" },
-    "offers": { "value": 2, "delta": "+2", "direction": "up" }
-  },
-  "feedback": [
-    {
-      "name": "Марина и Олег",
-      "date": "5 марта",
-      "verdict": "interested",
-      "verdictText": "Интересуются",
-      "text": "Понравилась планировка и вид. Хотят вернуться с родителями в выходные. Ипотека одобрена в Сбере."
-    },
-    {
-      "name": "Александр П.",
-      "date": "6 марта",
-      "verdict": "thinking",
-      "verdictText": "Думают",
-      "text": "Смотрят параллельно 3 квартиры в районе. Наш объект — фаворит по планировке, но хотят торг."
-    },
-    {
-      "name": "Ирина К.",
-      "date": "7 марта",
-      "verdict": "declined",
-      "verdictText": "Отказ",
-      "text": "Не подошёл этаж — принципиально ищут выше 10-го."
-    }
-  ],
-  "competitors": [
-    {
-      "address": "Кораблестроителей, 30",
-      "rooms": "2к",
-      "area": "58 м²",
-      "price": "13 200 000",
-      "status": "active",
-      "statusText": "В продаже",
-      "note": "Без ремонта, на рынке 45 дней"
-    },
-    {
-      "address": "Кораблестроителей, 32 (наш)",
-      "rooms": "2к",
-      "area": "61 м²",
-      "price": "12 900 000",
-      "status": "active",
-      "statusText": "Наш объект",
-      "note": "14 дней, 2 оффера",
-      "ours": true
-    },
-    {
-      "address": "Нахимова, 11",
-      "rooms": "2к",
-      "area": "55 м²",
-      "price": "12 500 000",
-      "status": "reduced",
-      "statusText": "Снижение −400к",
-      "note": "Был 12.9, снизили после 60 дней"
-    },
-    {
-      "address": "Беринга, 6",
-      "rooms": "2к",
-      "area": "63 м²",
-      "price": "13 800 000",
-      "status": "sold",
-      "statusText": "Продана",
-      "note": "Ушла за 13 500 на 22-й день"
-    }
-  ],
-  "recommendations": [
-    {
-      "title": "Провести повторный показ для Марины и Олега",
-      "text": "Пригласить с родителями в субботу утром, подготовить распечатку планировки с замерами."
-    },
-    {
-      "title": "Усилить рекламу на Циан",
-      "text": "Поднять объявление в ТОП на 3 дня. Конкурент на Нахимова снизил цену — наш объект стал ещё привлекательнее."
-    },
-    {
-      "title": "Подготовить контр-оффер для Александра",
-      "text": "Предложить фиксацию цены на 5 дней без торга взамен на быстрый задаток."
-    }
-  ],
-  "summary": "Объект вызывает стабильный интерес. Два реальных оффера за вторую неделю — это хороший темп. Конкуренты ослабевают: Нахимова снизила цену, Беринга ушла. На следующей неделе фокус — закрытие одного из двух покупателей."
-}
-</script>
-
 <!-- HEADER -->
 <header class="site-header">
   <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
@@ -602,348 +509,188 @@
       <textarea class="edit-textarea" id="e-summary" rows="4" onchange="saveFromPanel()"></textarea>
     </div>
 
-    <button class="btn-save" onclick="exportData()">Скопировать JSON данные</button>
-    <p class="save-hint">Скопируйте JSON и вставьте в блок &lt;script id="reportData"&gt; в файле отчёта, затем закоммитьте</p>
+    <button class="btn-save" onclick="saveData()">Сохранить</button>
+    <p class="save-hint" id="saveHint">Данные сохраняются в браузере. Откроете эту страницу снова — всё будет на месте.</p>
+    <button class="btn-add" style="margin-top:12px;color:#C0392B;border-color:#C0392B;" onclick="resetData()">Сбросить к исходным данным</button>
   </div>
 </div>
 
 <script>
-// ── Load data ──
-let data = JSON.parse(document.getElementById('reportData').textContent);
+const STORAGE_PREFIX='wr_',INDEX_KEY='wr_index';
+function blankData(){return{object:'',week:1,period:'',dayOnMarket:0,price:'',stats:{views:{value:0,delta:'—',direction:'neutral'},calls:{value:0,delta:'—',direction:'neutral'},showings:{value:0,delta:'—',direction:'neutral'},offers:{value:0,delta:'—',direction:'neutral'}},feedback:[],competitors:[],recommendations:[],summary:''};}
+function getIndex(){try{return JSON.parse(localStorage.getItem(INDEX_KEY))||[];}catch(e){return[];}}
+function saveIndex(idx){localStorage.setItem(INDEX_KEY,JSON.stringify(idx));}
+function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
 
-function render() {
-  // Hero
-  document.getElementById('heroTitle').innerHTML = 
-    `Неделя ${data.week}<br><em>${data.object}</em>`;
-  
-  document.getElementById('heroMeta').innerHTML = `
-    <div class="hero-meta-item">
-      <div class="hero-meta-label">Период</div>
-      <div class="hero-meta-value">${data.period}</div>
+let data,currentId=null;
+
+// Picker element
+const pickerEl=document.createElement('div');
+pickerEl.style.cssText='max-width:600px;margin:0 auto;padding:80px 40px;display:none;';
+document.body.insertBefore(pickerEl,document.querySelector('.report-footer'));
+
+// Back link
+const backLink=document.createElement('a');
+backLink.textContent='← Все объекты';backLink.href='#';
+backLink.style.cssText='font-size:12px;color:var(--muted);text-decoration:none;margin-left:16px;display:none;';
+backLink.onmouseover=()=>backLink.style.color='var(--text)';
+backLink.onmouseout=()=>backLink.style.color='var(--muted)';
+backLink.onclick=e=>{e.preventDefault();showPicker();};
+document.querySelector('.header-brand').after(backLink);
+
+const reportEls=['heroSection','statsSection','feedbackSection','compSection','recSection'];
+const footerEl=document.querySelector('.report-footer');
+const editPanel=document.getElementById('editPanel');
+const editBtn=document.getElementById('editToggle');
+
+function hideReport(){
+  reportEls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  if(footerEl)footerEl.style.display='none';
+  if(editPanel){editPanel.classList.remove('open');document.body.classList.remove('editing');}
+  if(editBtn){editBtn.style.display='none';editBtn.classList.remove('active');editBtn.textContent='Редактировать';}
+  backLink.style.display='none';
+}
+function showReportEls(){
+  reportEls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});
+  if(footerEl)footerEl.style.display='';
+  pickerEl.style.display='none';
+}
+
+function showPicker(){
+  currentId=null;hideReport();pickerEl.style.display='';renderPicker();
+}
+
+function renderPicker(){
+  const idx=getIndex();
+  pickerEl.innerHTML=`
+    <div style="margin-bottom:48px;">
+      <h1 style="font-family:var(--serif);font-size:32px;font-weight:400;margin-bottom:8px;">Еженедельные отчёты</h1>
+      <p style="color:var(--muted);font-size:15px;">Выберите объект или создайте новый</p>
     </div>
-    <div class="hero-meta-item">
-      <div class="hero-meta-label">Дней на рынке</div>
-      <div class="hero-meta-value">${data.dayOnMarket}</div>
-    </div>
-    <div class="hero-meta-item">
-      <div class="hero-meta-label">Цена</div>
-      <div class="hero-meta-value">${data.price}</div>
-    </div>
-  `;
-
-  // Stats
-  const statNames = { views: 'Просмотров', calls: 'Звонков', showings: 'Показов', offers: 'Офферов' };
-  document.getElementById('statGrid').innerHTML = 
-    Object.entries(data.stats).map(([key, s]) => `
-      <div class="stat-card">
-        <div class="stat-num">${s.value}</div>
-        <div class="stat-label">${statNames[key]}</div>
-        <div class="stat-delta ${s.direction}">${s.delta}</div>
-      </div>
-    `).join('');
-
-  // Feedback
-  document.getElementById('feedbackList').innerHTML = 
-    data.feedback.map(f => `
-      <div class="feedback-item">
-        <div class="feedback-header">
-          <span class="feedback-name">${f.name}</span>
-          <span class="feedback-date">${f.date}</span>
+    ${idx.length?idx.map(obj=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--border);">
+        <a href="#" onclick="event.preventDefault();openObject('${obj.id}')" style="text-decoration:none;color:var(--text);flex:1;" onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
+          <div style="font-size:15px;font-weight:500;">${obj.name||'Без названия'}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">Неделя ${obj.week||'?'} · ${obj.period||'—'}</div>
+        </a>
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+          <button onclick="copyLink('${obj.id}',this)" style="font-size:11px;color:var(--accent);background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:4px 10px;">Ссылка</button>
+          <button onclick="deleteObject('${obj.id}')" style="font-size:11px;color:#C0392B;background:none;border:none;cursor:pointer;padding:4px 8px;">✕</button>
         </div>
-        <span class="feedback-verdict ${f.verdict}">${f.verdictText}</span>
-        <div class="feedback-text">${f.text}</div>
+      </div>`).join('')+'<div style="border-top:1px solid var(--border);"></div>'
+    :'<p style="color:var(--muted);font-size:14px;padding:32px 0;">Пока нет объектов. Создайте первый ↓</p>'}
+    <div style="margin-top:32px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Новый объект</div>
+      <div style="display:flex;gap:8px;">
+        <input id="newObjName" class="edit-input" placeholder="Адрес, напр.: Кораблестроителей, 32" style="flex:1;" onkeydown="if(event.key==='Enter')createObject()">
+        <button onclick="createObject()" style="font-family:var(--sans);font-size:13px;font-weight:500;padding:8px 20px;background:var(--dark);color:#E5E5E5;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;">Создать</button>
       </div>
-    `).join('');
-
-  // Competitors
-  document.getElementById('compBody').innerHTML = 
-    data.competitors.map(c => `
-      <tr class="${c.ours ? 'our-object' : ''}">
-        <td>${c.address}</td>
-        <td>${c.rooms}</td>
-        <td>${c.area}</td>
-        <td>${c.price}</td>
-        <td><span class="comp-status ${c.status}">${c.statusText}</span></td>
-        <td>${c.note}</td>
-      </tr>
-    `).join('');
-
-  // Recommendations
-  document.getElementById('recList').innerHTML = 
-    data.recommendations.map((r, i) => `
-      <div class="rec-item">
-        <div class="rec-num">${String(i + 1).padStart(2, '0')}</div>
-        <div>
-          <div class="rec-title">${r.title}</div>
-          <div class="rec-text">${r.text}</div>
-        </div>
-      </div>
-    `).join('');
-
-  document.getElementById('summaryText').textContent = data.summary;
+    </div>`;
 }
 
-// ── Edit panel ──
-function toggleEdit() {
-  const panel = document.getElementById('editPanel');
-  const btn = document.getElementById('editToggle');
-  const open = panel.classList.toggle('open');
-  document.body.classList.toggle('editing', open);
-  btn.classList.toggle('active', open);
-  btn.textContent = open ? 'Закрыть' : 'Редактировать';
-  if (open) populatePanel();
+function createObject(){
+  const input=document.getElementById('newObjName');const name=input.value.trim();
+  if(!name)return;
+  const id=slugify(name)||('obj-'+Date.now());
+  const idx=getIndex();
+  if(idx.find(o=>o.id===id)){alert('Объект с таким адресом уже существует');return;}
+  const nd=blankData();nd.object=name;
+  localStorage.setItem(STORAGE_PREFIX+id,JSON.stringify(nd));
+  idx.push({id,name,week:1,period:''});saveIndex(idx);
+  openObject(id);
+}
+function deleteObject(id){
+  if(!confirm('Удалить этот объект и все его данные?'))return;
+  localStorage.removeItem(STORAGE_PREFIX+id);
+  saveIndex(getIndex().filter(o=>o.id!==id));renderPicker();
+}
+function copyLink(id,btn){
+  const url=window.location.origin+window.location.pathname+'?id='+id;
+  try{navigator.clipboard.writeText(url).then(()=>{
+    const o=btn.textContent;btn.textContent='✓';btn.style.color='#2D8A4E';
+    setTimeout(()=>{btn.textContent=o;btn.style.color='';},1500);
+  }).catch(()=>prompt('Скопируйте:',url));}catch(e){prompt('Скопируйте:',url);}
 }
 
-function populatePanel() {
-  document.getElementById('e-object').value = data.object;
-  document.getElementById('e-week').value = data.week;
-  document.getElementById('e-period').value = data.period;
-  document.getElementById('e-dayOnMarket').value = data.dayOnMarket;
-  document.getElementById('e-price').value = data.price;
-  document.getElementById('e-summary').value = data.summary;
-
-  // Stats
-  const statNames = { views: 'Просмотров', calls: 'Звонков', showings: 'Показов', offers: 'Офферов' };
-  document.getElementById('e-stats').innerHTML = 
-    Object.entries(data.stats).map(([key, s]) => `
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
-        <div>
-          <label class="edit-label">${statNames[key]}</label>
-          <input class="edit-input" data-stat="${key}" data-field="value" type="number" value="${s.value}" onchange="saveFromPanel()">
-        </div>
-        <div>
-          <label class="edit-label">Дельта</label>
-          <input class="edit-input" data-stat="${key}" data-field="delta" value="${s.delta}" onchange="saveFromPanel()">
-        </div>
-        <div>
-          <label class="edit-label">Направление</label>
-          <select class="edit-select" data-stat="${key}" data-field="direction" onchange="saveFromPanel()">
-            <option value="up" ${s.direction==='up'?'selected':''}>↑ Рост</option>
-            <option value="down" ${s.direction==='down'?'selected':''}>↓ Падение</option>
-            <option value="neutral" ${s.direction==='neutral'?'selected':''}>— Без изменений</option>
-          </select>
-        </div>
-      </div>
-    `).join('');
-
-  renderFeedbackPanel();
-  renderCompPanel();
-  renderRecPanel();
-}
-
-function renderFeedbackPanel() {
-  document.getElementById('e-feedback').innerHTML = data.feedback.map((f, i) => `
-    <div class="edit-feedback-block">
-      <button class="btn-remove" onclick="removeFeedback(${i})">✕</button>
-      <div class="edit-row">
-        <label class="edit-label">Имя</label>
-        <input class="edit-input" data-fb="${i}" data-field="name" value="${f.name}" onchange="saveFromPanel()">
-      </div>
-      <div class="edit-row">
-        <label class="edit-label">Дата</label>
-        <input class="edit-input" data-fb="${i}" data-field="date" value="${f.date}" onchange="saveFromPanel()">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <div class="edit-row">
-          <label class="edit-label">Статус</label>
-          <select class="edit-select" data-fb="${i}" data-field="verdict" onchange="saveFromPanel()">
-            <option value="interested" ${f.verdict==='interested'?'selected':''}>Интересуются</option>
-            <option value="thinking" ${f.verdict==='thinking'?'selected':''}>Думают</option>
-            <option value="declined" ${f.verdict==='declined'?'selected':''}>Отказ</option>
-          </select>
-        </div>
-        <div class="edit-row">
-          <label class="edit-label">Текст статуса</label>
-          <input class="edit-input" data-fb="${i}" data-field="verdictText" value="${f.verdictText}" onchange="saveFromPanel()">
-        </div>
-      </div>
-      <div class="edit-row">
-        <label class="edit-label">Комментарий</label>
-        <textarea class="edit-textarea" data-fb="${i}" data-field="text" onchange="saveFromPanel()">${f.text}</textarea>
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderCompPanel() {
-  document.getElementById('e-competitors').innerHTML = data.competitors.map((c, i) => `
-    <div class="edit-comp-block">
-      <button class="btn-remove" onclick="removeComp(${i})">✕</button>
-      <div class="edit-row">
-        <label class="edit-label">Адрес</label>
-        <input class="edit-input" data-comp="${i}" data-field="address" value="${c.address}" onchange="saveFromPanel()">
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
-        <div class="edit-row">
-          <label class="edit-label">Комнат</label>
-          <input class="edit-input" data-comp="${i}" data-field="rooms" value="${c.rooms}" onchange="saveFromPanel()">
-        </div>
-        <div class="edit-row">
-          <label class="edit-label">Площадь</label>
-          <input class="edit-input" data-comp="${i}" data-field="area" value="${c.area}" onchange="saveFromPanel()">
-        </div>
-        <div class="edit-row">
-          <label class="edit-label">Цена</label>
-          <input class="edit-input" data-comp="${i}" data-field="price" value="${c.price}" onchange="saveFromPanel()">
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <div class="edit-row">
-          <label class="edit-label">Статус</label>
-          <select class="edit-select" data-comp="${i}" data-field="status" onchange="saveFromPanel()">
-            <option value="active" ${c.status==='active'?'selected':''}>В продаже</option>
-            <option value="sold" ${c.status==='sold'?'selected':''}>Продана</option>
-            <option value="reduced" ${c.status==='reduced'?'selected':''}>Снижение</option>
-          </select>
-        </div>
-        <div class="edit-row">
-          <label class="edit-label">Текст статуса</label>
-          <input class="edit-input" data-comp="${i}" data-field="statusText" value="${c.statusText}" onchange="saveFromPanel()">
-        </div>
-      </div>
-      <div class="edit-row">
-        <label class="edit-label">Заметка</label>
-        <input class="edit-input" data-comp="${i}" data-field="note" value="${c.note}" onchange="saveFromPanel()">
-      </div>
-      <div class="edit-row">
-        <label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
-          <input type="checkbox" data-comp="${i}" data-field="ours" ${c.ours?'checked':''} onchange="saveFromPanel()">
-          Наш объект
-        </label>
-      </div>
-    </div>
-  `).join('');
-}
-
-function renderRecPanel() {
-  document.getElementById('e-recs').innerHTML = data.recommendations.map((r, i) => `
-    <div class="edit-rec-block">
-      <button class="btn-remove" onclick="removeRec(${i})">✕</button>
-      <div class="edit-row">
-        <label class="edit-label">Заголовок</label>
-        <input class="edit-input" data-rec="${i}" data-field="title" value="${r.title}" onchange="saveFromPanel()">
-      </div>
-      <div class="edit-row">
-        <label class="edit-label">Описание</label>
-        <textarea class="edit-textarea" data-rec="${i}" data-field="text" onchange="saveFromPanel()">${r.text}</textarea>
-      </div>
-    </div>
-  `).join('');
-}
-
-function saveFromPanel() {
-  data.object = document.getElementById('e-object').value;
-  data.week = parseInt(document.getElementById('e-week').value) || 1;
-  data.period = document.getElementById('e-period').value;
-  data.dayOnMarket = parseInt(document.getElementById('e-dayOnMarket').value) || 0;
-  data.price = document.getElementById('e-price').value;
-  data.summary = document.getElementById('e-summary').value;
-
-  // Stats
-  document.querySelectorAll('[data-stat]').forEach(el => {
-    const key = el.dataset.stat;
-    const field = el.dataset.field;
-    if (field === 'value') data.stats[key].value = parseInt(el.value) || 0;
-    else data.stats[key][field] = el.value;
-  });
-
-  // Feedback
-  document.querySelectorAll('[data-fb]').forEach(el => {
-    const i = parseInt(el.dataset.fb);
-    const field = el.dataset.field;
-    if (data.feedback[i]) data.feedback[i][field] = el.value;
-  });
-
-  // Competitors
-  document.querySelectorAll('[data-comp]').forEach(el => {
-    const i = parseInt(el.dataset.comp);
-    const field = el.dataset.field;
-    if (data.competitors[i]) {
-      if (field === 'ours') data.competitors[i].ours = el.checked;
-      else data.competitors[i][field] = el.value;
-    }
-  });
-
-  // Recommendations
-  document.querySelectorAll('[data-rec]').forEach(el => {
-    const i = parseInt(el.dataset.rec);
-    const field = el.dataset.field;
-    if (data.recommendations[i]) {
-      data.recommendations[i][field] = el.tagName === 'TEXTAREA' ? el.value : el.value;
-    }
-  });
-
+function openObject(id){
+  currentId=id;
+  try{const s=localStorage.getItem(STORAGE_PREFIX+id);data=s?JSON.parse(s):blankData();}catch(e){data=blankData();}
+  pickerEl.style.display='none';showReportEls();
+  editBtn.style.display='';backLink.style.display='';
   render();
+  const h=document.getElementById('saveHint');
+  if(h)h.textContent='Автосохранение включено.';
 }
 
-function addFeedback() {
-  data.feedback.push({ name: '', date: '', verdict: 'thinking', verdictText: 'Думают', text: '' });
-  renderFeedbackPanel();
-  render();
-}
-function removeFeedback(i) {
-  data.feedback.splice(i, 1);
-  renderFeedbackPanel();
-  render();
+function persist(){
+  if(!currentId)return;
+  try{localStorage.setItem(STORAGE_PREFIX+currentId,JSON.stringify(data));
+  const idx=getIndex(),e=idx.find(o=>o.id===currentId);
+  if(e){e.name=data.object;e.week=data.week;e.period=data.period;saveIndex(idx);}}catch(e){}
 }
 
-function addCompetitor() {
-  data.competitors.push({ address: '', rooms: '', area: '', price: '', status: 'active', statusText: 'В продаже', note: '', ours: false });
-  renderCompPanel();
-  render();
-}
-function removeComp(i) {
-  data.competitors.splice(i, 1);
-  renderCompPanel();
-  render();
-}
-
-function addRec() {
-  data.recommendations.push({ title: '', text: '' });
-  renderRecPanel();
-  render();
-}
-function removeRec(i) {
-  data.recommendations.splice(i, 1);
-  renderRecPanel();
-  render();
+function render(){
+  document.getElementById('heroTitle').innerHTML='Неделя '+data.week+'<br><em>'+(data.object||'Новый объект')+'</em>';
+  document.getElementById('heroMeta').innerHTML='<div class="hero-meta-item"><div class="hero-meta-label">Период</div><div class="hero-meta-value">'+(data.period||'—')+'</div></div><div class="hero-meta-item"><div class="hero-meta-label">Дней на рынке</div><div class="hero-meta-value">'+(data.dayOnMarket||'—')+'</div></div><div class="hero-meta-item"><div class="hero-meta-label">Цена</div><div class="hero-meta-value">'+(data.price||'—')+'</div></div>';
+  const sn={views:'Просмотров',calls:'Звонков',showings:'Показов',offers:'Офферов'};
+  document.getElementById('statGrid').innerHTML=Object.entries(data.stats).map(([k,s])=>'<div class="stat-card"><div class="stat-num">'+s.value+'</div><div class="stat-label">'+sn[k]+'</div><div class="stat-delta '+s.direction+'">'+s.delta+'</div></div>').join('');
+  document.getElementById('feedbackList').innerHTML=data.feedback.length?data.feedback.map(f=>'<div class="feedback-item"><div class="feedback-header"><span class="feedback-name">'+f.name+'</span><span class="feedback-date">'+f.date+'</span></div><span class="feedback-verdict '+f.verdict+'">'+f.verdictText+'</span><div class="feedback-text">'+f.text+'</div></div>').join(''):'<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
+  document.getElementById('compBody').innerHTML=data.competitors.length?data.competitors.map(c=>'<tr class="'+(c.ours?'our-object':'')+'"><td>'+(c.url?'<a href="'+c.url+'" target="_blank" style="color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px;">'+c.address+'</a>':c.address)+'</td><td>'+c.rooms+'</td><td>'+c.area+'</td><td>'+c.price+'</td><td><span class="comp-status '+c.status+'">'+c.statusText+'</span></td><td>'+c.note+'</td></tr>').join(''):'<tr><td colspan="6" style="color:var(--muted);padding:20px 16px;">Пока нет данных</td></tr>';
+  document.getElementById('recList').innerHTML=data.recommendations.map((r,i)=>'<div class="rec-item"><div class="rec-num">'+String(i+1).padStart(2,'0')+'</div><div><div class="rec-title">'+r.title+'</div><div class="rec-text">'+r.text+'</div></div></div>').join('');
+  document.getElementById('summaryText').textContent=data.summary||'Резюме будет добавлено';
 }
 
-function exportData() {
-  const json = JSON.stringify(data, null, 2);
-  navigator.clipboard.writeText(json).then(() => {
-    alert('JSON скопирован в буфер обмена!\n\nВставьте его в блок <script id="reportData"> в файле отчёта.');
-  }).catch(() => {
-    const w = window.open('', '_blank');
-    w.document.write('<pre>' + json.replace(/</g, '&lt;') + '</pre>');
-  });
+function toggleEdit(){
+  const open=editPanel.classList.toggle('open');
+  document.body.classList.toggle('editing',open);
+  editBtn.classList.toggle('active',open);
+  editBtn.textContent=open?'Закрыть':'Редактировать';
+  if(open)populatePanel();
 }
 
-// ── Init ──
-render();
-
-// Edit mode: hidden by default
-// Activate: add ?edit=1 to URL, or triple-click on logo
-const editBtn = document.getElementById('editToggle');
-editBtn.style.display = 'none';
-
-if (new URLSearchParams(window.location.search).has('edit')) {
-  editBtn.style.display = '';
+function populatePanel(){
+  document.getElementById('e-object').value=data.object;
+  document.getElementById('e-week').value=data.week;
+  document.getElementById('e-period').value=data.period;
+  document.getElementById('e-dayOnMarket').value=data.dayOnMarket;
+  document.getElementById('e-price').value=data.price;
+  document.getElementById('e-summary').value=data.summary;
+  const sn={views:'Просмотров',calls:'Звонков',showings:'Показов',offers:'Офферов'};
+  document.getElementById('e-stats').innerHTML=Object.entries(data.stats).map(([k,s])=>'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;"><div><label class="edit-label">'+sn[k]+'</label><input class="edit-input" data-stat="'+k+'" data-field="value" type="number" value="'+s.value+'" onchange="saveFromPanel()"></div><div><label class="edit-label">Дельта</label><input class="edit-input" data-stat="'+k+'" data-field="delta" value="'+s.delta+'" onchange="saveFromPanel()"></div><div><label class="edit-label">Направление</label><select class="edit-select" data-stat="'+k+'" data-field="direction" onchange="saveFromPanel()"><option value="up" '+(s.direction==='up'?'selected':'')+'>↑ Рост</option><option value="down" '+(s.direction==='down'?'selected':'')+'>↓ Падение</option><option value="neutral" '+(s.direction==='neutral'?'selected':'')+'>— Без изменений</option></select></div></div>').join('');
+  renderFeedbackPanel();renderCompPanel();renderRecPanel();
 }
 
-// Secret: triple-click on brand logo to show edit button
-let clickCount = 0;
-let clickTimer = null;
-document.querySelector('.header-brand').addEventListener('click', (e) => {
-  e.preventDefault();
-  clickCount++;
-  clearTimeout(clickTimer);
-  clickTimer = setTimeout(() => { clickCount = 0; }, 500);
-  if (clickCount >= 3) {
-    editBtn.style.display = '';
-    clickCount = 0;
-  }
-});
+function renderFeedbackPanel(){document.getElementById('e-feedback').innerHTML=data.feedback.map((f,i)=>'<div class="edit-feedback-block"><button class="btn-remove" onclick="removeFeedback('+i+')">✕</button><div class="edit-row"><label class="edit-label">Имя</label><input class="edit-input" data-fb="'+i+'" data-field="name" value="'+f.name+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Дата</label><input class="edit-input" data-fb="'+i+'" data-field="date" value="'+f.date+'" onchange="saveFromPanel()"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Статус</label><select class="edit-select" data-fb="'+i+'" data-field="verdict" onchange="saveFromPanel()"><option value="interested" '+(f.verdict==='interested'?'selected':'')+'>Интересуются</option><option value="thinking" '+(f.verdict==='thinking'?'selected':'')+'>Думают</option><option value="declined" '+(f.verdict==='declined'?'selected':'')+'>Отказ</option></select></div><div class="edit-row"><label class="edit-label">Текст статуса</label><input class="edit-input" data-fb="'+i+'" data-field="verdictText" value="'+f.verdictText+'" onchange="saveFromPanel()"></div></div><div class="edit-row"><label class="edit-label">Комментарий</label><textarea class="edit-textarea" data-fb="'+i+'" data-field="text" onchange="saveFromPanel()">'+f.text+'</textarea></div></div>').join('');}
+
+function renderCompPanel(){document.getElementById('e-competitors').innerHTML=data.competitors.map((c,i)=>'<div class="edit-comp-block"><button class="btn-remove" onclick="removeComp('+i+')">✕</button><div class="edit-row"><label class="edit-label">Адрес</label><input class="edit-input" data-comp="'+i+'" data-field="address" value="'+c.address+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Ссылка на объявление</label><input class="edit-input" data-comp="'+i+'" data-field="url" value="'+(c.url||'')+'" placeholder="https://cian.ru/..." onchange="saveFromPanel()"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Комнат</label><input class="edit-input" data-comp="'+i+'" data-field="rooms" value="'+c.rooms+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Площадь</label><input class="edit-input" data-comp="'+i+'" data-field="area" value="'+c.area+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Цена</label><input class="edit-input" data-comp="'+i+'" data-field="price" value="'+c.price+'" onchange="saveFromPanel()"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Статус</label><select class="edit-select" data-comp="'+i+'" data-field="status" onchange="saveFromPanel()"><option value="active" '+(c.status==='active'?'selected':'')+'>В продаже</option><option value="sold" '+(c.status==='sold'?'selected':'')+'>Продана</option><option value="reduced" '+(c.status==='reduced'?'selected':'')+'>Снижение</option></select></div><div class="edit-row"><label class="edit-label">Текст статуса</label><input class="edit-input" data-comp="'+i+'" data-field="statusText" value="'+c.statusText+'" onchange="saveFromPanel()"></div></div><div class="edit-row"><label class="edit-label">Заметка</label><input class="edit-input" data-comp="'+i+'" data-field="note" value="'+c.note+'" onchange="saveFromPanel()"></div><div class="edit-row"><label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;"><input type="checkbox" data-comp="'+i+'" data-field="ours" '+(c.ours?'checked':'')+' onchange="saveFromPanel()"> Наш объект</label></div></div>').join('');}
+
+function renderRecPanel(){document.getElementById('e-recs').innerHTML=data.recommendations.map((r,i)=>'<div class="edit-rec-block"><button class="btn-remove" onclick="removeRec('+i+')">✕</button><div class="edit-row"><label class="edit-label">Заголовок</label><input class="edit-input" data-rec="'+i+'" data-field="title" value="'+r.title+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Описание</label><textarea class="edit-textarea" data-rec="'+i+'" data-field="text" onchange="saveFromPanel()">'+r.text+'</textarea></div></div>').join('');}
+
+function saveFromPanel(){
+  data.object=document.getElementById('e-object').value;data.week=parseInt(document.getElementById('e-week').value)||1;
+  data.period=document.getElementById('e-period').value;data.dayOnMarket=parseInt(document.getElementById('e-dayOnMarket').value)||0;
+  data.price=document.getElementById('e-price').value;data.summary=document.getElementById('e-summary').value;
+  document.querySelectorAll('[data-stat]').forEach(el=>{const k=el.dataset.stat,f=el.dataset.field;if(f==='value')data.stats[k].value=parseInt(el.value)||0;else data.stats[k][f]=el.value;});
+  document.querySelectorAll('[data-fb]').forEach(el=>{const i=+el.dataset.fb,f=el.dataset.field;if(data.feedback[i])data.feedback[i][f]=el.value;});
+  document.querySelectorAll('[data-comp]').forEach(el=>{const i=+el.dataset.comp,f=el.dataset.field;if(data.competitors[i]){if(f==='ours')data.competitors[i].ours=el.checked;else data.competitors[i][f]=el.value;}});
+  document.querySelectorAll('[data-rec]').forEach(el=>{const i=+el.dataset.rec,f=el.dataset.field;if(data.recommendations[i])data.recommendations[i][f]=el.value;});
+  render();persist();
+}
+
+function addFeedback(){data.feedback.push({name:'',date:'',verdict:'thinking',verdictText:'Думают',text:''});renderFeedbackPanel();render();persist();}
+function removeFeedback(i){data.feedback.splice(i,1);renderFeedbackPanel();render();persist();}
+function addCompetitor(){data.competitors.push({address:'',rooms:'',area:'',price:'',status:'active',statusText:'В продаже',note:'',url:'',ours:false});renderCompPanel();render();persist();}
+function removeComp(i){data.competitors.splice(i,1);renderCompPanel();render();persist();}
+function addRec(){data.recommendations.push({title:'',text:''});renderRecPanel();render();persist();}
+function removeRec(i){data.recommendations.splice(i,1);renderRecPanel();render();persist();}
+function saveData(){persist();const h=document.getElementById('saveHint');if(h){h.style.color='#2D8A4E';h.textContent='✓ Сохранено';setTimeout(()=>{h.style.color='';h.textContent='Автосохранение включено.';},1500);}}
+function resetData(){if(!confirm('Сбросить все данные этого объекта?'))return;data=blankData();persist();render();populatePanel();}
+
+// INIT
+const params=new URLSearchParams(window.location.search);
+const initId=params.get('id'),isEditMode=params.has('edit');
+if(initId){openObject(initId);if(!isEditMode){editBtn.style.display='none';backLink.style.display='none';}}
+else{showPicker();}
 </script>
 </body>
 </html>
