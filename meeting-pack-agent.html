@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Партнёрство — Семён Гончаров</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    ::selection{background:#0066FF;color:#fff}::-moz-selection{background:#0066FF;color:#fff}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--serif:'Playfair Display',serif;--sans:'Inter',sans-serif;--bg:#FAFAF8;--dark:#1C1C1E;--text:#1A1A1A;--muted:#666;--border:rgba(0,0,0,0.08)}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6}
+    .site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center}
+    .header-brand{font-family:var(--serif);font-size:16px;font-weight:400;letter-spacing:0.01em;text-decoration:none;color:var(--text)}
+    .hero{background:var(--dark);color:#E5E5E5;padding:100px 40px 80px}
+    .hero-inner{max-width:900px;margin:0 auto}
+    .hero-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:28px}
+    .hero-title{font-family:var(--serif);font-size:clamp(36px,6vw,72px);font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:24px}
+    .hero-title em{font-style:italic;color:rgba(229,229,229,0.6)}
+    .hero-sub{font-size:16px;line-height:1.7;color:rgba(229,229,229,0.55);max-width:560px}
+    .nav-wrapper{position:sticky;top:64px;z-index:90}
+    .doc-nav{background:rgba(250,250,248,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:0 40px;display:flex;overflow-x:auto;scrollbar-width:none}
+    .doc-nav::-webkit-scrollbar{display:none}
+    .doc-nav-item{padding:18px 24px;font-size:12px;letter-spacing:0.05em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:color 0.2s,border-color 0.2s}
+    .doc-nav-item:hover,.doc-nav-item.active{color:var(--text);border-bottom-color:var(--text)}
+    .nav-burger{display:none;align-items:center;justify-content:space-between;padding:0 20px;height:52px;cursor:pointer;user-select:none;background:rgba(250,250,248,0.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .nav-burger-active{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text);font-weight:500}
+    .nav-burger-icon{display:flex;flex-direction:column;gap:4px;width:20px}
+    .nav-burger-icon span{display:block;height:1.5px;background:var(--text);border-radius:2px;transition:transform 0.25s,opacity 0.25s;transform-origin:center}
+    .nav-burger.open .nav-burger-icon span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+    .nav-burger.open .nav-burger-icon span:nth-child(2){opacity:0}
+    .nav-burger.open .nav-burger-icon span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+    .nav-dropdown{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(250,250,248,0.98);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);flex-direction:column;z-index:89}
+    .nav-dropdown.open{display:flex}
+    .nav-dropdown .doc-nav-item{padding:16px 20px;border-bottom:1px solid var(--border);border-left:2px solid transparent;white-space:normal}
+    .nav-dropdown .doc-nav-item:last-child{border-bottom:none}
+    .nav-dropdown .doc-nav-item.active{border-left-color:var(--text);border-bottom-color:var(--border);color:var(--text)}
+    .doc-section{max-width:900px;margin:0 auto;padding:80px 40px;border-bottom:1px solid var(--border)}
+    .doc-section:last-child{border-bottom:none}
+    .section-num{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:block}
+    .section-title{font-family:var(--serif);font-size:clamp(28px,4vw,48px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;margin-bottom:16px}
+    .section-intro{font-size:16px;line-height:1.7;color:var(--muted);max-width:620px;margin-bottom:52px}
+    .diagnosis-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+    .diagnosis-card{background:white;padding:28px 32px}
+    .diagnosis-card:first-child{border-radius:12px 0 0 0}
+    .diagnosis-card:nth-child(2){border-radius:0 12px 0 0}
+    .diagnosis-card:nth-child(3){border-radius:0 0 0 12px}
+    .diagnosis-card:last-child{border-radius:0 0 12px 0}
+    .diagnosis-label{font-size:10px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+    .diagnosis-text{font-size:14px;line-height:1.6;color:var(--text)}
+    .mechanics{display:flex;flex-direction:column}
+    .mechanic-step{display:grid;grid-template-columns:48px 1fr;gap:0 24px;padding:24px 0;border-top:1px solid var(--border);opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease}
+    .mechanic-step:last-child{border-bottom:1px solid var(--border)}
+    .mechanic-step.visible{opacity:1;transform:translateY(0)}
+    .mechanic-num{font-family:var(--serif);font-size:28px;font-weight:400;color:rgba(0,0,0,0.1);line-height:1;padding-top:2px}
+    .mechanic-title{font-size:15px;font-weight:500;margin-bottom:6px}
+    .mechanic-text{font-size:14px;line-height:1.65;color:var(--muted)}
+    .compare-wrap{border-radius:12px;overflow:hidden;background:white}
+    .compare-table{width:100%;border-collapse:collapse}
+    .compare-table th{font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding:14px 20px;text-align:left;border-bottom:1px solid var(--border)}
+    .compare-table th:last-child{color:var(--text)}
+    .compare-table td{font-size:14px;padding:16px 20px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
+    .compare-table tr:last-child td{border-bottom:none}
+    .compare-table td:first-child{color:var(--muted);font-size:12px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;width:30%}
+    .compare-table td:nth-child(2){color:var(--muted)}
+    .compare-table td:last-child{color:var(--text)}
+    .partnership-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+    .partnership-card{background:white;padding:32px}
+    .partnership-card:first-child{border-radius:12px 0 0 12px}
+    .partnership-card:last-child{border-radius:0 12px 12px 0}
+    .partnership-card-label{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+    .partnership-card-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+    .partnership-card-list li{font-size:14px;line-height:1.5;color:var(--text);padding-left:16px;position:relative}
+    .partnership-card-list li::before{content:'—';position:absolute;left:0;color:var(--muted)}
+    .rules{display:flex;flex-direction:column}
+    .rule{display:grid;grid-template-columns:40px 1fr;gap:0 24px;padding:28px 0;border-top:1px solid var(--border);opacity:0;transform:translateY(20px);transition:opacity 0.5s ease,transform 0.5s ease}
+    .rule:last-child{border-bottom:1px solid var(--border)}
+    .rule.visible{opacity:1;transform:translateY(0)}
+    .rule-num{font-family:var(--serif);font-size:24px;font-weight:400;color:rgba(0,0,0,0.12);line-height:1;padding-top:4px}
+    .rule-title{font-size:15px;font-weight:500;margin-bottom:6px}
+    .rule-text{font-size:14px;line-height:1.65;color:var(--muted)}
+    .cta-footer{background:var(--dark);padding:80px 40px;text-align:center}
+    .cta-footer-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:24px}
+    .cta-footer-title{font-family:var(--serif);font-size:clamp(24px,4vw,40px);font-weight:400;color:#E5E5E5;line-height:1.2;margin-bottom:12px}
+    .cta-footer-sub{font-size:15px;color:rgba(229,229,229,0.45);margin-bottom:40px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.6}
+    .cta-tg-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid #0088cc;border-radius:999px;text-decoration:none;background:transparent;color:#E5E5E5;font-family:var(--sans);font-size:14px;letter-spacing:0.02em;transition:background 0.2s,border-color 0.2s}
+    .cta-tg-btn:hover{background:#0088cc;border-color:#0088cc}
+    .cta-footer-copy{margin-top:48px;font-size:12px;color:rgba(229,229,229,0.2)}
+    .cta-footer-copy a{color:rgba(229,229,229,0.3);text-decoration:none}
+    @media(max-width:768px){
+      .site-header{padding:0 20px}.hero{padding:64px 20px 56px}.doc-section{padding:56px 20px}.cta-footer{padding:60px 20px}
+      .diagnosis-grid{grid-template-columns:1fr}.diagnosis-card:first-child{border-radius:12px 12px 0 0}.diagnosis-card:nth-child(2){border-radius:0}.diagnosis-card:nth-child(3){border-radius:0}.diagnosis-card:last-child{border-radius:0 0 12px 12px}
+      .partnership-grid{grid-template-columns:1fr}.partnership-card:first-child{border-radius:12px 12px 0 0}.partnership-card:last-child{border-radius:0 0 12px 12px}
+    }
+    @media(max-width:640px){.doc-nav{display:none}.nav-burger{display:flex}}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+</header>
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Для агентов · Партнёрство</p>
+    <h1 class="hero-title">Если объект завис —<br><em>есть другой формат</em></h1>
+    <p class="hero-sub">Предлагаю партнёрство в формате аукционной продажи. Вы приводите объект — я провожу процесс. Комиссия делится.</p>
+  </div>
+</section>
+<div class="nav-wrapper">
+  <nav class="doc-nav">
+    <a class="doc-nav-item active" href="#diagnosis">Почему объект завис</a>
+    <a class="doc-nav-item" href="#auction">Что такое аукцион</a>
+    <a class="doc-nav-item" href="#comparison">Аукцион vs классика</a>
+    <a class="doc-nav-item" href="#partnership">Как устроено партнёрство</a>
+    <a class="doc-nav-item" href="#conditions">Условия</a>
+  </nav>
+  <div class="nav-burger" id="navBurger">
+    <span class="nav-burger-active" id="navBurgerActive">Почему объект завис</span>
+    <div class="nav-burger-icon"><span></span><span></span><span></span></div>
+  </div>
+  <div class="nav-dropdown" id="navDropdown">
+    <a class="doc-nav-item active" href="#diagnosis">Почему объект завис</a>
+    <a class="doc-nav-item" href="#auction">Что такое аукцион</a>
+    <a class="doc-nav-item" href="#comparison">Аукцион vs классика</a>
+    <a class="doc-nav-item" href="#partnership">Как устроено партнёрство</a>
+    <a class="doc-nav-item" href="#conditions">Условия</a>
+  </div>
+</div>
+
+<section class="doc-section" id="diagnosis">
+  <span class="section-num">01 / 05</span>
+  <h2 class="section-title">Почему объект завис</h2>
+  <p class="section-intro">Зависший объект — почти всегда не проблема квартиры. Это проблема формата продажи. Несколько сценариев которые встречаются чаще всего.</p>
+  <div class="diagnosis-grid">
+    <div class="diagnosis-card">
+      <div class="diagnosis-label">Цена выше рынка</div>
+      <div class="diagnosis-text">Объект вышел по цене желания продавца, а не по цене рынка. Первые две недели — нет звонков. Потом снижение. Потом ещё снижение. К этому моменту объект уже «помечен» рынком как проблемный.</div>
+    </div>
+    <div class="diagnosis-card">
+      <div class="diagnosis-label">Нет эксклюзива</div>
+      <div class="diagnosis-text">Несколько агентов, никто не отвечает за результат. Покупатель звонит по одному объявлению — и получает пять разных ответов. Это создаёт ощущение хаоса и снижает доверие к объекту.</div>
+    </div>
+    <div class="diagnosis-card">
+      <div class="diagnosis-label">Слабая подача</div>
+      <div class="diagnosis-text">Фотографии на телефон, объявление без подготовки, собственник присутствует на показах. Покупатель видит чужую жизнь — а не своё будущее. Интерес есть, предложений нет.</div>
+    </div>
+    <div class="diagnosis-card">
+      <div class="diagnosis-label">Нет конкуренции между покупателями</div>
+      <div class="diagnosis-text">Классическая продажа — первый кто пришёл, тот и торгуется. Один на один с продавцом, давление на цену, долгие переговоры. Аукционный формат меняет эту механику принципиально.</div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-section" id="auction">
+  <span class="section-num">02 / 05</span>
+  <h2 class="section-title">Что такое аукционная продажа</h2>
+  <p class="section-intro">Аукцион — это не распродажа и не снижение цены. Это управляемая конкуренция между покупателями, которая позволяет продать объект быстро и по максимальной цене.</p>
+  <div class="mechanics">
+    <div class="mechanic-step">
+      <div class="mechanic-num">01</div>
+      <div>
+        <div class="mechanic-title">Вход ниже рынка — намеренно</div>
+        <div class="mechanic-text">Объект выставляется по цене чуть ниже рыночной. Это не уступка — это инструмент. Заниженная входная цена привлекает больше покупателей одновременно и создаёт ощущение выгодного предложения. Цель — собрать максимальный поток за короткое время.</div>
+      </div>
+    </div>
+    <div class="mechanic-step">
+      <div class="mechanic-num">02</div>
+      <div>
+        <div class="mechanic-title">Ограниченное время показов</div>
+        <div class="mechanic-text">Показы проводятся в строго отведённые дни. Все покупатели знают что конкурируют с другими. Дефицит времени убирает бесконечные «подумаю» и создаёт мотивацию принять решение.</div>
+      </div>
+    </div>
+    <div class="mechanic-step">
+      <div class="mechanic-num">03</div>
+      <div>
+        <div class="mechanic-title">Несколько предложений одновременно</div>
+        <div class="mechanic-text">После показов поступает несколько предложений от разных покупателей. Продавец выбирает лучшее — по цене и по условиям. Это кардинально меняет переговорную позицию: не продавец просит покупателя, а покупатель конкурирует за объект.</div>
+      </div>
+    </div>
+    <div class="mechanic-step">
+      <div class="mechanic-num">04</div>
+      <div>
+        <div class="mechanic-title">Результат — продажа по максимальной цене за 21 день</div>
+        <div class="mechanic-text">Конкуренция между покупателями естественно поднимает цену выше стартовой. Итоговая цена сделки в большинстве случаев выходит на максимальный уровень для данного объекта. При этом весь цикл от старта до аванса занимает три недели — вместо нескольких месяцев в классическом формате.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-section" id="comparison">
+  <span class="section-num">03 / 05</span>
+  <h2 class="section-title">Аукцион vs классическая продажа</h2>
+  <p class="section-intro">Два формата решают разные задачи. Аукцион — для мотивированного продавца который хочет продать быстро и по максимуму. Классика — для тех кто готов ждать.</p>
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr><th>Параметр</th><th>Классическая продажа</th><th>Аукционная продажа</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Срок</td><td>2–6 месяцев и дольше</td><td>21 день от старта до аванса</td></tr>
+        <tr><td>Цена</td><td>Торг вниз с каждым покупателем</td><td>Конкуренция поднимает цену до максимума</td></tr>
+        <tr><td>Переговоры</td><td>Один покупатель давит на продавца</td><td>Продавец выбирает из нескольких предложений</td></tr>
+        <tr><td>Показы</td><td>В любое время, хаотично</td><td>Организованно, в заданные дни</td></tr>
+        <tr><td>Контроль цены</td><td>Снижается по мере экспозиции</td><td>Растёт за счёт конкуренции</td></tr>
+        <tr><td>Репутация объекта</td><td>Падает с каждой неделей на рынке</td><td>Свежий старт, управляемый выход</td></tr>
+        <tr><td>Позиция продавца</td><td>Реактивная — отвечает на запросы</td><td>Активная — выбирает лучшее предложение</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="doc-section" id="partnership">
+  <span class="section-num">04 / 05</span>
+  <h2 class="section-title">Как устроено партнёрство</h2>
+  <p class="section-intro">Простая схема: вы приводите объект и клиента, я провожу весь процесс аукционной продажи. Комиссия делится между нами. Каждый делает своё. Я провёл достаточно аукционов чтобы понимать где механика работает, а где нет — и не берусь за объекты которые под неё не подходят.</p>
+  <div class="partnership-grid">
+    <div class="partnership-card">
+      <div class="partnership-card-label">Вы берёте на себя</div>
+      <ul class="partnership-card-list">
+        <li>Клиент — продавец с мотивацией продать</li>
+        <li>Объект готов к аукционному формату</li>
+        <li>Эксклюзивный договор подписан</li>
+        <li>Присутствие на ключевых этапах если нужно</li>
+        <li>Коммуникация с клиентом на стороне отношений</li>
+      </ul>
+    </div>
+    <div class="partnership-card">
+      <div class="partnership-card-label">Я беру на себя</div>
+      <ul class="partnership-card-list">
+        <li>Разработка маркетингового плана под объект</li>
+        <li>Определение стартовой цены и стратегии</li>
+        <li>Профессиональная фото и видео съёмка</li>
+        <li>Полная рекламная кампания</li>
+        <li>Организация и проведение показов</li>
+        <li>Сбор предложений и управление торгами</li>
+        <li>Переговоры с покупателями до аванса</li>
+        <li>Сопровождение сделки</li>
+      </ul>
+    </div>
+  </div>
+  <p style="margin-top:24px;font-size:14px;color:var(--muted);line-height:1.6;">Раздел комиссии обсуждается индивидуально под каждый объект — в зависимости от ситуации, сложности и условий.</p>
+</section>
+
+<section class="doc-section" id="conditions">
+  <span class="section-num">05 / 05</span>
+  <h2 class="section-title">Условия</h2>
+  <p class="section-intro">Аукционный формат работает только при соблюдении нескольких условий. Без них механика не запускается — и результат будет непредсказуемым.</p>
+  <div class="rules">
+    <div class="rule">
+      <div class="rule-num">01</div>
+      <div class="rule-body">
+        <div class="rule-title">Мотивированный продавец</div>
+        <div class="rule-text">Аукцион — это интенсивный формат. Продавец должен быть готов действовать быстро: подготовить квартиру, освободить её для показов, принять решение в короткие сроки. «Посмотрим как пойдёт» здесь не работает.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">02</div>
+      <div class="rule-body">
+        <div class="rule-title">Эксклюзивный договор</div>
+        <div class="rule-text">Без эксклюзива аукцион невозможен. Управление ценой, показами и переговорами требует полного контроля над процессом. Параллельная работа других агентов разрушает механику и лишает покупателей ощущения конкуренции.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">03</div>
+      <div class="rule-body">
+        <div class="rule-title">Готовность к стартовой цене ниже рынка</div>
+        <div class="rule-text">Это самый сложный момент для продавца психологически. Входная цена ниже рынка — не потеря, а инструмент. Но продавец должен это понять и принять до старта. Если в процессе возникнет желание поднять цену — аукцион потеряет смысл.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">04</div>
+      <div class="rule-body">
+        <div class="rule-title">Подготовленный объект</div>
+        <div class="rule-text">Квартира должна быть готова к профессиональной съёмке и показам до старта рекламной кампании. Хоумстейджинг, клининг, устранение явных дефектов — всё это делается до выхода на рынок, а не в процессе.</div>
+      </div>
+    </div>
+    <div class="rule">
+      <div class="rule-num">05</div>
+      <div class="rule-body">
+        <div class="rule-title">Отсутствие юридических проблем</div>
+        <div class="rule-text">Аукционный формат предполагает быстрое закрытие сделки. Если в документах есть сложности — наследство, несовершеннолетние, обременения — их нужно решить до старта. Юридические вопросы в процессе аукциона разрушают темп и теряют покупателей.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="cta-footer">
+  <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости</p>
+  <h2 class="cta-footer-title">Есть объект — давайте обсудим</h2>
+  <p class="cta-footer-sub">Напишите — коротко расскажите про объект и ситуацию. Сразу скажу подходит ли формат.</p>
+  <a class="cta-tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z" fill="currentColor"/></svg>
+    Написать в Telegram
+  </a>
+  <p style="margin-top:20px;font-size:13px;color:rgba(229,229,229,0.35);">или позвонить: <a href="tel:+79118461965" style="color:rgba(229,229,229,0.55);text-decoration:none;">+7 911 846-19-65</a></p>
+  <p class="cta-footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
+</footer>
+<script>
+  const burger=document.getElementById('navBurger'),dropdown=document.getElementById('navDropdown'),burgerActive=document.getElementById('navBurgerActive');
+  burger.addEventListener('click',()=>{burger.classList.toggle('open');dropdown.classList.toggle('open')});
+  dropdown.querySelectorAll('.doc-nav-item').forEach(item=>{item.addEventListener('click',()=>{burger.classList.remove('open');dropdown.classList.remove('open');burgerActive.textContent=item.textContent})});
+  const sections=document.querySelectorAll('.doc-section'),navItems=document.querySelectorAll('.doc-nav-item');
+  const observer=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){const id=entry.target.id;navItems.forEach(item=>{const isActive=item.getAttribute('href')==='#'+id;item.classList.toggle('active',isActive);if(isActive&&burgerActive)burgerActive.textContent=item.textContent})}})},{rootMargin:'-40% 0px -50% 0px'});
+  sections.forEach(s=>observer.observe(s));
+  const animItems=document.querySelectorAll('.rule,.mechanic-step');
+  const animObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');animObserver.unobserve(entry.target)}})},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+  animItems.forEach((el,i)=>{el.style.transitionDelay=`${i%5*0.07}s`;animObserver.observe(el)});
+</script>
+</body>
+</html>
