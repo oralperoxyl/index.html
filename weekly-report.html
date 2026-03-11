@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <!--
+  ЕЖЕНЕДЕЛЬНЫЙ ОТЧЁТ — ШАБЛОН
+  
+  Как использовать:
+  1. Скопируйте этот файл для каждого объекта: reports/адрес.html
+  2. Откройте с ?edit=1 или тройной клик по логотипу → появится кнопка «Редактировать»
+  3. Заполните данные в панели справа → страница обновится в реальном времени
+  4. Нажмите «Скопировать JSON данные» → вставьте в блок <script id="reportData"> ниже
+  5. Закоммитьте файл → отправьте клиенту обычную ссылку (без ?edit=1)
+  
+  Клиент видит только чистый отчёт, без кнопки редактирования.
+-->
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Еженедельный отчёт — Семён Гончаров</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    ::selection { background: #0066FF; color: #fff; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --serif: 'Playfair Display', serif;
+      --sans: 'Inter', sans-serif;
+      --bg: #FAFAF8;
+      --dark: #1C1C1E;
+      --text: #1A1A1A;
+      --muted: #666;
+      --border: rgba(0,0,0,0.08);
+      --accent: #0066FF;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(250,250,248,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .header-brand {
+      font-family: var(--serif);
+      font-size: 16px; font-weight: 400;
+      text-decoration: none; color: var(--text);
+    }
+    .edit-toggle {
+      font-family: var(--sans);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: transparent; color: var(--muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .edit-toggle:hover { border-color: var(--text); color: var(--text); }
+    .edit-toggle.active { background: var(--dark); color: #E5E5E5; border-color: var(--dark); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--dark); color: #E5E5E5;
+      padding: 80px 40px 60px;
+    }
+    .hero-inner { max-width: 900px; margin: 0 auto; }
+    .hero-label {
+      font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: rgba(229,229,229,0.4);
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 400; line-height: 1.15;
+      letter-spacing: -0.02em; color: #E5E5E5;
+      margin-bottom: 12px;
+    }
+    .hero-title em { font-style: italic; color: rgba(229,229,229,0.5); }
+    .hero-meta {
+      display: flex; gap: 40px; margin-top: 24px;
+      flex-wrap: wrap;
+    }
+    .hero-meta-item { }
+    .hero-meta-label {
+      font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(229,229,229,0.35);
+      margin-bottom: 4px;
+    }
+    .hero-meta-value {
+      font-size: 15px; color: rgba(229,229,229,0.75);
+    }
+
+    /* ── SECTIONS ── */
+    .report-section {
+      max-width: 900px; margin: 0 auto;
+      padding: 64px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+    .report-section:last-of-type { border-bottom: none; }
+    .section-label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 400; line-height: 1.2;
+      margin-bottom: 36px;
+    }
+
+    /* ── STAT CARDS ── */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 2px; margin-bottom: 32px;
+    }
+    .stat-card {
+      background: white; padding: 24px;
+    }
+    .stat-card:first-child { border-radius: 8px 0 0 8px; }
+    .stat-card:last-child { border-radius: 0 8px 8px 0; }
+    .stat-num {
+      font-family: var(--serif);
+      font-size: 36px; font-weight: 400;
+      line-height: 1; margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: 12px; color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+    .stat-delta {
+      font-size: 11px; margin-top: 8px;
+      font-weight: 500;
+    }
+    .stat-delta.up { color: #2D8A4E; }
+    .stat-delta.down { color: #C0392B; }
+    .stat-delta.neutral { color: var(--muted); }
+
+    /* ── FEEDBACK LIST ── */
+    .feedback-list { display: flex; flex-direction: column; gap: 0; }
+    .feedback-item {
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+    }
+    .feedback-item:last-child { border-bottom: 1px solid var(--border); }
+    .feedback-header {
+      display: flex; justify-content: space-between;
+      align-items: baseline; margin-bottom: 6px;
+    }
+    .feedback-name { font-size: 15px; font-weight: 500; }
+    .feedback-date { font-size: 12px; color: var(--muted); }
+    .feedback-verdict {
+      font-size: 11px; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 3px;
+      display: inline-block; margin-bottom: 8px;
+    }
+    .feedback-verdict.interested { background: #E8F5E9; color: #2D8A4E; }
+    .feedback-verdict.thinking { background: #FFF8E1; color: #B8860B; }
+    .feedback-verdict.declined { background: #FBEAEA; color: #C0392B; }
+    .feedback-text {
+      font-size: 14px; line-height: 1.65; color: var(--muted);
+    }
+
+    /* ── COMPETITOR TABLE ── */
+    .comp-table {
+      width: 100%; border-collapse: collapse;
+    }
+    .comp-table th {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); text-align: left;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--text);
+    }
+    .comp-table td {
+      font-size: 14px; padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .comp-table tr.our-object { background: rgba(0,102,255,0.04); }
+    .comp-table .comp-status {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .comp-status.active { color: #2D8A4E; }
+    .comp-status.sold { color: var(--muted); text-decoration: line-through; }
+    .comp-status.reduced { color: #C0392B; }
+
+    /* ── RECOMMENDATIONS ── */
+    .rec-list { display: flex; flex-direction: column; gap: 0; }
+    .rec-item {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 16px; padding: 20px 0;
+      border-top: 1px solid var(--border);
+    }
+    .rec-item:last-child { border-bottom: 1px solid var(--border); }
+    .rec-num {
+      font-family: var(--serif);
+      font-size: 20px; color: rgba(0,0,0,0.12);
+      padding-top: 2px;
+    }
+    .rec-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+    .rec-text { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── SUMMARY BOX ── */
+    .summary-box {
+      background: var(--dark); color: #E5E5E5;
+      padding: 32px; border-radius: 8px;
+      margin-top: 24px;
+    }
+    .summary-label {
+      font-size: 10px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: rgba(229,229,229,0.4);
+      margin-bottom: 12px;
+    }
+    .summary-text {
+      font-size: 15px; line-height: 1.7;
+      color: rgba(229,229,229,0.8);
+    }
+
+    /* ── FOOTER ── */
+    .report-footer {
+      background: var(--dark); padding: 60px 40px; text-align: center;
+    }
+    .footer-name {
+      font-family: var(--serif);
+      font-size: 16px; color: rgba(229,229,229,0.6);
+      margin-bottom: 8px;
+    }
+    .footer-contact {
+      font-size: 13px; color: rgba(229,229,229,0.35);
+    }
+    .footer-contact a { color: rgba(229,229,229,0.5); text-decoration: none; }
+    .footer-contact a:hover { color: rgba(229,229,229,0.8); }
+
+    /* ── EDIT PANEL ── */
+    .edit-panel {
+      display: none;
+      position: fixed; top: 64px; right: 0; bottom: 0;
+      width: 420px; background: white;
+      border-left: 1px solid var(--border);
+      z-index: 200; overflow-y: auto;
+      box-shadow: -4px 0 24px rgba(0,0,0,0.06);
+    }
+    .edit-panel.open { display: block; }
+    .edit-panel-inner { padding: 28px; }
+    .edit-panel h3 {
+      font-family: var(--serif);
+      font-size: 18px; font-weight: 400;
+      margin-bottom: 20px; padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .edit-group { margin-bottom: 28px; }
+    .edit-group-title {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
+    }
+    .edit-row { margin-bottom: 12px; }
+    .edit-label {
+      font-size: 12px; color: var(--muted);
+      margin-bottom: 4px; display: block;
+    }
+    .edit-input, .edit-textarea, .edit-select {
+      width: 100%; font-family: var(--sans);
+      font-size: 14px; padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 4px; background: var(--bg);
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .edit-input:focus, .edit-textarea:focus, .edit-select:focus {
+      outline: none; border-color: var(--accent);
+    }
+    .edit-textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+
+    .edit-feedback-block {
+      background: var(--bg); border-radius: 6px;
+      padding: 16px; margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+    .edit-comp-block {
+      background: var(--bg); border-radius: 6px;
+      padding: 16px; margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+    .edit-rec-block {
+      background: var(--bg); border-radius: 6px;
+      padding: 16px; margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .btn-add {
+      font-family: var(--sans);
+      font-size: 12px; font-weight: 500;
+      color: var(--accent); background: none;
+      border: 1px dashed var(--accent);
+      border-radius: 4px; padding: 8px 16px;
+      cursor: pointer; width: 100%;
+      transition: background 0.2s;
+    }
+    .btn-add:hover { background: rgba(0,102,255,0.04); }
+
+    .btn-remove {
+      font-size: 11px; color: #C0392B;
+      background: none; border: none;
+      cursor: pointer; float: right;
+      padding: 2px 6px;
+    }
+    .btn-remove:hover { text-decoration: underline; }
+
+    .btn-save {
+      width: 100%; padding: 14px;
+      font-family: var(--sans);
+      font-size: 13px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      background: var(--dark); color: #E5E5E5;
+      border: none; border-radius: 4px;
+      cursor: pointer; transition: opacity 0.2s;
+      margin-top: 20px;
+    }
+    .btn-save:hover { opacity: 0.85; }
+
+    .save-hint {
+      font-size: 11px; color: var(--muted);
+      text-align: center; margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    body.editing .report-section { margin-right: 420px; }
+    body.editing .hero { padding-right: 460px; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .site-header { padding: 0 20px; }
+      .hero { padding: 60px 20px 48px; }
+      .report-section { padding: 48px 20px; }
+      .hero-meta { gap: 24px; }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .stat-card:first-child { border-radius: 8px 0 0 0; }
+      .stat-card:nth-child(2) { border-radius: 0 8px 0 0; }
+      .stat-card:last-child { border-radius: 0 0 8px 0; }
+      .comp-table { font-size: 13px; }
+      .comp-table th, .comp-table td { padding: 10px 8px; }
+      .edit-panel { width: 100%; left: 0; }
+      body.editing .report-section { margin-right: 0; }
+      body.editing .hero { padding-right: 20px; }
+      .report-footer { padding: 48px 20px; }
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      .edit-toggle, .edit-panel { display: none !important; }
+      .site-header { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- DATA — edit this JSON block or use the panel -->
+<script id="reportData" type="application/json">
+{
+  "object": "ул. Кораблестроителей, 32, кв. 78",
+  "week": 2,
+  "period": "3–9 марта 2026",
+  "dayOnMarket": 14,
+  "price": "12 900 000 ₽",
+  "stats": {
+    "views": { "value": 847, "delta": "+12%", "direction": "up" },
+    "calls": { "value": 23, "delta": "+4", "direction": "up" },
+    "showings": { "value": 8, "delta": "—", "direction": "neutral" },
+    "offers": { "value": 2, "delta": "+2", "direction": "up" }
+  },
+  "feedback": [
+    {
+      "name": "Марина и Олег",
+      "date": "5 марта",
+      "verdict": "interested",
+      "verdictText": "Интересуются",
+      "text": "Понравилась планировка и вид. Хотят вернуться с родителями в выходные. Ипотека одобрена в Сбере."
+    },
+    {
+      "name": "Александр П.",
+      "date": "6 марта",
+      "verdict": "thinking",
+      "verdictText": "Думают",
+      "text": "Смотрят параллельно 3 квартиры в районе. Наш объект — фаворит по планировке, но хотят торг."
+    },
+    {
+      "name": "Ирина К.",
+      "date": "7 марта",
+      "verdict": "declined",
+      "verdictText": "Отказ",
+      "text": "Не подошёл этаж — принципиально ищут выше 10-го."
+    }
+  ],
+  "competitors": [
+    {
+      "address": "Кораблестроителей, 30",
+      "rooms": "2к",
+      "area": "58 м²",
+      "price": "13 200 000",
+      "status": "active",
+      "statusText": "В продаже",
+      "note": "Без ремонта, на рынке 45 дней"
+    },
+    {
+      "address": "Кораблестроителей, 32 (наш)",
+      "rooms": "2к",
+      "area": "61 м²",
+      "price": "12 900 000",
+      "status": "active",
+      "statusText": "Наш объект",
+      "note": "14 дней, 2 оффера",
+      "ours": true
+    },
+    {
+      "address": "Нахимова, 11",
+      "rooms": "2к",
+      "area": "55 м²",
+      "price": "12 500 000",
+      "status": "reduced",
+      "statusText": "Снижение −400к",
+      "note": "Был 12.9, снизили после 60 дней"
+    },
+    {
+      "address": "Беринга, 6",
+      "rooms": "2к",
+      "area": "63 м²",
+      "price": "13 800 000",
+      "status": "sold",
+      "statusText": "Продана",
+      "note": "Ушла за 13 500 на 22-й день"
+    }
+  ],
+  "recommendations": [
+    {
+      "title": "Провести повторный показ для Марины и Олега",
+      "text": "Пригласить с родителями в субботу утром, подготовить распечатку планировки с замерами."
+    },
+    {
+      "title": "Усилить рекламу на Циан",
+      "text": "Поднять объявление в ТОП на 3 дня. Конкурент на Нахимова снизил цену — наш объект стал ещё привлекательнее."
+    },
+    {
+      "title": "Подготовить контр-оффер для Александра",
+      "text": "Предложить фиксацию цены на 5 дней без торга взамен на быстрый задаток."
+    }
+  ],
+  "summary": "Объект вызывает стабильный интерес. Два реальных оффера за вторую неделю — это хороший темп. Конкуренты ослабевают: Нахимова снизила цену, Беринга ушла. На следующей неделе фокус — закрытие одного из двух покупателей."
+}
+</script>
+
+<!-- HEADER -->
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+  <button class="edit-toggle" id="editToggle" onclick="toggleEdit()">Редактировать</button>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="heroSection">
+  <div class="hero-inner">
+    <p class="hero-label">Еженедельный отчёт · Семён Гончаров</p>
+    <h1 class="hero-title" id="heroTitle"></h1>
+    <div class="hero-meta" id="heroMeta"></div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="report-section" id="statsSection">
+  <div class="section-label">01 — Статистика</div>
+  <h2 class="section-title">Активность за неделю</h2>
+  <div class="stat-grid" id="statGrid"></div>
+</section>
+
+<!-- FEEDBACK -->
+<section class="report-section" id="feedbackSection">
+  <div class="section-label">02 — Обратная связь</div>
+  <h2 class="section-title">Что говорят покупатели</h2>
+  <div class="feedback-list" id="feedbackList"></div>
+</section>
+
+<!-- COMPETITORS -->
+<section class="report-section" id="compSection">
+  <div class="section-label">03 — Рынок</div>
+  <h2 class="section-title">Сравнение с конкурентами</h2>
+  <div style="overflow-x:auto;">
+    <table class="comp-table" id="compTable">
+      <thead>
+        <tr>
+          <th>Адрес</th>
+          <th>Комнат</th>
+          <th>Площадь</th>
+          <th>Цена</th>
+          <th>Статус</th>
+          <th>Заметка</th>
+        </tr>
+      </thead>
+      <tbody id="compBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- RECOMMENDATIONS -->
+<section class="report-section" id="recSection">
+  <div class="section-label">04 — Рекомендации</div>
+  <h2 class="section-title">План на следующую неделю</h2>
+  <div class="rec-list" id="recList"></div>
+  <div class="summary-box" id="summaryBox">
+    <div class="summary-label">Резюме</div>
+    <div class="summary-text" id="summaryText"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="report-footer">
+  <p class="footer-name">Семён Гончаров · Агент по недвижимости</p>
+  <p class="footer-contact">
+    <a href="tel:+79118461965">+7 911 846-19-65</a> · 
+    <a href="https://t.me/semengme">t.me/semengme</a> · 
+    <a href="https://fastbroker21.ru">fastbroker21.ru</a>
+  </p>
+</footer>
+
+<!-- EDIT PANEL -->
+<div class="edit-panel" id="editPanel">
+  <div class="edit-panel-inner">
+    <h3>Редактор отчёта</h3>
+
+    <!-- META -->
+    <div class="edit-group">
+      <div class="edit-group-title">Объект и период</div>
+      <div class="edit-row">
+        <label class="edit-label">Адрес объекта</label>
+        <input class="edit-input" id="e-object" onchange="saveFromPanel()">
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Номер недели</label>
+        <input class="edit-input" id="e-week" type="number" onchange="saveFromPanel()">
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Период (напр. «3–9 марта 2026»)</label>
+        <input class="edit-input" id="e-period" onchange="saveFromPanel()">
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Дней на рынке</label>
+        <input class="edit-input" id="e-dayOnMarket" type="number" onchange="saveFromPanel()">
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Цена</label>
+        <input class="edit-input" id="e-price" onchange="saveFromPanel()">
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="edit-group">
+      <div class="edit-group-title">Статистика</div>
+      <div id="e-stats"></div>
+    </div>
+
+    <!-- FEEDBACK -->
+    <div class="edit-group">
+      <div class="edit-group-title">Обратная связь покупателей</div>
+      <div id="e-feedback"></div>
+      <button class="btn-add" onclick="addFeedback()">+ Добавить покупателя</button>
+    </div>
+
+    <!-- COMPETITORS -->
+    <div class="edit-group">
+      <div class="edit-group-title">Конкуренты</div>
+      <div id="e-competitors"></div>
+      <button class="btn-add" onclick="addCompetitor()">+ Добавить объект</button>
+    </div>
+
+    <!-- RECOMMENDATIONS -->
+    <div class="edit-group">
+      <div class="edit-group-title">Рекомендации</div>
+      <div id="e-recs"></div>
+      <button class="btn-add" onclick="addRec()">+ Добавить</button>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="edit-group">
+      <div class="edit-group-title">Резюме недели</div>
+      <textarea class="edit-textarea" id="e-summary" rows="4" onchange="saveFromPanel()"></textarea>
+    </div>
+
+    <button class="btn-save" onclick="exportData()">Скопировать JSON данные</button>
+    <p class="save-hint">Скопируйте JSON и вставьте в блок &lt;script id="reportData"&gt; в файле отчёта, затем закоммитьте</p>
+  </div>
+</div>
+
+<script>
+// ── Load data ──
+let data = JSON.parse(document.getElementById('reportData').textContent);
+
+function render() {
+  // Hero
+  document.getElementById('heroTitle').innerHTML = 
+    `Неделя ${data.week}<br><em>${data.object}</em>`;
+  
+  document.getElementById('heroMeta').innerHTML = `
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Период</div>
+      <div class="hero-meta-value">${data.period}</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Дней на рынке</div>
+      <div class="hero-meta-value">${data.dayOnMarket}</div>
+    </div>
+    <div class="hero-meta-item">
+      <div class="hero-meta-label">Цена</div>
+      <div class="hero-meta-value">${data.price}</div>
+    </div>
+  `;
+
+  // Stats
+  const statNames = { views: 'Просмотров', calls: 'Звонков', showings: 'Показов', offers: 'Офферов' };
+  document.getElementById('statGrid').innerHTML = 
+    Object.entries(data.stats).map(([key, s]) => `
+      <div class="stat-card">
+        <div class="stat-num">${s.value}</div>
+        <div class="stat-label">${statNames[key]}</div>
+        <div class="stat-delta ${s.direction}">${s.delta}</div>
+      </div>
+    `).join('');
+
+  // Feedback
+  document.getElementById('feedbackList').innerHTML = 
+    data.feedback.map(f => `
+      <div class="feedback-item">
+        <div class="feedback-header">
+          <span class="feedback-name">${f.name}</span>
+          <span class="feedback-date">${f.date}</span>
+        </div>
+        <span class="feedback-verdict ${f.verdict}">${f.verdictText}</span>
+        <div class="feedback-text">${f.text}</div>
+      </div>
+    `).join('');
+
+  // Competitors
+  document.getElementById('compBody').innerHTML = 
+    data.competitors.map(c => `
+      <tr class="${c.ours ? 'our-object' : ''}">
+        <td>${c.address}</td>
+        <td>${c.rooms}</td>
+        <td>${c.area}</td>
+        <td>${c.price}</td>
+        <td><span class="comp-status ${c.status}">${c.statusText}</span></td>
+        <td>${c.note}</td>
+      </tr>
+    `).join('');
+
+  // Recommendations
+  document.getElementById('recList').innerHTML = 
+    data.recommendations.map((r, i) => `
+      <div class="rec-item">
+        <div class="rec-num">${String(i + 1).padStart(2, '0')}</div>
+        <div>
+          <div class="rec-title">${r.title}</div>
+          <div class="rec-text">${r.text}</div>
+        </div>
+      </div>
+    `).join('');
+
+  document.getElementById('summaryText').textContent = data.summary;
+}
+
+// ── Edit panel ──
+function toggleEdit() {
+  const panel = document.getElementById('editPanel');
+  const btn = document.getElementById('editToggle');
+  const open = panel.classList.toggle('open');
+  document.body.classList.toggle('editing', open);
+  btn.classList.toggle('active', open);
+  btn.textContent = open ? 'Закрыть' : 'Редактировать';
+  if (open) populatePanel();
+}
+
+function populatePanel() {
+  document.getElementById('e-object').value = data.object;
+  document.getElementById('e-week').value = data.week;
+  document.getElementById('e-period').value = data.period;
+  document.getElementById('e-dayOnMarket').value = data.dayOnMarket;
+  document.getElementById('e-price').value = data.price;
+  document.getElementById('e-summary').value = data.summary;
+
+  // Stats
+  const statNames = { views: 'Просмотров', calls: 'Звонков', showings: 'Показов', offers: 'Офферов' };
+  document.getElementById('e-stats').innerHTML = 
+    Object.entries(data.stats).map(([key, s]) => `
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div>
+          <label class="edit-label">${statNames[key]}</label>
+          <input class="edit-input" data-stat="${key}" data-field="value" type="number" value="${s.value}" onchange="saveFromPanel()">
+        </div>
+        <div>
+          <label class="edit-label">Дельта</label>
+          <input class="edit-input" data-stat="${key}" data-field="delta" value="${s.delta}" onchange="saveFromPanel()">
+        </div>
+        <div>
+          <label class="edit-label">Направление</label>
+          <select class="edit-select" data-stat="${key}" data-field="direction" onchange="saveFromPanel()">
+            <option value="up" ${s.direction==='up'?'selected':''}>↑ Рост</option>
+            <option value="down" ${s.direction==='down'?'selected':''}>↓ Падение</option>
+            <option value="neutral" ${s.direction==='neutral'?'selected':''}>— Без изменений</option>
+          </select>
+        </div>
+      </div>
+    `).join('');
+
+  renderFeedbackPanel();
+  renderCompPanel();
+  renderRecPanel();
+}
+
+function renderFeedbackPanel() {
+  document.getElementById('e-feedback').innerHTML = data.feedback.map((f, i) => `
+    <div class="edit-feedback-block">
+      <button class="btn-remove" onclick="removeFeedback(${i})">✕</button>
+      <div class="edit-row">
+        <label class="edit-label">Имя</label>
+        <input class="edit-input" data-fb="${i}" data-field="name" value="${f.name}" onchange="saveFromPanel()">
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Дата</label>
+        <input class="edit-input" data-fb="${i}" data-field="date" value="${f.date}" onchange="saveFromPanel()">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row">
+          <label class="edit-label">Статус</label>
+          <select class="edit-select" data-fb="${i}" data-field="verdict" onchange="saveFromPanel()">
+            <option value="interested" ${f.verdict==='interested'?'selected':''}>Интересуются</option>
+            <option value="thinking" ${f.verdict==='thinking'?'selected':''}>Думают</option>
+            <option value="declined" ${f.verdict==='declined'?'selected':''}>Отказ</option>
+          </select>
+        </div>
+        <div class="edit-row">
+          <label class="edit-label">Текст статуса</label>
+          <input class="edit-input" data-fb="${i}" data-field="verdictText" value="${f.verdictText}" onchange="saveFromPanel()">
+        </div>
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Комментарий</label>
+        <textarea class="edit-textarea" data-fb="${i}" data-field="text" onchange="saveFromPanel()">${f.text}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderCompPanel() {
+  document.getElementById('e-competitors').innerHTML = data.competitors.map((c, i) => `
+    <div class="edit-comp-block">
+      <button class="btn-remove" onclick="removeComp(${i})">✕</button>
+      <div class="edit-row">
+        <label class="edit-label">Адрес</label>
+        <input class="edit-input" data-comp="${i}" data-field="address" value="${c.address}" onchange="saveFromPanel()">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div class="edit-row">
+          <label class="edit-label">Комнат</label>
+          <input class="edit-input" data-comp="${i}" data-field="rooms" value="${c.rooms}" onchange="saveFromPanel()">
+        </div>
+        <div class="edit-row">
+          <label class="edit-label">Площадь</label>
+          <input class="edit-input" data-comp="${i}" data-field="area" value="${c.area}" onchange="saveFromPanel()">
+        </div>
+        <div class="edit-row">
+          <label class="edit-label">Цена</label>
+          <input class="edit-input" data-comp="${i}" data-field="price" value="${c.price}" onchange="saveFromPanel()">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row">
+          <label class="edit-label">Статус</label>
+          <select class="edit-select" data-comp="${i}" data-field="status" onchange="saveFromPanel()">
+            <option value="active" ${c.status==='active'?'selected':''}>В продаже</option>
+            <option value="sold" ${c.status==='sold'?'selected':''}>Продана</option>
+            <option value="reduced" ${c.status==='reduced'?'selected':''}>Снижение</option>
+          </select>
+        </div>
+        <div class="edit-row">
+          <label class="edit-label">Текст статуса</label>
+          <input class="edit-input" data-comp="${i}" data-field="statusText" value="${c.statusText}" onchange="saveFromPanel()">
+        </div>
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Заметка</label>
+        <input class="edit-input" data-comp="${i}" data-field="note" value="${c.note}" onchange="saveFromPanel()">
+      </div>
+      <div class="edit-row">
+        <label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+          <input type="checkbox" data-comp="${i}" data-field="ours" ${c.ours?'checked':''} onchange="saveFromPanel()">
+          Наш объект
+        </label>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderRecPanel() {
+  document.getElementById('e-recs').innerHTML = data.recommendations.map((r, i) => `
+    <div class="edit-rec-block">
+      <button class="btn-remove" onclick="removeRec(${i})">✕</button>
+      <div class="edit-row">
+        <label class="edit-label">Заголовок</label>
+        <input class="edit-input" data-rec="${i}" data-field="title" value="${r.title}" onchange="saveFromPanel()">
+      </div>
+      <div class="edit-row">
+        <label class="edit-label">Описание</label>
+        <textarea class="edit-textarea" data-rec="${i}" data-field="text" onchange="saveFromPanel()">${r.text}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+function saveFromPanel() {
+  data.object = document.getElementById('e-object').value;
+  data.week = parseInt(document.getElementById('e-week').value) || 1;
+  data.period = document.getElementById('e-period').value;
+  data.dayOnMarket = parseInt(document.getElementById('e-dayOnMarket').value) || 0;
+  data.price = document.getElementById('e-price').value;
+  data.summary = document.getElementById('e-summary').value;
+
+  // Stats
+  document.querySelectorAll('[data-stat]').forEach(el => {
+    const key = el.dataset.stat;
+    const field = el.dataset.field;
+    if (field === 'value') data.stats[key].value = parseInt(el.value) || 0;
+    else data.stats[key][field] = el.value;
+  });
+
+  // Feedback
+  document.querySelectorAll('[data-fb]').forEach(el => {
+    const i = parseInt(el.dataset.fb);
+    const field = el.dataset.field;
+    if (data.feedback[i]) data.feedback[i][field] = el.value;
+  });
+
+  // Competitors
+  document.querySelectorAll('[data-comp]').forEach(el => {
+    const i = parseInt(el.dataset.comp);
+    const field = el.dataset.field;
+    if (data.competitors[i]) {
+      if (field === 'ours') data.competitors[i].ours = el.checked;
+      else data.competitors[i][field] = el.value;
+    }
+  });
+
+  // Recommendations
+  document.querySelectorAll('[data-rec]').forEach(el => {
+    const i = parseInt(el.dataset.rec);
+    const field = el.dataset.field;
+    if (data.recommendations[i]) {
+      data.recommendations[i][field] = el.tagName === 'TEXTAREA' ? el.value : el.value;
+    }
+  });
+
+  render();
+}
+
+function addFeedback() {
+  data.feedback.push({ name: '', date: '', verdict: 'thinking', verdictText: 'Думают', text: '' });
+  renderFeedbackPanel();
+  render();
+}
+function removeFeedback(i) {
+  data.feedback.splice(i, 1);
+  renderFeedbackPanel();
+  render();
+}
+
+function addCompetitor() {
+  data.competitors.push({ address: '', rooms: '', area: '', price: '', status: 'active', statusText: 'В продаже', note: '', ours: false });
+  renderCompPanel();
+  render();
+}
+function removeComp(i) {
+  data.competitors.splice(i, 1);
+  renderCompPanel();
+  render();
+}
+
+function addRec() {
+  data.recommendations.push({ title: '', text: '' });
+  renderRecPanel();
+  render();
+}
+function removeRec(i) {
+  data.recommendations.splice(i, 1);
+  renderRecPanel();
+  render();
+}
+
+function exportData() {
+  const json = JSON.stringify(data, null, 2);
+  navigator.clipboard.writeText(json).then(() => {
+    alert('JSON скопирован в буфер обмена!\n\nВставьте его в блок <script id="reportData"> в файле отчёта.');
+  }).catch(() => {
+    const w = window.open('', '_blank');
+    w.document.write('<pre>' + json.replace(/</g, '&lt;') + '</pre>');
+  });
+}
+
+// ── Init ──
+render();
+
+// Edit mode: hidden by default
+// Activate: add ?edit=1 to URL, or triple-click on logo
+const editBtn = document.getElementById('editToggle');
+editBtn.style.display = 'none';
+
+if (new URLSearchParams(window.location.search).has('edit')) {
+  editBtn.style.display = '';
+}
+
+// Secret: triple-click on brand logo to show edit button
+let clickCount = 0;
+let clickTimer = null;
+document.querySelector('.header-brand').addEventListener('click', (e) => {
+  e.preventDefault();
+  clickCount++;
+  clearTimeout(clickTimer);
+  clickTimer = setTimeout(() => { clickCount = 0; }, 500);
+  if (clickCount >= 3) {
+    editBtn.style.display = '';
+    clickCount = 0;
+  }
+});
+</script>
+</body>
+</html>
