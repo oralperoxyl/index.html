@@ -381,9 +381,9 @@
 
     @media (max-width: 640px) {
       .stair-start { align-items: flex-start; padding-left: 0; }
-      .stair-start .stair-connector-line { margin: 0 0 0 23px; }
+      .stair-start .stair-connector-line { margin: 0 0 0 24px; }
       .staircase > div:last-child { align-items: flex-start !important; }
-      .staircase > div:last-child .stair-connector-line { margin: 0 0 0 23px; }
+      .staircase > div:last-child .stair-connector-line { margin: 0 0 0 24px; }
     }
 
     @media (max-width: 640px) {
@@ -437,7 +437,7 @@
       100% { transform: scale(1); }
     }
 
-    /* Линия рисуется сверху вниз */
+    /* Линия рисуется сверху вниз — прогрессивно до каждого шага */
     .staircase {
       position: relative;
     }
@@ -448,13 +448,10 @@
       top: 0;
       transform: translateX(-50%);
       width: 2px;
-      height: 0;
+      height: var(--line-h, 0px);
       background: var(--border);
-      transition: height 0.8s ease;
+      transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 0;
-    }
-    .staircase.line-drawn::before {
-      height: 100%;
     }
     /* Скрываем отдельные линии — используем псевдоэлемент */
     .stair-line-top,
@@ -464,7 +461,7 @@
 
     @media (max-width: 640px) {
       .staircase::before {
-        left: 23px;
+        left: 24px;
         transform: none;
       }
     }
@@ -1498,16 +1495,30 @@
   const staircase = document.querySelector('.staircase');
   const steps = document.querySelectorAll('.stair-step');
 
-  // Draw the line when staircase enters view
-  const lineObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        staircase.classList.add('line-drawn');
-        lineObserver.disconnect();
-      }
-    });
-  }, { threshold: 0.05 });
-  if (staircase) lineObserver.observe(staircase);
+  // Progressive line: grows to each step as it becomes visible
+  function updateLineHeight(step) {
+    if (!staircase) return;
+    const staircaseRect = staircase.getBoundingClientRect();
+    const stepRect = step.getBoundingClientRect();
+    // Grow line to the vertical center of the step's number circle
+    const numEl = step.querySelector('.stair-num');
+    let targetBottom;
+    if (numEl) {
+      const numRect = numEl.getBoundingClientRect();
+      targetBottom = numRect.top + numRect.height / 2 - staircaseRect.top;
+    } else {
+      targetBottom = stepRect.top + stepRect.height / 2 - staircaseRect.top;
+    }
+    const currentHeight = parseFloat(staircase.style.getPropertyValue('--line-h') || '0');
+    if (targetBottom > currentHeight) {
+      staircase.style.setProperty('--line-h', targetBottom + 'px');
+    }
+  }
+
+  // Use CSS custom property for line height
+  if (staircase) {
+    staircase.style.setProperty('--line-h', '0px');
+  }
 
   // Animate each step as it scrolls into view
   const stepObserver = new IntersectionObserver(entries => {
@@ -1515,17 +1526,18 @@
       if (entry.isIntersecting) {
         const step = entry.target;
         step.classList.add('visible');
-        // Pulse the number circle
+        // Update line to reach this step
+        requestAnimationFrame(() => updateLineHeight(step));
+        // Pulse the number circle after step fades in
         setTimeout(() => {
           step.classList.add('pulse');
-        }, 300);
+        }, 350);
         stepObserver.unobserve(step);
       }
     });
-  }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.15, rootMargin: '0px 0px -30px 0px' });
 
-  steps.forEach((step, i) => {
-    step.style.transitionDelay = `${i * 0.04}s`;
+  steps.forEach(step => {
     stepObserver.observe(step);
   });
 
