@@ -12,9 +12,17 @@
             "views": 564,
             "calls": 6,
             "showings": 4,
-            "offers": 0
+            "offers": 2
           },
-          "feedback": [],
+          "feedback": [
+            {
+              "name": "",
+              "date": "",
+              "verdict": "thinking",
+              "verdictText": "Думают",
+              "text": ""
+            }
+          ],
           "competitors": [],
           "recommendations": [],
           "summary": ""
