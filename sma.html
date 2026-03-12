@@ -443,9 +443,8 @@ function showReportEls(){
 }
 
 // ─── PICKER ───
-function showPicker(skipPush){
+function showPicker(){
   currentId=null;hideReport();pickerEl.style.display='';footerEl.style.display='';
-  if(!skipPush){try{history.pushState({view:'picker'},'',window.location.pathname+(isEditMode?'?edit=1':''));}catch(e){}}
   renderPicker();
 }
 function renderPicker(){
@@ -498,7 +497,7 @@ function openSma(id){
   const s=allData.analyses[id];if(!s)return;currentId=id;
   pickerEl.style.display='none';showReportEls();
   if(isEditMode){editBtn.style.display='';backLink.style.display='';}
-  try{history.pushState({view:'sma',id},'',window.location.pathname+'?id='+id);}catch(e){}
+  try{history.pushState({view:'sma',id},'',window.location.pathname+'?id='+id+(isEditMode?'&edit=1':''));}catch(e){}
   render();if(editPanel.classList.contains('open'))populatePanel();
 }
 
@@ -752,7 +751,7 @@ async function initApp(){
 
   // Show picker immediately so page is never blank
   if(!initId){
-    showPicker(true); // skipPush — don't change URL on init
+    showPicker(); // don't change URL on init
     if(!token&&params.has('edit'))showTokenModal();
   }
 
@@ -768,7 +767,7 @@ async function initApp(){
   else if(!initId&&loaded)renderPicker(); // refresh picker with loaded data
 }
 
-(async function(){try{await initApp();}catch(e){console.error(e);showPicker(true);}})();
+(async function(){try{await initApp();}catch(e){console.error(e);showPicker();}})();
 </script>
 </body>
 </html>
