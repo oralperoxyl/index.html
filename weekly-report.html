@@ -1438,14 +1438,20 @@ async function initApp() {
   const token = getToken();
   const syncStatusEl = document.getElementById('syncStatus');
 
-  // Determine mode:
-  // - ?edit=1 → agent mode (can edit if has token, show modal if not)
-  // - ?id=xxx without ?edit=1 → client read-only mode
-  // - Neither → agent landing (needs token)
-  isEditMode = params.has('edit');
+  // Mode detection:
+  // - Token in localStorage → agent (can edit, sync shown)
+  // - No token → client (read-only, clean UI)
+  // - ?edit=1 without token → show token modal (first-time agent setup)
+  isEditMode = !!token || params.has('edit');
 
-  // Show sync status only in edit mode
-  syncStatusEl.style.display = isEditMode ? '' : 'none';
+  // Show sync status only for agent
+  syncStatusEl.style.display = token ? '' : 'none';
+
+  // If ?edit=1 but no token → show modal for first-time setup
+  if (params.has('edit') && !token) {
+    setSyncError('Нет токена — нажмите сюда');
+    syncStatusEl.style.display = '';
+  }
 
   // Load data
   let loaded = false;
@@ -1453,7 +1459,7 @@ async function initApp() {
     loaded = await loadFromGitHub();
   }
 
-  // Client mode — try anonymous read from public repo
+  // No token — try anonymous read from public repo
   if (!loaded && initId) {
     try {
       const resp = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`);
@@ -1471,14 +1477,13 @@ async function initApp() {
   // Route
   if (initId && allData.objects[initId]) {
     openObject(initId);
-    // openObject already respects isEditMode for button visibility
-  } else if (isEditMode && !token) {
+  } else if (!token && params.has('edit')) {
     showTokenModal();
     showPicker();
-  } else if (isEditMode) {
+  } else if (token) {
     showPicker();
   } else {
-    // No ?id, no ?edit → show picker (read-only, no edit controls)
+    // Client without ?id — show empty picker
     showPicker();
   }
 }
