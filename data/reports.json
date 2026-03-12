@@ -52,8 +52,19 @@
               "price": "17500000",
               "status": "active",
               "statusText": "В продаже",
-              "note": "",
+              "note": "Прямой конкурент, цену снижать не планируют. ",
               "url": "https://www.cian.ru/sale/flat/327455618/",
+              "ours": false
+            },
+            {
+              "address": "",
+              "rooms": "",
+              "area": "",
+              "price": "",
+              "status": "active",
+              "statusText": "В продаже",
+              "note": "",
+              "url": "",
               "ours": false
             }
           ],
