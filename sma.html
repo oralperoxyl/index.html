@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<!--
+  СМА — СРАВНИТЕЛЬНО МАРКЕТИНГОВЫЙ АНАЛИЗ
+  Один файл на все объекты, SPA-архитектура
+  Синхронизация через GitHub API (data/sma.json)
+
+  Агент: sma.html (с токеном в localStorage — режим редактирования)
+  Клиент: sma.html?id=slug — только просмотр
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>СМА — Семён Гончаров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+::selection{background:#0066FF;color:#fff}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --serif:'Playfair Display',serif;
+  --sans:'Inter',sans-serif;
+  --bg:#FAFAF8;--dark:#1C1C1E;--text:#1A1A1A;
+  --muted:#666;--border:rgba(0,0,0,0.08);--accent:#0066FF;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6}
+
+/* ── HEADER ── */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.header-left{display:flex;align-items:center;gap:0}
+.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}
+.back-link{font-size:12px;color:var(--muted);text-decoration:none;margin-left:16px;display:none;transition:color 0.2s}
+.back-link:hover{color:var(--text)}
+.header-right{display:flex;align-items:center;gap:12px}
+.sync-status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer;display:none}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:#ccc;display:inline-block}
+.sync-dot.ok{background:#2D8A4E}.sync-dot.error{background:#C0392B}
+.sync-dot.loading{background:#B8860B;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.edit-toggle{font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--border);border-radius:4px;background:transparent;color:var(--muted);cursor:pointer;transition:all 0.2s;display:none}
+.edit-toggle:hover{border-color:var(--text);color:var(--text)}
+.edit-toggle.active{background:var(--dark);color:#E5E5E5;border-color:var(--dark)}
+
+/* ── HERO ── */
+.hero{background:var(--dark);color:#E5E5E5;padding:80px 40px 60px;display:none}
+.hero-inner{max-width:900px;margin:0 auto}
+.hero-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:24px}
+.hero-title{font-family:var(--serif);font-size:clamp(28px,5vw,52px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:12px}
+.hero-title em{font-style:italic;color:rgba(229,229,229,0.5)}
+.hero-meta{display:flex;gap:40px;margin-top:24px;flex-wrap:wrap}
+.hero-meta-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.35);margin-bottom:4px}
+.hero-meta-value{font-size:15px;color:rgba(229,229,229,0.75)}
+
+/* ── SECTIONS ── */
+.report-section{max-width:900px;margin:0 auto;padding:64px 40px;border-bottom:1px solid var(--border);display:none}
+.report-section:last-of-type{border-bottom:none}
+.section-label{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.section-title{font-family:var(--serif);font-size:clamp(24px,3.5vw,36px);font-weight:400;line-height:1.2;margin-bottom:36px}
+
+/* ── SUMMARY CARDS ── */
+.summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2px;margin-bottom:32px}
+.summary-card{background:white;padding:24px}
+.summary-card:first-child{border-radius:8px 0 0 8px}
+.summary-card:last-child{border-radius:0 8px 8px 0}
+.summary-num{font-family:var(--serif);font-size:32px;font-weight:400;line-height:1;margin-bottom:6px}
+.summary-label{font-size:12px;color:var(--muted);letter-spacing:0.04em}
+
+/* ── COMPETITOR TABLE (desktop) ── */
+.comp-table-wrap{overflow-x:auto}
+.comp-table{width:100%;border-collapse:collapse;min-width:800px}
+.comp-table th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 12px;border-bottom:2px solid var(--text);white-space:nowrap}
+.comp-table td{font-size:13px;padding:14px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
+.comp-table tr:hover{background:rgba(0,0,0,0.015)}
+.comp-table tr.our-object{background:rgba(0,102,255,0.04)}
+.comp-table a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
+.comp-table a:hover{text-decoration-color:var(--text)}
+.comp-table .tag{font-size:10px;font-weight:500;letter-spacing:0.03em;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+.tag-repair{background:#E8F5E9;color:#2D8A4E}
+.tag-needs{background:#FFF8E1;color:#B8860B}
+
+/* ── COMPETITOR CARDS (mobile) ── */
+.comp-cards{display:none}
+.comp-card{background:white;padding:20px;border-top:1px solid var(--border)}
+.comp-card:first-child{border-top:none;border-radius:8px 8px 0 0}
+.comp-card:last-child{border-radius:0 0 8px 8px}
+.comp-card:only-child{border-radius:8px}
+.comp-card.our-object{background:rgba(0,102,255,0.03);border-left:2px solid var(--accent)}
+.comp-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.comp-card-addr{font-size:15px;font-weight:500;color:var(--text);text-decoration:none}
+a.comp-card-addr{text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
+.comp-card-meta{font-size:12px;color:var(--muted);margin-top:3px}
+.comp-card-price{font-family:var(--serif);font-size:18px;font-weight:400}
+.comp-card-ppm{font-size:12px;color:var(--muted)}
+.comp-card-note{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
+.comp-card-badge{font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:var(--accent);color:white;padding:2px 6px;border-radius:3px;margin-left:8px;vertical-align:middle}
+.comp-card-bargain{font-size:12px;color:#2D8A4E;margin-top:6px;font-weight:500}
+.comp-card-ad{font-size:11px;color:var(--muted);margin-top:6px}
+
+/* ── RECOMMENDATION BOX ── */
+.rec-list{display:flex;flex-direction:column;gap:0}
+.rec-item{display:grid;grid-template-columns:32px 1fr;gap:16px;padding:20px 0;border-top:1px solid var(--border)}
+.rec-item:last-child{border-bottom:1px solid var(--border)}
+.rec-num{font-family:var(--serif);font-size:20px;color:rgba(0,0,0,0.12);padding-top:2px}
+.rec-text{font-size:14px;color:var(--muted);line-height:1.7}
+.rec-text strong{color:var(--text);font-weight:600}
+
+.price-box{background:var(--dark);color:#E5E5E5;padding:32px;border-radius:8px;margin-top:32px}
+.price-box-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:16px}
+.price-range{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.price-val{font-family:var(--serif);font-size:clamp(24px,4vw,36px);font-weight:400;color:#E5E5E5}
+.price-sep{font-size:14px;color:rgba(229,229,229,0.3)}
+.price-avg{margin-top:12px;font-size:14px;color:rgba(229,229,229,0.55)}
+.price-note{margin-top:16px;font-size:13px;color:rgba(229,229,229,0.4);line-height:1.6}
+
+/* ── FOOTER ── */
+.report-footer{background:var(--dark);padding:60px 40px;text-align:center;display:none}
+.footer-name{font-family:var(--serif);font-size:16px;color:rgba(229,229,229,0.6);margin-bottom:8px}
+.footer-contact{font-size:13px;color:rgba(229,229,229,0.35)}
+.footer-contact a{color:rgba(229,229,229,0.5);text-decoration:none}
+.footer-contact a:hover{color:rgba(229,229,229,0.8)}
+
+/* ── EDIT PANEL ── */
+.edit-panel{display:none;position:fixed;top:64px;right:0;bottom:0;width:460px;background:white;border-left:1px solid var(--border);z-index:200;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,0.06)}
+.edit-panel.open{display:block}
+.edit-panel-inner{padding:28px}
+.edit-panel h3{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.edit-group{margin-bottom:28px}
+.edit-group-title{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.edit-row{margin-bottom:12px}
+.edit-label{font-size:12px;color:var(--muted);margin-bottom:4px;display:block}
+.edit-input,.edit-textarea,.edit-select{width:100%;font-family:var(--sans);font-size:14px;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);transition:border-color 0.2s}
+.edit-input:focus,.edit-textarea:focus,.edit-select:focus{outline:none;border-color:var(--accent)}
+.edit-textarea{resize:vertical;min-height:60px;line-height:1.5}
+.edit-comp-block{background:var(--bg);border-radius:6px;padding:16px;margin-bottom:12px;border:1px solid var(--border)}
+.edit-rec-block{background:var(--bg);border-radius:6px;padding:16px;margin-bottom:12px;border:1px solid var(--border)}
+.btn-add{font-family:var(--sans);font-size:12px;font-weight:500;color:var(--accent);background:none;border:1px dashed var(--accent);border-radius:4px;padding:8px 16px;cursor:pointer;width:100%;transition:background 0.2s}
+.btn-add:hover{background:rgba(0,102,255,0.04)}
+.btn-remove{font-size:11px;color:#C0392B;background:none;border:none;cursor:pointer;float:right;padding:2px 6px}
+.btn-remove:hover{text-decoration:underline}
+.btn-save{width:100%;padding:14px;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:var(--dark);color:#E5E5E5;border:none;border-radius:4px;cursor:pointer;transition:opacity 0.2s;margin-top:20px}
+.btn-save:hover{opacity:0.85}
+.save-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.5}
+.auto-calc{font-size:10px;color:var(--accent);margin-top:2px;font-style:italic}
+
+body.editing .report-section{margin-right:460px}
+body.editing .hero{padding-right:500px}
+
+/* ── LOADING ── */
+.loading-bar{position:fixed;top:64px;left:0;right:0;height:2px;z-index:300;display:none}
+.loading-bar.active{display:block}
+.loading-bar::after{content:'';display:block;height:100%;width:30%;background:var(--accent);animation:loadSlide 1.2s ease infinite}
+@keyframes loadSlide{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
+
+/* ── TOKEN MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal-box{background:white;border-radius:12px;padding:40px;max-width:440px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.15)}
+.modal-box h3{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:12px}
+.modal-box p{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.modal-box input{width:100%;font-family:var(--sans);font-size:14px;padding:10px 14px;border:1px solid var(--border);border-radius:6px;margin-bottom:16px}
+.modal-box input:focus{outline:none;border-color:var(--accent)}
+.modal-box button{width:100%;padding:12px;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:var(--dark);color:#E5E5E5;border:none;border-radius:6px;cursor:pointer}
+.modal-box button:hover{opacity:0.85}
+.modal-error{font-size:12px;color:#C0392B;margin-top:8px;display:none}
+
+/* ── PICKER ── */
+#pickerContainer{max-width:600px;margin:0 auto;padding:80px 40px;display:none}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .site-header{padding:0 20px}
+  .hero{padding:60px 20px 48px}
+  .report-section{padding:48px 20px}
+  .hero-meta{gap:24px}
+  .summary-grid{grid-template-columns:1fr 1fr}
+  .summary-card:first-child{border-radius:8px 0 0 0}
+  .summary-card:nth-child(2){border-radius:0 8px 0 0}
+  .summary-card:last-child{border-radius:0 0 8px 0}
+  .comp-table-wrap{display:none}
+  .comp-cards{display:block}
+  .edit-panel{width:100%;left:0}
+  body.editing .report-section{margin-right:0}
+  body.editing .hero{padding-right:20px}
+  .report-footer{padding:48px 20px}
+  .sync-status{display:none!important}
+  .price-range{flex-direction:column;gap:8px}
+}
+@media print{
+  .edit-toggle,.edit-panel,.sync-status,.loading-bar{display:none!important}
+  .site-header{position:static}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-bar" id="loadingBar"></div>
+
+<!-- TOKEN MODAL -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <h3>Подключение к GitHub</h3>
+    <p>Введите Personal Access Token для синхронизации данных СМА.</p>
+    <input type="password" id="tokenInput" placeholder="github_pat_..." autocomplete="off">
+    <button onclick="saveToken()">Подключить</button>
+    <div class="modal-error" id="tokenError"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-left">
+    <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+    <a class="back-link" id="backLink" href="#" onclick="event.preventDefault();showPicker();">← Все анализы</a>
+  </div>
+  <div class="header-right">
+    <span class="sync-status" id="syncStatus" onclick="if(!getToken())showTokenModal();">
+      <span class="sync-dot" id="syncDot"></span>
+      <span id="syncText">—</span>
+    </span>
+    <button class="edit-toggle" id="editToggle" onclick="toggleEdit()">Редактировать</button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="heroSection">
+  <div class="hero-inner">
+    <p class="hero-label">Сравнительно маркетинговый анализ · Семён Гончаров</p>
+    <h1 class="hero-title" id="heroTitle"></h1>
+    <div class="hero-meta" id="heroMeta"></div>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<section class="report-section" id="summarySection">
+  <div class="section-label">01 — Обзор рынка</div>
+  <h2 class="section-title">Сводка</h2>
+  <div class="summary-grid" id="summaryGrid"></div>
+</section>
+
+<!-- COMPETITORS -->
+<section class="report-section" id="compSection">
+  <div class="section-label">02 — Конкуренты</div>
+  <h2 class="section-title">Сводная таблица по конкурентам</h2>
+  <div class="comp-table-wrap">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>№</th>
+          <th>Адрес</th>
+          <th>Площадь</th>
+          <th>Комн.</th>
+          <th>Этаж</th>
+          <th>Состояние</th>
+          <th>Цена / за м²</th>
+          <th>Торг</th>
+          <th>Реклама</th>
+          <th>Комментарий</th>
+        </tr>
+      </thead>
+      <tbody id="compBody"></tbody>
+    </table>
+  </div>
+  <div class="comp-cards" id="compCards"></div>
+</section>
+
+<!-- RECOMMENDATIONS -->
+<section class="report-section" id="recSection">
+  <div class="section-label">03 — Рекомендации</div>
+  <h2 class="section-title">Выводы и рекомендуемая стоимость</h2>
+  <div class="rec-list" id="recList"></div>
+  <div class="price-box" id="priceBox"></div>
+</section>
+
+<!-- PICKER -->
+<div id="pickerContainer"></div>
+
+<!-- FOOTER -->
+<footer class="report-footer" id="footerEl">
+  <p class="footer-name">Семён Гончаров · Агент по недвижимости</p>
+  <p class="footer-contact">
+    <a href="tel:+79118461965">+7 911 846-19-65</a> · 
+    <a href="https://t.me/semengme">t.me/semengme</a> · 
+    <a href="https://fastbroker21.ru">fastbroker21.ru</a>
+  </p>
+</footer>
+
+<!-- EDIT PANEL -->
+<div class="edit-panel" id="editPanel">
+  <div class="edit-panel-inner">
+    <h3>Редактор СМА</h3>
+
+    <!-- OBJECT META -->
+    <div class="edit-group">
+      <div class="edit-group-title">Оцениваемый объект</div>
+      <div class="edit-row"><label class="edit-label">Адрес</label><input class="edit-input" id="e-address" onchange="saveFromPanel()"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">Площадь, м²</label><input class="edit-input" id="e-area" type="number" step="0.1" onchange="saveFromPanel()"></div>
+        <div class="edit-row"><label class="edit-label">Комнат</label><input class="edit-input" id="e-rooms" type="number" onchange="saveFromPanel()"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">Этаж / этажность</label><input class="edit-input" id="e-floor" placeholder="5/6" onchange="saveFromPanel()"></div>
+        <div class="edit-row"><label class="edit-label">Район/метро</label><input class="edit-input" id="e-location" onchange="saveFromPanel()"></div>
+      </div>
+    </div>
+
+    <!-- COMPETITORS -->
+    <div class="edit-group">
+      <div class="edit-group-title">Конкуренты</div>
+      <div id="e-comps"></div>
+      <button class="btn-add" onclick="addComp()">+ Добавить конкурента</button>
+    </div>
+
+    <!-- PRICE RECOMMENDATION -->
+    <div class="edit-group">
+      <div class="edit-group-title">Рекомендуемая стоимость</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">От (руб.)</label><input class="edit-input" id="e-priceFrom" type="number" onchange="saveFromPanel()"></div>
+        <div class="edit-row"><label class="edit-label">До (руб.)</label><input class="edit-input" id="e-priceTo" type="number" onchange="saveFromPanel()"></div>
+      </div>
+      <div class="auto-calc" id="priceCalcHint"></div>
+    </div>
+
+    <!-- RECOMMENDATIONS TEXT -->
+    <div class="edit-group">
+      <div class="edit-group-title">Текст рекомендаций</div>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:8px;">Шаблон генерируется автоматически. Можно редактировать каждый пункт.</p>
+      <button class="btn-add" style="margin-bottom:12px;" onclick="generateRecs()">Сгенерировать шаблон</button>
+      <div id="e-recs"></div>
+      <button class="btn-add" onclick="addRec()">+ Добавить пункт</button>
+    </div>
+
+    <button class="btn-save" onclick="saveData()">Сохранить и синхронизировать</button>
+    <p class="save-hint" id="saveHint">Данные синхронизируются через GitHub.</p>
+    <button class="btn-add" style="margin-top:12px;color:#C0392B;border-color:#C0392B;" onclick="resetSma()">Удалить этот СМА</button>
+    <button class="btn-add" style="margin-top:8px;color:var(--muted);border-color:var(--border);" onclick="changeToken()">Сменить GitHub Token</button>
+  </div>
+</div>
+
+<script>
+// ─── CONFIG ───
+const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_FILE='data/sma.json',GH_BRANCH='main',TOKEN_KEY='wr_gh_token';
+
+// ─── STATE ───
+let allData={analyses:{}},currentId=null,fileSha=null,isEditMode=false,saveTimeout=null;
+
+// ─── ELEMENTS ───
+const editPanel=document.getElementById('editPanel'),editBtn=document.getElementById('editToggle');
+const backLink=document.getElementById('backLink'),pickerEl=document.getElementById('pickerContainer');
+const loadingBar=document.getElementById('loadingBar'),syncDot=document.getElementById('syncDot'),syncText=document.getElementById('syncText');
+const footerEl=document.getElementById('footerEl');
+const reportEls=['heroSection','summarySection','compSection','recSection'];
+
+// ─── HELPERS ───
+function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
+function escHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function escAttr(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function fmt(n){if(!n)return '—';return Number(n).toLocaleString('ru-RU');}
+function fmtPrice(n){if(!n)return '—';const m=Number(n);if(m>=1e6)return (m/1e6).toFixed(1).replace('.0','').replace('.',',')+' млн ₽';return fmt(m)+' ₽';}
+function calcPpm(price,area){if(!price||!area)return 0;return Math.round(Number(price)/Number(area));}
+function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
+
+// ─── GITHUB API ───
+function setLoading(on){loadingBar.classList.toggle('active',on);syncDot.className='sync-dot'+(on?' loading':'');if(on)syncText.textContent='Синхронизация...';}
+function setSyncOk(m){syncDot.className='sync-dot ok';syncText.textContent=m||'Синхронизировано';}
+function setSyncError(m){syncDot.className='sync-dot error';syncText.textContent=m||'Ошибка';}
+
+async function ghFetch(method,body){
+  const token=getToken();if(!token)return null;
+  try{
+    const url=`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`;
+    const opts={method:method||'GET',headers:{'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}};
+    if(body)opts.body=JSON.stringify(body);
+    return await fetch(url,opts);
+  }catch(e){return null;}
+}
+
+async function loadFromGitHub(){
+  setLoading(true);
+  try{
+    const resp=await ghFetch('GET');
+    if(!resp){setSyncError('Нет токена');return false;}
+    if(resp.status===404){allData={analyses:{}};fileSha=null;setSyncOk('Новый файл');return true;}
+    if(!resp.ok){setSyncError('Ошибка '+resp.status);return false;}
+    const json=await resp.json();fileSha=json.sha;
+    const content=atob(json.content.replace(/\n/g,''));
+    const decoded=new TextDecoder().decode(Uint8Array.from(content,c=>c.charCodeAt(0)));
+    allData=JSON.parse(decoded);if(!allData.analyses)allData.analyses={};
+    setSyncOk();return true;
+  }catch(e){setSyncError('Ошибка сети');return false;}
+  finally{setLoading(false);}
+}
+
+async function saveToGitHub(){
+  setLoading(true);
+  try{
+    const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(allData,null,2))));
+    const body={message:'Update SMA data',content:encoded,branch:GH_BRANCH};
+    if(fileSha)body.sha=fileSha;
+    const resp=await ghFetch('PUT',body);
+    if(!resp){setSyncError('Нет токена');return false;}
+    if(!resp.ok){
+      if(resp.status===409){await loadFromGitHub();return saveToGitHub();}
+      setSyncError('Ошибка '+resp.status);return false;
+    }
+    const json=await resp.json();fileSha=json.content.sha;setSyncOk('Сохранено');return true;
+  }catch(e){setSyncError('Ошибка сети');return false;}
+  finally{setLoading(false);}
+}
+
+function debounceSave(){if(saveTimeout)clearTimeout(saveTimeout);saveTimeout=setTimeout(()=>saveToGitHub(),2000);}
+
+// ─── TOKEN ───
+function showTokenModal(){document.getElementById('tokenModal').classList.add('open');document.getElementById('tokenInput').value='';document.getElementById('tokenError').style.display='none';}
+async function saveToken(){
+  const token=document.getElementById('tokenInput').value.trim();
+  if(!token){document.getElementById('tokenError').textContent='Введите токен';document.getElementById('tokenError').style.display='block';return;}
+  try{localStorage.setItem(TOKEN_KEY,token);}catch(e){}
+  document.getElementById('tokenError').style.display='none';
+  const ok=await loadFromGitHub();
+  if(ok){document.getElementById('tokenModal').classList.remove('open');initApp();}
+  else{try{localStorage.removeItem(TOKEN_KEY);}catch(e){}document.getElementById('tokenError').textContent='Не удалось подключиться';document.getElementById('tokenError').style.display='block';}
+}
+function changeToken(){try{localStorage.removeItem(TOKEN_KEY);}catch(e){}showTokenModal();}
+
+// ─── BLANK DATA ───
+function blankSma(){return{address:'',area:0,rooms:0,floor:'',location:'',competitors:[],recommendations:[],priceFrom:0,priceTo:0};}
+function blankComp(){return{address:'',agent:'',area:'',rooms:'',floor:'',condition:'',price:0,ppm:0,bargain:'',adDate:'',adViews:'',url:'',comment:'',ours:false};}
+
+// ─── UI ───
+function hideReport(){
+  reportEls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  footerEl.style.display='none';
+  editPanel.classList.remove('open');document.body.classList.remove('editing');
+  editBtn.style.display='none';editBtn.classList.remove('active');editBtn.textContent='Редактировать';
+  backLink.style.display='none';
+}
+function showReportEls(){
+  reportEls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});
+  footerEl.style.display='';pickerEl.style.display='none';
+}
+
+// ─── PICKER ───
+function showPicker(){
+  currentId=null;hideReport();pickerEl.style.display='';footerEl.style.display='';
+  try{history.pushState({view:'picker'},'',window.location.pathname);}catch(e){}
+  renderPicker();
+}
+function renderPicker(){
+  const ids=Object.keys(allData.analyses);
+  pickerEl.innerHTML=`
+    <div style="margin-bottom:48px;">
+      <h1 style="font-family:var(--serif);font-size:32px;font-weight:400;margin-bottom:8px;">Маркетинговые анализы</h1>
+      <p style="color:var(--muted);font-size:15px;">Выберите объект или создайте новый СМА</p>
+    </div>
+    ${ids.length?ids.map(id=>{
+      const s=allData.analyses[id];
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--border);">
+        <a href="#" onclick="event.preventDefault();openSma('${id}')" style="text-decoration:none;color:var(--text);flex:1;transition:padding-left 0.2s;" onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
+          <div style="font-size:15px;font-weight:500;">${escHtml(s.address||'Без адреса')}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">${s.rooms||'?'}к · ${s.area||'?'} м² · ${s.competitors?s.competitors.length:0} конкурентов</div>
+        </a>
+        <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+          <button onclick="copyLink('${id}',this)" style="font-size:11px;color:var(--accent);background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:4px 10px;">Ссылка</button>
+          <button onclick="deleteSma('${id}')" style="font-size:11px;color:#C0392B;background:none;border:none;cursor:pointer;padding:4px 8px;">✕</button>
+        </div>
+      </div>`;
+    }).join('')+'<div style="border-top:1px solid var(--border);"></div>'
+    :'<p style="color:var(--muted);font-size:14px;padding:32px 0;">Пока нет анализов. Создайте первый ↓</p>'}
+    <div style="margin-top:32px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Новый СМА</div>
+      <div style="display:flex;gap:8px;">
+        <input id="newSmaAddr" class="edit-input" placeholder="Адрес объекта, напр.: Гатчинская 2/54" style="flex:1;" onkeydown="if(event.key==='Enter')createSma()">
+        <button onclick="createSma()" style="font-family:var(--sans);font-size:13px;font-weight:500;padding:8px 20px;background:var(--dark);color:#E5E5E5;border:none;border-radius:4px;cursor:pointer;white-space:nowrap;">Создать</button>
+      </div>
+    </div>`;
+}
+
+// ─── CRUD ───
+async function createSma(){
+  const input=document.getElementById('newSmaAddr');const name=input.value.trim();if(!name)return;
+  const id=slugify(name)||('sma-'+Date.now());
+  if(allData.analyses[id]){alert('Анализ с таким адресом уже существует');return;}
+  const s=blankSma();s.address=name;allData.analyses[id]=s;
+  await saveToGitHub();openSma(id);
+}
+async function deleteSma(id){if(!confirm('Удалить этот СМА?'))return;delete allData.analyses[id];await saveToGitHub();renderPicker();}
+function resetSma(){if(!confirm('Удалить этот СМА и все его данные?'))return;delete allData.analyses[currentId];saveToGitHub();showPicker();}
+function copyLink(id,btn){
+  const url=window.location.origin+window.location.pathname+'?id='+id;
+  try{navigator.clipboard.writeText(url).then(()=>{const o=btn.textContent;btn.textContent='✓';btn.style.color='#2D8A4E';setTimeout(()=>{btn.textContent=o;btn.style.color='';},1500);}).catch(()=>prompt('Скопируйте:',url));}catch(e){prompt('Скопируйте:',url);}
+}
+
+// ─── OPEN SMA ───
+function openSma(id){
+  const s=allData.analyses[id];if(!s)return;currentId=id;
+  pickerEl.style.display='none';showReportEls();
+  if(isEditMode){editBtn.style.display='';backLink.style.display='';}
+  try{history.pushState({view:'sma',id},'',window.location.pathname+'?id='+id);}catch(e){}
+  render();if(editPanel.classList.contains('open'))populatePanel();
+}
+
+// ─── RENDER ───
+function render(){
+  const s=allData.analyses[currentId];if(!s)return;
+  const comps=s.competitors||[];
+
+  // Hero
+  document.getElementById('heroTitle').innerHTML=escHtml(s.address||'Новый объект');
+  document.getElementById('heroMeta').innerHTML=`
+    <div class="hero-meta-item"><div class="hero-meta-label">Площадь</div><div class="hero-meta-value">${s.area?s.area+' м²':'—'}</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-label">Комнат</div><div class="hero-meta-value">${s.rooms||'—'}</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-label">Этаж</div><div class="hero-meta-value">${escHtml(s.floor||'—')}</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-label">Район</div><div class="hero-meta-value">${escHtml(s.location||'—')}</div></div>`;
+
+  // Summary cards
+  const prices=comps.filter(c=>c.price>0).map(c=>Number(c.price));
+  const ppms=comps.map(c=>calcPpm(c.price,c.area)).filter(v=>v>0);
+  const minPrice=prices.length?Math.min(...prices):0;
+  const maxPrice=prices.length?Math.max(...prices):0;
+  const avgPpm=ppms.length?Math.round(ppms.reduce((a,b)=>a+b,0)/ppms.length):0;
+  document.getElementById('summaryGrid').innerHTML=`
+    <div class="summary-card" style="border-radius:8px 0 0 8px;"><div class="summary-num">${comps.length}</div><div class="summary-label">Конкурентов</div></div>
+    <div class="summary-card"><div class="summary-num">${prices.length?fmtPrice(minPrice):'—'}</div><div class="summary-label">Мин. цена</div></div>
+    <div class="summary-card"><div class="summary-num">${prices.length?fmtPrice(maxPrice):'—'}</div><div class="summary-label">Макс. цена</div></div>
+    <div class="summary-card" style="border-radius:0 8px 8px 0;"><div class="summary-num">${avgPpm?fmt(avgPpm)+'&nbsp;₽':'—'}</div><div class="summary-label">Средняя за м²</div></div>`;
+
+  // Table (desktop)
+  document.getElementById('compBody').innerHTML=comps.length?comps.map((c,i)=>{
+    const ppm=calcPpm(c.price,c.area);
+    const addrHtml=c.url?`<a href="${escAttr(c.url)}" target="_blank">${escHtml(c.address)}</a>`:escHtml(c.address);
+    const condTag=c.condition?(c.condition.toLowerCase().includes('треб')?'tag-needs':'tag-repair'):'';
+    return `<tr class="${c.ours?'our-object':''}">
+      <td style="font-weight:500;color:var(--muted);">${i+1}</td>
+      <td><div style="font-weight:500;">${addrHtml}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${escHtml(c.agent||'')}</div></td>
+      <td>${escHtml(c.area)}</td>
+      <td>${escHtml(c.rooms)}</td>
+      <td>${escHtml(c.floor)}</td>
+      <td>${c.condition?'<span class="tag '+condTag+'">'+escHtml(c.condition)+'</span>':''}</td>
+      <td><div style="font-weight:500;">${c.price?fmt(c.price)+' ₽':''}</div><div style="font-size:11px;color:var(--muted);">${ppm?fmt(ppm)+' ₽/м²':''}</div></td>
+      <td style="font-size:12px;">${escHtml(c.bargain)}</td>
+      <td style="font-size:11px;color:var(--muted);"><div>${escHtml(c.adDate)}</div>${c.adViews?'<div>'+escHtml(c.adViews)+' просм.</div>':''}</td>
+      <td style="font-size:12px;max-width:220px;">${escHtml(c.comment)}</td>
+    </tr>`;
+  }).join(''):'<tr><td colspan="10" style="color:var(--muted);padding:20px 12px;">Добавьте конкурентов в панели редактирования</td></tr>';
+
+  // Cards (mobile)
+  document.getElementById('compCards').innerHTML=comps.length?comps.map((c,i)=>{
+    const ppm=calcPpm(c.price,c.area);
+    const cls=c.ours?' our-object':'';
+    const addrTag=c.url?`<a href="${escAttr(c.url)}" target="_blank" class="comp-card-addr">${escHtml(c.address)}</a>`:`<span class="comp-card-addr">${escHtml(c.address)}</span>`;
+    const badge=c.ours?'<span class="comp-card-badge">Оцениваемый</span>':'';
+    const meta=[c.rooms?c.rooms+' комн.':'',c.area?c.area+' м²':'',c.floor?'этаж '+c.floor:''].filter(Boolean).join(' · ');
+    return `<div class="comp-card${cls}">
+      <div class="comp-card-top">
+        <div>${addrTag}${badge}<div class="comp-card-meta">${escHtml(meta)}</div></div>
+        <span style="font-size:12px;font-weight:500;color:var(--muted);flex-shrink:0;margin-left:12px;">#${i+1}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;">
+        <span class="comp-card-price">${c.price?fmt(c.price)+' ₽':'—'}</span>
+        <span class="comp-card-ppm">${ppm?fmt(ppm)+' ₽/м²':''}</span>
+      </div>
+      ${c.bargain?'<div class="comp-card-bargain">Торг: '+escHtml(c.bargain)+'</div>':''}
+      ${c.adDate?'<div class="comp-card-ad">С '+escHtml(c.adDate)+(c.adViews?' · '+escHtml(c.adViews)+' просм.':'')+'</div>':''}
+      ${c.condition?'<div style="margin-top:6px;"><span class="tag '+(c.condition.toLowerCase().includes('треб')?'tag-needs':'tag-repair')+'">'+escHtml(c.condition)+'</span></div>':''}
+      ${c.comment?'<div class="comp-card-note">'+escHtml(c.comment)+'</div>':''}
+    </div>`;
+  }).join(''):'<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
+
+  // Recommendations
+  const recs=s.recommendations||[];
+  document.getElementById('recList').innerHTML=recs.map((r,i)=>`
+    <div class="rec-item"><div class="rec-num">${String(i+1).padStart(2,'0')}</div><div class="rec-text">${r}</div></div>`).join('');
+
+  // Price box
+  const avg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
+  const avgPpmRec=avg&&s.area?Math.round(avg/Number(s.area)):0;
+  if(s.priceFrom||s.priceTo){
+    document.getElementById('priceBox').innerHTML=`
+      <div class="price-box-label">Рекомендуемая рыночная стоимость</div>
+      <div class="price-range">
+        <span class="price-val">${fmtPrice(s.priceFrom)}</span>
+        <span class="price-sep">—</span>
+        <span class="price-val">${fmtPrice(s.priceTo)}</span>
+      </div>
+      ${avg?'<div class="price-avg">Средняя: <strong>'+fmtPrice(avg)+'</strong>'+(avgPpmRec?' ('+fmt(avgPpmRec)+' ₽/м²)':'')+'</div>':''}
+      <div class="price-note">Стоимость может быть скорректирована при наличии реальных покупателей и при согласовании с продавцом.</div>`;
+    document.getElementById('priceBox').style.display='';
+  }else{
+    document.getElementById('priceBox').style.display='none';
+  }
+}
+
+// ─── EDIT PANEL ───
+function toggleEdit(){
+  if(!getToken()){showTokenModal();return;}
+  const open=editPanel.classList.toggle('open');
+  document.body.classList.toggle('editing',open);
+  editBtn.classList.toggle('active',open);
+  editBtn.textContent=open?'Закрыть':'Редактировать';
+  if(open)populatePanel();
+}
+
+function populatePanel(){
+  const s=allData.analyses[currentId];if(!s)return;
+  document.getElementById('e-address').value=s.address||'';
+  document.getElementById('e-area').value=s.area||'';
+  document.getElementById('e-rooms').value=s.rooms||'';
+  document.getElementById('e-floor').value=s.floor||'';
+  document.getElementById('e-location').value=s.location||'';
+  document.getElementById('e-priceFrom').value=s.priceFrom||'';
+  document.getElementById('e-priceTo').value=s.priceTo||'';
+  updatePriceHint();
+  renderCompPanel();renderRecPanel();
+}
+
+function updatePriceHint(){
+  const s=allData.analyses[currentId];if(!s)return;
+  const f=Number(s.priceFrom),t=Number(s.priceTo),a=Number(s.area);
+  if(f&&t&&a){
+    const avg=Math.round((f+t)/2);
+    document.getElementById('priceCalcHint').textContent=`Средняя: ${fmtPrice(avg)} (${fmt(Math.round(avg/a))} ₽/м²)`;
+  }else{document.getElementById('priceCalcHint').textContent='';}
+}
+
+function renderCompPanel(){
+  const s=allData.analyses[currentId];if(!s)return;
+  const comps=s.competitors||[];
+  document.getElementById('e-comps').innerHTML=comps.map((c,i)=>{
+    const ppm=calcPpm(c.price,c.area);
+    return `<div class="edit-comp-block">
+      <button class="btn-remove" onclick="removeComp(${i})">✕</button>
+      <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:8px;">Конкурент #${i+1}</div>
+      <div class="edit-row"><label class="edit-label">Адрес</label><input class="edit-input" data-c="${i}" data-f="address" value="${escAttr(c.address)}" onchange="saveFromPanel()"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">Агент/контакт</label><input class="edit-input" data-c="${i}" data-f="agent" value="${escAttr(c.agent)}" onchange="saveFromPanel()"></div>
+        <div class="edit-row"><label class="edit-label">Ссылка</label><input class="edit-input" data-c="${i}" data-f="url" value="${escAttr(c.url)}" placeholder="https://cian.ru/..." onchange="saveFromPanel()"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">Площадь</label><input class="edit-input" data-c="${i}" data-f="area" value="${escAttr(c.area)}" onchange="saveFromPanel()"></div>
+        <div class="edit-row"><label class="edit-label">Комнат</label><input class="edit-input" data-c="${i}" data-f="rooms" value="${escAttr(c.rooms)}" onchange="saveFromPanel()"></div>
+        <div class="edit-row"><label class="edit-label">Этаж</label><input class="edit-input" data-c="${i}" data-f="floor" value="${escAttr(c.floor)}" onchange="saveFromPanel()"></div>
+      </div>
+      <div class="edit-row"><label class="edit-label">Состояние</label><input class="edit-input" data-c="${i}" data-f="condition" value="${escAttr(c.condition)}" placeholder="Ремонт / Требуется ремонт" onchange="saveFromPanel()"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">Цена (руб.)</label><input class="edit-input" data-c="${i}" data-f="price" type="number" value="${c.price||''}" onchange="saveFromPanel()">
+          ${ppm?'<div class="auto-calc">'+fmt(ppm)+' ₽/м²</div>':''}</div>
+        <div class="edit-row"><label class="edit-label">Торг</label><input class="edit-input" data-c="${i}" data-f="bargain" value="${escAttr(c.bargain)}" onchange="saveFromPanel()"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">Дата рекламы</label><input class="edit-input" data-c="${i}" data-f="adDate" value="${escAttr(c.adDate)}" placeholder="С 01.01.2026" onchange="saveFromPanel()"></div>
+        <div class="edit-row"><label class="edit-label">Просмотров</label><input class="edit-input" data-c="${i}" data-f="adViews" value="${escAttr(c.adViews)}" onchange="saveFromPanel()"></div>
+      </div>
+      <div class="edit-row"><label class="edit-label">Комментарий</label><textarea class="edit-textarea" data-c="${i}" data-f="comment" onchange="saveFromPanel()">${escHtml(c.comment||'')}</textarea></div>
+      <div class="edit-row"><label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;"><input type="checkbox" data-c="${i}" data-f="ours" ${c.ours?'checked':''} onchange="saveFromPanel()"> Наш объект (оцениваемый)</label></div>
+    </div>`;
+  }).join('');
+}
+
+function renderRecPanel(){
+  const s=allData.analyses[currentId];if(!s)return;
+  const recs=s.recommendations||[];
+  document.getElementById('e-recs').innerHTML=recs.map((r,i)=>`
+    <div class="edit-rec-block">
+      <button class="btn-remove" onclick="removeRec(${i})">✕</button>
+      <textarea class="edit-textarea" data-r="${i}" rows="3" onchange="saveFromPanel()">${escHtml(r)}</textarea>
+    </div>`).join('');
+}
+
+// ─── SAVE FROM PANEL ───
+function saveFromPanel(){
+  const s=allData.analyses[currentId];if(!s)return;
+  s.address=document.getElementById('e-address').value;
+  s.area=parseFloat(document.getElementById('e-area').value)||0;
+  s.rooms=parseInt(document.getElementById('e-rooms').value)||0;
+  s.floor=document.getElementById('e-floor').value;
+  s.location=document.getElementById('e-location').value;
+  s.priceFrom=parseInt(document.getElementById('e-priceFrom').value)||0;
+  s.priceTo=parseInt(document.getElementById('e-priceTo').value)||0;
+
+  document.querySelectorAll('[data-c]').forEach(el=>{
+    const i=+el.dataset.c,f=el.dataset.f;
+    if(!s.competitors[i])return;
+    if(f==='ours')s.competitors[i].ours=el.checked;
+    else if(f==='price')s.competitors[i].price=parseInt(el.value)||0;
+    else s.competitors[i][f]=el.value;
+  });
+
+  const recs=[];
+  document.querySelectorAll('[data-r]').forEach(el=>{recs[+el.dataset.r]=el.value;});
+  s.recommendations=recs.filter(r=>r!==undefined);
+
+  updatePriceHint();render();debounceSave();
+}
+
+// ─── ADD / REMOVE ───
+function addComp(){
+  const s=allData.analyses[currentId];if(!s)return;
+  if(!s.competitors)s.competitors=[];
+  s.competitors.push(blankComp());renderCompPanel();render();debounceSave();
+}
+function removeComp(i){const s=allData.analyses[currentId];if(!s)return;s.competitors.splice(i,1);renderCompPanel();render();debounceSave();}
+function addRec(){const s=allData.analyses[currentId];if(!s)return;if(!s.recommendations)s.recommendations=[];s.recommendations.push('');renderRecPanel();debounceSave();}
+function removeRec(i){const s=allData.analyses[currentId];if(!s)return;s.recommendations.splice(i,1);renderRecPanel();render();debounceSave();}
+
+// ─── GENERATE TEMPLATE RECS ───
+function generateRecs(){
+  const s=allData.analyses[currentId];if(!s)return;
+  const comps=s.competitors||[];
+  const n=comps.length;
+  const avg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
+  const avgPpm=avg&&s.area?fmt(Math.round(avg/Number(s.area))):0;
+  const loc=s.location||'данной локации';
+
+  s.recommendations=[
+    `На рынке СПб в локации ${loc} выставлено на продажу более <strong>${n*2}</strong> объектов, сравнимых с оцениваемым (учитывается метраж, местность, высота потолков, парадная, вид из окна, этаж, класс дома). В таблице представлены тщательно отобранные варианты — <strong>конкуренты за бюджет</strong> в ближайшем окружении.`,
+    `Выбор потенциального покупателя будет состоять как минимум из более чем <strong>${n}</strong> вариантов.`,
+    `По статистике на текущем рынке покупатель выбирает 2–3 самых выгодных объекта из сегмента. Квартира — рыночный товар. Если объект не входит в число наиболее привлекательных предложений по цене и качеству, покупатель его просто не выберет.`,
+    `Анализ проводится по выставленным предложениям, а <strong>реальная стоимость покупки</strong> определяется при переговорах и торге между сторонами. Имеет смысл говорить о <strong>потенциальной стоимости спроса</strong>, а не стоимости покупки.`,
+    `Стоимость спроса и стоимость покупки могут отличаться на 10–15%. Объекты, где собственники не готовы к корректировке, стоят на рынке месяцами без реального спроса.`,
+    s.priceFrom&&s.priceTo?`<strong>Сравнивая выставленные на продажу объекты, а также учитывая тенденции рынка, рекомендуемая рыночная стоимость может составлять: ${fmtPrice(s.priceFrom)} (${s.area?fmt(Math.round(s.priceFrom/s.area)):'-'} ₽/м²) — ${fmtPrice(s.priceTo)} (${s.area?fmt(Math.round(s.priceTo/s.area)):'-'} ₽/м²), средняя ${fmtPrice(avg)}${avgPpm?' ('+avgPpm+' ₽/м²)':''}.</strong>`:'<strong>Рекомендуемая стоимость: [заполните диапазон цен выше]</strong>',
+    `Стоимость может быть скорректирована в большую или меньшую сторону при наличии или отсутствии реальных покупателей и при согласовании с продавцом.`
+  ];
+  renderRecPanel();render();debounceSave();
+}
+
+async function saveData(){
+  if(saveTimeout)clearTimeout(saveTimeout);
+  const ok=await saveToGitHub();
+  const h=document.getElementById('saveHint');
+  if(h){h.style.color=ok?'#2D8A4E':'#C0392B';h.textContent=ok?'✓ Сохранено':'✕ Ошибка';setTimeout(()=>{h.style.color='';h.textContent='Данные синхронизируются через GitHub.';},2500);}
+}
+
+// ─── SPA NAV ───
+window.addEventListener('popstate',e=>{
+  const st=e.state;
+  if(st&&st.view==='sma'&&st.id&&allData.analyses[st.id]){currentId=st.id;pickerEl.style.display='none';showReportEls();if(isEditMode){editBtn.style.display='';backLink.style.display='';}render();if(editPanel.classList.contains('open'))populatePanel();}
+  else{currentId=null;hideReport();pickerEl.style.display='';footerEl.style.display='';renderPicker();}
+});
+
+// ─── INIT ───
+async function initApp(){
+  const params=new URLSearchParams(window.location.search);
+  const initId=params.get('id');
+  const token=getToken();
+  const syncStatusEl=document.getElementById('syncStatus');
+  isEditMode=!!token||params.has('edit');
+  syncStatusEl.style.display=token?'':'none';
+  if(params.has('edit')&&!token){setSyncError('Нет токена — нажмите сюда');syncStatusEl.style.display='';}
+
+  let loaded=false;
+  if(token)loaded=await loadFromGitHub();
+  if(!loaded&&initId){
+    try{const resp=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`);
+    if(resp.ok){const json=await resp.json();const content=atob(json.content.replace(/\n/g,''));const decoded=new TextDecoder().decode(Uint8Array.from(content,c=>c.charCodeAt(0)));allData=JSON.parse(decoded);if(!allData.analyses)allData.analyses={};loaded=true;}}catch(e){}
+  }
+
+  if(initId&&allData.analyses[initId])openSma(initId);
+  else if(!token&&params.has('edit')){showTokenModal();showPicker();}
+  else showPicker();
+}
+
+(async function(){try{await initApp();}catch(e){console.error(e);showPicker();}})();
+</script>
+</body>
+</html>
