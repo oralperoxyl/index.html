@@ -138,6 +138,27 @@
           "summary": "Показов меньше, офферов больше"
         }
       ]
+    },
+    "пр-кт-индустриальный-д-17": {
+      "name": "пр-кт Индустриальный, д. 17",
+      "weeks": [
+        {
+          "week": 1,
+          "period": "",
+          "dayOnMarket": 0,
+          "price": "",
+          "stats": {
+            "views": 0,
+            "calls": 0,
+            "showings": 0,
+            "offers": 0
+          },
+          "feedback": [],
+          "competitors": [],
+          "recommendations": [],
+          "summary": ""
+        }
+      ]
     }
   }
 }
