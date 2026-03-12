@@ -34,6 +34,13 @@
               "date": "7 марта",
               "verdict": "interested",
               "verdictText": "Думают",
+              "text": "Только вышли на рынок, смотрят варианты"
+            },
+            {
+              "name": "",
+              "date": "",
+              "verdict": "thinking",
+              "verdictText": "Думают",
               "text": ""
             }
           ],
