@@ -5,8 +5,25 @@
       "area": 55.6,
       "rooms": 2,
       "floor": "",
-      "location": "",
-      "competitors": [],
+      "location": "Петроградская",
+      "competitors": [
+        {
+          "address": "",
+          "agent": "",
+          "area": "",
+          "rooms": "",
+          "floor": "",
+          "condition": "",
+          "price": 0,
+          "ppm": 0,
+          "bargain": "",
+          "adDate": "",
+          "adViews": "",
+          "url": "",
+          "comment": "",
+          "ours": false
+        }
+      ],
       "recommendations": [],
       "priceFrom": 0,
       "priceTo": 0
