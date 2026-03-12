@@ -129,7 +129,12 @@
               "ours": false
             }
           ],
-          "recommendations": [],
+          "recommendations": [
+            {
+              "title": "",
+              "text": ""
+            }
+          ],
           "summary": "Показов меньше, офферов больше"
         }
       ]
