@@ -6,12 +6,10 @@
   Синхронизация через GitHub API + автоподсчёт дельт
 
   Для вас (агент):
-  1. Откройте weekly-report.html?edit=1 — увидите список объектов
-  2. При первом входе введите GitHub Token (сохранится в localStorage)
-  3. Создайте новый объект (введите адрес)
-  4. Заполните отчёт — данные синхронизируются через GitHub
-  5. Просмотры/звонки/показы — дельта считается автоматически vs прошлая неделя
-  6. Офферы — только абсолютное число, без процентов
+  1. Откройте weekly-report.html — при первом входе появится окно ввода GitHub Token
+  2. Вставьте токен один раз — он сохранится в браузере
+  3. Создайте объект, заполните отчёт — данные синхронизируются через GitHub
+  4. Просмотры/звонки/показы — дельта считается автоматически vs прошлая неделя
 
   Для клиента:
   Отправьте ссылку: weekly-report.html?id=slug-адреса
@@ -131,6 +129,31 @@
     }
     .hero-meta-value {
       font-size: 15px; color: rgba(229,229,229,0.75);
+    }
+
+    /* ── HERO WEEK NAV (client-facing) ── */
+    .hero-weeks {
+      display: flex; gap: 8px; margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .hero-weeks:empty { display: none; }
+    .hero-week-btn {
+      font-family: var(--sans);
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.03em;
+      padding: 7px 16px; border-radius: 100px;
+      border: 1px solid rgba(229,229,229,0.15);
+      background: transparent; color: rgba(229,229,229,0.45);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .hero-week-btn:hover {
+      border-color: rgba(229,229,229,0.35);
+      color: rgba(229,229,229,0.7);
+    }
+    .hero-week-btn.active {
+      background: rgba(229,229,229,0.12);
+      border-color: rgba(229,229,229,0.3);
+      color: #E5E5E5;
     }
 
     /* ── SECTIONS ── */
@@ -527,6 +550,7 @@
     <p class="hero-label">Еженедельный отчёт · Семён Гончаров</p>
     <h1 class="hero-title" id="heroTitle"></h1>
     <div class="hero-meta" id="heroMeta"></div>
+    <div class="hero-weeks" id="heroWeeks"></div>
   </div>
 </section>
 
@@ -624,7 +648,7 @@
     <!-- STATS -->
     <div class="edit-group">
       <div class="edit-group-title">Статистика</div>
-      <p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.5;">Введите значение — дельта vs прошлая неделя рассчитается автоматически.<br>Офферы — только число, без процентов.</p>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.5;">Просмотры, звонки, показы — суммарные (нарастающим итогом).<br>Дельта vs прошлая неделя рассчитается автоматически.<br>Офферы — только число, без процентов.</p>
       <div id="e-stats"></div>
     </div>
 
@@ -933,7 +957,7 @@ function showPicker() {
   pickerEl.style.display = '';
   document.querySelector('.report-footer').style.display = '';
   // Update URL without reload
-  try { history.pushState({view:'picker'}, '', window.location.pathname + (isEditMode ? '?edit=1' : '')); } catch(e) {}
+  try { history.pushState({view:'picker'}, '', window.location.pathname); } catch(e) {}
   renderPicker();
 }
 
@@ -976,6 +1000,7 @@ function escHtml(s) { const d = document.createElement('div'); d.textContent = s
 
 // ─── OBJECT CRUD ───
 async function createObject() {
+  if (!getToken()) { showTokenModal(); return; }
   const input = document.getElementById('newObjName');
   const name = input.value.trim();
   if (!name) return;
@@ -1022,12 +1047,12 @@ function openObject(id, weekIdx) {
   }
   pickerEl.style.display = 'none';
   showReportEls();
-  if (isEditMode) {
+  if (getToken()) {
     editBtn.style.display = '';
   }
-  backLink.style.display = '';
+  backLink.style.display = getToken() ? '' : 'none';
   // Update URL without reload
-  try { history.pushState({view:'object', id: id}, '', window.location.pathname + '?id=' + id + (isEditMode ? '&edit=1' : '')); } catch(e) {}
+  try { history.pushState({view:'object', id: id}, '', window.location.pathname + '?id=' + id); } catch(e) {}
   render();
   if (editPanel.classList.contains('open')) populatePanel();
 }
@@ -1078,6 +1103,18 @@ function render() {
     <div class="hero-meta-item"><div class="hero-meta-label">Период</div><div class="hero-meta-value">${escHtml(w.period || '—')}</div></div>
     <div class="hero-meta-item"><div class="hero-meta-label">Дней на рынке</div><div class="hero-meta-value">${w.dayOnMarket || '—'}</div></div>
     <div class="hero-meta-item"><div class="hero-meta-label">Цена</div><div class="hero-meta-value">${escHtml(w.price || '—')}</div></div>`;
+
+  // Hero week navigation (visible to everyone, shown if > 1 week)
+  const heroWeeksEl = document.getElementById('heroWeeks');
+  if (obj.weeks.length > 1) {
+    heroWeeksEl.innerHTML = obj.weeks.map((wk, i) => {
+      const cls = i === currentWeekIdx ? ' active' : '';
+      const label = wk.period ? `Н${wk.week} · ${escHtml(wk.period)}` : `Неделя ${wk.week}`;
+      return `<button class="hero-week-btn${cls}" onclick="switchWeekClient(${i})">${label}</button>`;
+    }).join('');
+  } else {
+    heroWeeksEl.innerHTML = '';
+  }
 
   document.getElementById('statGrid').innerHTML = ['views','calls','showings','offers'].map(k => {
     const val = w.stats[k] || 0;
@@ -1182,6 +1219,14 @@ function switchWeek(idx) {
   currentWeekIdx = idx;
   render();
   populatePanel();
+}
+
+function switchWeekClient(idx) {
+  currentWeekIdx = idx;
+  render();
+  if (editPanel.classList.contains('open')) populatePanel();
+  // Scroll to top of hero smoothly
+  document.getElementById('heroSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function updateDeltaPreview(input, key) {
@@ -1372,8 +1417,8 @@ function openObjectSilent(id) {
   currentWeekIdx = obj.weeks ? obj.weeks.length - 1 : 0;
   pickerEl.style.display = 'none';
   showReportEls();
-  if (isEditMode) editBtn.style.display = '';
-  backLink.style.display = '';
+  if (getToken()) editBtn.style.display = '';
+  backLink.style.display = getToken() ? '' : 'none';
   render();
   if (editPanel.classList.contains('open')) populatePanel();
 }
@@ -1390,27 +1435,26 @@ function showPickerSilent() {
 async function initApp() {
   const params = new URLSearchParams(window.location.search);
   const initId = params.get('id');
-  isEditMode = params.has('edit');
-
-  const syncStatusEl = document.getElementById('syncStatus');
   const token = getToken();
+  const syncStatusEl = document.getElementById('syncStatus');
 
-  // Show sync status only in edit mode
-  if (isEditMode) {
-    syncStatusEl.style.display = '';
-  } else {
-    syncStatusEl.style.display = 'none';
-  }
+  // Determine mode:
+  // - Has token → agent mode (can edit, sync visible)
+  // - Has ?id= but no token → client read-only mode
+  // - No token, no ?id= → need token → show modal
+  isEditMode = !!token;
+  const isClientView = !!initId && !token;
 
-  // Try loading from GitHub if we have a token
+  // Show sync status only in agent mode
+  syncStatusEl.style.display = isEditMode ? '' : 'none';
+
+  // Load data
   let loaded = false;
   if (token) {
     loaded = await loadFromGitHub();
-  } else if (isEditMode) {
-    setSyncError('Нет токена — нажмите сюда');
   }
 
-  // Client mode without token — try public repo read
+  // Client mode — try anonymous read from public repo
   if (!loaded && initId) {
     try {
       const resp = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`);
@@ -1427,16 +1471,18 @@ async function initApp() {
 
   // Route
   if (initId && allData.objects[initId]) {
+    // View specific object
     openObject(initId);
-    if (!isEditMode) {
+    if (isClientView) {
       editBtn.style.display = 'none';
       backLink.style.display = 'none';
     }
-  } else if (isEditMode && !token) {
+  } else if (!token) {
+    // No token, no valid ?id= → agent needs to log in
     showTokenModal();
-    // Also show picker behind modal so page isn't blank
     showPicker();
   } else {
+    // Agent with token → show picker
     showPicker();
   }
 }
@@ -1447,7 +1493,6 @@ async function initApp() {
     await initApp();
   } catch(e) {
     console.error('Init error:', e);
-    // Fallback: just show the picker
     showPicker();
   }
 })();
