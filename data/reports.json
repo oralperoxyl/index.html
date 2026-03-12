@@ -1,0 +1,25 @@
+{
+  "objects": {
+    "ул-кедрова-д-3": {
+      "name": "ул. Кедрова, д.3",
+      "weeks": [
+        {
+          "week": 1,
+          "period": "",
+          "dayOnMarket": 0,
+          "price": "",
+          "stats": {
+            "views": 0,
+            "calls": 0,
+            "showings": 0,
+            "offers": 0
+          },
+          "feedback": [],
+          "competitors": [],
+          "recommendations": [],
+          "summary": ""
+        }
+      ]
+    }
+  }
+}
