@@ -513,7 +513,7 @@
     <a class="back-link" id="backLink" href="#" onclick="event.preventDefault();showPicker();">← Все объекты</a>
   </div>
   <div class="header-right">
-    <span class="sync-status" id="syncStatus">
+    <span class="sync-status" id="syncStatus" style="cursor:pointer;display:none;" onclick="if(!getToken())showTokenModal();">
       <span class="sync-dot" id="syncDot"></span>
       <span id="syncText">—</span>
     </span>
@@ -1121,6 +1121,7 @@ function render() {
 
 // ─── EDIT PANEL ───
 function toggleEdit() {
+  if (!getToken()) { showTokenModal(); return; }
   const open = editPanel.classList.toggle('open');
   document.body.classList.toggle('editing', open);
   editBtn.classList.toggle('active', open);
@@ -1391,12 +1392,22 @@ async function initApp() {
   const initId = params.get('id');
   isEditMode = params.has('edit');
 
+  const syncStatusEl = document.getElementById('syncStatus');
   const token = getToken();
+
+  // Show sync status only in edit mode
+  if (isEditMode) {
+    syncStatusEl.style.display = '';
+  } else {
+    syncStatusEl.style.display = 'none';
+  }
 
   // Try loading from GitHub if we have a token
   let loaded = false;
   if (token) {
     loaded = await loadFromGitHub();
+  } else if (isEditMode) {
+    setSyncError('Нет токена — нажмите сюда');
   }
 
   // Client mode without token — try public repo read
@@ -1410,7 +1421,6 @@ async function initApp() {
         allData = JSON.parse(decoded);
         if (!allData.objects) allData.objects = {};
         loaded = true;
-        setSyncOk('Только чтение');
       }
     } catch(e) { console.log('Public fetch failed:', e); }
   }
