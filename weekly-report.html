@@ -3,12 +3,15 @@
 <head>
   <!--
   ЕЖЕНЕДЕЛЬНЫЙ ОТЧЁТ — ОДИН ФАЙЛ НА ВСЕ ОБЪЕКТЫ
+  Синхронизация через GitHub API + автоподсчёт дельт
 
   Для вас (агент):
   1. Откройте weekly-report.html?edit=1 — увидите список объектов
-  2. Создайте новый объект (введите адрес)
-  3. Заполните отчёт в панели справа
-  4. Данные сохраняются автоматически в браузере
+  2. При первом входе введите GitHub Token (сохранится в localStorage)
+  3. Создайте новый объект (введите адрес)
+  4. Заполните отчёт — данные синхронизируются через GitHub
+  5. Просмотры/звонки/показы — дельта считается автоматически vs прошлая неделя
+  6. Офферы — только абсолютное число, без процентов
 
   Для клиента:
   Отправьте ссылку: weekly-report.html?id=slug-адреса
@@ -54,11 +57,36 @@
       padding: 0 40px; height: 64px;
       display: flex; align-items: center; justify-content: space-between;
     }
+    .header-left {
+      display: flex; align-items: center; gap: 0;
+    }
     .header-brand {
       font-family: var(--serif);
       font-size: 16px; font-weight: 400;
       text-decoration: none; color: var(--text);
     }
+    .back-link {
+      font-size: 12px; color: var(--muted);
+      text-decoration: none; margin-left: 16px;
+      display: none; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text); }
+    .header-right {
+      display: flex; align-items: center; gap: 12px;
+    }
+    .sync-status {
+      font-size: 11px; color: var(--muted);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .sync-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: #ccc; display: inline-block;
+    }
+    .sync-dot.ok { background: #2D8A4E; }
+    .sync-dot.error { background: #C0392B; }
+    .sync-dot.loading { background: #B8860B; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
     .edit-toggle {
       font-family: var(--sans);
       font-size: 11px; font-weight: 500;
@@ -292,17 +320,7 @@
     }
     .edit-textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
 
-    .edit-feedback-block {
-      background: var(--bg); border-radius: 6px;
-      padding: 16px; margin-bottom: 12px;
-      border: 1px solid var(--border);
-    }
-    .edit-comp-block {
-      background: var(--bg); border-radius: 6px;
-      padding: 16px; margin-bottom: 12px;
-      border: 1px solid var(--border);
-    }
-    .edit-rec-block {
+    .edit-feedback-block, .edit-comp-block, .edit-rec-block {
       background: var(--bg); border-radius: 6px;
       padding: 16px; margin-bottom: 12px;
       border: 1px solid var(--border);
@@ -348,6 +366,104 @@
     body.editing .report-section { margin-right: 420px; }
     body.editing .hero { padding-right: 460px; }
 
+    /* ── WEEK HISTORY NAV ── */
+    .week-nav {
+      display: flex; gap: 8px; margin-bottom: 20px;
+      flex-wrap: wrap; align-items: center;
+    }
+    .week-nav-label {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-right: 8px;
+    }
+    .week-btn {
+      font-family: var(--sans);
+      font-size: 12px; font-weight: 500;
+      padding: 6px 14px; border-radius: 4px;
+      border: 1px solid var(--border);
+      background: transparent; color: var(--muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .week-btn:hover { border-color: var(--text); color: var(--text); }
+    .week-btn.active { background: var(--dark); color: #E5E5E5; border-color: var(--dark); }
+    .week-btn-add {
+      font-family: var(--sans);
+      font-size: 12px; font-weight: 500;
+      padding: 6px 14px; border-radius: 4px;
+      border: 1px dashed var(--accent);
+      background: transparent; color: var(--accent);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .week-btn-add:hover { background: rgba(0,102,255,0.04); }
+
+    /* ── AUTO DELTA DISPLAY ── */
+    .delta-auto {
+      font-size: 10px; color: var(--muted);
+      margin-top: 2px; font-style: italic;
+    }
+
+    /* ── TOKEN MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 999;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: white; border-radius: 12px;
+      padding: 40px; max-width: 440px; width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .modal-box h3 {
+      font-family: var(--serif);
+      font-size: 22px; font-weight: 400;
+      margin-bottom: 12px;
+    }
+    .modal-box p {
+      font-size: 14px; color: var(--muted);
+      line-height: 1.6; margin-bottom: 20px;
+    }
+    .modal-box input {
+      width: 100%; font-family: var(--sans);
+      font-size: 14px; padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px; margin-bottom: 16px;
+    }
+    .modal-box input:focus { outline: none; border-color: var(--accent); }
+    .modal-box button {
+      width: 100%; padding: 12px;
+      font-family: var(--sans);
+      font-size: 13px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      background: var(--dark); color: #E5E5E5;
+      border: none; border-radius: 6px;
+      cursor: pointer;
+    }
+    .modal-box button:hover { opacity: 0.85; }
+    .modal-error {
+      font-size: 12px; color: #C0392B;
+      margin-top: 8px; display: none;
+    }
+
+    /* ── LOADING OVERLAY ── */
+    .loading-bar {
+      position: fixed; top: 64px; left: 0; right: 0;
+      height: 2px; z-index: 300; display: none;
+    }
+    .loading-bar.active { display: block; }
+    .loading-bar::after {
+      content: ''; display: block;
+      height: 100%; width: 30%;
+      background: var(--accent);
+      animation: loadSlide 1.2s ease infinite;
+    }
+    @keyframes loadSlide {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(400%); }
+    }
+
     /* ── MOBILE ── */
     @media (max-width: 768px) {
       .site-header { padding: 0 20px; }
@@ -364,25 +480,49 @@
       body.editing .report-section { margin-right: 0; }
       body.editing .hero { padding-right: 20px; }
       .report-footer { padding: 48px 20px; }
+      .sync-status { display: none; }
     }
 
     /* ── PRINT ── */
     @media print {
-      .edit-toggle, .edit-panel { display: none !important; }
+      .edit-toggle, .edit-panel, .sync-status, .loading-bar { display: none !important; }
       .site-header { position: static; }
     }
   </style>
 </head>
 <body>
 
+<!-- LOADING BAR -->
+<div class="loading-bar" id="loadingBar"></div>
+
+<!-- TOKEN MODAL -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal-box">
+    <h3>Подключение к GitHub</h3>
+    <p>Введите Personal Access Token для синхронизации данных отчётов между устройствами.</p>
+    <input type="password" id="tokenInput" placeholder="github_pat_..." autocomplete="off">
+    <button onclick="saveToken()">Подключить</button>
+    <div class="modal-error" id="tokenError"></div>
+  </div>
+</div>
+
 <!-- HEADER -->
 <header class="site-header">
-  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
-  <button class="edit-toggle" id="editToggle" onclick="toggleEdit()">Редактировать</button>
+  <div class="header-left">
+    <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+    <a class="back-link" id="backLink" href="#" onclick="event.preventDefault();showPicker();">← Все объекты</a>
+  </div>
+  <div class="header-right">
+    <span class="sync-status" id="syncStatus">
+      <span class="sync-dot" id="syncDot"></span>
+      <span id="syncText">—</span>
+    </span>
+    <button class="edit-toggle" id="editToggle" onclick="toggleEdit()" style="display:none;">Редактировать</button>
+  </div>
 </header>
 
 <!-- HERO -->
-<section class="hero" id="heroSection">
+<section class="hero" id="heroSection" style="display:none;">
   <div class="hero-inner">
     <p class="hero-label">Еженедельный отчёт · Семён Гончаров</p>
     <h1 class="hero-title" id="heroTitle"></h1>
@@ -391,21 +531,21 @@
 </section>
 
 <!-- STATS -->
-<section class="report-section" id="statsSection">
+<section class="report-section" id="statsSection" style="display:none;">
   <div class="section-label">01 — Статистика</div>
   <h2 class="section-title">Активность за неделю</h2>
   <div class="stat-grid" id="statGrid"></div>
 </section>
 
 <!-- FEEDBACK -->
-<section class="report-section" id="feedbackSection">
+<section class="report-section" id="feedbackSection" style="display:none;">
   <div class="section-label">02 — Обратная связь</div>
   <h2 class="section-title">Что говорят покупатели</h2>
   <div class="feedback-list" id="feedbackList"></div>
 </section>
 
 <!-- COMPETITORS -->
-<section class="report-section" id="compSection">
+<section class="report-section" id="compSection" style="display:none;">
   <div class="section-label">03 — Рынок</div>
   <h2 class="section-title">Сравнение с конкурентами</h2>
   <div style="overflow-x:auto;">
@@ -426,7 +566,7 @@
 </section>
 
 <!-- RECOMMENDATIONS -->
-<section class="report-section" id="recSection">
+<section class="report-section" id="recSection" style="display:none;">
   <div class="section-label">04 — Рекомендации</div>
   <h2 class="section-title">План на следующую неделю</h2>
   <div class="rec-list" id="recList"></div>
@@ -435,6 +575,9 @@
     <div class="summary-text" id="summaryText"></div>
   </div>
 </section>
+
+<!-- PICKER -->
+<div id="pickerContainer" style="max-width:600px;margin:0 auto;padding:80px 40px;display:none;"></div>
 
 <!-- FOOTER -->
 <footer class="report-footer">
@@ -451,16 +594,18 @@
   <div class="edit-panel-inner">
     <h3>Редактор отчёта</h3>
 
+    <!-- WEEK HISTORY -->
+    <div class="edit-group">
+      <div class="edit-group-title">Неделя</div>
+      <div class="week-nav" id="weekNav"></div>
+    </div>
+
     <!-- META -->
     <div class="edit-group">
       <div class="edit-group-title">Объект и период</div>
       <div class="edit-row">
         <label class="edit-label">Адрес объекта</label>
         <input class="edit-input" id="e-object" onchange="saveFromPanel()">
-      </div>
-      <div class="edit-row">
-        <label class="edit-label">Номер недели</label>
-        <input class="edit-input" id="e-week" type="number" onchange="saveFromPanel()">
       </div>
       <div class="edit-row">
         <label class="edit-label">Период (напр. «3–9 марта 2026»)</label>
@@ -479,6 +624,7 @@
     <!-- STATS -->
     <div class="edit-group">
       <div class="edit-group-title">Статистика</div>
+      <p style="font-size:11px;color:var(--muted);margin-bottom:12px;line-height:1.5;">Введите значение — дельта vs прошлая неделя рассчитается автоматически.<br>Офферы — только число, без процентов.</p>
       <div id="e-stats"></div>
     </div>
 
@@ -509,76 +655,314 @@
       <textarea class="edit-textarea" id="e-summary" rows="4" onchange="saveFromPanel()"></textarea>
     </div>
 
-    <button class="btn-save" onclick="saveData()">Сохранить</button>
-    <p class="save-hint" id="saveHint">Данные сохраняются в браузере. Откроете эту страницу снова — всё будет на месте.</p>
+    <button class="btn-save" onclick="saveData()">Сохранить и синхронизировать</button>
+    <p class="save-hint" id="saveHint">Данные синхронизируются через GitHub.</p>
     <button class="btn-add" style="margin-top:12px;color:#C0392B;border-color:#C0392B;" onclick="resetData()">Сбросить к исходным данным</button>
+    <button class="btn-add" style="margin-top:8px;color:var(--muted);border-color:var(--border);" onclick="changeToken()">Сменить GitHub Token</button>
   </div>
 </div>
 
 <script>
-const STORAGE_PREFIX='wr_',INDEX_KEY='wr_index';
-function blankData(){return{object:'',week:1,period:'',dayOnMarket:0,price:'',stats:{views:{value:0,delta:'—',direction:'neutral'},calls:{value:0,delta:'—',direction:'neutral'},showings:{value:0,delta:'—',direction:'neutral'},offers:{value:0,delta:'—',direction:'neutral'}},feedback:[],competitors:[],recommendations:[],summary:''};}
-function getIndex(){try{return JSON.parse(localStorage.getItem(INDEX_KEY))||[];}catch(e){return[];}}
-function saveIndex(idx){localStorage.setItem(INDEX_KEY,JSON.stringify(idx));}
-function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
+// ─── CONFIG ───
+const GH_OWNER = 'oralperoxyl';
+const GH_REPO = 'index.html';
+const GH_FILE = 'data/reports.json';
+const GH_BRANCH = 'main';
+const TOKEN_KEY = 'wr_gh_token';
 
-let data,currentId=null;
+// ─── STATE ───
+let allData = { objects: {} }; // full data from GitHub
+let currentId = null;
+let currentWeekIdx = null; // index into the weeks array for current object
+let fileSha = null; // SHA of the file on GitHub for updates
+let saveTimeout = null;
+let isEditMode = false;
 
-// Picker element
-const pickerEl=document.createElement('div');
-pickerEl.style.cssText='max-width:600px;margin:0 auto;padding:80px 40px;display:none;';
-document.body.insertBefore(pickerEl,document.querySelector('.report-footer'));
+// ─── ELEMENTS ───
+const editPanel = document.getElementById('editPanel');
+const editBtn = document.getElementById('editToggle');
+const backLink = document.getElementById('backLink');
+const pickerEl = document.getElementById('pickerContainer');
+const loadingBar = document.getElementById('loadingBar');
+const syncDot = document.getElementById('syncDot');
+const syncText = document.getElementById('syncText');
+const reportEls = ['heroSection','statsSection','feedbackSection','compSection','recSection'];
 
-// Back link
-const backLink=document.createElement('a');
-backLink.textContent='← Все объекты';backLink.href='#';
-backLink.style.cssText='font-size:12px;color:var(--muted);text-decoration:none;margin-left:16px;display:none;';
-backLink.onmouseover=()=>backLink.style.color='var(--text)';
-backLink.onmouseout=()=>backLink.style.color='var(--muted)';
-backLink.onclick=e=>{e.preventDefault();showPicker();};
-document.querySelector('.header-brand').after(backLink);
+// ─── GITHUB API ───
+function getToken() { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch(e) { return ''; } }
 
-const reportEls=['heroSection','statsSection','feedbackSection','compSection','recSection'];
-const footerEl=document.querySelector('.report-footer');
-const editPanel=document.getElementById('editPanel');
-const editBtn=document.getElementById('editToggle');
-
-function hideReport(){
-  reportEls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
-  if(footerEl)footerEl.style.display='none';
-  if(editPanel){editPanel.classList.remove('open');document.body.classList.remove('editing');}
-  if(editBtn){editBtn.style.display='none';editBtn.classList.remove('active');editBtn.textContent='Редактировать';}
-  backLink.style.display='none';
-}
-function showReportEls(){
-  reportEls.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='';});
-  if(footerEl)footerEl.style.display='';
-  pickerEl.style.display='none';
+function setLoading(on) {
+  loadingBar.classList.toggle('active', on);
+  syncDot.className = 'sync-dot' + (on ? ' loading' : '');
+  if (on) syncText.textContent = 'Синхронизация...';
 }
 
-function showPicker(){
-  currentId=null;hideReport();pickerEl.style.display='';renderPicker();
+function setSyncOk(msg) {
+  syncDot.className = 'sync-dot ok';
+  syncText.textContent = msg || 'Синхронизировано';
 }
 
-function renderPicker(){
-  const idx=getIndex();
-  pickerEl.innerHTML=`
+function setSyncError(msg) {
+  syncDot.className = 'sync-dot error';
+  syncText.textContent = msg || 'Ошибка';
+}
+
+async function ghFetch(method, body) {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    const url = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`;
+    const opts = {
+      method: method || 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    };
+    if (body) opts.body = JSON.stringify(body);
+    const resp = await fetch(url, opts);
+    return resp;
+  } catch(e) {
+    console.error('ghFetch network error:', e);
+    return null;
+  }
+}
+
+async function loadFromGitHub() {
+  setLoading(true);
+  try {
+    const resp = await ghFetch('GET');
+    if (!resp) { setSyncError('Нет токена'); return false; }
+    if (resp.status === 404) {
+      // File doesn't exist yet — create empty
+      allData = { objects: {} };
+      fileSha = null;
+      setSyncOk('Новый файл');
+      return true;
+    }
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      setSyncError('Ошибка ' + resp.status);
+      console.error('GH load error:', err);
+      return false;
+    }
+    const json = await resp.json();
+    fileSha = json.sha;
+    const content = atob(json.content.replace(/\n/g, ''));
+    const decoded = new TextDecoder().decode(Uint8Array.from(content, c => c.charCodeAt(0)));
+    allData = JSON.parse(decoded);
+    if (!allData.objects) allData.objects = {};
+    setSyncOk();
+    return true;
+  } catch (e) {
+    console.error('GH load:', e);
+    setSyncError('Ошибка сети');
+    return false;
+  } finally {
+    setLoading(false);
+  }
+}
+
+async function saveToGitHub() {
+  setLoading(true);
+  try {
+    const contentStr = JSON.stringify(allData, null, 2);
+    const encoded = btoa(unescape(encodeURIComponent(contentStr)));
+    const body = {
+      message: 'Update weekly reports',
+      content: encoded,
+      branch: GH_BRANCH
+    };
+    if (fileSha) body.sha = fileSha;
+    const resp = await ghFetch('PUT', body);
+    if (!resp) { setSyncError('Нет токена'); return false; }
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      // SHA conflict — re-fetch and retry once
+      if (resp.status === 409 || (err.message && err.message.includes('sha'))) {
+        await loadFromGitHub();
+        return saveToGitHub();
+      }
+      setSyncError('Ошибка ' + resp.status);
+      console.error('GH save error:', err);
+      return false;
+    }
+    const json = await resp.json();
+    fileSha = json.content.sha;
+    setSyncOk('Сохранено');
+    return true;
+  } catch (e) {
+    console.error('GH save:', e);
+    setSyncError('Ошибка сети');
+    return false;
+  } finally {
+    setLoading(false);
+  }
+}
+
+// ─── TOKEN MODAL ───
+function showTokenModal() {
+  document.getElementById('tokenModal').classList.add('open');
+  document.getElementById('tokenInput').value = '';
+  document.getElementById('tokenError').style.display = 'none';
+}
+
+async function saveToken() {
+  const token = document.getElementById('tokenInput').value.trim();
+  if (!token) { showTokenError('Введите токен'); return; }
+  try { localStorage.setItem(TOKEN_KEY, token); } catch(e) {}
+  document.getElementById('tokenError').style.display = 'none';
+  // Test connection
+  const ok = await loadFromGitHub();
+  if (ok) {
+    document.getElementById('tokenModal').classList.remove('open');
+    initApp();
+  } else {
+    try { localStorage.removeItem(TOKEN_KEY); } catch(e) {}
+    showTokenError('Не удалось подключиться. Проверьте токен и права доступа.');
+  }
+}
+
+function showTokenError(msg) {
+  const el = document.getElementById('tokenError');
+  el.textContent = msg; el.style.display = 'block';
+}
+
+function changeToken() {
+  try { localStorage.removeItem(TOKEN_KEY); } catch(e) {}
+  showTokenModal();
+}
+
+// ─── SLUG / HELPERS ───
+function slugify(t) {
+  return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').substring(0, 60);
+}
+
+function blankWeek(weekNum) {
+  return {
+    week: weekNum || 1,
+    period: '',
+    dayOnMarket: 0,
+    price: '',
+    stats: {
+      views: 0,
+      calls: 0,
+      showings: 0,
+      offers: 0
+    },
+    feedback: [],
+    competitors: [],
+    recommendations: [],
+    summary: ''
+  };
+}
+
+function getObjData(id) {
+  return allData.objects[id] || null;
+}
+
+function getCurrentWeek() {
+  const obj = getObjData(currentId);
+  if (!obj || !obj.weeks || !obj.weeks[currentWeekIdx]) return blankWeek(1);
+  return obj.weeks[currentWeekIdx];
+}
+
+function getPrevWeek() {
+  const obj = getObjData(currentId);
+  if (!obj || !obj.weeks || currentWeekIdx < 1) return null;
+  return obj.weeks[currentWeekIdx - 1] || null;
+}
+
+// ─── AUTO DELTA CALCULATION ───
+function calcDelta(key, currentVal) {
+  // Offers — no percentage, just absolute
+  if (key === 'offers') {
+    return { delta: currentVal > 0 ? String(currentVal) : '—', direction: 'neutral' };
+  }
+  const prev = getPrevWeek();
+  if (!prev) {
+    return { delta: '—', direction: 'neutral' };
+  }
+  const prevVal = prev.stats[key] || 0;
+  if (prevVal === 0 && currentVal === 0) {
+    return { delta: '—', direction: 'neutral' };
+  }
+  if (prevVal === 0 && currentVal > 0) {
+    return { delta: '+∞', direction: 'up' };
+  }
+  const pct = ((currentVal - prevVal) / prevVal * 100);
+  const rounded = Math.round(pct);
+  if (rounded === 0) {
+    return { delta: '0%', direction: 'neutral' };
+  }
+  const sign = rounded > 0 ? '+' : '';
+  const dir = rounded > 0 ? 'up' : 'down';
+  return { delta: sign + rounded + '%', direction: dir };
+}
+
+function calcAllDeltas(weekData) {
+  const result = {};
+  for (const key of ['views', 'calls', 'showings', 'offers']) {
+    const val = weekData.stats[key] || 0;
+    result[key] = calcDelta(key, val);
+  }
+  return result;
+}
+
+// ─── UI: HIDE / SHOW ───
+function hideReport() {
+  reportEls.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+  document.querySelector('.report-footer').style.display = 'none';
+  if (editPanel) { editPanel.classList.remove('open'); document.body.classList.remove('editing'); }
+  if (editBtn) { editBtn.style.display = 'none'; editBtn.classList.remove('active'); editBtn.textContent = 'Редактировать'; }
+  backLink.style.display = 'none';
+}
+
+function showReportEls() {
+  reportEls.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = ''; });
+  document.querySelector('.report-footer').style.display = '';
+  pickerEl.style.display = 'none';
+}
+
+// ─── PICKER ───
+function showPicker() {
+  currentId = null;
+  currentWeekIdx = null;
+  hideReport();
+  pickerEl.style.display = '';
+  document.querySelector('.report-footer').style.display = '';
+  // Update URL without reload
+  try { history.pushState({view:'picker'}, '', window.location.pathname + (isEditMode ? '?edit=1' : '')); } catch(e) {}
+  renderPicker();
+}
+
+function renderPicker() {
+  const ids = Object.keys(allData.objects);
+  pickerEl.innerHTML = `
     <div style="margin-bottom:48px;">
       <h1 style="font-family:var(--serif);font-size:32px;font-weight:400;margin-bottom:8px;">Еженедельные отчёты</h1>
       <p style="color:var(--muted);font-size:15px;">Выберите объект или создайте новый</p>
     </div>
-    ${idx.length?idx.map(obj=>`
+    ${ids.length ? ids.map(id => {
+      const obj = allData.objects[id];
+      const lastWeek = obj.weeks && obj.weeks.length ? obj.weeks[obj.weeks.length - 1] : null;
+      const name = obj.name || 'Без названия';
+      const weekNum = lastWeek ? lastWeek.week : '?';
+      const period = lastWeek ? (lastWeek.period || '—') : '—';
+      return `
       <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--border);">
-        <a href="#" onclick="event.preventDefault();openObject('${obj.id}')" style="text-decoration:none;color:var(--text);flex:1;" onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
-          <div style="font-size:15px;font-weight:500;">${obj.name||'Без названия'}</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px;">Неделя ${obj.week||'?'} · ${obj.period||'—'}</div>
+        <a href="#" onclick="event.preventDefault();openObject('${id}')" style="text-decoration:none;color:var(--text);flex:1;transition:padding-left 0.2s;" onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
+          <div style="font-size:15px;font-weight:500;">${escHtml(name)}</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">Неделя ${weekNum} · ${escHtml(period)}</div>
         </a>
         <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
-          <button onclick="copyLink('${obj.id}',this)" style="font-size:11px;color:var(--accent);background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:4px 10px;">Ссылка</button>
-          <button onclick="deleteObject('${obj.id}')" style="font-size:11px;color:#C0392B;background:none;border:none;cursor:pointer;padding:4px 8px;">✕</button>
+          <button onclick="copyLink('${id}',this)" style="font-size:11px;color:var(--accent);background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:4px 10px;">Ссылка</button>
+          <button onclick="deleteObject('${id}')" style="font-size:11px;color:#C0392B;background:none;border:none;cursor:pointer;padding:4px 8px;">✕</button>
         </div>
-      </div>`).join('')+'<div style="border-top:1px solid var(--border);"></div>'
-    :'<p style="color:var(--muted);font-size:14px;padding:32px 0;">Пока нет объектов. Создайте первый ↓</p>'}
+      </div>`;
+    }).join('') + '<div style="border-top:1px solid var(--border);"></div>'
+    : '<p style="color:var(--muted);font-size:14px;padding:32px 0;">Пока нет объектов. Создайте первый ↓</p>'}
     <div style="margin-top:32px;">
       <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Новый объект</div>
       <div style="display:flex;gap:8px;">
@@ -588,109 +972,475 @@ function renderPicker(){
     </div>`;
 }
 
-function createObject(){
-  const input=document.getElementById('newObjName');const name=input.value.trim();
-  if(!name)return;
-  const id=slugify(name)||('obj-'+Date.now());
-  const idx=getIndex();
-  if(idx.find(o=>o.id===id)){alert('Объект с таким адресом уже существует');return;}
-  const nd=blankData();nd.object=name;
-  localStorage.setItem(STORAGE_PREFIX+id,JSON.stringify(nd));
-  idx.push({id,name,week:1,period:''});saveIndex(idx);
+function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// ─── OBJECT CRUD ───
+async function createObject() {
+  const input = document.getElementById('newObjName');
+  const name = input.value.trim();
+  if (!name) return;
+  const id = slugify(name) || ('obj-' + Date.now());
+  if (allData.objects[id]) { alert('Объект с таким адресом уже существует'); return; }
+  allData.objects[id] = {
+    name: name,
+    weeks: [blankWeek(1)]
+  };
+  await saveToGitHub();
   openObject(id);
 }
-function deleteObject(id){
-  if(!confirm('Удалить этот объект и все его данные?'))return;
-  localStorage.removeItem(STORAGE_PREFIX+id);
-  saveIndex(getIndex().filter(o=>o.id!==id));renderPicker();
-}
-function copyLink(id,btn){
-  const url=window.location.origin+window.location.pathname+'?id='+id;
-  try{navigator.clipboard.writeText(url).then(()=>{
-    const o=btn.textContent;btn.textContent='✓';btn.style.color='#2D8A4E';
-    setTimeout(()=>{btn.textContent=o;btn.style.color='';},1500);
-  }).catch(()=>prompt('Скопируйте:',url));}catch(e){prompt('Скопируйте:',url);}
+
+async function deleteObject(id) {
+  if (!confirm('Удалить этот объект и все его данные?')) return;
+  delete allData.objects[id];
+  await saveToGitHub();
+  renderPicker();
 }
 
-function openObject(id){
-  currentId=id;
-  try{const s=localStorage.getItem(STORAGE_PREFIX+id);data=s?JSON.parse(s):blankData();}catch(e){data=blankData();}
-  pickerEl.style.display='none';showReportEls();
-  editBtn.style.display='';backLink.style.display='';
+function copyLink(id, btn) {
+  const url = window.location.origin + window.location.pathname + '?id=' + id;
+  try {
+    navigator.clipboard.writeText(url).then(() => {
+      const o = btn.textContent; btn.textContent = '✓'; btn.style.color = '#2D8A4E';
+      setTimeout(() => { btn.textContent = o; btn.style.color = ''; }, 1500);
+    }).catch(() => prompt('Скопируйте:', url));
+  } catch(e) { prompt('Скопируйте:', url); }
+}
+
+// ─── OPEN OBJECT ───
+function openObject(id, weekIdx) {
+  const obj = allData.objects[id];
+  if (!obj) return;
+  currentId = id;
+  // Default to last week
+  if (weekIdx !== undefined) {
+    currentWeekIdx = weekIdx;
+  } else {
+    currentWeekIdx = obj.weeks ? obj.weeks.length - 1 : 0;
+  }
+  if (!obj.weeks || !obj.weeks.length) {
+    obj.weeks = [blankWeek(1)];
+  }
+  pickerEl.style.display = 'none';
+  showReportEls();
+  if (isEditMode) {
+    editBtn.style.display = '';
+  }
+  backLink.style.display = '';
+  // Update URL without reload
+  try { history.pushState({view:'object', id: id}, '', window.location.pathname + '?id=' + id + (isEditMode ? '&edit=1' : '')); } catch(e) {}
   render();
-  const h=document.getElementById('saveHint');
-  if(h)h.textContent='Автосохранение включено.';
+  if (editPanel.classList.contains('open')) populatePanel();
 }
 
-function persist(){
-  if(!currentId)return;
-  try{localStorage.setItem(STORAGE_PREFIX+currentId,JSON.stringify(data));
-  const idx=getIndex(),e=idx.find(o=>o.id===currentId);
-  if(e){e.name=data.object;e.week=data.week;e.period=data.period;saveIndex(idx);}}catch(e){}
+// ─── ADD WEEK ───
+async function addWeek() {
+  const obj = allData.objects[currentId];
+  if (!obj) return;
+  const lastWeek = obj.weeks[obj.weeks.length - 1];
+  const newWeekNum = (lastWeek ? lastWeek.week : 0) + 1;
+  // Copy competitors from previous week as starting point
+  const newWeek = blankWeek(newWeekNum);
+  if (lastWeek && lastWeek.competitors) {
+    newWeek.competitors = JSON.parse(JSON.stringify(lastWeek.competitors));
+  }
+  if (lastWeek) {
+    newWeek.price = lastWeek.price;
+    newWeek.dayOnMarket = lastWeek.dayOnMarket + 7;
+  }
+  obj.weeks.push(newWeek);
+  currentWeekIdx = obj.weeks.length - 1;
+  await saveToGitHub();
+  render();
+  if (editPanel.classList.contains('open')) populatePanel();
 }
 
-function render(){
-  document.getElementById('heroTitle').innerHTML='Неделя '+data.week+'<br><em>'+(data.object||'Новый объект')+'</em>';
-  document.getElementById('heroMeta').innerHTML='<div class="hero-meta-item"><div class="hero-meta-label">Период</div><div class="hero-meta-value">'+(data.period||'—')+'</div></div><div class="hero-meta-item"><div class="hero-meta-label">Дней на рынке</div><div class="hero-meta-value">'+(data.dayOnMarket||'—')+'</div></div><div class="hero-meta-item"><div class="hero-meta-label">Цена</div><div class="hero-meta-value">'+(data.price||'—')+'</div></div>';
-  const sn={views:'Просмотров',calls:'Звонков',showings:'Показов',offers:'Офферов'};
-  document.getElementById('statGrid').innerHTML=Object.entries(data.stats).map(([k,s])=>'<div class="stat-card"><div class="stat-num">'+s.value+'</div><div class="stat-label">'+sn[k]+'</div><div class="stat-delta '+s.direction+'">'+s.delta+'</div></div>').join('');
-  document.getElementById('feedbackList').innerHTML=data.feedback.length?data.feedback.map(f=>'<div class="feedback-item"><div class="feedback-header"><span class="feedback-name">'+f.name+'</span><span class="feedback-date">'+f.date+'</span></div><span class="feedback-verdict '+f.verdict+'">'+f.verdictText+'</span><div class="feedback-text">'+f.text+'</div></div>').join(''):'<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
-  document.getElementById('compBody').innerHTML=data.competitors.length?data.competitors.map(c=>'<tr class="'+(c.ours?'our-object':'')+'"><td>'+(c.url?'<a href="'+c.url+'" target="_blank" style="color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px;">'+c.address+'</a>':c.address)+'</td><td>'+c.rooms+'</td><td>'+c.area+'</td><td>'+c.price+'</td><td><span class="comp-status '+c.status+'">'+c.statusText+'</span></td><td>'+c.note+'</td></tr>').join(''):'<tr><td colspan="6" style="color:var(--muted);padding:20px 16px;">Пока нет данных</td></tr>';
-  document.getElementById('recList').innerHTML=data.recommendations.map((r,i)=>'<div class="rec-item"><div class="rec-num">'+String(i+1).padStart(2,'0')+'</div><div><div class="rec-title">'+r.title+'</div><div class="rec-text">'+r.text+'</div></div></div>').join('');
-  document.getElementById('summaryText').textContent=data.summary||'Резюме будет добавлено';
+async function deleteWeek(idx) {
+  const obj = allData.objects[currentId];
+  if (!obj || obj.weeks.length <= 1) { alert('Нельзя удалить единственную неделю'); return; }
+  if (!confirm('Удалить неделю ' + obj.weeks[idx].week + '?')) return;
+  obj.weeks.splice(idx, 1);
+  if (currentWeekIdx >= obj.weeks.length) currentWeekIdx = obj.weeks.length - 1;
+  await saveToGitHub();
+  render();
+  if (editPanel.classList.contains('open')) populatePanel();
 }
 
-function toggleEdit(){
-  const open=editPanel.classList.toggle('open');
-  document.body.classList.toggle('editing',open);
-  editBtn.classList.toggle('active',open);
-  editBtn.textContent=open?'Закрыть':'Редактировать';
-  if(open)populatePanel();
+// ─── RENDER ───
+function render() {
+  const obj = allData.objects[currentId];
+  if (!obj) return;
+  const w = getCurrentWeek();
+  const deltas = calcAllDeltas(w);
+  const statNames = { views: 'Просмотров', calls: 'Звонков', showings: 'Показов', offers: 'Офферов' };
+
+  document.getElementById('heroTitle').innerHTML = 'Неделя ' + w.week + '<br><em>' + escHtml(obj.name || 'Новый объект') + '</em>';
+  document.getElementById('heroMeta').innerHTML = `
+    <div class="hero-meta-item"><div class="hero-meta-label">Период</div><div class="hero-meta-value">${escHtml(w.period || '—')}</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-label">Дней на рынке</div><div class="hero-meta-value">${w.dayOnMarket || '—'}</div></div>
+    <div class="hero-meta-item"><div class="hero-meta-label">Цена</div><div class="hero-meta-value">${escHtml(w.price || '—')}</div></div>`;
+
+  document.getElementById('statGrid').innerHTML = ['views','calls','showings','offers'].map(k => {
+    const val = w.stats[k] || 0;
+    const d = deltas[k];
+    return `<div class="stat-card">
+      <div class="stat-num">${val}</div>
+      <div class="stat-label">${statNames[k]}</div>
+      <div class="stat-delta ${d.direction}">${d.delta}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('feedbackList').innerHTML = w.feedback.length
+    ? w.feedback.map(f => `
+      <div class="feedback-item">
+        <div class="feedback-header"><span class="feedback-name">${escHtml(f.name)}</span><span class="feedback-date">${escHtml(f.date)}</span></div>
+        <span class="feedback-verdict ${f.verdict}">${escHtml(f.verdictText)}</span>
+        <div class="feedback-text">${escHtml(f.text)}</div>
+      </div>`).join('')
+    : '<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
+
+  document.getElementById('compBody').innerHTML = w.competitors.length
+    ? w.competitors.map(c => {
+      const addrHtml = c.url
+        ? `<a href="${escHtml(c.url)}" target="_blank" style="color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px;">${escHtml(c.address)}</a>`
+        : escHtml(c.address);
+      return `<tr class="${c.ours ? 'our-object' : ''}">
+        <td>${addrHtml}</td><td>${escHtml(c.rooms)}</td><td>${escHtml(c.area)}</td>
+        <td>${escHtml(c.price)}</td><td><span class="comp-status ${c.status}">${escHtml(c.statusText)}</span></td>
+        <td>${escHtml(c.note)}</td></tr>`;
+    }).join('')
+    : '<tr><td colspan="6" style="color:var(--muted);padding:20px 16px;">Пока нет данных</td></tr>';
+
+  document.getElementById('recList').innerHTML = w.recommendations.map((r, i) => `
+    <div class="rec-item">
+      <div class="rec-num">${String(i + 1).padStart(2, '0')}</div>
+      <div><div class="rec-title">${escHtml(r.title)}</div><div class="rec-text">${escHtml(r.text)}</div></div>
+    </div>`).join('');
+
+  document.getElementById('summaryText').textContent = w.summary || 'Резюме будет добавлено';
 }
 
-function populatePanel(){
-  document.getElementById('e-object').value=data.object;
-  document.getElementById('e-week').value=data.week;
-  document.getElementById('e-period').value=data.period;
-  document.getElementById('e-dayOnMarket').value=data.dayOnMarket;
-  document.getElementById('e-price').value=data.price;
-  document.getElementById('e-summary').value=data.summary;
-  const sn={views:'Просмотров',calls:'Звонков',showings:'Показов',offers:'Офферов'};
-  document.getElementById('e-stats').innerHTML=Object.entries(data.stats).map(([k,s])=>'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;"><div><label class="edit-label">'+sn[k]+'</label><input class="edit-input" data-stat="'+k+'" data-field="value" type="number" value="'+s.value+'" onchange="saveFromPanel()"></div><div><label class="edit-label">Дельта</label><input class="edit-input" data-stat="'+k+'" data-field="delta" value="'+s.delta+'" onchange="saveFromPanel()"></div><div><label class="edit-label">Направление</label><select class="edit-select" data-stat="'+k+'" data-field="direction" onchange="saveFromPanel()"><option value="up" '+(s.direction==='up'?'selected':'')+'>↑ Рост</option><option value="down" '+(s.direction==='down'?'selected':'')+'>↓ Падение</option><option value="neutral" '+(s.direction==='neutral'?'selected':'')+'>— Без изменений</option></select></div></div>').join('');
-  renderFeedbackPanel();renderCompPanel();renderRecPanel();
+// ─── EDIT PANEL ───
+function toggleEdit() {
+  const open = editPanel.classList.toggle('open');
+  document.body.classList.toggle('editing', open);
+  editBtn.classList.toggle('active', open);
+  editBtn.textContent = open ? 'Закрыть' : 'Редактировать';
+  if (open) populatePanel();
 }
 
-function renderFeedbackPanel(){document.getElementById('e-feedback').innerHTML=data.feedback.map((f,i)=>'<div class="edit-feedback-block"><button class="btn-remove" onclick="removeFeedback('+i+')">✕</button><div class="edit-row"><label class="edit-label">Имя</label><input class="edit-input" data-fb="'+i+'" data-field="name" value="'+f.name+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Дата</label><input class="edit-input" data-fb="'+i+'" data-field="date" value="'+f.date+'" onchange="saveFromPanel()"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Статус</label><select class="edit-select" data-fb="'+i+'" data-field="verdict" onchange="saveFromPanel()"><option value="interested" '+(f.verdict==='interested'?'selected':'')+'>Интересуются</option><option value="thinking" '+(f.verdict==='thinking'?'selected':'')+'>Думают</option><option value="declined" '+(f.verdict==='declined'?'selected':'')+'>Отказ</option></select></div><div class="edit-row"><label class="edit-label">Текст статуса</label><input class="edit-input" data-fb="'+i+'" data-field="verdictText" value="'+f.verdictText+'" onchange="saveFromPanel()"></div></div><div class="edit-row"><label class="edit-label">Комментарий</label><textarea class="edit-textarea" data-fb="'+i+'" data-field="text" onchange="saveFromPanel()">'+f.text+'</textarea></div></div>').join('');}
+function populatePanel() {
+  const obj = allData.objects[currentId];
+  if (!obj) return;
+  const w = getCurrentWeek();
 
-function renderCompPanel(){document.getElementById('e-competitors').innerHTML=data.competitors.map((c,i)=>'<div class="edit-comp-block"><button class="btn-remove" onclick="removeComp('+i+')">✕</button><div class="edit-row"><label class="edit-label">Адрес</label><input class="edit-input" data-comp="'+i+'" data-field="address" value="'+c.address+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Ссылка на объявление</label><input class="edit-input" data-comp="'+i+'" data-field="url" value="'+(c.url||'')+'" placeholder="https://cian.ru/..." onchange="saveFromPanel()"></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Комнат</label><input class="edit-input" data-comp="'+i+'" data-field="rooms" value="'+c.rooms+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Площадь</label><input class="edit-input" data-comp="'+i+'" data-field="area" value="'+c.area+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Цена</label><input class="edit-input" data-comp="'+i+'" data-field="price" value="'+c.price+'" onchange="saveFromPanel()"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Статус</label><select class="edit-select" data-comp="'+i+'" data-field="status" onchange="saveFromPanel()"><option value="active" '+(c.status==='active'?'selected':'')+'>В продаже</option><option value="sold" '+(c.status==='sold'?'selected':'')+'>Продана</option><option value="reduced" '+(c.status==='reduced'?'selected':'')+'>Снижение</option></select></div><div class="edit-row"><label class="edit-label">Текст статуса</label><input class="edit-input" data-comp="'+i+'" data-field="statusText" value="'+c.statusText+'" onchange="saveFromPanel()"></div></div><div class="edit-row"><label class="edit-label">Заметка</label><input class="edit-input" data-comp="'+i+'" data-field="note" value="'+c.note+'" onchange="saveFromPanel()"></div><div class="edit-row"><label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;"><input type="checkbox" data-comp="'+i+'" data-field="ours" '+(c.ours?'checked':'')+' onchange="saveFromPanel()"> Наш объект</label></div></div>').join('');}
+  // Week navigation
+  renderWeekNav();
 
-function renderRecPanel(){document.getElementById('e-recs').innerHTML=data.recommendations.map((r,i)=>'<div class="edit-rec-block"><button class="btn-remove" onclick="removeRec('+i+')">✕</button><div class="edit-row"><label class="edit-label">Заголовок</label><input class="edit-input" data-rec="'+i+'" data-field="title" value="'+r.title+'" onchange="saveFromPanel()"></div><div class="edit-row"><label class="edit-label">Описание</label><textarea class="edit-textarea" data-rec="'+i+'" data-field="text" onchange="saveFromPanel()">'+r.text+'</textarea></div></div>').join('');}
+  document.getElementById('e-object').value = obj.name;
+  document.getElementById('e-period').value = w.period;
+  document.getElementById('e-dayOnMarket').value = w.dayOnMarket;
+  document.getElementById('e-price').value = w.price;
+  document.getElementById('e-summary').value = w.summary;
 
-function saveFromPanel(){
-  data.object=document.getElementById('e-object').value;data.week=parseInt(document.getElementById('e-week').value)||1;
-  data.period=document.getElementById('e-period').value;data.dayOnMarket=parseInt(document.getElementById('e-dayOnMarket').value)||0;
-  data.price=document.getElementById('e-price').value;data.summary=document.getElementById('e-summary').value;
-  document.querySelectorAll('[data-stat]').forEach(el=>{const k=el.dataset.stat,f=el.dataset.field;if(f==='value')data.stats[k].value=parseInt(el.value)||0;else data.stats[k][f]=el.value;});
-  document.querySelectorAll('[data-fb]').forEach(el=>{const i=+el.dataset.fb,f=el.dataset.field;if(data.feedback[i])data.feedback[i][f]=el.value;});
-  document.querySelectorAll('[data-comp]').forEach(el=>{const i=+el.dataset.comp,f=el.dataset.field;if(data.competitors[i]){if(f==='ours')data.competitors[i].ours=el.checked;else data.competitors[i][f]=el.value;}});
-  document.querySelectorAll('[data-rec]').forEach(el=>{const i=+el.dataset.rec,f=el.dataset.field;if(data.recommendations[i])data.recommendations[i][f]=el.value;});
-  render();persist();
+  const statNames = { views: 'Просмотров', calls: 'Звонков', showings: 'Показов', offers: 'Офферов' };
+  const prev = getPrevWeek();
+
+  document.getElementById('e-stats').innerHTML = ['views','calls','showings','offers'].map(k => {
+    const val = w.stats[k] || 0;
+    const d = calcDelta(k, val);
+    const prevVal = prev ? (prev.stats[k] || 0) : null;
+    const prevHint = (k !== 'offers' && prevVal !== null) ? `<div class="delta-auto">Прошлая неделя: ${prevVal} → ${d.delta}</div>` : (k === 'offers' ? '<div class="delta-auto">Абсолютное число, без %</div>' : '');
+    return `<div style="margin-bottom:12px;">
+      <label class="edit-label">${statNames[k]}</label>
+      <input class="edit-input" data-stat="${k}" type="number" value="${val}" onchange="saveFromPanel()" oninput="updateDeltaPreview(this,'${k}')">
+      ${prevHint}
+    </div>`;
+  }).join('');
+
+  renderFeedbackPanel();
+  renderCompPanel();
+  renderRecPanel();
 }
 
-function addFeedback(){data.feedback.push({name:'',date:'',verdict:'thinking',verdictText:'Думают',text:''});renderFeedbackPanel();render();persist();}
-function removeFeedback(i){data.feedback.splice(i,1);renderFeedbackPanel();render();persist();}
-function addCompetitor(){data.competitors.push({address:'',rooms:'',area:'',price:'',status:'active',statusText:'В продаже',note:'',url:'',ours:false});renderCompPanel();render();persist();}
-function removeComp(i){data.competitors.splice(i,1);renderCompPanel();render();persist();}
-function addRec(){data.recommendations.push({title:'',text:''});renderRecPanel();render();persist();}
-function removeRec(i){data.recommendations.splice(i,1);renderRecPanel();render();persist();}
-function saveData(){persist();const h=document.getElementById('saveHint');if(h){h.style.color='#2D8A4E';h.textContent='✓ Сохранено';setTimeout(()=>{h.style.color='';h.textContent='Автосохранение включено.';},1500);}}
-function resetData(){if(!confirm('Сбросить все данные этого объекта?'))return;data=blankData();persist();render();populatePanel();}
+function renderWeekNav() {
+  const obj = allData.objects[currentId];
+  if (!obj) return;
+  let html = '<span class="week-nav-label">Недели:</span>';
+  obj.weeks.forEach((w, i) => {
+    const cls = i === currentWeekIdx ? ' active' : '';
+    html += `<button class="week-btn${cls}" onclick="switchWeek(${i})">Н${w.week}</button>`;
+  });
+  html += `<button class="week-btn-add" onclick="addWeek()">+</button>`;
+  if (obj.weeks.length > 1) {
+    html += `<button class="btn-remove" style="float:none;padding:6px 10px;font-size:10px;" onclick="deleteWeek(${currentWeekIdx})">Удалить Н${getCurrentWeek().week}</button>`;
+  }
+  document.getElementById('weekNav').innerHTML = html;
+}
 
-// INIT
-const params=new URLSearchParams(window.location.search);
-const initId=params.get('id'),isEditMode=params.has('edit');
-if(initId){openObject(initId);if(!isEditMode){editBtn.style.display='none';backLink.style.display='none';}}
-else{showPicker();}
+function switchWeek(idx) {
+  currentWeekIdx = idx;
+  render();
+  populatePanel();
+}
+
+function updateDeltaPreview(input, key) {
+  if (key === 'offers') return;
+  const val = parseInt(input.value) || 0;
+  const d = calcDelta(key, val);
+  const hint = input.parentElement.querySelector('.delta-auto');
+  if (hint) {
+    const prev = getPrevWeek();
+    const prevVal = prev ? (prev.stats[key] || 0) : null;
+    if (prevVal !== null) {
+      hint.textContent = `Прошлая неделя: ${prevVal} → ${d.delta}`;
+    }
+  }
+}
+
+function renderFeedbackPanel() {
+  const w = getCurrentWeek();
+  document.getElementById('e-feedback').innerHTML = w.feedback.map((f, i) => `
+    <div class="edit-feedback-block">
+      <button class="btn-remove" onclick="removeFeedback(${i})">✕</button>
+      <div class="edit-row"><label class="edit-label">Имя</label><input class="edit-input" data-fb="${i}" data-field="name" value="${escAttr(f.name)}" onchange="saveFromPanel()"></div>
+      <div class="edit-row"><label class="edit-label">Дата</label><input class="edit-input" data-fb="${i}" data-field="date" value="${escAttr(f.date)}" onchange="saveFromPanel()"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">Статус</label>
+          <select class="edit-select" data-fb="${i}" data-field="verdict" onchange="saveFromPanel()">
+            <option value="interested" ${f.verdict==='interested'?'selected':''}>Интересуются</option>
+            <option value="thinking" ${f.verdict==='thinking'?'selected':''}>Думают</option>
+            <option value="declined" ${f.verdict==='declined'?'selected':''}>Отказ</option>
+          </select>
+        </div>
+        <div class="edit-row"><label class="edit-label">Текст статуса</label><input class="edit-input" data-fb="${i}" data-field="verdictText" value="${escAttr(f.verdictText)}" onchange="saveFromPanel()"></div>
+      </div>
+      <div class="edit-row"><label class="edit-label">Комментарий</label><textarea class="edit-textarea" data-fb="${i}" data-field="text" onchange="saveFromPanel()">${escHtml(f.text)}</textarea></div>
+    </div>`).join('');
+}
+
+function renderCompPanel() {
+  const w = getCurrentWeek();
+  document.getElementById('e-competitors').innerHTML = w.competitors.map((c, i) => `
+    <div class="edit-comp-block">
+      <button class="btn-remove" onclick="removeComp(${i})">✕</button>
+      <div class="edit-row"><label class="edit-label">Адрес</label><input class="edit-input" data-comp="${i}" data-field="address" value="${escAttr(c.address)}" onchange="saveFromPanel()"></div>
+      <div class="edit-row"><label class="edit-label">Ссылка на объявление</label><input class="edit-input" data-comp="${i}" data-field="url" value="${escAttr(c.url||'')}" placeholder="https://cian.ru/..." onchange="saveFromPanel()"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">Комнат</label><input class="edit-input" data-comp="${i}" data-field="rooms" value="${escAttr(c.rooms)}" onchange="saveFromPanel()"></div>
+        <div class="edit-row"><label class="edit-label">Площадь</label><input class="edit-input" data-comp="${i}" data-field="area" value="${escAttr(c.area)}" onchange="saveFromPanel()"></div>
+        <div class="edit-row"><label class="edit-label">Цена</label><input class="edit-input" data-comp="${i}" data-field="price" value="${escAttr(c.price)}" onchange="saveFromPanel()"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="edit-row"><label class="edit-label">Статус</label>
+          <select class="edit-select" data-comp="${i}" data-field="status" onchange="saveFromPanel()">
+            <option value="active" ${c.status==='active'?'selected':''}>В продаже</option>
+            <option value="sold" ${c.status==='sold'?'selected':''}>Продана</option>
+            <option value="reduced" ${c.status==='reduced'?'selected':''}>Снижение</option>
+          </select>
+        </div>
+        <div class="edit-row"><label class="edit-label">Текст статуса</label><input class="edit-input" data-comp="${i}" data-field="statusText" value="${escAttr(c.statusText)}" onchange="saveFromPanel()"></div>
+      </div>
+      <div class="edit-row"><label class="edit-label">Заметка</label><input class="edit-input" data-comp="${i}" data-field="note" value="${escAttr(c.note)}" onchange="saveFromPanel()"></div>
+      <div class="edit-row"><label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+        <input type="checkbox" data-comp="${i}" data-field="ours" ${c.ours?'checked':''} onchange="saveFromPanel()"> Наш объект
+      </label></div>
+    </div>`).join('');
+}
+
+function renderRecPanel() {
+  const w = getCurrentWeek();
+  document.getElementById('e-recs').innerHTML = w.recommendations.map((r, i) => `
+    <div class="edit-rec-block">
+      <button class="btn-remove" onclick="removeRec(${i})">✕</button>
+      <div class="edit-row"><label class="edit-label">Заголовок</label><input class="edit-input" data-rec="${i}" data-field="title" value="${escAttr(r.title)}" onchange="saveFromPanel()"></div>
+      <div class="edit-row"><label class="edit-label">Описание</label><textarea class="edit-textarea" data-rec="${i}" data-field="text" onchange="saveFromPanel()">${escHtml(r.text)}</textarea></div>
+    </div>`).join('');
+}
+
+function escAttr(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ─── SAVE FROM PANEL ───
+function saveFromPanel() {
+  const obj = allData.objects[currentId];
+  if (!obj) return;
+  const w = getCurrentWeek();
+
+  obj.name = document.getElementById('e-object').value;
+  w.period = document.getElementById('e-period').value;
+  w.dayOnMarket = parseInt(document.getElementById('e-dayOnMarket').value) || 0;
+  w.price = document.getElementById('e-price').value;
+  w.summary = document.getElementById('e-summary').value;
+
+  document.querySelectorAll('[data-stat]').forEach(el => {
+    const k = el.dataset.stat;
+    w.stats[k] = parseInt(el.value) || 0;
+  });
+
+  document.querySelectorAll('[data-fb]').forEach(el => {
+    const i = +el.dataset.fb, f = el.dataset.field;
+    if (w.feedback[i]) w.feedback[i][f] = el.value;
+  });
+
+  document.querySelectorAll('[data-comp]').forEach(el => {
+    const i = +el.dataset.comp, f = el.dataset.field;
+    if (w.competitors[i]) {
+      if (f === 'ours') w.competitors[i].ours = el.checked;
+      else w.competitors[i][f] = el.value;
+    }
+  });
+
+  document.querySelectorAll('[data-rec]').forEach(el => {
+    const i = +el.dataset.rec, f = el.dataset.field;
+    if (w.recommendations[i]) w.recommendations[i][f] = el.value;
+  });
+
+  render();
+  debounceSave();
+}
+
+function debounceSave() {
+  if (saveTimeout) clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => saveToGitHub(), 2000);
+}
+
+// ─── ADD / REMOVE ───
+function addFeedback() {
+  const w = getCurrentWeek();
+  w.feedback.push({ name: '', date: '', verdict: 'thinking', verdictText: 'Думают', text: '' });
+  renderFeedbackPanel(); render(); debounceSave();
+}
+function removeFeedback(i) {
+  getCurrentWeek().feedback.splice(i, 1);
+  renderFeedbackPanel(); render(); debounceSave();
+}
+function addCompetitor() {
+  const w = getCurrentWeek();
+  w.competitors.push({ address: '', rooms: '', area: '', price: '', status: 'active', statusText: 'В продаже', note: '', url: '', ours: false });
+  renderCompPanel(); render(); debounceSave();
+}
+function removeComp(i) {
+  getCurrentWeek().competitors.splice(i, 1);
+  renderCompPanel(); render(); debounceSave();
+}
+function addRec() {
+  getCurrentWeek().recommendations.push({ title: '', text: '' });
+  renderRecPanel(); render(); debounceSave();
+}
+function removeRec(i) {
+  getCurrentWeek().recommendations.splice(i, 1);
+  renderRecPanel(); render(); debounceSave();
+}
+
+async function saveData() {
+  if (saveTimeout) clearTimeout(saveTimeout);
+  const ok = await saveToGitHub();
+  const h = document.getElementById('saveHint');
+  if (h) {
+    if (ok) {
+      h.style.color = '#2D8A4E'; h.textContent = '✓ Сохранено и синхронизировано';
+    } else {
+      h.style.color = '#C0392B'; h.textContent = '✕ Ошибка сохранения';
+    }
+    setTimeout(() => { h.style.color = ''; h.textContent = 'Данные синхронизируются через GitHub.'; }, 2500);
+  }
+}
+
+async function resetData() {
+  if (!confirm('Сбросить все данные этой недели?')) return;
+  const obj = allData.objects[currentId];
+  if (!obj) return;
+  obj.weeks[currentWeekIdx] = blankWeek(getCurrentWeek().week);
+  await saveToGitHub();
+  render(); populatePanel();
+}
+
+// ─── SPA NAVIGATION (popstate) ───
+window.addEventListener('popstate', (e) => {
+  const state = e.state;
+  if (state && state.view === 'object' && state.id) {
+    openObjectSilent(state.id);
+  } else {
+    showPickerSilent();
+  }
+});
+
+function openObjectSilent(id) {
+  const obj = allData.objects[id];
+  if (!obj) { showPickerSilent(); return; }
+  currentId = id;
+  currentWeekIdx = obj.weeks ? obj.weeks.length - 1 : 0;
+  pickerEl.style.display = 'none';
+  showReportEls();
+  if (isEditMode) editBtn.style.display = '';
+  backLink.style.display = '';
+  render();
+  if (editPanel.classList.contains('open')) populatePanel();
+}
+
+function showPickerSilent() {
+  currentId = null; currentWeekIdx = null;
+  hideReport();
+  pickerEl.style.display = '';
+  document.querySelector('.report-footer').style.display = '';
+  renderPicker();
+}
+
+// ─── INIT ───
+async function initApp() {
+  const params = new URLSearchParams(window.location.search);
+  const initId = params.get('id');
+  isEditMode = params.has('edit');
+
+  const token = getToken();
+
+  // Try loading from GitHub if we have a token
+  let loaded = false;
+  if (token) {
+    loaded = await loadFromGitHub();
+  }
+
+  // Client mode without token — try public repo read
+  if (!loaded && initId) {
+    try {
+      const resp = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`);
+      if (resp.ok) {
+        const json = await resp.json();
+        const content = atob(json.content.replace(/\n/g, ''));
+        const decoded = new TextDecoder().decode(Uint8Array.from(content, c => c.charCodeAt(0)));
+        allData = JSON.parse(decoded);
+        if (!allData.objects) allData.objects = {};
+        loaded = true;
+        setSyncOk('Только чтение');
+      }
+    } catch(e) { console.log('Public fetch failed:', e); }
+  }
+
+  // Route
+  if (initId && allData.objects[initId]) {
+    openObject(initId);
+    if (!isEditMode) {
+      editBtn.style.display = 'none';
+      backLink.style.display = 'none';
+    }
+  } else if (isEditMode && !token) {
+    showTokenModal();
+    // Also show picker behind modal so page isn't blank
+    showPicker();
+  } else {
+    showPicker();
+  }
+}
+
+// Start — wrapped in try/catch so page always renders
+(async function() {
+  try {
+    await initApp();
+  } catch(e) {
+    console.error('Init error:', e);
+    // Fallback: just show the picker
+    showPicker();
+  }
+})();
 </script>
 </body>
 </html>
