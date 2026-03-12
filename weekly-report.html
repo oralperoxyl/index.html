@@ -1047,12 +1047,12 @@ function openObject(id, weekIdx) {
   }
   pickerEl.style.display = 'none';
   showReportEls();
-  if (getToken()) {
+  if (isEditMode) {
     editBtn.style.display = '';
   }
-  backLink.style.display = getToken() ? '' : 'none';
+  backLink.style.display = isEditMode ? '' : 'none';
   // Update URL without reload
-  try { history.pushState({view:'object', id: id}, '', window.location.pathname + '?id=' + id); } catch(e) {}
+  try { history.pushState({view:'object', id: id}, '', window.location.pathname + '?id=' + id + (isEditMode ? '&edit=1' : '')); } catch(e) {}
   render();
   if (editPanel.classList.contains('open')) populatePanel();
 }
@@ -1417,8 +1417,8 @@ function openObjectSilent(id) {
   currentWeekIdx = obj.weeks ? obj.weeks.length - 1 : 0;
   pickerEl.style.display = 'none';
   showReportEls();
-  if (getToken()) editBtn.style.display = '';
-  backLink.style.display = getToken() ? '' : 'none';
+  if (isEditMode) editBtn.style.display = '';
+  backLink.style.display = isEditMode ? '' : 'none';
   render();
   if (editPanel.classList.contains('open')) populatePanel();
 }
@@ -1439,13 +1439,12 @@ async function initApp() {
   const syncStatusEl = document.getElementById('syncStatus');
 
   // Determine mode:
-  // - Has token → agent mode (can edit, sync visible)
-  // - Has ?id= but no token → client read-only mode
-  // - No token, no ?id= → need token → show modal
-  isEditMode = !!token;
-  const isClientView = !!initId && !token;
+  // - ?edit=1 → agent mode (can edit if has token, show modal if not)
+  // - ?id=xxx without ?edit=1 → client read-only mode
+  // - Neither → agent landing (needs token)
+  isEditMode = params.has('edit');
 
-  // Show sync status only in agent mode
+  // Show sync status only in edit mode
   syncStatusEl.style.display = isEditMode ? '' : 'none';
 
   // Load data
@@ -1471,18 +1470,15 @@ async function initApp() {
 
   // Route
   if (initId && allData.objects[initId]) {
-    // View specific object
     openObject(initId);
-    if (isClientView) {
-      editBtn.style.display = 'none';
-      backLink.style.display = 'none';
-    }
-  } else if (!token) {
-    // No token, no valid ?id= → agent needs to log in
+    // openObject already respects isEditMode for button visibility
+  } else if (isEditMode && !token) {
     showTokenModal();
     showPicker();
+  } else if (isEditMode) {
+    showPicker();
   } else {
-    // Agent with token → show picker
+    // No ?id, no ?edit → show picker (read-only, no edit controls)
     showPicker();
   }
 }
