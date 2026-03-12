@@ -88,6 +88,13 @@
               "date": "8 марта",
               "verdict": "declined",
               "verdictText": "Думают",
+              "text": "Дорого"
+            },
+            {
+              "name": "",
+              "date": "",
+              "verdict": "thinking",
+              "verdictText": "Думают",
               "text": ""
             }
           ],
