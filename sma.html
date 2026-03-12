@@ -167,7 +167,7 @@ body.editing .hero{padding-right:500px}
 .modal-error{font-size:12px;color:#C0392B;margin-top:8px;display:none}
 
 /* ── PICKER ── */
-#pickerContainer{max-width:600px;margin:0 auto;padding:80px 40px;display:none}
+#pickerContainer{max-width:600px;margin:0 auto;padding:80px 40px}
 
 /* ── MOBILE ── */
 @media(max-width:768px){
@@ -275,7 +275,7 @@ body.editing .hero{padding-right:500px}
 </section>
 
 <!-- PICKER -->
-<div id="pickerContainer"></div>
+<div id="pickerContainer" style="display:none;"></div>
 
 <!-- FOOTER -->
 <footer class="report-footer" id="footerEl">
@@ -444,7 +444,7 @@ function showReportEls(){
 
 // ─── PICKER ───
 function showPicker(){
-  currentId=null;hideReport();pickerEl.style.display='';footerEl.style.display='';
+  currentId=null;hideReport();pickerEl.style.display='block';footerEl.style.display='';
   renderPicker();
 }
 function renderPicker(){
@@ -736,7 +736,7 @@ async function saveData(){
 window.addEventListener('popstate',e=>{
   const st=e.state;
   if(st&&st.view==='sma'&&st.id&&allData.analyses[st.id]){currentId=st.id;pickerEl.style.display='none';showReportEls();if(isEditMode){editBtn.style.display='';backLink.style.display='';}render();if(editPanel.classList.contains('open'))populatePanel();}
-  else{currentId=null;hideReport();pickerEl.style.display='';footerEl.style.display='';renderPicker();}
+  else{currentId=null;hideReport();pickerEl.style.display='block';footerEl.style.display='';renderPicker();}
 });
 
 // ─── INIT ───
