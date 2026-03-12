@@ -45,7 +45,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .edit-toggle.active{background:var(--dark);color:#E5E5E5;border-color:var(--dark)}
 
 /* ── HERO ── */
-.hero{background:var(--dark);color:#E5E5E5;padding:80px 40px 60px;display:none}
+.hero{background:var(--dark);color:#E5E5E5;padding:80px 40px 60px}
 .hero-inner{max-width:900px;margin:0 auto}
 .hero-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:24px}
 .hero-title{font-family:var(--serif);font-size:clamp(28px,5vw,52px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:12px}
@@ -55,7 +55,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .hero-meta-value{font-size:15px;color:rgba(229,229,229,0.75)}
 
 /* ── SECTIONS ── */
-.report-section{max-width:900px;margin:0 auto;padding:64px 40px;border-bottom:1px solid var(--border);display:none}
+.report-section{max-width:900px;margin:0 auto;padding:64px 40px;border-bottom:1px solid var(--border)}
 .report-section:last-of-type{border-bottom:none}
 .section-label{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
 .section-title{font-family:var(--serif);font-size:clamp(24px,3.5vw,36px);font-weight:400;line-height:1.2;margin-bottom:36px}
@@ -116,7 +116,7 @@ a.comp-card-addr{text-decoration:underline;text-decoration-color:var(--border);t
 .price-note{margin-top:16px;font-size:13px;color:rgba(229,229,229,0.4);line-height:1.6}
 
 /* ── FOOTER ── */
-.report-footer{background:var(--dark);padding:60px 40px;text-align:center;display:none}
+.report-footer{background:var(--dark);padding:60px 40px;text-align:center}
 .footer-name{font-family:var(--serif);font-size:16px;color:rgba(229,229,229,0.6);margin-bottom:8px}
 .footer-contact{font-size:13px;color:rgba(229,229,229,0.35)}
 .footer-contact a{color:rgba(229,229,229,0.5);text-decoration:none}
@@ -225,7 +225,7 @@ body.editing .hero{padding-right:500px}
 </header>
 
 <!-- HERO -->
-<section class="hero" id="heroSection">
+<section class="hero" id="heroSection" style="display:none;">
   <div class="hero-inner">
     <p class="hero-label">Сравнительно маркетинговый анализ · Семён Гончаров</p>
     <h1 class="hero-title" id="heroTitle"></h1>
@@ -234,14 +234,14 @@ body.editing .hero{padding-right:500px}
 </section>
 
 <!-- SUMMARY -->
-<section class="report-section" id="summarySection">
+<section class="report-section" id="summarySection" style="display:none;">
   <div class="section-label">01 — Обзор рынка</div>
   <h2 class="section-title">Сводка</h2>
   <div class="summary-grid" id="summaryGrid"></div>
 </section>
 
 <!-- COMPETITORS -->
-<section class="report-section" id="compSection">
+<section class="report-section" id="compSection" style="display:none;">
   <div class="section-label">02 — Конкуренты</div>
   <h2 class="section-title">Сводная таблица по конкурентам</h2>
   <div class="comp-table-wrap">
@@ -267,7 +267,7 @@ body.editing .hero{padding-right:500px}
 </section>
 
 <!-- RECOMMENDATIONS -->
-<section class="report-section" id="recSection">
+<section class="report-section" id="recSection" style="display:none;">
   <div class="section-label">03 — Рекомендации</div>
   <h2 class="section-title">Выводы и рекомендуемая стоимость</h2>
   <div class="rec-list" id="recList"></div>
@@ -278,7 +278,7 @@ body.editing .hero{padding-right:500px}
 <div id="pickerContainer" style="display:none;"></div>
 
 <!-- FOOTER -->
-<footer class="report-footer" id="footerEl">
+<footer class="report-footer" id="footerEl" style="display:none;">
   <p class="footer-name">Семён Гончаров · Агент по недвижимости</p>
   <p class="footer-contact">
     <a href="tel:+79118461965">+7 911 846-19-65</a> · 
