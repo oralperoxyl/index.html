@@ -254,6 +254,58 @@
     .comp-status.sold { color: var(--muted); text-decoration: line-through; }
     .comp-status.reduced { color: #C0392B; }
 
+    /* ── COMPETITOR CARDS (mobile) ── */
+    .comp-table-wrap { overflow-x: auto; }
+    .comp-cards { display: none; }
+
+    .comp-card {
+      background: white; padding: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .comp-card:first-child { border-top: none; border-radius: 8px 8px 0 0; }
+    .comp-card:last-child { border-radius: 0 0 8px 8px; }
+    .comp-card:only-child { border-radius: 8px; }
+    .comp-card.our-object {
+      background: rgba(0,102,255,0.03);
+      border-left: 2px solid var(--accent);
+    }
+    .comp-card.sold-card { opacity: 0.55; }
+    .comp-card-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 10px;
+    }
+    .comp-card-addr {
+      font-size: 15px; font-weight: 500;
+      color: var(--text); text-decoration: none;
+    }
+    a.comp-card-addr {
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 3px;
+    }
+    .comp-card-meta {
+      font-size: 12px; color: var(--muted); margin-top: 3px;
+    }
+    .comp-card-price-row {
+      display: flex; justify-content: space-between;
+      align-items: baseline;
+    }
+    .comp-card-price {
+      font-family: var(--serif);
+      font-size: 18px; font-weight: 400;
+    }
+    .comp-card-note {
+      font-size: 13px; color: var(--muted);
+      margin-top: 8px; line-height: 1.5;
+    }
+    .comp-card-badge {
+      font-size: 9px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      background: var(--accent); color: white;
+      padding: 2px 6px; border-radius: 3px;
+      margin-left: 8px; vertical-align: middle;
+    }
+
     /* ── RECOMMENDATIONS ── */
     .rec-list { display: flex; flex-direction: column; gap: 0; }
     .rec-item {
@@ -497,8 +549,8 @@
       .stat-card:first-child { border-radius: 8px 0 0 0; }
       .stat-card:nth-child(2) { border-radius: 0 8px 0 0; }
       .stat-card:last-child { border-radius: 0 0 8px 0; }
-      .comp-table { font-size: 13px; }
-      .comp-table th, .comp-table td { padding: 10px 8px; }
+      .comp-table-wrap { display: none; }
+      .comp-cards { display: block; }
       .edit-panel { width: 100%; left: 0; }
       body.editing .report-section { margin-right: 0; }
       body.editing .hero { padding-right: 20px; }
@@ -572,7 +624,7 @@
 <section class="report-section" id="compSection" style="display:none;">
   <div class="section-label">03 — Рынок</div>
   <h2 class="section-title">Сравнение с конкурентами</h2>
-  <div style="overflow-x:auto;">
+  <div class="comp-table-wrap">
     <table class="comp-table" id="compTable">
       <thead>
         <tr>
@@ -587,6 +639,7 @@
       <tbody id="compBody"></tbody>
     </table>
   </div>
+  <div class="comp-cards" id="compCards"></div>
 </section>
 
 <!-- RECOMMENDATIONS -->
@@ -1146,6 +1199,32 @@ function render() {
         <td>${escHtml(c.note)}</td></tr>`;
     }).join('')
     : '<tr><td colspan="6" style="color:var(--muted);padding:20px 16px;">Пока нет данных</td></tr>';
+
+  // Mobile cards
+  document.getElementById('compCards').innerHTML = w.competitors.length
+    ? w.competitors.map(c => {
+      const isSold = c.status === 'sold';
+      const cls = (c.ours ? ' our-object' : '') + (isSold ? ' sold-card' : '');
+      const addrTag = c.url
+        ? `<a href="${escHtml(c.url)}" target="_blank" class="comp-card-addr">${escHtml(c.address)}</a>`
+        : `<span class="comp-card-addr">${escHtml(c.address)}</span>`;
+      const badge = c.ours ? '<span class="comp-card-badge">Наш</span>' : '';
+      const statusColor = c.status === 'active' ? '#2D8A4E' : c.status === 'reduced' ? '#C0392B' : 'var(--muted)';
+      const statusStyle = isSold ? 'text-decoration:line-through;' : '';
+      const priceStyle = c.status === 'reduced' ? 'text-decoration:line-through;text-decoration-color:var(--border);' : '';
+      const meta = [c.rooms ? c.rooms + ' комн.' : '', c.area ? c.area : ''].filter(Boolean).join(' · ');
+      return `<div class="comp-card${cls}">
+        <div class="comp-card-top">
+          <div>${addrTag}${badge}<div class="comp-card-meta">${escHtml(meta)}</div></div>
+          <span class="comp-status" style="color:${statusColor};${statusStyle}font-size:11px;font-weight:500;letter-spacing:0.04em;flex-shrink:0;margin-left:12px;">${escHtml(c.statusText)}</span>
+        </div>
+        <div class="comp-card-price-row">
+          <span class="comp-card-price" style="${priceStyle}">${escHtml(c.price)}</span>
+        </div>
+        ${c.note ? '<div class="comp-card-note">' + escHtml(c.note) + '</div>' : ''}
+      </div>`;
+    }).join('')
+    : '<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
 
   document.getElementById('recList').innerHTML = w.recommendations.map((r, i) => `
     <div class="rec-item">
