@@ -443,9 +443,9 @@ function showReportEls(){
 }
 
 // ─── PICKER ───
-function showPicker(){
+function showPicker(skipPush){
   currentId=null;hideReport();pickerEl.style.display='';footerEl.style.display='';
-  try{history.pushState({view:'picker'},'',window.location.pathname);}catch(e){}
+  if(!skipPush){try{history.pushState({view:'picker'},'',window.location.pathname+(isEditMode?'?edit=1':''));}catch(e){}}
   renderPicker();
 }
 function renderPicker(){
@@ -752,7 +752,7 @@ async function initApp(){
 
   // Show picker immediately so page is never blank
   if(!initId){
-    showPicker();
+    showPicker(true); // skipPush — don't change URL on init
     if(!token&&params.has('edit'))showTokenModal();
   }
 
@@ -768,7 +768,7 @@ async function initApp(){
   else if(!initId&&loaded)renderPicker(); // refresh picker with loaded data
 }
 
-(async function(){try{await initApp();}catch(e){console.error(e);showPicker();}})();
+(async function(){try{await initApp();}catch(e){console.error(e);showPicker(true);}})();
 </script>
 </body>
 </html>
