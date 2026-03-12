@@ -80,9 +80,17 @@
             "views": 650,
             "calls": 4,
             "showings": 3,
-            "offers": 0
+            "offers": 4
           },
-          "feedback": [],
+          "feedback": [
+            {
+              "name": "",
+              "date": "",
+              "verdict": "thinking",
+              "verdictText": "Думают",
+              "text": ""
+            }
+          ],
           "competitors": [
             {
               "address": "ул. Вавилова 44к4",
