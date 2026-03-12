@@ -41,10 +41,22 @@
               "date": "8 марта",
               "verdict": "declined",
               "verdictText": "Думают",
-              "text": ""
+              "text": "Маленькая площадь"
             }
           ],
-          "competitors": [],
+          "competitors": [
+            {
+              "address": "",
+              "rooms": "",
+              "area": "",
+              "price": "",
+              "status": "active",
+              "statusText": "В продаже",
+              "note": "",
+              "url": "",
+              "ours": false
+            }
+          ],
           "recommendations": [],
           "summary": ""
         }
