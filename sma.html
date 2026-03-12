@@ -750,6 +750,12 @@ async function initApp(){
   syncStatusEl.style.display=token?'':'none';
   if(params.has('edit')&&!token){setSyncError('Нет токена — нажмите сюда');syncStatusEl.style.display='';}
 
+  // Show picker immediately so page is never blank
+  if(!initId){
+    showPicker();
+    if(!token&&params.has('edit'))showTokenModal();
+  }
+
   let loaded=false;
   if(token)loaded=await loadFromGitHub();
   if(!loaded&&initId){
@@ -757,9 +763,9 @@ async function initApp(){
     if(resp.ok){const json=await resp.json();const content=atob(json.content.replace(/\n/g,''));const decoded=new TextDecoder().decode(Uint8Array.from(content,c=>c.charCodeAt(0)));allData=JSON.parse(decoded);if(!allData.analyses)allData.analyses={};loaded=true;}}catch(e){}
   }
 
+  // Re-render or navigate after data loaded
   if(initId&&allData.analyses[initId])openSma(initId);
-  else if(!token&&params.has('edit')){showTokenModal();showPicker();}
-  else showPicker();
+  else if(!initId&&loaded)renderPicker(); // refresh picker with loaded data
 }
 
 (async function(){try{await initApp();}catch(e){console.error(e);showPicker();}})();
