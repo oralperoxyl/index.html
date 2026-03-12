@@ -2,8 +2,8 @@
   "analyses": {
     "гатчинская-2-54": {
       "address": "Гатчинская 2/54",
-      "area": 0,
-      "rooms": 0,
+      "area": 55.6,
+      "rooms": 2,
       "floor": "",
       "location": "",
       "competitors": [],
