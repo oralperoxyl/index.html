@@ -710,9 +710,12 @@ function generateRecs(){
   const s=allData.analyses[currentId];if(!s)return;
   const comps=s.competitors||[];
   const n=comps.length;
+  const area=parseNum(s.area);
   const avg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
-  const avgPpm=avg&&s.area?fmt(Math.round(avg/parseNum(s.area))):0;
+  const avgPpm=avg&&area?fmt(Math.round(avg/area)):0;
   const loc=s.location||'данной локации';
+  const ppmFrom=s.priceFrom&&area?fmt(Math.round(s.priceFrom/area)):'-';
+  const ppmTo=s.priceTo&&area?fmt(Math.round(s.priceTo/area)):'-';
 
   s.recommendations=[
     `На рынке СПб в локации ${loc} выставлено на продажу более <strong>${n*2}</strong> объектов, сравнимых с оцениваемым (учитывается метраж, местность, высота потолков, парадная, вид из окна, этаж, класс дома). В таблице представлены тщательно отобранные варианты — <strong>конкуренты за бюджет</strong> в ближайшем окружении.`,
@@ -720,7 +723,7 @@ function generateRecs(){
     `По статистике на текущем рынке покупатель выбирает 2–3 самых выгодных объекта из сегмента. Квартира — рыночный товар. Если объект не входит в число наиболее привлекательных предложений по цене и качеству, покупатель его просто не выберет.`,
     `Анализ проводится по выставленным предложениям, а <strong>реальная стоимость покупки</strong> определяется при переговорах и торге между сторонами. Имеет смысл говорить о <strong>потенциальной стоимости спроса</strong>, а не стоимости покупки.`,
     `Стоимость спроса и стоимость покупки могут отличаться на 10–15%. Объекты, где собственники не готовы к корректировке, стоят на рынке месяцами без реального спроса.`,
-    s.priceFrom&&s.priceTo?`<strong>Сравнивая выставленные на продажу объекты, а также учитывая тенденции рынка, рекомендуемая рыночная стоимость может составлять: ${fmtPrice(s.priceFrom)} (${s.area?fmt(Math.round(s.priceFrom/s.area)):'-'} ₽/м²) — ${fmtPrice(s.priceTo)} (${s.area?fmt(Math.round(s.priceTo/s.area)):'-'} ₽/м²), средняя ${fmtPrice(avg)}${avgPpm?' ('+avgPpm+' ₽/м²)':''}.</strong>`:'<strong>Рекомендуемая стоимость: [заполните диапазон цен выше]</strong>',
+    s.priceFrom&&s.priceTo?`<strong>Сравнивая выставленные на продажу объекты, а также учитывая тенденции рынка, рекомендуемая рыночная стоимость может составлять: ${fmtPrice(s.priceFrom)} (${ppmFrom} ₽/м²) — ${fmtPrice(s.priceTo)} (${ppmTo} ₽/м²), средняя ${fmtPrice(avg)}${avgPpm?' ('+avgPpm+' ₽/м²)':''}.</strong>`:'<strong>Рекомендуемая стоимость: [заполните диапазон цен выше]</strong>',
     `Стоимость может быть скорректирована в большую или меньшую сторону при наличии или отсутствии реальных покупателей и при согласовании с продавцом.`
   ];
   renderRecPanel();render();debounceSave();
