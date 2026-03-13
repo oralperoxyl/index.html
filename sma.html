@@ -80,6 +80,37 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .comp-table .tag{font-size:10px;font-weight:500;letter-spacing:0.03em;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
 .tag-repair{background:#E8F5E9;color:#2D8A4E}
 .tag-needs{background:#FFF8E1;color:#B8860B}
+.tag-stale{background:#FBEAEA;color:#C0392B}
+.tag-visited{background:#E6F1FB;color:#185FA5}
+
+/* ── INTRO SECTION ── */
+.intro-text{font-size:15px;line-height:1.8;color:var(--muted);max-width:720px}
+.intro-text p{margin-bottom:16px}
+.intro-text p:last-child{margin-bottom:0}
+.intro-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2px;margin-top:32px}
+.intro-step{background:white;padding:24px}
+.intro-step:first-child{border-radius:8px 0 0 8px}
+.intro-step:last-child{border-radius:0 8px 8px 0}
+.intro-step-num{font-family:var(--serif);font-size:28px;color:rgba(0,0,0,0.08);margin-bottom:8px}
+.intro-step-title{font-size:13px;font-weight:600;margin-bottom:4px}
+.intro-step-text{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* ── CHART ── */
+.chart-wrap{background:white;border-radius:8px;padding:28px;position:relative;overflow:hidden}
+.chart-canvas{width:100%;height:320px;position:relative}
+.chart-dot{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--muted);border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.15);transform:translate(-50%,-50%);cursor:default;transition:transform 0.2s}
+.chart-dot:hover{transform:translate(-50%,-50%) scale(1.4);z-index:10}
+.chart-dot.ours{width:14px;height:14px;background:var(--accent);border:2px solid white;box-shadow:0 2px 8px rgba(0,102,255,0.3)}
+.chart-dot.rec{width:12px;height:12px;background:#2D8A4E;border:2px solid white;border-radius:2px;box-shadow:0 2px 8px rgba(45,138,78,0.25)}
+.chart-tooltip{position:absolute;background:var(--dark);color:#E5E5E5;font-size:11px;padding:6px 10px;border-radius:4px;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity 0.15s;z-index:20}
+.chart-axis-label{font-size:10px;color:var(--muted);letter-spacing:0.04em}
+.chart-legend{display:flex;gap:20px;margin-top:16px;flex-wrap:wrap}
+.chart-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.chart-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.chart-legend-dot.square{border-radius:2px}
+
+/* ── HERO DATE ── */
+.hero-date{font-size:12px;color:rgba(229,229,229,0.3);margin-top:20px}
 
 /* ── COMPETITOR CARDS (mobile) ── */
 .comp-cards{display:none}
@@ -187,6 +218,11 @@ body.editing .hero{padding-right:500px}
   .report-footer{padding:48px 20px}
   .sync-status{display:none!important}
   .price-range{flex-direction:column;gap:8px}
+  .intro-steps{grid-template-columns:1fr 1fr}
+  .intro-step:first-child{border-radius:8px 0 0 0}
+  .intro-step:nth-child(2){border-radius:0 8px 0 0}
+  .intro-step:last-child{border-radius:0 0 8px 0}
+  .chart-canvas{height:260px}
 }
 @media print{
   .edit-toggle,.edit-panel,.sync-status,.loading-bar{display:none!important}
@@ -230,6 +266,24 @@ body.editing .hero{padding-right:500px}
     <p class="hero-label">Сравнительно маркетинговый анализ · Семён Гончаров</p>
     <h1 class="hero-title" id="heroTitle"></h1>
     <div class="hero-meta" id="heroMeta"></div>
+    <div class="hero-date" id="heroDate"></div>
+  </div>
+</section>
+
+<!-- INTRO / METHODOLOGY -->
+<section class="report-section" id="introSection" style="display:none;">
+  <div class="section-label">О документе</div>
+  <h2 class="section-title">Что такое СМА и зачем он нужен</h2>
+  <div class="intro-text">
+    <p>Сравнительно маркетинговый анализ (СМА) — это профессиональная оценка рыночной стоимости вашего объекта на основе сравнения с аналогичными квартирами, выставленными на продажу в том же районе.</p>
+    <p>Цель анализа — определить <strong style="color:var(--text);">реальный коридор цены</strong>, в котором ваш объект будет конкурентоспособен и привлечёт покупателей. Завышенная цена приводит к отсутствию показов и потере времени, заниженная — к потере денег.</p>
+    <p>Для подготовки этого документа была проведена детальная работа: отобраны объекты-конкуренты по метражу, бюджету и локации, проведены переговоры с агентами и собственниками конкурирующих квартир для выяснения реальных условий продажи и готовности к торгу. В ряде случаев объекты были осмотрены лично для объективной оценки их состояния и преимуществ.</p>
+  </div>
+  <div class="intro-steps">
+    <div class="intro-step"><div class="intro-step-num">01</div><div class="intro-step-title">Отбор конкурентов</div><div class="intro-step-text">Поиск аналогов по метражу, району, этажу, классу дома и бюджету</div></div>
+    <div class="intro-step"><div class="intro-step-num">02</div><div class="intro-step-title">Переговоры</div><div class="intro-step-text">Звонки агентам и собственникам: реальные условия, готовность к торгу, сроки</div></div>
+    <div class="intro-step"><div class="intro-step-num">03</div><div class="intro-step-title">Личные осмотры</div><div class="intro-step-text">Посещение ключевых объектов для оценки реального состояния и сравнения</div></div>
+    <div class="intro-step"><div class="intro-step-num">04</div><div class="intro-step-title">Анализ и выводы</div><div class="intro-step-text">Определение рыночного коридора цены на основе собранных данных</div></div>
   </div>
 </section>
 
@@ -240,9 +294,19 @@ body.editing .hero{padding-right:500px}
   <div class="summary-grid" id="summaryGrid"></div>
 </section>
 
+<!-- CHART -->
+<section class="report-section" id="chartSection" style="display:none;">
+  <div class="section-label">02 — Позиционирование</div>
+  <h2 class="section-title">Ваш объект среди конкурентов</h2>
+  <div class="chart-wrap">
+    <div class="chart-canvas" id="chartCanvas"></div>
+    <div class="chart-legend" id="chartLegend"></div>
+  </div>
+</section>
+
 <!-- COMPETITORS -->
 <section class="report-section" id="compSection" style="display:none;">
-  <div class="section-label">02 — Конкуренты</div>
+  <div class="section-label">03 — Конкуренты</div>
   <h2 class="section-title">Сводная таблица по конкурентам</h2>
   <div class="comp-table-wrap">
     <table class="comp-table">
@@ -268,7 +332,7 @@ body.editing .hero{padding-right:500px}
 
 <!-- RECOMMENDATIONS -->
 <section class="report-section" id="recSection" style="display:none;">
-  <div class="section-label">03 — Рекомендации</div>
+  <div class="section-label">04 — Рекомендации</div>
   <h2 class="section-title">Выводы и рекомендуемая стоимость</h2>
   <div class="rec-list" id="recList"></div>
   <div class="price-box" id="priceBox"></div>
@@ -304,6 +368,7 @@ body.editing .hero{padding-right:500px}
         <div class="edit-row"><label class="edit-label">Этаж / этажность</label><input class="edit-input" id="e-floor" placeholder="5/6" onchange="saveFromPanel()"></div>
         <div class="edit-row"><label class="edit-label">Район/метро</label><input class="edit-input" id="e-location" onchange="saveFromPanel()"></div>
       </div>
+      <div class="edit-row"><label class="edit-label">Дата анализа</label><input class="edit-input" id="e-date" placeholder="13 марта 2026" onchange="saveFromPanel()"></div>
     </div>
 
     <!-- COMPETITORS -->
@@ -351,7 +416,7 @@ const editPanel=document.getElementById('editPanel'),editBtn=document.getElement
 const backLink=document.getElementById('backLink'),pickerEl=document.getElementById('pickerContainer');
 const loadingBar=document.getElementById('loadingBar'),syncDot=document.getElementById('syncDot'),syncText=document.getElementById('syncText');
 const footerEl=document.getElementById('footerEl');
-const reportEls=['heroSection','summarySection','compSection','recSection'];
+const reportEls=['heroSection','introSection','summarySection','chartSection','compSection','recSection'];
 
 // ─── HELPERS ───
 function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
@@ -362,6 +427,8 @@ function fmtPrice(n){if(!n)return '—';const m=Number(n);if(m>=1e6)return (m/1e
 function parseNum(v){if(!v)return 0;return Number(String(v).replace(/,/g,'.').replace(/[^\d.]/g,''))||0;}
 function calcPpm(price,area){const p=parseNum(price),a=parseNum(area);if(!p||!a)return 0;return Math.round(p/a);}
 function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
+function isStale(dateStr){if(!dateStr)return false;const m=dateStr.match(/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/);if(!m)return false;const y=m[3].length===2?2000+Number(m[3]):Number(m[3]);const d=new Date(y,Number(m[2])-1,Number(m[1]));const diff=(Date.now()-d.getTime())/(1000*60*60*24);return diff>90;}
+function todayStr(){const d=new Date();return d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});}
 
 // ─── GITHUB API ───
 function setLoading(on){loadingBar.classList.toggle('active',on);syncDot.className='sync-dot'+(on?' loading':'');if(on)syncText.textContent='Синхронизация...';}
@@ -427,8 +494,8 @@ async function saveToken(){
 function changeToken(){try{localStorage.removeItem(TOKEN_KEY);}catch(e){}showTokenModal();}
 
 // ─── BLANK DATA ───
-function blankSma(){return{address:'',area:0,rooms:0,floor:'',location:'',competitors:[],recommendations:[],priceFrom:0,priceTo:0};}
-function blankComp(){return{address:'',agent:'',area:'',rooms:'',floor:'',condition:'',price:0,ppm:0,bargain:'',adDate:'',adViews:'',url:'',comment:'',ours:false};}
+function blankSma(){return{address:'',area:0,rooms:0,floor:'',location:'',competitors:[],recommendations:[],priceFrom:0,priceTo:0,date:todayStr()};}
+function blankComp(){return{address:'',agent:'',area:'',rooms:'',floor:'',condition:'',price:0,ppm:0,bargain:'',adDate:'',adViews:'',url:'',comment:'',ours:false,visited:false};}
 
 // ─── UI ───
 function hideReport(){
@@ -514,6 +581,7 @@ function render(){
     <div class="hero-meta-item"><div class="hero-meta-label">Комнат</div><div class="hero-meta-value">${s.rooms||'—'}</div></div>
     <div class="hero-meta-item"><div class="hero-meta-label">Этаж</div><div class="hero-meta-value">${escHtml(s.floor||'—')}</div></div>
     <div class="hero-meta-item"><div class="hero-meta-label">Район</div><div class="hero-meta-value">${escHtml(s.location||'—')}</div></div>`;
+  document.getElementById('heroDate').textContent=s.date?'Актуально на '+s.date:'';
 
   // Summary cards
   const prices=comps.filter(c=>c.price>0).map(c=>Number(c.price));
@@ -521,11 +589,23 @@ function render(){
   const minPrice=prices.length?Math.min(...prices):0;
   const maxPrice=prices.length?Math.max(...prices):0;
   const avgPpm=ppms.length?Math.round(ppms.reduce((a,b)=>a+b,0)/ppms.length):0;
+  const visitedCount=comps.filter(c=>c.visited).length;
   document.getElementById('summaryGrid').innerHTML=`
-    <div class="summary-card" style="border-radius:8px 0 0 8px;"><div class="summary-num">${comps.length}</div><div class="summary-label">Конкурентов</div></div>
+    <div class="summary-card" style="border-radius:8px 0 0 8px;"><div class="summary-num">${comps.length}</div><div class="summary-label">Конкурентов изучено</div></div>
+    <div class="summary-card"><div class="summary-num">${visitedCount}</div><div class="summary-label">Осмотрено лично</div></div>
     <div class="summary-card"><div class="summary-num">${prices.length?fmtPrice(minPrice):'—'}</div><div class="summary-label">Мин. цена</div></div>
-    <div class="summary-card"><div class="summary-num">${prices.length?fmtPrice(maxPrice):'—'}</div><div class="summary-label">Макс. цена</div></div>
     <div class="summary-card" style="border-radius:0 8px 8px 0;"><div class="summary-num">${avgPpm?fmt(avgPpm)+'&nbsp;₽':'—'}</div><div class="summary-label">Средняя за м²</div></div>`;
+
+  // Chart
+  renderChart(s, comps);
+
+  // Badge helper
+  function badges(c){
+    let b='';
+    if(c.visited)b+='<span class="tag tag-visited">Осмотрено лично</span> ';
+    if(isStale(c.adDate))b+='<span class="tag tag-stale">Давно в рекламе</span> ';
+    return b;
+  }
 
   // Table (desktop)
   document.getElementById('compBody').innerHTML=comps.length?comps.map((c,i)=>{
@@ -534,7 +614,7 @@ function render(){
     const condTag=c.condition?(c.condition.toLowerCase().includes('треб')?'tag-needs':'tag-repair'):'';
     return `<tr class="${c.ours?'our-object':''}">
       <td style="font-weight:500;color:var(--muted);">${i+1}</td>
-      <td><div style="font-weight:500;">${addrHtml}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${escHtml(c.agent||'')}</div></td>
+      <td><div style="font-weight:500;">${addrHtml}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${escHtml(c.agent||'')}</div><div style="margin-top:4px;">${badges(c)}</div></td>
       <td>${escHtml(c.area)}</td>
       <td>${escHtml(c.rooms)}</td>
       <td>${escHtml(c.floor)}</td>
@@ -551,11 +631,11 @@ function render(){
     const ppm=calcPpm(c.price,c.area);
     const cls=c.ours?' our-object':'';
     const addrTag=c.url?`<a href="${escAttr(c.url)}" target="_blank" class="comp-card-addr">${escHtml(c.address)}</a>`:`<span class="comp-card-addr">${escHtml(c.address)}</span>`;
-    const badge=c.ours?'<span class="comp-card-badge">Оцениваемый</span>':'';
+    const ourBadge=c.ours?'<span class="comp-card-badge">Оцениваемый</span>':'';
     const meta=[c.rooms?c.rooms+' комн.':'',c.area?c.area+' м²':'',c.floor?'этаж '+c.floor:''].filter(Boolean).join(' · ');
     return `<div class="comp-card${cls}">
       <div class="comp-card-top">
-        <div>${addrTag}${badge}<div class="comp-card-meta">${escHtml(meta)}</div></div>
+        <div>${addrTag}${ourBadge}<div class="comp-card-meta">${escHtml(meta)}</div></div>
         <span style="font-size:12px;font-weight:500;color:var(--muted);flex-shrink:0;margin-left:12px;">#${i+1}</span>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:baseline;">
@@ -563,8 +643,9 @@ function render(){
         <span class="comp-card-ppm">${ppm?fmt(ppm)+' ₽/м²':''}</span>
       </div>
       ${c.bargain?'<div class="comp-card-bargain">Торг: '+escHtml(c.bargain)+'</div>':''}
+      <div style="margin-top:6px;">${badges(c)}</div>
       ${c.adDate?'<div class="comp-card-ad">С '+escHtml(c.adDate)+(c.adViews?' · '+escHtml(c.adViews)+' просм.':'')+'</div>':''}
-      ${c.condition?'<div style="margin-top:6px;"><span class="tag '+(c.condition.toLowerCase().includes('треб')?'tag-needs':'tag-repair')+'">'+escHtml(c.condition)+'</span></div>':''}
+      ${c.condition?'<div style="margin-top:4px;"><span class="tag '+(c.condition.toLowerCase().includes('треб')?'tag-needs':'tag-repair')+'">'+escHtml(c.condition)+'</span></div>':''}
       ${c.comment?'<div class="comp-card-note">'+escHtml(c.comment)+'</div>':''}
     </div>`;
   }).join(''):'<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
@@ -593,6 +674,79 @@ function render(){
   }
 }
 
+// ─── CHART: Price/m² vs Area scatter ───
+function renderChart(s, comps){
+  const canvas=document.getElementById('chartCanvas');
+  const points=comps.filter(c=>c.price>0&&parseNum(c.area)>0).map(c=>({
+    area:parseNum(c.area), ppm:calcPpm(c.price,c.area),
+    label:c.address||'?', ours:!!c.ours, visited:!!c.visited
+  }));
+  // Add recommended price point
+  const recAvg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
+  const recPpm=recAvg&&s.area?Math.round(recAvg/parseNum(s.area)):0;
+
+  if(points.length<2){canvas.innerHTML='<p style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center;">Добавьте минимум 2 конкурента с ценой и площадью для отображения графика</p>';document.getElementById('chartLegend').innerHTML='';return;}
+
+  const areas=points.map(p=>p.area);
+  const ppms=points.map(p=>p.ppm);
+  const minA=Math.min(...areas)*0.9, maxA=Math.max(...areas)*1.1;
+  const allPpms=[...ppms];if(recPpm)allPpms.push(recPpm);
+  const minP=Math.min(...allPpms)*0.9, maxP=Math.max(...allPpms)*1.1;
+
+  const pad={top:20,right:20,bottom:36,left:60};
+  let html='';
+
+  // Grid lines
+  const gridLines=5;
+  for(let i=0;i<=gridLines;i++){
+    const y=pad.top+(320-pad.top-pad.bottom)*i/gridLines;
+    const val=Math.round(maxP-(maxP-minP)*i/gridLines);
+    html+=`<div style="position:absolute;left:${pad.left}px;right:${pad.right}px;top:${y}px;border-top:1px solid var(--border);"></div>`;
+    html+=`<div class="chart-axis-label" style="position:absolute;left:0;top:${y-7}px;width:${pad.left-8}px;text-align:right;">${Math.round(val/1000)}к</div>`;
+  }
+  // X axis labels
+  for(let i=0;i<=4;i++){
+    const x=pad.left+(100-0)*(i/4);
+    const val=Math.round(minA+(maxA-minA)*i/4);
+    const xPx=pad.left+((val-minA)/(maxA-minA))*(320*2.2-pad.left-pad.right);
+    html+=`<div class="chart-axis-label" style="position:absolute;bottom:4px;left:${pad.left+i*((100-0)/4)}%;transform:translateX(-50%);">${Math.round(minA+(maxA-minA)*i/4)} м²</div>`;
+  }
+
+  // Rec zone
+  if(s.priceFrom&&s.priceTo&&parseNum(s.area)){
+    const ppmFrom=Math.round(s.priceFrom/parseNum(s.area));
+    const ppmTo=Math.round(s.priceTo/parseNum(s.area));
+    const yFrom=pad.top+(1-(ppmFrom-minP)/(maxP-minP))*(320-pad.top-pad.bottom);
+    const yTo=pad.top+(1-(ppmTo-minP)/(maxP-minP))*(320-pad.top-pad.bottom);
+    const top=Math.min(yFrom,yTo),h=Math.abs(yFrom-yTo);
+    html+=`<div style="position:absolute;left:${pad.left}px;right:${pad.right}px;top:${top}px;height:${h}px;background:rgba(45,138,78,0.06);border-top:1px dashed rgba(45,138,78,0.3);border-bottom:1px dashed rgba(45,138,78,0.3);"></div>`;
+  }
+
+  // Dots
+  points.forEach((p,i)=>{
+    const x=pad.left+((p.area-minA)/(maxA-minA))*(canvas.offsetWidth||600-pad.left-pad.right);
+    const y=pad.top+(1-(p.ppm-minP)/(maxP-minP))*(320-pad.top-pad.bottom);
+    const cls=p.ours?'chart-dot ours':'chart-dot';
+    const xPct=((p.area-minA)/(maxA-minA))*100;
+    html+=`<div class="${cls}" style="left:calc(${pad.left}px + ${xPct}% * (1 - ${(pad.left+pad.right)/600}));top:${y}px;" onmouseenter="showTip(this,'${escAttr(p.label)}: ${fmt(p.ppm)} ₽/м²')" onmouseleave="hideTip(this)"></div>`;
+  });
+
+  canvas.innerHTML=html;
+
+  // Legend
+  document.getElementById('chartLegend').innerHTML=`
+    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent);"></div>Ваш объект</div>
+    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--muted);"></div>Конкуренты</div>
+    ${s.priceFrom?'<div class="chart-legend-item"><div class="chart-legend-dot square" style="background:rgba(45,138,78,0.3);"></div>Рекомендуемый диапазон</div>':''}`;
+}
+
+function showTip(el,text){
+  let tip=el.querySelector('.chart-tooltip');
+  if(!tip){tip=document.createElement('div');tip.className='chart-tooltip';el.appendChild(tip);}
+  tip.textContent=text;tip.style.opacity='1';tip.style.bottom='16px';tip.style.left='50%';tip.style.transform='translateX(-50%)';
+}
+function hideTip(el){const tip=el.querySelector('.chart-tooltip');if(tip)tip.style.opacity='0';}
+
 // ─── EDIT PANEL ───
 function toggleEdit(){
   if(!getToken()){showTokenModal();return;}
@@ -610,6 +764,7 @@ function populatePanel(){
   document.getElementById('e-rooms').value=s.rooms||'';
   document.getElementById('e-floor').value=s.floor||'';
   document.getElementById('e-location').value=s.location||'';
+  document.getElementById('e-date').value=s.date||'';
   document.getElementById('e-priceFrom').value=s.priceFrom||'';
   document.getElementById('e-priceTo').value=s.priceTo||'';
   updatePriceHint();
@@ -655,6 +810,7 @@ function renderCompPanel(){
       </div>
       <div class="edit-row"><label class="edit-label">Комментарий</label><textarea class="edit-textarea" data-c="${i}" data-f="comment" onchange="saveFromPanel()">${escHtml(c.comment||'')}</textarea></div>
       <div class="edit-row"><label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;"><input type="checkbox" data-c="${i}" data-f="ours" ${c.ours?'checked':''} onchange="saveFromPanel()"> Наш объект (оцениваемый)</label></div>
+      <div class="edit-row"><label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;"><input type="checkbox" data-c="${i}" data-f="visited" ${c.visited?'checked':''} onchange="saveFromPanel()"> Посмотрел лично</label></div>
     </div>`;
   }).join('');
 }
@@ -677,6 +833,7 @@ function saveFromPanel(){
   s.rooms=parseInt(document.getElementById('e-rooms').value)||0;
   s.floor=document.getElementById('e-floor').value;
   s.location=document.getElementById('e-location').value;
+  s.date=document.getElementById('e-date').value;
   s.priceFrom=parseInt(document.getElementById('e-priceFrom').value)||0;
   s.priceTo=parseInt(document.getElementById('e-priceTo').value)||0;
 
@@ -684,6 +841,7 @@ function saveFromPanel(){
     const i=+el.dataset.c,f=el.dataset.f;
     if(!s.competitors[i])return;
     if(f==='ours')s.competitors[i].ours=el.checked;
+    else if(f==='visited')s.competitors[i].visited=el.checked;
     else if(f==='price')s.competitors[i].price=parseInt(el.value)||0;
     else s.competitors[i][f]=el.value;
   });
