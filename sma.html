@@ -359,7 +359,8 @@ function escHtml(s){const d=document.createElement('div');d.textContent=s;return
 function escAttr(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(n){if(!n)return '—';return Number(n).toLocaleString('ru-RU');}
 function fmtPrice(n){if(!n)return '—';const m=Number(n);if(m>=1e6)return (m/1e6).toFixed(1).replace('.0','').replace('.',',')+' млн ₽';return fmt(m)+' ₽';}
-function calcPpm(price,area){if(!price||!area)return 0;return Math.round(Number(price)/Number(area));}
+function parseNum(v){if(!v)return 0;return Number(String(v).replace(/,/g,'.').replace(/[^\d.]/g,''))||0;}
+function calcPpm(price,area){const p=parseNum(price),a=parseNum(area);if(!p||!a)return 0;return Math.round(p/a);}
 function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
 
 // ─── GITHUB API ───
@@ -575,7 +576,7 @@ function render(){
 
   // Price box
   const avg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
-  const avgPpmRec=avg&&s.area?Math.round(avg/Number(s.area)):0;
+  const avgPpmRec=avg&&s.area?Math.round(avg/parseNum(s.area)):0;
   if(s.priceFrom||s.priceTo){
     document.getElementById('priceBox').innerHTML=`
       <div class="price-box-label">Рекомендуемая рыночная стоимость</div>
@@ -617,7 +618,7 @@ function populatePanel(){
 
 function updatePriceHint(){
   const s=allData.analyses[currentId];if(!s)return;
-  const f=Number(s.priceFrom),t=Number(s.priceTo),a=Number(s.area);
+  const f=Number(s.priceFrom),t=Number(s.priceTo),a=parseNum(s.area);
   if(f&&t&&a){
     const avg=Math.round((f+t)/2);
     document.getElementById('priceCalcHint').textContent=`Средняя: ${fmtPrice(avg)} (${fmt(Math.round(avg/a))} ₽/м²)`;
@@ -710,7 +711,7 @@ function generateRecs(){
   const comps=s.competitors||[];
   const n=comps.length;
   const avg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
-  const avgPpm=avg&&s.area?fmt(Math.round(avg/Number(s.area))):0;
+  const avgPpm=avg&&s.area?fmt(Math.round(avg/parseNum(s.area))):0;
   const loc=s.location||'данной локации';
 
   s.recommendations=[
