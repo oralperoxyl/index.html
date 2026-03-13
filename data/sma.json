@@ -34,9 +34,25 @@
           "ppm": 0,
           "bargain": "12500000",
           "adDate": "С 29.09.25",
-          "adViews": "",
+          "adViews": "1658",
           "url": "https://spb.cian.ru/sale/flat/316950077/ ",
           "comment": "Один взрослый собственник, встречная покупка, уже подобрана, обременений нет. 20 лет в собственности. Со слов агента спрос на эту цену сейчас слабый. ",
+          "ours": false
+        },
+        {
+          "address": "",
+          "agent": "",
+          "area": "",
+          "rooms": "",
+          "floor": "",
+          "condition": "",
+          "price": 0,
+          "ppm": 0,
+          "bargain": "",
+          "adDate": "",
+          "adViews": "",
+          "url": "",
+          "comment": "",
           "ours": false
         }
       ],
