@@ -74,8 +74,8 @@
         {
           "address": "Гатчинская 31-33",
           "agent": "Ольга агент",
-          "area": "",
-          "rooms": "",
+          "area": "79",
+          "rooms": "3",
           "floor": "",
           "condition": "",
           "price": 0,
