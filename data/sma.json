@@ -58,9 +58,9 @@
         {
           "address": "Полозова, 7",
           "agent": "Инесса агент",
-          "area": "",
-          "rooms": "",
-          "floor": "",
+          "area": "69,8",
+          "rooms": "3",
+          "floor": "4/5",
           "condition": "",
           "price": 0,
           "ppm": 0,
