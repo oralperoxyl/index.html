@@ -201,8 +201,8 @@
         {
           "address": "ул. Гарибальди, д. 11",
           "agent": "Татьяна агент",
-          "area": "",
-          "rooms": "",
+          "area": "39",
+          "rooms": "1",
           "floor": "",
           "condition": "",
           "price": 0,
