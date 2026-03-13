@@ -122,6 +122,18 @@
       "priceFrom": 12500000,
       "priceTo": 15000000,
       "date": ""
+    },
+    "москва-ул-кедрова-д-3-кв-41": {
+      "address": "Москва, ул. Кедрова, д.3 кв. 41",
+      "area": 0,
+      "rooms": 0,
+      "floor": "",
+      "location": "",
+      "competitors": [],
+      "recommendations": [],
+      "priceFrom": 0,
+      "priceTo": 0,
+      "date": "13 марта 2026 г."
     }
   }
 }
