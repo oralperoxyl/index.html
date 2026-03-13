@@ -95,8 +95,8 @@
         {
           "address": "Гатчинская 2/54",
           "agent": "Алиса собственник",
-          "area": "55",
-          "rooms": "",
+          "area": "55,6",
+          "rooms": "2",
           "floor": "",
           "condition": "",
           "price": 0,
