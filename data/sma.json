@@ -218,8 +218,8 @@
         {
           "address": "ул. Вавилова, д. 25",
           "agent": "Наталья агент",
-          "area": "",
-          "rooms": "",
+          "area": "37",
+          "rooms": "1",
           "floor": "",
           "condition": "",
           "price": 0,
