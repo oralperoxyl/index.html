@@ -631,17 +631,22 @@ function render(){
 
   // Price box
   const avg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
-  const avgPpmRec=avg&&s.area?Math.round(avg/parseNum(s.area)):0;
+  const sArea=parseNum(s.area);
+  const ppmFrom=s.priceFrom&&sArea?fmt(Math.round(s.priceFrom/sArea))+' \u20bd/\u043c\u00b2':'';
+  const ppmTo=s.priceTo&&sArea?fmt(Math.round(s.priceTo/sArea))+' \u20bd/\u043c\u00b2':'';
+  const avgPpmRec=avg&&sArea?fmt(Math.round(avg/sArea))+' \u20bd/\u043c\u00b2':'';
   if(s.priceFrom||s.priceTo){
-    document.getElementById('priceBox').innerHTML=`
-      <div class="price-box-label">Рекомендуемая рыночная стоимость</div>
-      <div class="price-range">
-        <span class="price-val">${fmtPrice(s.priceFrom)}</span>
-        <span class="price-sep">—</span>
-        <span class="price-val">${fmtPrice(s.priceTo)}</span>
-      </div>
-      ${avg?'<div class="price-avg">Средняя: <strong>'+fmtPrice(avg)+'</strong>'+(avgPpmRec?' ('+fmt(avgPpmRec)+' ₽/м²)':'')+'</div>':''}
-      <div class="price-note">Стоимость может быть скорректирована при наличии реальных покупателей и при согласовании с продавцом.</div>`;
+    document.getElementById('priceBox').innerHTML=
+      '<div class="price-box-label">\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0435\u043c\u0430\u044f \u0440\u044b\u043d\u043e\u0447\u043d\u0430\u044f \u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c</div>'
+      +'<div class="price-range">'
+      +'<span class="price-val">'+fmtPrice(s.priceFrom)+'</span>'
+      +(ppmFrom?'<span style="font-size:13px;color:rgba(229,229,229,0.4);margin-left:-8px;">('+ppmFrom+')</span>':'')
+      +'<span class="price-sep">\u2014</span>'
+      +'<span class="price-val">'+fmtPrice(s.priceTo)+'</span>'
+      +(ppmTo?'<span style="font-size:13px;color:rgba(229,229,229,0.4);margin-left:-8px;">('+ppmTo+')</span>':'')
+      +'</div>'
+      +(avg?'<div class="price-avg">\u0421\u0440\u0435\u0434\u043d\u044f\u044f: <strong>'+fmtPrice(avg)+'</strong>'+(avgPpmRec?' ('+avgPpmRec+')':'')+'</div>':'')
+      +'<div class="price-note">\u0421\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c \u043c\u043e\u0436\u0435\u0442 \u0431\u044b\u0442\u044c \u0441\u043a\u043e\u0440\u0440\u0435\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0430 \u043f\u0440\u0438 \u043d\u0430\u043b\u0438\u0447\u0438\u0438 \u0440\u0435\u0430\u043b\u044c\u043d\u044b\u0445 \u043f\u043e\u043a\u0443\u043f\u0430\u0442\u0435\u043b\u0435\u0439 \u0438 \u043f\u0440\u0438 \u0441\u043e\u0433\u043b\u0430\u0441\u043e\u0432\u0430\u043d\u0438\u0438 \u0441 \u043f\u0440\u043e\u0434\u0430\u0432\u0446\u043e\u043c.</div>';
     document.getElementById('priceBox').style.display='';
   }else{
     document.getElementById('priceBox').style.display='none';
