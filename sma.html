@@ -70,8 +70,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 
 /* ── COMPETITOR TABLE (desktop) ── */
 .comp-table-wrap{overflow-x:auto}
-.comp-table{width:100%;border-collapse:collapse;min-width:800px}
-.comp-table th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 12px;border-bottom:2px solid var(--text);white-space:nowrap}
+.comp-table{width:100%;border-collapse:collapse}
+.comp-table th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 12px;border-bottom:2px solid var(--text)}
 .comp-table td{font-size:13px;padding:14px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
 .comp-table tr:hover{background:rgba(0,0,0,0.015)}
 .comp-table tr.our-object{background:rgba(0,102,255,0.04)}
@@ -309,25 +309,16 @@ body.editing .hero{padding-right:500px}
   <div class="section-label">03 — Конкуренты</div>
   <h2 class="section-title">Сводная таблица по конкурентам</h2>
   <div class="comp-table-wrap">
-    <table class="comp-table" style="min-width:700px;table-layout:fixed;">
-      <colgroup>
-        <col style="width:30px;">
-        <col style="width:140px;">
-        <col style="width:80px;">
-        <col style="width:110px;">
-        <col style="width:90px;">
-        <col style="width:80px;">
-        <col>
-      </colgroup>
+    <table class="comp-table">
       <thead>
         <tr>
-          <th>№</th>
-          <th>Адрес</th>
-          <th>Площадь / эт.</th>
-          <th>Цена / за м²</th>
-          <th>Торг</th>
-          <th>Реклама</th>
-          <th>Комментарий</th>
+          <th style="width:30px;">№</th>
+          <th style="min-width:140px;">Адрес</th>
+          <th style="min-width:90px;white-space:nowrap;">Площадь / эт.</th>
+          <th style="min-width:120px;white-space:nowrap;">Цена / за м²</th>
+          <th style="min-width:80px;">Торг</th>
+          <th style="min-width:70px;">Реклама</th>
+          <th style="min-width:180px;">Комментарий</th>
         </tr>
       </thead>
       <tbody id="compBody"></tbody>
@@ -622,8 +613,8 @@ function render(){
     return `<tr class="${c.ours?'our-object':''}">
       <td style="font-weight:500;color:var(--muted);">${i+1}</td>
       <td><div style="font-weight:500;">${addrHtml}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${escHtml(c.agent||'')}</div><div style="margin-top:4px;">${badges(c)}${c.condition?'<span class="tag '+condTag+'">'+escHtml(c.condition)+'</span>':''}</div></td>
-      <td style="font-size:12px;">${escHtml(areaFloor)}</td>
-      <td><div style="font-weight:500;">${c.price?fmt(c.price)+' ₽':''}</div><div style="font-size:11px;color:var(--muted);">${ppm?fmt(ppm)+' ₽/м²':''}</div></td>
+      <td style="font-size:12px;white-space:nowrap;">${escHtml(areaFloor)}</td>
+      <td style="white-space:nowrap;"><div style="font-weight:500;">${c.price?fmt(c.price)+' ₽':''}</div><div style="font-size:11px;color:var(--muted);">${ppm?fmt(ppm)+' ₽/м²':''}</div></td>
       <td style="font-size:12px;">${escHtml(c.bargain)}</td>
       <td style="font-size:11px;color:var(--muted);"><div>${escHtml(c.adDate)}</div>${c.adViews?'<div>'+escHtml(c.adViews)+' просм.</div>':''}</td>
       <td style="font-size:12px;line-height:1.6;">${escHtml(c.comment)}</td>
