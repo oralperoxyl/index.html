@@ -97,7 +97,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 
 /* ── CHART ── */
 .chart-wrap{background:white;border-radius:8px;padding:28px;position:relative;overflow:hidden}
-.chart-canvas{width:100%;height:360px;position:relative}
+.chart-canvas{width:100%;position:relative;min-height:120px}
 .chart-dot{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--muted);border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.15);transform:translate(-50%,-50%);cursor:default;transition:transform 0.2s}
 .chart-dot:hover{transform:translate(-50%,-50%) scale(1.4);z-index:10}
 .chart-dot.ours{width:14px;height:14px;background:var(--accent);border:2px solid white;box-shadow:0 2px 8px rgba(0,102,255,0.3)}
@@ -222,7 +222,6 @@ body.editing .hero{padding-right:500px}
   .intro-step:first-child{border-radius:8px 0 0 0}
   .intro-step:nth-child(2){border-radius:0 8px 0 0}
   .intro-step:last-child{border-radius:0 0 8px 0}
-  .chart-canvas{height:340px}
 }
 @media print{
   .edit-toggle,.edit-panel,.sync-status,.loading-bar{display:none!important}
@@ -677,60 +676,49 @@ function renderChart(s, comps){
     idx:i+1, ppm:calcPpm(c.price,c.area),
     label:c.address||'#'+(i+1), ours:!!c.ours
   }));
-  const recAvg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
-  const recPpm=recAvg&&parseNum(s.area)?Math.round(recAvg/parseNum(s.area)):0;
 
-  if(points.length<2){canvas.innerHTML='<p style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center;">Добавьте минимум 2 конкурента с ценой и площадью</p>';legend.innerHTML='';return;}
+  if(points.length<2){canvas.innerHTML='<p style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center;">Добавьте минимум 2 конкурента с ценой и площадью</p>';legend.innerHTML='';canvas.style.height='auto';return;}
 
-  const allPpms=points.map(p=>p.ppm);
-  if(recPpm)allPpms.push(recPpm);
-  const minP=Math.min(...allPpms)*0.85, maxP=Math.max(...allPpms)*1.1;
-  const n=points.length;
-  const h=360, pad={top:16,bottom:80,left:56,right:16};
-  const plotH=h-pad.top-pad.bottom;
+  // Sort by ppm descending (most expensive on top)
+  points.sort((a,b)=>b.ppm-a.ppm);
+
+  const maxP=Math.max(...points.map(p=>p.ppm));
+  const area=parseNum(s.area);
+  const recPpmLo=s.priceFrom&&area?Math.round(Math.min(s.priceFrom,s.priceTo)/area):0;
+  const recPpmHi=s.priceTo&&area?Math.round(Math.max(s.priceFrom,s.priceTo)/area):0;
+
+  const rowH=44, gap=3;
+  const totalH=points.length*(rowH+gap);
+  canvas.style.height=(totalH+8)+'px';
+
   let html='';
 
-  // Y axis grid + labels
-  const gridN=4;
-  for(let i=0;i<=gridN;i++){
-    const y=pad.top+plotH*i/gridN;
-    const val=Math.round(maxP-(maxP-minP)*i/gridN);
-    html+=`<div style="position:absolute;left:${pad.left}px;right:${pad.right}px;top:${y}px;border-top:1px solid var(--border);"></div>`;
-    html+=`<div class="chart-axis-label" style="position:absolute;left:0;top:${y-7}px;width:${pad.left-8}px;text-align:right;">${fmt(Math.round(val/1000))}к</div>`;
+  // Rec zone (vertical green band)
+  if(recPpmLo&&recPpmHi){
+    const lo=recPpmLo/maxP*100;
+    const hi=recPpmHi/maxP*100;
+    html+=`<div style="position:absolute;left:${lo}%;width:${hi-lo}%;top:0;bottom:0;background:rgba(45,138,78,0.06);border-left:1px dashed rgba(45,138,78,0.35);border-right:1px dashed rgba(45,138,78,0.35);z-index:0;pointer-events:none;"></div>`;
   }
 
-  // Rec zone
-  if(s.priceFrom&&s.priceTo&&parseNum(s.area)){
-    const ppmLo=Math.round(Math.min(s.priceFrom,s.priceTo)/parseNum(s.area));
-    const ppmHi=Math.round(Math.max(s.priceFrom,s.priceTo)/parseNum(s.area));
-    const yLo=pad.top+(1-(ppmLo-minP)/(maxP-minP))*plotH;
-    const yHi=pad.top+(1-(ppmHi-minP)/(maxP-minP))*plotH;
-    const top=Math.min(yLo,yHi),bh=Math.abs(yLo-yHi)||2;
-    html+=`<div style="position:absolute;left:${pad.left}px;right:${pad.right}px;top:${top}px;height:${bh}px;background:rgba(45,138,78,0.07);border-top:1px dashed rgba(45,138,78,0.35);border-bottom:1px dashed rgba(45,138,78,0.35);"></div>`;
-    html+=`<div style="position:absolute;right:${pad.right+4}px;top:${top-14}px;font-size:9px;color:#2D8A4E;letter-spacing:0.04em;">Рекомендуемый диапазон</div>`;
-  }
-
-  // Bars + dots + labels
-  const barW=Math.min(36, (100/n)*0.6);
-  const gap=(100-barW*n)/(n+1);
+  // Horizontal bars
   points.forEach((p,i)=>{
-    const xPct=gap*(i+1)+barW*i+barW/2;
-    const yVal=pad.top+(1-(p.ppm-minP)/(maxP-minP))*plotH;
-    const barH=h-pad.bottom-yVal;
-    const color=p.ours?'var(--accent)':'rgba(0,0,0,0.08)';
-    const dotColor=p.ours?'var(--accent)':'var(--muted)';
-    const dotSize=p.ours?12:9;
+    const top=i*(rowH+gap);
+    const barPct=p.ppm/maxP*100;
+    const isOurs=p.ours;
+    const color=isOurs?'var(--accent)':'rgba(0,0,0,0.06)';
+    const shortLabel=p.label.length>24?p.label.substring(0,22)+'…':p.label;
 
     // Bar
-    html+=`<div style="position:absolute;left:${xPct}%;bottom:${pad.bottom}px;width:${barW}%;height:${Math.max(barH,2)}px;background:${color};border-radius:3px 3px 0 0;transform:translateX(-50%);"></div>`;
-    // Dot
-    html+=`<div style="position:absolute;left:${xPct}%;top:${yVal}px;width:${dotSize}px;height:${dotSize}px;border-radius:50%;background:${dotColor};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.15);transform:translate(-50%,-50%);z-index:5;"></div>`;
-    // Value label above dot
-    html+=`<div style="position:absolute;left:${xPct}%;top:${yVal-20}px;transform:translateX(-50%);font-size:10px;font-weight:600;color:${p.ours?'var(--accent)':'var(--text)'};white-space:nowrap;text-align:center;">${fmt(p.ppm)}</div>`;
-    // Address label below (rotated on many items)
-    const labelStyle=n>6?'writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);text-align:right;max-height:65px;':'transform:translateX(-50%);text-align:center;max-width:80px;';
-    const shortLabel=p.label.length>18?p.label.substring(0,16)+'…':p.label;
-    html+=`<div style="position:absolute;left:${xPct}%;bottom:4px;${labelStyle}font-size:10px;color:${p.ours?'var(--accent)':'var(--muted)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2;${p.ours?'font-weight:600;':''}">${escHtml(shortLabel)}</div>`;
+    html+=`<div style="position:absolute;left:0;top:${top}px;width:${barPct}%;height:${rowH}px;background:${color};border-radius:0 6px 6px 0;z-index:1;"></div>`;
+
+    // Address (top-left of bar)
+    const addrColor=isOurs?'white':'var(--text)';
+    const addrWeight=isOurs?'600':'500';
+    html+=`<div style="position:absolute;left:10px;top:${top+7}px;font-size:12px;font-weight:${addrWeight};color:${addrColor};z-index:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(${barPct}% - 20px);">${escHtml(shortLabel)}</div>`;
+
+    // PPM value (bottom-left of bar, smaller)
+    const valColor=isOurs?'rgba(255,255,255,0.7)':'var(--muted)';
+    html+=`<div style="position:absolute;left:10px;top:${top+24}px;font-size:11px;font-weight:500;color:${valColor};z-index:2;">${fmt(p.ppm)} ₽/м²</div>`;
   });
 
   canvas.innerHTML=html;
@@ -738,15 +726,8 @@ function renderChart(s, comps){
   legend.innerHTML=`
     <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent);"></div>Ваш объект</div>
     <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--muted);"></div>Конкуренты</div>
-    ${s.priceFrom?'<div class="chart-legend-item"><div style="width:16px;height:8px;background:rgba(45,138,78,0.15);border:1px dashed rgba(45,138,78,0.4);border-radius:2px;flex-shrink:0;"></div>Рекомендуемый диапазон</div>':''}`;
+    ${recPpmLo?'<div class="chart-legend-item"><div style="width:16px;height:8px;background:rgba(45,138,78,0.15);border:1px dashed rgba(45,138,78,0.4);border-radius:2px;flex-shrink:0;"></div>Рекомендуемый диапазон</div>':''}`;
 }
-
-function showTip(el,text){
-  let tip=el.querySelector('.chart-tooltip');
-  if(!tip){tip=document.createElement('div');tip.className='chart-tooltip';el.appendChild(tip);}
-  tip.textContent=text;tip.style.opacity='1';tip.style.bottom='16px';tip.style.left='50%';tip.style.transform='translateX(-50%)';
-}
-function hideTip(el){const tip=el.querySelector('.chart-tooltip');if(tip)tip.style.opacity='0';}
 
 // ─── EDIT PANEL ───
 function toggleEdit(){
