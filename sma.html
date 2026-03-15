@@ -679,48 +679,79 @@ function renderChart(s, comps){
 
   if(points.length<2){canvas.innerHTML='<p style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center;">Добавьте минимум 2 конкурента с ценой и площадью</p>';legend.innerHTML='';canvas.style.height='auto';return;}
 
-  // Sort by ppm descending (most expensive on top)
-  points.sort((a,b)=>b.ppm-a.ppm);
-
-  const maxP=Math.max(...points.map(p=>p.ppm));
   const area=parseNum(s.area);
   const recPpmLo=s.priceFrom&&area?Math.round(Math.min(s.priceFrom,s.priceTo)/area):0;
   const recPpmHi=s.priceTo&&area?Math.round(Math.max(s.priceFrom,s.priceTo)/area):0;
 
-  const rowH=44, gap=3;
-  const totalH=points.length*(rowH+gap);
-  canvas.style.height=(totalH+8)+'px';
+  const allPpms=points.map(p=>p.ppm);
+  if(recPpmHi)allPpms.push(recPpmHi);
+  const maxP=Math.max(...allPpms)*1.12;
+  const minP=Math.min(...allPpms)*0.85;
+  const range=maxP-minP;
+  const n=points.length;
 
-  let html='';
+  // Layout
+  const labelZone=80; // px bottom for rotated labels
+  const topPad=28; // px for value labels above bars
+  const plotH=280;
+  const totalH=plotH+topPad+labelZone;
+  canvas.style.height=totalH+'px';
 
-  // Rec zone (vertical green band)
-  if(recPpmLo&&recPpmHi){
-    const lo=recPpmLo/maxP*100;
-    const hi=recPpmHi/maxP*100;
-    html+=`<div style="position:absolute;left:${lo}%;width:${hi-lo}%;top:0;bottom:0;background:rgba(45,138,78,0.06);border-left:1px dashed rgba(45,138,78,0.35);border-right:1px dashed rgba(45,138,78,0.35);z-index:0;pointer-events:none;"></div>`;
+  let html='<svg width="100%" height="'+totalH+'" viewBox="0 0 600 '+totalH+'" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;">';
+
+  // Y-axis grid
+  const gridN=4;
+  const leftPad=0;
+  const rightPad=0;
+  const plotW=600;
+  for(let i=0;i<=gridN;i++){
+    const y=topPad+(plotH*i/gridN);
+    const val=Math.round(maxP-range*i/gridN);
+    html+=`<line x1="${leftPad}" y1="${y}" x2="${plotW}" y2="${y}" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>`;
+    html+=`<text x="${leftPad}" y="${y-4}" font-size="9" fill="#999" font-family="Inter,sans-serif">${Math.round(val/1000)}к</text>`;
   }
 
-  // Horizontal bars
+  // Rec zone (horizontal band)
+  if(recPpmLo&&recPpmHi){
+    const yLo=topPad+(1-(recPpmLo-minP)/range)*plotH;
+    const yHi=topPad+(1-(recPpmHi-minP)/range)*plotH;
+    const yt=Math.min(yLo,yHi), yb=Math.max(yLo,yHi);
+    html+=`<rect x="${leftPad}" y="${yt}" width="${plotW}" height="${Math.max(yb-yt,2)}" fill="rgba(45,138,78,0.07)"/>`;
+    html+=`<line x1="${leftPad}" y1="${yt}" x2="${plotW}" y2="${yt}" stroke="rgba(45,138,78,0.35)" stroke-width="1" stroke-dasharray="4,3"/>`;
+    html+=`<line x1="${leftPad}" y1="${yb}" x2="${plotW}" y2="${yb}" stroke="rgba(45,138,78,0.35)" stroke-width="1" stroke-dasharray="4,3"/>`;
+  }
+
+  // Bars
+  const barGapRatio=0.35;
+  const totalBarSpace=plotW-leftPad-rightPad;
+  const slotW=totalBarSpace/n;
+  const barW=slotW*(1-barGapRatio);
+  const barGap=slotW*barGapRatio;
+
   points.forEach((p,i)=>{
-    const top=i*(rowH+gap);
-    const barPct=p.ppm/maxP*100;
-    const isOurs=p.ours;
-    const color=isOurs?'var(--accent)':'rgba(0,0,0,0.06)';
-    const shortLabel=p.label.length>24?p.label.substring(0,22)+'…':p.label;
+    const cx=leftPad+slotW*i+slotW/2;
+    const bx=cx-barW/2;
+    const valNorm=(p.ppm-minP)/range;
+    const barH=valNorm*plotH;
+    const barTop=topPad+plotH-barH;
+    const color=p.ours?'#0066FF':'rgba(0,0,0,0.07)';
+    const textColor=p.ours?'#0066FF':'#1A1A1A';
 
-    // Bar
-    html+=`<div style="position:absolute;left:0;top:${top}px;width:${barPct}%;height:${rowH}px;background:${color};border-radius:0 6px 6px 0;z-index:1;"></div>`;
+    // Bar rect
+    html+=`<rect x="${bx}" y="${barTop}" width="${barW}" height="${barH}" rx="3" fill="${color}"/>`;
 
-    // Address (top-left of bar)
-    const addrColor=isOurs?'white':'var(--text)';
-    const addrWeight=isOurs?'600':'500';
-    html+=`<div style="position:absolute;left:10px;top:${top+7}px;font-size:12px;font-weight:${addrWeight};color:${addrColor};z-index:2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(${barPct}% - 20px);">${escHtml(shortLabel)}</div>`;
+    // Value above bar
+    html+=`<text x="${cx}" y="${barTop-6}" text-anchor="middle" font-size="10" font-weight="600" fill="${textColor}" font-family="Inter,sans-serif">${fmt(p.ppm)}</text>`;
 
-    // PPM value (bottom-left of bar, smaller)
-    const valColor=isOurs?'rgba(255,255,255,0.7)':'var(--muted)';
-    html+=`<div style="position:absolute;left:10px;top:${top+24}px;font-size:11px;font-weight:500;color:${valColor};z-index:2;">${fmt(p.ppm)} ₽/м²</div>`;
+    // Address below (rotated 45°)
+    const labelY=topPad+plotH+8;
+    const shortLabel=p.label.length>20?p.label.substring(0,18)+'…':p.label;
+    const labelColor=p.ours?'#0066FF':'#999';
+    const labelWeight=p.ours?'600':'400';
+    html+=`<text x="${cx}" y="${labelY}" font-size="10" fill="${labelColor}" font-weight="${labelWeight}" font-family="Inter,sans-serif" transform="rotate(45,${cx},${labelY})" dominant-baseline="hanging">${escHtml(shortLabel)}</text>`;
   });
 
+  html+='</svg>';
   canvas.innerHTML=html;
 
   legend.innerHTML=`
