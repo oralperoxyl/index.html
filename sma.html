@@ -93,10 +93,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .chart-mobile{display:none}
 .chart-legend{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
 .chart-legend span{display:flex;align-items:center;gap:5px}
-.chart-m-row{display:flex;align-items:center;gap:0;margin-bottom:3px;position:relative}
-.chart-m-label{width:130px;flex-shrink:0;font-size:11px;text-align:right;padding-right:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.chart-m-bar{height:32px;border-radius:0 4px 4px 0;position:relative;min-width:2px;transition:width 0.3s}
-.chart-m-val{font-size:10px;font-weight:600;padding-left:8px;white-space:nowrap;flex-shrink:0}
+.chart-m-row{margin-bottom:12px;position:relative}
+.chart-m-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
+.chart-m-label{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.chart-m-val{font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0;padding-left:8px}
+.chart-m-bar{height:24px;border-radius:4px;min-width:4px}
+.chart-m-hint{padding:10px 0;margin:4px 0 8px;font-size:12px;line-height:1.5;color:#085041;border-left:3px solid #2D8A4E;padding-left:12px}
 
 /* ── COMPETITOR TABLE (desktop) ── */
 .comp-table-wrap{overflow-x:auto}
@@ -724,23 +726,36 @@ function renderChart(s, comps){
   svg+='</svg>';
   deskEl.innerHTML=svg;
 
-  // ── MOBILE: horizontal bars ──
+  // ── MOBILE: horizontal bars with address above ──
   let mhtml='';
   const sorted=[...points].sort((a,b)=>b.ppm-a.ppm);
+  let mHintInserted=false;
   sorted.forEach(p=>{
     const pct=Math.round(p.ppm/maxP*100);
     const col=p.ours?'#0066FF':'rgba(0,0,0,0.06)';
-    const lCol=p.ours?'#0066FF':'var(--muted)';
+    const lCol=p.ours?'#0066FF':'var(--text)';
+    const vCol=p.ours?'#0066FF':'var(--muted)';
     const lW=p.ours?'600':'400';
-    const short=p.label.length>16?p.label.substring(0,14)+'\u2026':p.label;
     const inZone=recLo&&recHi&&p.ppm>=recLo&&p.ppm<=recHi;
-    const borderL=inZone?'border-left:2px solid #2D8A4E;':'';
-    mhtml+='<div class="chart-m-row" style="'+borderL+'">'
-      +'<div class="chart-m-label" style="font-weight:'+lW+';color:'+lCol+';">'+escHtml(short)+'</div>'
+
+    // Insert rec hint before first item in zone
+    if(!mHintInserted&&recLo&&(inZone||p.ppm<recLo)){
+      mhtml+='<div class="chart-m-hint"><strong>Рек. диапазон: '+fmt(recLo)+' \u2013 '+fmt(recHi)+' \u20bd/\u043c\u00b2</strong><br>Объекты ниже \u2014 в зоне реального спроса</div>';
+      mHintInserted=true;
+    }
+
+    const zoneMark=inZone?'border-left:3px solid #2D8A4E;padding-left:10px;':'';
+    mhtml+='<div class="chart-m-row" style="'+zoneMark+'">'
+      +'<div class="chart-m-top">'
+      +'<div class="chart-m-label" style="font-weight:'+lW+';color:'+lCol+';">'+escHtml(p.label)+(p.ours?' \u2014 \u0432\u0430\u0448 \u043e\u0431\u044a\u0435\u043a\u0442':'')+'</div>'
+      +'<div class="chart-m-val" style="color:'+vCol+';">'+fmt(p.ppm)+' \u20bd/\u043c\u00b2</div>'
+      +'</div>'
       +'<div class="chart-m-bar" style="width:'+pct+'%;background:'+col+';"></div>'
-      +'<div class="chart-m-val" style="color:'+lCol+';">'+fmt(p.ppm)+'</div>'
       +'</div>';
   });
+  if(!mHintInserted&&recLo){
+    mhtml+='<div class="chart-m-hint"><strong>Рек. диапазон: '+fmt(recLo)+' \u2013 '+fmt(recHi)+' \u20bd/\u043c\u00b2</strong></div>';
+  }
   mobEl.innerHTML=mhtml;
 
   // Legend
