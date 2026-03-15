@@ -68,16 +68,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .summary-num{font-family:var(--serif);font-size:32px;font-weight:400;line-height:1;margin-bottom:6px}
 .summary-label{font-size:12px;color:var(--muted);letter-spacing:0.04em}
 
-/* ── COMPETITOR TABLE (desktop) ── */
-.comp-table-wrap{overflow-x:auto}
-.comp-table{width:100%;border-collapse:collapse}
-.comp-table th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 12px;border-bottom:2px solid var(--text)}
-.comp-table td{font-size:13px;padding:14px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
-.comp-table tr:hover{background:rgba(0,0,0,0.015)}
-.comp-table tr.our-object{background:rgba(0,102,255,0.04)}
-.comp-table a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
-.comp-table a:hover{text-decoration-color:var(--text)}
-.comp-table .tag{font-size:10px;font-weight:500;letter-spacing:0.03em;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+/* ── TAGS ── */
+.tag{font-size:10px;font-weight:500;letter-spacing:0.03em;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
 .tag-repair{background:#E8F5E9;color:#2D8A4E}
 .tag-needs{background:#FFF8E1;color:#B8860B}
 .tag-stale{background:#FBEAEA;color:#C0392B}
@@ -95,40 +87,62 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .intro-step-title{font-size:13px;font-weight:600;margin-bottom:4px}
 .intro-step-text{font-size:12px;color:var(--muted);line-height:1.5}
 
-/* ── CHART ── */
-.chart-wrap{background:white;border-radius:8px;padding:28px;position:relative;overflow:hidden}
-.chart-canvas{width:100%;position:relative;min-height:120px}
-.chart-dot{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--muted);border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.15);transform:translate(-50%,-50%);cursor:default;transition:transform 0.2s}
-.chart-dot:hover{transform:translate(-50%,-50%) scale(1.4);z-index:10}
-.chart-dot.ours{width:14px;height:14px;background:var(--accent);border:2px solid white;box-shadow:0 2px 8px rgba(0,102,255,0.3)}
-.chart-dot.rec{width:12px;height:12px;background:#2D8A4E;border:2px solid white;border-radius:2px;box-shadow:0 2px 8px rgba(45,138,78,0.25)}
-.chart-tooltip{position:absolute;background:var(--dark);color:#E5E5E5;font-size:11px;padding:6px 10px;border-radius:4px;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity 0.15s;z-index:20}
-.chart-axis-label{font-size:10px;color:var(--muted);letter-spacing:0.04em}
-.chart-legend{display:flex;gap:20px;margin-top:16px;flex-wrap:wrap}
-.chart-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
-.chart-legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.chart-legend-dot.square{border-radius:2px}
+/* ── RANKING LIST ── */
+.rk-list{background:white;border-radius:8px;overflow:hidden}
+.rk-row{display:flex;align-items:stretch;border-bottom:1px solid var(--border);position:relative;cursor:pointer;transition:background 0.15s}
+.rk-row:last-child{border-bottom:none}
+.rk-bar{position:absolute;left:0;top:0;bottom:0;z-index:0;transition:width 0.3s}
+.rk-content{display:flex;align-items:center;width:100%;padding:14px 16px;position:relative;z-index:1}
+.rk-num{width:28px;flex-shrink:0;font-size:12px;font-weight:500}
+.rk-info{flex:1;min-width:0}
+.rk-addr{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk-addr a{color:inherit;text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
+.rk-addr a:hover{text-decoration-color:currentColor}
+.rk-meta{font-size:11px;margin-top:2px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.rk-vals{text-align:right;flex-shrink:0;padding-left:12px}
+.rk-ppm{font-size:14px;font-weight:600}
+.rk-price{font-size:11px;margin-top:1px}
+.rk-chevron{width:20px;flex-shrink:0;text-align:center;font-size:12px;transition:transform 0.2s;color:var(--muted)}
+.rk-row.open .rk-chevron{transform:rotate(180deg)}
+
+.rk-over .rk-bar{background:rgba(0,0,0,0.025)}
+.rk-over .rk-num{color:var(--muted)}
+.rk-over .rk-addr{color:var(--muted)}
+.rk-over .rk-meta{color:var(--muted)}
+.rk-over .rk-ppm{color:var(--muted)}
+.rk-over .rk-price{color:var(--muted)}
+.rk-over:hover .rk-bar{background:rgba(0,0,0,0.04)}
+
+.rk-zone .rk-bar{background:rgba(45,138,78,0.05)}
+.rk-zone{border-left:3px solid #2D8A4E}
+.rk-zone .rk-num{color:#0F6E56}
+.rk-zone .rk-addr{color:var(--text)}
+.rk-zone .rk-meta{color:#0F6E56}
+.rk-zone .rk-ppm{color:#085041}
+.rk-zone .rk-price{color:#0F6E56}
+.rk-zone:hover .rk-bar{background:rgba(45,138,78,0.08)}
+
+.rk-ours .rk-bar{background:#0066FF}
+.rk-ours .rk-num{color:rgba(255,255,255,0.5)}
+.rk-ours .rk-addr,.rk-ours .rk-addr a{color:white;font-weight:600}
+.rk-ours .rk-meta{color:rgba(255,255,255,0.6)}
+.rk-ours .rk-ppm{color:white}
+.rk-ours .rk-price{color:rgba(255,255,255,0.6)}
+.rk-ours .rk-chevron{color:rgba(255,255,255,0.5)}
+.rk-ours .tag{background:rgba(255,255,255,0.2)!important;color:white!important}
+
+.rk-hint{padding:10px 16px;background:rgba(45,138,78,0.04);border-left:3px solid #2D8A4E;border-bottom:1px solid var(--border);font-size:12px;line-height:1.5;color:#085041}
+.rk-hint strong{color:#085041}
+
+.rk-details{display:none;padding:0 16px 16px 44px;position:relative;z-index:1;font-size:13px;line-height:1.6;color:var(--muted)}
+.rk-row.open .rk-details{display:block}
+.rk-details-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 24px}
+.rk-details-label{font-size:11px;color:var(--muted);letter-spacing:0.03em}
+.rk-details-val{font-size:13px;color:var(--text);margin-bottom:8px}
+.rk-details-comment{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-size:13px;line-height:1.6;color:var(--muted)}
 
 /* ── HERO DATE ── */
 .hero-date{font-size:12px;color:rgba(229,229,229,0.3);margin-top:20px}
-
-/* ── COMPETITOR CARDS (mobile) ── */
-.comp-cards{display:none}
-.comp-card{background:white;padding:20px;border-top:1px solid var(--border)}
-.comp-card:first-child{border-top:none;border-radius:8px 8px 0 0}
-.comp-card:last-child{border-radius:0 0 8px 8px}
-.comp-card:only-child{border-radius:8px}
-.comp-card.our-object{background:rgba(0,102,255,0.03);border-left:2px solid var(--accent)}
-.comp-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.comp-card-addr{font-size:15px;font-weight:500;color:var(--text);text-decoration:none}
-a.comp-card-addr{text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
-.comp-card-meta{font-size:12px;color:var(--muted);margin-top:3px}
-.comp-card-price{font-family:var(--serif);font-size:18px;font-weight:400}
-.comp-card-ppm{font-size:12px;color:var(--muted)}
-.comp-card-note{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
-.comp-card-badge{font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:var(--accent);color:white;padding:2px 6px;border-radius:3px;margin-left:8px;vertical-align:middle}
-.comp-card-bargain{font-size:12px;color:#2D8A4E;margin-top:6px;font-weight:500}
-.comp-card-ad{font-size:11px;color:var(--muted);margin-top:6px}
 
 /* ── RECOMMENDATION BOX ── */
 .rec-list{display:flex;flex-direction:column;gap:0}
@@ -210,8 +224,6 @@ body.editing .hero{padding-right:500px}
   .summary-card:first-child{border-radius:8px 0 0 0}
   .summary-card:nth-child(2){border-radius:0 8px 0 0}
   .summary-card:last-child{border-radius:0 0 8px 0}
-  .comp-table-wrap{display:none}
-  .comp-cards{display:block}
   .edit-panel{width:100%;left:0}
   body.editing .report-section{margin-right:0}
   body.editing .hero{padding-right:20px}
@@ -293,42 +305,18 @@ body.editing .hero{padding-right:500px}
   <div class="summary-grid" id="summaryGrid"></div>
 </section>
 
-<!-- CHART -->
-<section class="report-section" id="chartSection" style="display:none;">
-  <div class="section-label">02 — Позиционирование</div>
+<!-- RANKING (replaces chart + competitor table) -->
+<section class="report-section" id="rankSection" style="display:none;">
+  <div class="section-label">02 — Конкуренты</div>
   <h2 class="section-title">Ваш объект среди конкурентов</h2>
-  <div class="chart-wrap">
-    <div class="chart-canvas" id="chartCanvas"></div>
-    <div class="chart-legend" id="chartLegend"></div>
-  </div>
-</section>
-
-<!-- COMPETITORS -->
-<section class="report-section" id="compSection" style="display:none;">
-  <div class="section-label">03 — Конкуренты</div>
-  <h2 class="section-title">Сводная таблица по конкурентам</h2>
-  <div class="comp-table-wrap">
-    <table class="comp-table">
-      <thead>
-        <tr>
-          <th style="width:30px;">№</th>
-          <th style="min-width:140px;">Адрес</th>
-          <th style="min-width:90px;white-space:nowrap;">Площадь / эт.</th>
-          <th style="min-width:120px;white-space:nowrap;">Цена / за м²</th>
-          <th style="min-width:80px;">Торг</th>
-          <th style="min-width:70px;">Реклама</th>
-          <th style="min-width:180px;">Комментарий</th>
-        </tr>
-      </thead>
-      <tbody id="compBody"></tbody>
-    </table>
-  </div>
-  <div class="comp-cards" id="compCards"></div>
+  <p id="rankSubtitle" style="font-size:13px;color:var(--muted);margin:-24px 0 28px;line-height:1.5;">Объекты отсортированы по цене за м² — от дорогих к дешёвым. Ширина полоски пропорциональна стоимости.</p>
+  <div id="rankList"></div>
+  <div id="rankLegend" style="display:flex;gap:16px;margin-top:16px;font-size:11px;color:var(--muted);flex-wrap:wrap;"></div>
 </section>
 
 <!-- RECOMMENDATIONS -->
 <section class="report-section" id="recSection" style="display:none;">
-  <div class="section-label">04 — Рекомендации</div>
+  <div class="section-label">03 — Рекомендации</div>
   <h2 class="section-title">Выводы и рекомендуемая стоимость</h2>
   <div class="rec-list" id="recList"></div>
   <div class="price-box" id="priceBox"></div>
@@ -412,7 +400,7 @@ const editPanel=document.getElementById('editPanel'),editBtn=document.getElement
 const backLink=document.getElementById('backLink'),pickerEl=document.getElementById('pickerContainer');
 const loadingBar=document.getElementById('loadingBar'),syncDot=document.getElementById('syncDot'),syncText=document.getElementById('syncText');
 const footerEl=document.getElementById('footerEl');
-const reportEls=['heroSection','introSection','summarySection','chartSection','compSection','recSection'];
+const reportEls=['heroSection','introSection','summarySection','rankSection','recSection'];
 
 // ─── HELPERS ───
 function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
@@ -592,57 +580,8 @@ function render(){
     <div class="summary-card"><div class="summary-num">${prices.length?fmtPrice(minPrice):'—'}</div><div class="summary-label">Мин. цена</div></div>
     <div class="summary-card" style="border-radius:0 8px 8px 0;"><div class="summary-num">${avgPpm?fmt(avgPpm)+'&nbsp;₽':'—'}</div><div class="summary-label">Средняя за м²</div></div>`;
 
-  // Chart
-  renderChart(s, comps);
-
-  // Badge helper
-  function badges(c){
-    let b='';
-    if(c.visited)b+='<span class="tag tag-visited">Осмотрено лично</span> ';
-    if(isStale(c.adDate))b+='<span class="tag tag-stale">Давно в рекламе</span> ';
-    return b;
-  }
-
-  // Table (desktop)
-  document.getElementById('compBody').innerHTML=comps.length?comps.map((c,i)=>{
-    const ppm=calcPpm(c.price,c.area);
-    const addrHtml=c.url?`<a href="${escAttr(c.url)}" target="_blank">${escHtml(c.address)}</a>`:escHtml(c.address);
-    const condTag=c.condition?(c.condition.toLowerCase().includes('треб')?'tag-needs':'tag-repair'):'';
-    const areaFloor=[c.area?c.area+' м²':'',c.rooms?c.rooms+'к':'',c.floor?'эт. '+c.floor:''].filter(Boolean).join(' · ');
-    return `<tr class="${c.ours?'our-object':''}">
-      <td style="font-weight:500;color:var(--muted);">${i+1}</td>
-      <td><div style="font-weight:500;">${addrHtml}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${escHtml(c.agent||'')}</div><div style="margin-top:4px;">${badges(c)}${c.condition?'<span class="tag '+condTag+'">'+escHtml(c.condition)+'</span>':''}</div></td>
-      <td style="font-size:12px;white-space:nowrap;">${escHtml(areaFloor)}</td>
-      <td style="white-space:nowrap;"><div style="font-weight:500;">${c.price?fmt(c.price)+' ₽':''}</div><div style="font-size:11px;color:var(--muted);">${ppm?fmt(ppm)+' ₽/м²':''}</div></td>
-      <td style="font-size:12px;">${escHtml(c.bargain)}</td>
-      <td style="font-size:11px;color:var(--muted);"><div>${escHtml(c.adDate)}</div>${c.adViews?'<div>'+escHtml(c.adViews)+' просм.</div>':''}</td>
-      <td style="font-size:12px;line-height:1.6;">${escHtml(c.comment)}</td>
-    </tr>`;
-  }).join(''):'<tr><td colspan="7" style="color:var(--muted);padding:20px 12px;">Добавьте конкурентов в панели редактирования</td></tr>';
-
-  // Cards (mobile)
-  document.getElementById('compCards').innerHTML=comps.length?comps.map((c,i)=>{
-    const ppm=calcPpm(c.price,c.area);
-    const cls=c.ours?' our-object':'';
-    const addrTag=c.url?`<a href="${escAttr(c.url)}" target="_blank" class="comp-card-addr">${escHtml(c.address)}</a>`:`<span class="comp-card-addr">${escHtml(c.address)}</span>`;
-    const ourBadge=c.ours?'<span class="comp-card-badge">Оцениваемый</span>':'';
-    const meta=[c.rooms?c.rooms+' комн.':'',c.area?c.area+' м²':'',c.floor?'этаж '+c.floor:''].filter(Boolean).join(' · ');
-    return `<div class="comp-card${cls}">
-      <div class="comp-card-top">
-        <div>${addrTag}${ourBadge}<div class="comp-card-meta">${escHtml(meta)}</div></div>
-        <span style="font-size:12px;font-weight:500;color:var(--muted);flex-shrink:0;margin-left:12px;">#${i+1}</span>
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:baseline;">
-        <span class="comp-card-price">${c.price?fmt(c.price)+' ₽':'—'}</span>
-        <span class="comp-card-ppm">${ppm?fmt(ppm)+' ₽/м²':''}</span>
-      </div>
-      ${c.bargain?'<div class="comp-card-bargain">Торг: '+escHtml(c.bargain)+'</div>':''}
-      <div style="margin-top:6px;">${badges(c)}</div>
-      ${c.adDate?'<div class="comp-card-ad">С '+escHtml(c.adDate)+(c.adViews?' · '+escHtml(c.adViews)+' просм.':'')+'</div>':''}
-      ${c.condition?'<div style="margin-top:4px;"><span class="tag '+(c.condition.toLowerCase().includes('треб')?'tag-needs':'tag-repair')+'">'+escHtml(c.condition)+'</span></div>':''}
-      ${c.comment?'<div class="comp-card-note">'+escHtml(c.comment)+'</div>':''}
-    </div>`;
-  }).join(''):'<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
+  // Ranking
+  renderRanking(s, comps);
 
   // Recommendations
   const recs=s.recommendations||[];
@@ -669,95 +608,96 @@ function render(){
 }
 
 // ─── CHART: Price/m² by competitor ───
-function renderChart(s, comps){
-  const canvas=document.getElementById('chartCanvas');
-  const legend=document.getElementById('chartLegend');
-  const points=comps.filter(c=>c.price>0&&parseNum(c.area)>0).map((c,i)=>({
-    idx:i+1, ppm:calcPpm(c.price,c.area),
-    label:c.address||'#'+(i+1), ours:!!c.ours
-  }));
+function renderRanking(s, comps){
+  const listEl=document.getElementById('rankList');
+  const legendEl=document.getElementById('rankLegend');
 
-  if(points.length<2){canvas.innerHTML='<p style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center;">Добавьте минимум 2 конкурента с ценой и площадью</p>';legend.innerHTML='';canvas.style.height='auto';return;}
+  if(!comps.length){
+    listEl.innerHTML='<p style="color:var(--muted);font-size:14px;padding:32px 0;">Добавьте конкурентов в панели редактирования</p>';
+    legendEl.innerHTML='';return;
+  }
 
+  // Sort by ppm descending
+  const sorted=comps.map((c,i)=>({...c,origIdx:i,ppm:calcPpm(c.price,c.area)})).filter(c=>c.ppm>0);
+  sorted.sort((a,b)=>b.ppm-a.ppm);
+
+  const maxPpm=sorted.length?sorted[0].ppm:1;
   const area=parseNum(s.area);
-  const recPpmLo=s.priceFrom&&area?Math.round(Math.min(s.priceFrom,s.priceTo)/area):0;
-  const recPpmHi=s.priceTo&&area?Math.round(Math.max(s.priceFrom,s.priceTo)/area):0;
+  const recLo=s.priceFrom&&area?Math.round(Math.min(s.priceFrom,s.priceTo)/area):0;
+  const recHi=s.priceTo&&area?Math.round(Math.max(s.priceFrom,s.priceTo)/area):0;
 
-  const allPpms=points.map(p=>p.ppm);
-  if(recPpmHi)allPpms.push(recPpmHi);
-  const maxP=Math.max(...allPpms)*1.12;
-  const minP=Math.min(...allPpms)*0.85;
-  const range=maxP-minP;
-  const n=points.length;
-
-  // Layout
-  const labelZone=80; // px bottom for rotated labels
-  const topPad=28; // px for value labels above bars
-  const plotH=280;
-  const totalH=plotH+topPad+labelZone;
-  canvas.style.height=totalH+'px';
-
-  let html='<svg width="100%" height="'+totalH+'" viewBox="0 0 600 '+totalH+'" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;">';
-
-  // Y-axis grid
-  const gridN=4;
-  const leftPad=0;
-  const rightPad=0;
-  const plotW=600;
-  for(let i=0;i<=gridN;i++){
-    const y=topPad+(plotH*i/gridN);
-    const val=Math.round(maxP-range*i/gridN);
-    html+=`<line x1="${leftPad}" y1="${y}" x2="${plotW}" y2="${y}" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>`;
-    html+=`<text x="${leftPad}" y="${y-4}" font-size="9" fill="#999" font-family="Inter,sans-serif">${Math.round(val/1000)}к</text>`;
+  function inZone(ppm){return recLo&&recHi&&ppm>=recLo&&ppm<=recHi;}
+  function belowZone(ppm){return recLo&&ppm<recLo;}
+  function badges(c){
+    let b='';
+    if(c.visited)b+='<span class="tag tag-visited">Осмотрено лично</span> ';
+    if(isStale(c.adDate))b+='<span class="tag tag-stale">Давно в рекламе</span> ';
+    const condTag=c.condition?(c.condition.toLowerCase().includes('треб')?'tag-needs':'tag-repair'):'';
+    if(c.condition)b+='<span class="tag '+condTag+'">'+escHtml(c.condition)+'</span> ';
+    return b;
   }
 
-  // Rec zone (horizontal band)
-  if(recPpmLo&&recPpmHi){
-    const yLo=topPad+(1-(recPpmLo-minP)/range)*plotH;
-    const yHi=topPad+(1-(recPpmHi-minP)/range)*plotH;
-    const yt=Math.min(yLo,yHi), yb=Math.max(yLo,yHi);
-    html+=`<rect x="${leftPad}" y="${yt}" width="${plotW}" height="${Math.max(yb-yt,2)}" fill="rgba(45,138,78,0.07)"/>`;
-    html+=`<line x1="${leftPad}" y1="${yt}" x2="${plotW}" y2="${yt}" stroke="rgba(45,138,78,0.35)" stroke-width="1" stroke-dasharray="4,3"/>`;
-    html+=`<line x1="${leftPad}" y1="${yb}" x2="${plotW}" y2="${yb}" stroke="rgba(45,138,78,0.35)" stroke-width="1" stroke-dasharray="4,3"/>`;
-  }
+  let html='<div class="rk-list">';
+  let hintInserted=false;
 
-  // Bars
-  const barGapRatio=0.35;
-  const totalBarSpace=plotW-leftPad-rightPad;
-  const slotW=totalBarSpace/n;
-  const barW=slotW*(1-barGapRatio);
-  const barGap=slotW*barGapRatio;
+  sorted.forEach((c,i)=>{
+    // Insert rec zone hint before first item in zone
+    if(!hintInserted&&recLo&&(inZone(c.ppm)||belowZone(c.ppm))){
+      html+=`<div class="rk-hint"><strong>Рекомендуемый диапазон: ${fmt(recLo)} – ${fmt(recHi)} ₽/м²</strong><br>Объекты ниже находятся в зоне реального спроса покупателей</div>`;
+      hintInserted=true;
+    }
 
-  points.forEach((p,i)=>{
-    const cx=leftPad+slotW*i+slotW/2;
-    const bx=cx-barW/2;
-    const valNorm=(p.ppm-minP)/range;
-    const barH=valNorm*plotH;
-    const barTop=topPad+plotH-barH;
-    const color=p.ours?'#0066FF':'rgba(0,0,0,0.07)';
-    const textColor=p.ours?'#0066FF':'#1A1A1A';
+    const cls=c.ours?'rk-ours':inZone(c.ppm)?'rk-zone':'rk-over';
+    const barW=Math.round(c.ppm/maxPpm*100);
+    const addrHtml=c.url?`<a href="${escAttr(c.url)}" target="_blank" onclick="event.stopPropagation();">${escHtml(c.address)}</a>`:escHtml(c.address);
+    const meta=[c.area?c.area+' м²':'',c.rooms?c.rooms+'к':'',c.floor?c.floor+' эт.':''].filter(Boolean).join(' · ');
 
-    // Bar rect
-    html+=`<rect x="${bx}" y="${barTop}" width="${barW}" height="${barH}" rx="3" fill="${color}"/>`;
+    // Details content
+    const details=[];
+    if(c.agent)details.push({l:'Агент',v:escHtml(c.agent)});
+    if(c.bargain)details.push({l:'Торг',v:escHtml(c.bargain)});
+    if(c.adDate)details.push({l:'В рекламе с',v:escHtml(c.adDate)});
+    if(c.adViews)details.push({l:'Просмотров',v:escHtml(c.adViews)});
+    const hasDetails=details.length>0||c.comment;
 
-    // Value above bar
-    html+=`<text x="${cx}" y="${barTop-6}" text-anchor="middle" font-size="10" font-weight="600" fill="${textColor}" font-family="Inter,sans-serif">${fmt(p.ppm)}</text>`;
-
-    // Address below (rotated 45°)
-    const labelY=topPad+plotH+8;
-    const shortLabel=p.label.length>20?p.label.substring(0,18)+'…':p.label;
-    const labelColor=p.ours?'#0066FF':'#999';
-    const labelWeight=p.ours?'600':'400';
-    html+=`<text x="${cx}" y="${labelY}" font-size="10" fill="${labelColor}" font-weight="${labelWeight}" font-family="Inter,sans-serif" transform="rotate(45,${cx},${labelY})" dominant-baseline="hanging">${escHtml(shortLabel)}</text>`;
+    html+=`<div class="rk-row ${cls}" onclick="toggleRow(this)">
+      <div class="rk-bar" style="width:${barW}%;"></div>
+      <div class="rk-content">
+        <div class="rk-num">${i+1}</div>
+        <div class="rk-info">
+          <div class="rk-addr">${addrHtml}${c.ours?' — ваш объект':''}</div>
+          <div class="rk-meta"><span>${escHtml(meta)}</span>${badges(c)}</div>
+        </div>
+        <div class="rk-vals">
+          <div class="rk-ppm">${fmt(c.ppm)} ₽/м²</div>
+          <div class="rk-price">${c.price?fmtPrice(c.price):''}</div>
+        </div>
+        ${hasDetails?'<div class="rk-chevron">▾</div>':'<div style="width:20px;"></div>'}
+      </div>
+      ${hasDetails?`<div class="rk-details">
+        ${details.length?'<div class="rk-details-grid">'+details.map(d=>'<div><div class="rk-details-label">'+d.l+'</div><div class="rk-details-val">'+d.v+'</div></div>').join('')+'</div>':''}
+        ${c.comment?'<div class="rk-details-comment">'+escHtml(c.comment)+'</div>':''}
+      </div>`:''}
+    </div>`;
   });
 
-  html+='</svg>';
-  canvas.innerHTML=html;
+  // If hint not inserted (all items above zone), add at bottom
+  if(!hintInserted&&recLo){
+    html+=`<div class="rk-hint"><strong>Рекомендуемый диапазон: ${fmt(recLo)} – ${fmt(recHi)} ₽/м²</strong><br>Ни один из текущих конкурентов не попадает в зону реального спроса</div>`;
+  }
 
-  legend.innerHTML=`
-    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent);"></div>Ваш объект</div>
-    <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--muted);"></div>Конкуренты</div>
-    ${recPpmLo?'<div class="chart-legend-item"><div style="width:16px;height:8px;background:rgba(45,138,78,0.15);border:1px dashed rgba(45,138,78,0.4);border-radius:2px;flex-shrink:0;"></div>Рекомендуемый диапазон</div>':''}`;
+  html+='</div>';
+  listEl.innerHTML=html;
+
+  legendEl.innerHTML=`
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:20px;height:12px;border-radius:2px;background:#0066FF;"></span>Ваш объект</span>
+    ${recLo?'<span style="display:flex;align-items:center;gap:5px;"><span style="width:20px;height:12px;border-radius:2px;background:rgba(45,138,78,0.1);border-left:2px solid #2D8A4E;"></span>Рек. диапазон</span>':''}
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:20px;height:12px;border-radius:2px;background:rgba(0,0,0,0.03);"></span>Выше рынка</span>`;
+}
+
+function toggleRow(row){
+  if(!row.querySelector('.rk-details'))return;
+  row.classList.toggle('open');
 }
 
 // ─── EDIT PANEL ───
