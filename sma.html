@@ -87,18 +87,31 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .intro-step-title{font-size:13px;font-weight:600;margin-bottom:4px}
 .intro-step-text{font-size:12px;color:var(--muted);line-height:1.5}
 
-/* ── CHART ── */
-.chart-wrap{background:white;border-radius:8px;padding:24px;overflow:hidden}
-.chart-desktop{position:relative;min-height:120px}
-.chart-mobile{display:none}
-.chart-legend{display:flex;gap:16px;margin-top:16px;flex-wrap:wrap;font-size:11px;color:var(--muted)}
-.chart-legend span{display:flex;align-items:center;gap:5px}
-.chart-m-row{margin-bottom:12px;position:relative}
-.chart-m-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
-.chart-m-label{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
-.chart-m-val{font-size:12px;font-weight:600;white-space:nowrap;flex-shrink:0;padding-left:8px}
-.chart-m-bar{height:24px;border-radius:4px;min-width:4px}
-.chart-m-hint{padding:10px 0;margin:4px 0 8px;font-size:12px;line-height:1.5;color:#085041;border-left:3px solid #2D8A4E;padding-left:12px}
+/* ── CHART: editorial lollipop ── */
+.ch-row{display:flex;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);position:relative}
+.ch-row:last-child{border-bottom:none}
+.ch-num{width:24px;flex-shrink:0;font-size:12px;font-weight:400;color:var(--border);font-family:var(--serif)}
+.ch-body{flex:1;min-width:0;display:flex;align-items:center}
+.ch-name{font-size:14px;font-weight:400;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
+.ch-line{flex:1;height:1px;background:var(--border);margin:0 16px;min-width:20px;position:relative}
+.ch-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);position:absolute;right:-3px;top:-3px}
+.ch-val{font-size:14px;font-weight:400;color:var(--text);white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums}
+.ch-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:300}
+.ch-right{text-align:right;flex-shrink:0;padding-left:4px}
+.ch-ours .ch-name{color:var(--text);font-weight:500}
+.ch-ours .ch-line{height:2px;background:var(--accent)}
+.ch-ours .ch-dot{width:9px;height:9px;right:-4px;top:-4px;background:var(--accent)}
+.ch-ours .ch-val{color:var(--accent);font-weight:600}
+.ch-ours .ch-sub{color:var(--accent)}
+.ch-zone{background:rgba(45,138,78,0.025)}
+.ch-zone .ch-name{color:var(--text)}
+.ch-zone .ch-dot{background:#2D8A4E}
+.ch-zone .ch-val{color:#085041}
+.ch-hint{padding:12px 0 12px 24px;border-left:2px solid #2D8A4E;margin:4px 0;font-size:13px;color:#085041;line-height:1.5;letter-spacing:-0.01em}
+.ch-hint strong{font-weight:500}
+.ch-legend{display:flex;gap:24px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);letter-spacing:0.02em}
+.ch-legend-item{display:flex;align-items:center;gap:6px}
+.ch-legend-dot{width:7px;height:7px;border-radius:50%}
 
 /* ── COMPETITOR TABLE (desktop) ── */
 .comp-table-wrap{overflow-x:auto}
@@ -209,8 +222,6 @@ body.editing .hero{padding-right:500px}
   .intro-step:first-child{border-radius:8px 0 0 0}
   .intro-step:nth-child(2){border-radius:0 8px 0 0}
   .intro-step:last-child{border-radius:0 0 8px 0}
-  .chart-desktop{display:none}
-  .chart-mobile{display:block}
   .comp-table-wrap{display:none}
   .comp-cards{display:block}
 }
@@ -288,11 +299,7 @@ body.editing .hero{padding-right:500px}
 <section class="report-section" id="chartSection" style="display:none;">
   <div class="section-label">02 — Позиционирование</div>
   <h2 class="section-title">Ваш объект среди конкурентов</h2>
-  <div class="chart-wrap">
-    <div class="chart-desktop" id="chartDesktop"></div>
-    <div class="chart-mobile" id="chartMobile"></div>
-    <div class="chart-legend" id="chartLegend"></div>
-  </div>
+  <div id="chartContainer"></div>
 </section>
 
 <!-- COMPETITORS -->
@@ -657,111 +664,58 @@ function render(){
 
 // ─── CHART: Price/m² by competitor ───
 function renderChart(s, comps){
-  const deskEl=document.getElementById('chartDesktop');
-  const mobEl=document.getElementById('chartMobile');
-  const legEl=document.getElementById('chartLegend');
+  const el=document.getElementById('chartContainer');
   const points=comps.filter(c=>c.price>0&&parseNum(c.area)>0).map((c,i)=>({
-    idx:i+1,ppm:calcPpm(c.price,c.area),label:c.address||'#'+(i+1),ours:!!c.ours,price:c.price
+    idx:i+1,ppm:calcPpm(c.price,c.area),label:c.address||'#'+(i+1),
+    ours:!!c.ours,price:c.price
   }));
 
-  if(points.length<2){deskEl.innerHTML=mobEl.innerHTML='<p style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center;">Добавьте минимум 2 конкурента с ценой и площадью</p>';legEl.innerHTML='';return;}
+  if(points.length<2){el.innerHTML='<p style="color:var(--muted);font-size:14px;padding:32px 0;">Добавьте минимум 2 конкурента с ценой и площадью</p>';return;}
 
+  const sorted=[...points].sort((a,b)=>b.ppm-a.ppm);
   const area=parseNum(s.area);
   const recLo=s.priceFrom&&area?Math.round(Math.min(s.priceFrom,s.priceTo)/area):0;
   const recHi=s.priceTo&&area?Math.round(Math.max(s.priceFrom,s.priceTo)/area):0;
-  const allPpms=points.map(p=>p.ppm);
-  if(recHi)allPpms.push(recHi);
-  const maxP=Math.max(...allPpms)*1.12;
-  const minP=Math.min(...allPpms)*0.85;
-  const range=maxP-minP;
-  const n=points.length;
 
-  // ── DESKTOP: vertical SVG bars ──
-  const labelH=Math.min(90,12*8);
-  const topPad=24,plotH=260,totalH=plotH+topPad+labelH+10;
-  let svg='<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="'+totalH+'" style="display:block;overflow:visible;">';
+  function inZone(v){return recLo&&recHi&&v>=recLo&&v<=recHi;}
+  function belowZone(v){return recLo&&v<recLo;}
 
-  // viewBox auto-scales; use percentages for x
-  const vw=Math.max(n*70,600);
-  svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+vw+' '+totalH+'" width="100%" style="display:block;">';
+  let html='';
+  let hintDone=false;
 
-  // Grid
-  for(let i=0;i<=4;i++){
-    const y=topPad+plotH*i/4;
-    const val=Math.round(maxP-range*i/4);
-    svg+='<line x1="0" y1="'+y+'" x2="'+vw+'" y2="'+y+'" stroke="rgba(0,0,0,0.06)" stroke-width="1"/>';
-    svg+='<text x="2" y="'+(y-4)+'" font-size="9" fill="#999" font-family="Inter,sans-serif">'+Math.round(val/1000)+'к</text>';
-  }
-
-  // Rec zone
-  if(recLo&&recHi){
-    const yL=topPad+(1-(recLo-minP)/range)*plotH;
-    const yH=topPad+(1-(recHi-minP)/range)*plotH;
-    const yt=Math.min(yL,yH),yb=Math.max(yL,yH);
-    svg+='<rect x="0" y="'+yt+'" width="'+vw+'" height="'+Math.max(yb-yt,2)+'" fill="rgba(45,138,78,0.07)"/>';
-    svg+='<line x1="0" y1="'+yt+'" x2="'+vw+'" y2="'+yt+'" stroke="rgba(45,138,78,0.35)" stroke-width="1" stroke-dasharray="4,3"/>';
-    svg+='<line x1="0" y1="'+yb+'" x2="'+vw+'" y2="'+yb+'" stroke="rgba(45,138,78,0.35)" stroke-width="1" stroke-dasharray="4,3"/>';
-    svg+='<text x="'+(vw-4)+'" y="'+(yt-3)+'" text-anchor="end" font-size="9" fill="#2D8A4E" font-family="Inter,sans-serif">рек. диапазон</text>';
-  }
-
-  // Bars
-  const slotW=vw/n;
-  const barW=Math.min(slotW*0.6,50);
-  points.forEach((p,i)=>{
-    const cx=slotW*i+slotW/2;
-    const bx=cx-barW/2;
-    const valN=(p.ppm-minP)/range;
-    const barH=valN*plotH;
-    const barTop=topPad+plotH-barH;
-    const col=p.ours?'#0066FF':'rgba(0,0,0,0.07)';
-    const txtCol=p.ours?'#0066FF':'#1A1A1A';
-    svg+='<rect x="'+bx+'" y="'+barTop+'" width="'+barW+'" height="'+barH+'" rx="3" fill="'+col+'"/>';
-    svg+='<text x="'+cx+'" y="'+(barTop-6)+'" text-anchor="middle" font-size="10" font-weight="600" fill="'+txtCol+'" font-family="Inter,sans-serif">'+fmt(p.ppm)+'</text>';
-    const labelY=topPad+plotH+8;
-    const short=p.label.length>16?p.label.substring(0,14)+'\u2026':p.label;
-    const lCol=p.ours?'#0066FF':'#999';
-    const lW=p.ours?'600':'400';
-    svg+='<text x="'+cx+'" y="'+labelY+'" font-size="9" fill="'+lCol+'" font-weight="'+lW+'" font-family="Inter,sans-serif" transform="rotate(40,'+cx+','+labelY+')" dominant-baseline="hanging">'+escHtml(short)+'</text>';
-  });
-  svg+='</svg>';
-  deskEl.innerHTML=svg;
-
-  // ── MOBILE: horizontal bars with address above ──
-  let mhtml='';
-  const sorted=[...points].sort((a,b)=>b.ppm-a.ppm);
-  let mHintInserted=false;
-  sorted.forEach(p=>{
-    const pct=Math.round(p.ppm/maxP*100);
-    const col=p.ours?'#0066FF':'rgba(0,0,0,0.06)';
-    const lCol=p.ours?'#0066FF':'var(--text)';
-    const vCol=p.ours?'#0066FF':'var(--muted)';
-    const lW=p.ours?'600':'400';
-    const inZone=recLo&&recHi&&p.ppm>=recLo&&p.ppm<=recHi;
-
-    // Insert rec hint before first item in zone
-    if(!mHintInserted&&recLo&&(inZone||p.ppm<recLo)){
-      mhtml+='<div class="chart-m-hint"><strong>Рек. диапазон: '+fmt(recLo)+' \u2013 '+fmt(recHi)+' \u20bd/\u043c\u00b2</strong><br>Объекты ниже \u2014 в зоне реального спроса</div>';
-      mHintInserted=true;
+  sorted.forEach((p,i)=>{
+    // Rec zone hint
+    if(!hintDone&&recLo&&(inZone(p.ppm)||belowZone(p.ppm))){
+      html+='<div class="ch-hint"><strong>Рекомендуемый диапазон: '+fmt(recLo)+' \u2013 '+fmt(recHi)+' \u20bd/\u043c\u00b2</strong><br>Объекты ниже находятся в зоне реального спроса</div>';
+      hintDone=true;
     }
 
-    const zoneMark=inZone?'border-left:3px solid #2D8A4E;padding-left:10px;':'';
-    mhtml+='<div class="chart-m-row" style="'+zoneMark+'">'
-      +'<div class="chart-m-top">'
-      +'<div class="chart-m-label" style="font-weight:'+lW+';color:'+lCol+';">'+escHtml(p.label)+(p.ours?' \u2014 \u0432\u0430\u0448 \u043e\u0431\u044a\u0435\u043a\u0442':'')+'</div>'
-      +'<div class="chart-m-val" style="color:'+vCol+';">'+fmt(p.ppm)+' \u20bd/\u043c\u00b2</div>'
+    const cls=p.ours?'ch-ours':inZone(p.ppm)?'ch-zone':'';
+    html+='<div class="ch-row '+cls+'">'
+      +'<div class="ch-num">'+(i+1)+'</div>'
+      +'<div class="ch-body">'
+      +'<div class="ch-name">'+escHtml(p.label)+(p.ours?' \u2014 ваш объект':'')+'</div>'
+      +'<div class="ch-line"><div class="ch-dot"></div></div>'
       +'</div>'
-      +'<div class="chart-m-bar" style="width:'+pct+'%;background:'+col+';"></div>'
+      +'<div class="ch-right">'
+      +'<div class="ch-val">'+fmt(p.ppm)+' \u20bd/\u043c\u00b2</div>'
+      +'<div class="ch-sub">'+fmtPrice(p.price)+'</div>'
+      +'</div>'
       +'</div>';
   });
-  if(!mHintInserted&&recLo){
-    mhtml+='<div class="chart-m-hint"><strong>Рек. диапазон: '+fmt(recLo)+' \u2013 '+fmt(recHi)+' \u20bd/\u043c\u00b2</strong></div>';
+
+  if(!hintDone&&recLo){
+    html+='<div class="ch-hint"><strong>Рек. диапазон: '+fmt(recLo)+' \u2013 '+fmt(recHi)+' \u20bd/\u043c\u00b2</strong></div>';
   }
-  mobEl.innerHTML=mhtml;
 
   // Legend
-  legEl.innerHTML='<span><span style="width:10px;height:10px;border-radius:2px;background:#0066FF;display:inline-block;"></span> Ваш объект</span>'
-    +'<span><span style="width:10px;height:10px;border-radius:2px;background:rgba(0,0,0,0.07);display:inline-block;"></span> Конкуренты</span>'
-    +(recLo?'<span><span style="width:14px;height:6px;background:rgba(45,138,78,0.15);border:1px dashed rgba(45,138,78,0.4);border-radius:1px;display:inline-block;"></span> Рек. диапазон</span>':'');
+  html+='<div class="ch-legend">'
+    +'<div class="ch-legend-item"><div class="ch-legend-dot" style="background:var(--accent);"></div>Ваш объект</div>'
+    +'<div class="ch-legend-item"><div class="ch-legend-dot" style="background:var(--muted);"></div>Конкуренты</div>'
+    +(recLo?'<div class="ch-legend-item"><div class="ch-legend-dot" style="background:#2D8A4E;"></div>В рек. диапазоне</div>':'')
+    +'</div>';
+
+  el.innerHTML=html;
 }
 
 // ─── EDIT PANEL ───
