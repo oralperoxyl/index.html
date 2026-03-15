@@ -88,10 +88,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .intro-step-text{font-size:12px;color:var(--muted);line-height:1.5}
 
 /* ── CHART: vertical lollipop ── */
-.ch-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.ch-area{position:relative;display:flex;align-items:flex-end;gap:0;min-height:280px;padding-left:40px}
-.ch-col{flex:1;display:flex;flex-direction:column;align-items:center;min-width:40px;position:relative;z-index:2}
-.ch-val{font-size:10px;font-weight:500;margin-bottom:6px;white-space:nowrap;letter-spacing:-0.02em}
+.ch-wrap{overflow:hidden}
+.ch-area{position:relative;display:flex;align-items:flex-end;gap:0;min-height:240px;padding-left:36px}
+.ch-col{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;z-index:2}
+.ch-val{font-size:9px;font-weight:500;margin-bottom:5px;white-space:nowrap;letter-spacing:-0.02em}
 .ch-ball{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .ch-stick{width:1.5px;flex-shrink:0}
 .ch-num{font-size:10px;margin-top:8px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
@@ -674,7 +674,7 @@ function renderChart(s, comps){
   const maxP=Math.max(...allPpms)*1.08;
   const minP=Math.min(...allPpms)*0.88;
   const range=maxP-minP;
-  const plotH=260;
+  const plotH=220;
 
   function pct(v){return Math.max(0,Math.min(100,((v-minP)/range)*100));}
   function inZone(v){return recLo&&recHi&&v>=recLo&&v<=recHi;}
