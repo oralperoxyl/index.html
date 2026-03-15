@@ -106,10 +106,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .ch-leg-price{font-size:11px;color:var(--muted);flex-shrink:0;text-align:right;opacity:0.6}
 
 /* ── COMPETITOR TABLE (desktop) ── */
-.comp-table-wrap{overflow-x:auto}
+.comp-table-wrap{overflow:hidden}
 .comp-table{width:100%;border-collapse:collapse}
-.comp-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:16px 16px 12px;border-bottom:1px solid var(--text)}
-.comp-table td{font-size:13px;padding:20px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6}
+.comp-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:14px 8px 10px;border-bottom:1px solid var(--text)}
+.comp-table td{font-size:12px;padding:16px 8px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55;word-wrap:break-word;overflow-wrap:break-word}
 .comp-table tr:hover{background:rgba(0,0,0,0.01)}
 .comp-table tr.our-object{background:rgba(0,102,255,0.03)}
 .comp-table a{color:var(--text);text-decoration:underline;text-decoration-color:rgba(0,0,0,0.12);text-underline-offset:3px;transition:text-decoration-color 0.2s}
@@ -320,15 +320,24 @@ body.editing .hero{padding-right:500px}
   <div class="section-label">03 — Конкуренты</div>
   <h2 class="section-title">Детали по конкурентам</h2>
   <div class="comp-table-wrap">
-    <table class="comp-table">
+    <table class="comp-table" style="table-layout:fixed;width:100%;">
+      <colgroup>
+        <col style="width:4%;">
+        <col style="width:20%;">
+        <col style="width:12%;">
+        <col style="width:14%;">
+        <col style="width:12%;">
+        <col style="width:10%;">
+        <col style="width:28%;">
+      </colgroup>
       <thead><tr>
-        <th style="width:30px;">№</th>
-        <th style="min-width:140px;">Адрес</th>
+        <th>№</th>
+        <th>Адрес</th>
         <th>Площадь / эт.</th>
-        <th style="white-space:nowrap;">Цена / за м²</th>
+        <th>Цена / за м²</th>
         <th>Торг</th>
         <th>Реклама</th>
-        <th style="min-width:180px;">Комментарий</th>
+        <th>Комментарий</th>
       </tr></thead>
       <tbody id="compBody"></tbody>
     </table>
@@ -633,7 +642,7 @@ function render(){
     return '<tr class="'+(c.ours?'our-object':'')+'">'
       +'<td style="font-weight:500;color:var(--muted);">'+(i+1)+'</td>'
       +'<td><div style="font-weight:500;">'+addrHtml+'</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">'+escHtml(c.agent||'')+'</div><div style="margin-top:4px;">'+badges(c)+'</div></td>'
-      +'<td style="font-size:12px;white-space:nowrap;">'+escHtml(meta)+'</td>'
+      +'<td style="font-size:12px;">'+escHtml(meta)+'</td>'
       +'<td style="white-space:nowrap;"><div style="font-weight:500;">'+(c.price?fmt(c.price)+' \u20bd':'')+'</div><div style="font-size:11px;color:var(--muted);">'+(ppm?fmt(ppm)+' \u20bd/\u043c\u00b2':'')+'</div></td>'
       +'<td style="font-size:12px;">'+escHtml(c.bargain)+'</td>'
       +'<td style="font-size:11px;color:var(--muted);"><div>'+escHtml(c.adDate)+'</div>'+(c.adViews?'<div>'+escHtml(c.adViews)+' \u043f\u0440\u043e\u0441\u043c.</div>':'')+'</td>'
