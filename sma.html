@@ -97,7 +97,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 
 /* ── CHART ── */
 .chart-wrap{background:white;border-radius:8px;padding:28px;position:relative;overflow:hidden}
-.chart-canvas{width:100%;height:320px;position:relative}
+.chart-canvas{width:100%;height:360px;position:relative}
 .chart-dot{position:absolute;width:10px;height:10px;border-radius:50%;background:var(--muted);border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.15);transform:translate(-50%,-50%);cursor:default;transition:transform 0.2s}
 .chart-dot:hover{transform:translate(-50%,-50%) scale(1.4);z-index:10}
 .chart-dot.ours{width:14px;height:14px;background:var(--accent);border:2px solid white;box-shadow:0 2px 8px rgba(0,102,255,0.3)}
@@ -222,7 +222,7 @@ body.editing .hero{padding-right:500px}
   .intro-step:first-child{border-radius:8px 0 0 0}
   .intro-step:nth-child(2){border-radius:0 8px 0 0}
   .intro-step:last-child{border-radius:0 0 8px 0}
-  .chart-canvas{height:260px}
+  .chart-canvas{height:340px}
 }
 @media print{
   .edit-toggle,.edit-panel,.sync-status,.loading-bar{display:none!important}
@@ -309,15 +309,21 @@ body.editing .hero{padding-right:500px}
   <div class="section-label">03 — Конкуренты</div>
   <h2 class="section-title">Сводная таблица по конкурентам</h2>
   <div class="comp-table-wrap">
-    <table class="comp-table">
+    <table class="comp-table" style="min-width:700px;table-layout:fixed;">
+      <colgroup>
+        <col style="width:30px;">
+        <col style="width:140px;">
+        <col style="width:80px;">
+        <col style="width:110px;">
+        <col style="width:90px;">
+        <col style="width:80px;">
+        <col>
+      </colgroup>
       <thead>
         <tr>
           <th>№</th>
           <th>Адрес</th>
-          <th>Площадь</th>
-          <th>Комн.</th>
-          <th>Этаж</th>
-          <th>Состояние</th>
+          <th>Площадь / эт.</th>
           <th>Цена / за м²</th>
           <th>Торг</th>
           <th>Реклама</th>
@@ -612,19 +618,17 @@ function render(){
     const ppm=calcPpm(c.price,c.area);
     const addrHtml=c.url?`<a href="${escAttr(c.url)}" target="_blank">${escHtml(c.address)}</a>`:escHtml(c.address);
     const condTag=c.condition?(c.condition.toLowerCase().includes('треб')?'tag-needs':'tag-repair'):'';
+    const areaFloor=[c.area?c.area+' м²':'',c.rooms?c.rooms+'к':'',c.floor?'эт. '+c.floor:''].filter(Boolean).join(' · ');
     return `<tr class="${c.ours?'our-object':''}">
       <td style="font-weight:500;color:var(--muted);">${i+1}</td>
-      <td><div style="font-weight:500;">${addrHtml}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${escHtml(c.agent||'')}</div><div style="margin-top:4px;">${badges(c)}</div></td>
-      <td>${escHtml(c.area)}</td>
-      <td>${escHtml(c.rooms)}</td>
-      <td>${escHtml(c.floor)}</td>
-      <td>${c.condition?'<span class="tag '+condTag+'">'+escHtml(c.condition)+'</span>':''}</td>
+      <td><div style="font-weight:500;">${addrHtml}</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">${escHtml(c.agent||'')}</div><div style="margin-top:4px;">${badges(c)}${c.condition?'<span class="tag '+condTag+'">'+escHtml(c.condition)+'</span>':''}</div></td>
+      <td style="font-size:12px;">${escHtml(areaFloor)}</td>
       <td><div style="font-weight:500;">${c.price?fmt(c.price)+' ₽':''}</div><div style="font-size:11px;color:var(--muted);">${ppm?fmt(ppm)+' ₽/м²':''}</div></td>
       <td style="font-size:12px;">${escHtml(c.bargain)}</td>
       <td style="font-size:11px;color:var(--muted);"><div>${escHtml(c.adDate)}</div>${c.adViews?'<div>'+escHtml(c.adViews)+' просм.</div>':''}</td>
-      <td style="font-size:12px;max-width:220px;">${escHtml(c.comment)}</td>
+      <td style="font-size:12px;line-height:1.6;">${escHtml(c.comment)}</td>
     </tr>`;
-  }).join(''):'<tr><td colspan="10" style="color:var(--muted);padding:20px 12px;">Добавьте конкурентов в панели редактирования</td></tr>';
+  }).join(''):'<tr><td colspan="7" style="color:var(--muted);padding:20px 12px;">Добавьте конкурентов в панели редактирования</td></tr>';
 
   // Cards (mobile)
   document.getElementById('compCards').innerHTML=comps.length?comps.map((c,i)=>{
@@ -674,70 +678,76 @@ function render(){
   }
 }
 
-// ─── CHART: Price/m² vs Area scatter ───
+// ─── CHART: Price/m² by competitor ───
 function renderChart(s, comps){
   const canvas=document.getElementById('chartCanvas');
-  const points=comps.filter(c=>c.price>0&&parseNum(c.area)>0).map(c=>({
-    area:parseNum(c.area), ppm:calcPpm(c.price,c.area),
-    label:c.address||'?', ours:!!c.ours, visited:!!c.visited
+  const legend=document.getElementById('chartLegend');
+  const points=comps.filter(c=>c.price>0&&parseNum(c.area)>0).map((c,i)=>({
+    idx:i+1, ppm:calcPpm(c.price,c.area),
+    label:c.address||'#'+(i+1), ours:!!c.ours
   }));
-  // Add recommended price point
   const recAvg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
-  const recPpm=recAvg&&s.area?Math.round(recAvg/parseNum(s.area)):0;
+  const recPpm=recAvg&&parseNum(s.area)?Math.round(recAvg/parseNum(s.area)):0;
 
-  if(points.length<2){canvas.innerHTML='<p style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center;">Добавьте минимум 2 конкурента с ценой и площадью для отображения графика</p>';document.getElementById('chartLegend').innerHTML='';return;}
+  if(points.length<2){canvas.innerHTML='<p style="color:var(--muted);font-size:13px;padding:40px 0;text-align:center;">Добавьте минимум 2 конкурента с ценой и площадью</p>';legend.innerHTML='';return;}
 
-  const areas=points.map(p=>p.area);
-  const ppms=points.map(p=>p.ppm);
-  const minA=Math.min(...areas)*0.9, maxA=Math.max(...areas)*1.1;
-  const allPpms=[...ppms];if(recPpm)allPpms.push(recPpm);
-  const minP=Math.min(...allPpms)*0.9, maxP=Math.max(...allPpms)*1.1;
-
-  const pad={top:20,right:20,bottom:36,left:60};
+  const allPpms=points.map(p=>p.ppm);
+  if(recPpm)allPpms.push(recPpm);
+  const minP=Math.min(...allPpms)*0.85, maxP=Math.max(...allPpms)*1.1;
+  const n=points.length;
+  const h=360, pad={top:16,bottom:80,left:56,right:16};
+  const plotH=h-pad.top-pad.bottom;
   let html='';
 
-  // Grid lines
-  const gridLines=5;
-  for(let i=0;i<=gridLines;i++){
-    const y=pad.top+(320-pad.top-pad.bottom)*i/gridLines;
-    const val=Math.round(maxP-(maxP-minP)*i/gridLines);
+  // Y axis grid + labels
+  const gridN=4;
+  for(let i=0;i<=gridN;i++){
+    const y=pad.top+plotH*i/gridN;
+    const val=Math.round(maxP-(maxP-minP)*i/gridN);
     html+=`<div style="position:absolute;left:${pad.left}px;right:${pad.right}px;top:${y}px;border-top:1px solid var(--border);"></div>`;
-    html+=`<div class="chart-axis-label" style="position:absolute;left:0;top:${y-7}px;width:${pad.left-8}px;text-align:right;">${Math.round(val/1000)}к</div>`;
-  }
-  // X axis labels
-  for(let i=0;i<=4;i++){
-    const x=pad.left+(100-0)*(i/4);
-    const val=Math.round(minA+(maxA-minA)*i/4);
-    const xPx=pad.left+((val-minA)/(maxA-minA))*(320*2.2-pad.left-pad.right);
-    html+=`<div class="chart-axis-label" style="position:absolute;bottom:4px;left:${pad.left+i*((100-0)/4)}%;transform:translateX(-50%);">${Math.round(minA+(maxA-minA)*i/4)} м²</div>`;
+    html+=`<div class="chart-axis-label" style="position:absolute;left:0;top:${y-7}px;width:${pad.left-8}px;text-align:right;">${fmt(Math.round(val/1000))}к</div>`;
   }
 
   // Rec zone
   if(s.priceFrom&&s.priceTo&&parseNum(s.area)){
-    const ppmFrom=Math.round(s.priceFrom/parseNum(s.area));
-    const ppmTo=Math.round(s.priceTo/parseNum(s.area));
-    const yFrom=pad.top+(1-(ppmFrom-minP)/(maxP-minP))*(320-pad.top-pad.bottom);
-    const yTo=pad.top+(1-(ppmTo-minP)/(maxP-minP))*(320-pad.top-pad.bottom);
-    const top=Math.min(yFrom,yTo),h=Math.abs(yFrom-yTo);
-    html+=`<div style="position:absolute;left:${pad.left}px;right:${pad.right}px;top:${top}px;height:${h}px;background:rgba(45,138,78,0.06);border-top:1px dashed rgba(45,138,78,0.3);border-bottom:1px dashed rgba(45,138,78,0.3);"></div>`;
+    const ppmLo=Math.round(Math.min(s.priceFrom,s.priceTo)/parseNum(s.area));
+    const ppmHi=Math.round(Math.max(s.priceFrom,s.priceTo)/parseNum(s.area));
+    const yLo=pad.top+(1-(ppmLo-minP)/(maxP-minP))*plotH;
+    const yHi=pad.top+(1-(ppmHi-minP)/(maxP-minP))*plotH;
+    const top=Math.min(yLo,yHi),bh=Math.abs(yLo-yHi)||2;
+    html+=`<div style="position:absolute;left:${pad.left}px;right:${pad.right}px;top:${top}px;height:${bh}px;background:rgba(45,138,78,0.07);border-top:1px dashed rgba(45,138,78,0.35);border-bottom:1px dashed rgba(45,138,78,0.35);"></div>`;
+    html+=`<div style="position:absolute;right:${pad.right+4}px;top:${top-14}px;font-size:9px;color:#2D8A4E;letter-spacing:0.04em;">Рекомендуемый диапазон</div>`;
   }
 
-  // Dots
+  // Bars + dots + labels
+  const barW=Math.min(36, (100/n)*0.6);
+  const gap=(100-barW*n)/(n+1);
   points.forEach((p,i)=>{
-    const x=pad.left+((p.area-minA)/(maxA-minA))*(canvas.offsetWidth||600-pad.left-pad.right);
-    const y=pad.top+(1-(p.ppm-minP)/(maxP-minP))*(320-pad.top-pad.bottom);
-    const cls=p.ours?'chart-dot ours':'chart-dot';
-    const xPct=((p.area-minA)/(maxA-minA))*100;
-    html+=`<div class="${cls}" style="left:calc(${pad.left}px + ${xPct}% * (1 - ${(pad.left+pad.right)/600}));top:${y}px;" onmouseenter="showTip(this,'${escAttr(p.label)}: ${fmt(p.ppm)} ₽/м²')" onmouseleave="hideTip(this)"></div>`;
+    const xPct=gap*(i+1)+barW*i+barW/2;
+    const yVal=pad.top+(1-(p.ppm-minP)/(maxP-minP))*plotH;
+    const barH=h-pad.bottom-yVal;
+    const color=p.ours?'var(--accent)':'rgba(0,0,0,0.08)';
+    const dotColor=p.ours?'var(--accent)':'var(--muted)';
+    const dotSize=p.ours?12:9;
+
+    // Bar
+    html+=`<div style="position:absolute;left:${xPct}%;bottom:${pad.bottom}px;width:${barW}%;height:${Math.max(barH,2)}px;background:${color};border-radius:3px 3px 0 0;transform:translateX(-50%);"></div>`;
+    // Dot
+    html+=`<div style="position:absolute;left:${xPct}%;top:${yVal}px;width:${dotSize}px;height:${dotSize}px;border-radius:50%;background:${dotColor};border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.15);transform:translate(-50%,-50%);z-index:5;"></div>`;
+    // Value label above dot
+    html+=`<div style="position:absolute;left:${xPct}%;top:${yVal-20}px;transform:translateX(-50%);font-size:10px;font-weight:600;color:${p.ours?'var(--accent)':'var(--text)'};white-space:nowrap;text-align:center;">${fmt(p.ppm)}</div>`;
+    // Address label below (rotated on many items)
+    const labelStyle=n>6?'writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);text-align:right;max-height:65px;':'transform:translateX(-50%);text-align:center;max-width:80px;';
+    const shortLabel=p.label.length>18?p.label.substring(0,16)+'…':p.label;
+    html+=`<div style="position:absolute;left:${xPct}%;bottom:4px;${labelStyle}font-size:10px;color:${p.ours?'var(--accent)':'var(--muted)'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2;${p.ours?'font-weight:600;':''}">${escHtml(shortLabel)}</div>`;
   });
 
   canvas.innerHTML=html;
 
-  // Legend
-  document.getElementById('chartLegend').innerHTML=`
+  legend.innerHTML=`
     <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--accent);"></div>Ваш объект</div>
     <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--muted);"></div>Конкуренты</div>
-    ${s.priceFrom?'<div class="chart-legend-item"><div class="chart-legend-dot square" style="background:rgba(45,138,78,0.3);"></div>Рекомендуемый диапазон</div>':''}`;
+    ${s.priceFrom?'<div class="chart-legend-item"><div style="width:16px;height:8px;background:rgba(45,138,78,0.15);border:1px dashed rgba(45,138,78,0.4);border-radius:2px;flex-shrink:0;"></div>Рекомендуемый диапазон</div>':''}`;
 }
 
 function showTip(el,text){
