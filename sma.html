@@ -87,31 +87,23 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .intro-step-title{font-size:13px;font-weight:600;margin-bottom:4px}
 .intro-step-text{font-size:12px;color:var(--muted);line-height:1.5}
 
-/* ── CHART: editorial lollipop ── */
-.ch-row{display:flex;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);position:relative}
-.ch-row:last-child{border-bottom:none}
-.ch-num{width:24px;flex-shrink:0;font-size:12px;font-weight:400;color:var(--border);font-family:var(--serif)}
-.ch-body{flex:1;min-width:0;display:flex;align-items:center}
-.ch-name{font-size:14px;font-weight:400;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:1;min-width:0}
-.ch-line{flex:1;height:1px;background:var(--border);margin:0 16px;min-width:20px;position:relative}
-.ch-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);position:absolute;right:-3px;top:-3px}
-.ch-val{font-size:14px;font-weight:400;color:var(--text);white-space:nowrap;flex-shrink:0;font-variant-numeric:tabular-nums}
-.ch-sub{font-size:11px;color:var(--muted);margin-top:1px;font-weight:300}
-.ch-right{text-align:right;flex-shrink:0;padding-left:4px}
-.ch-ours .ch-name{color:var(--text);font-weight:500}
-.ch-ours .ch-line{height:2px;background:var(--accent)}
-.ch-ours .ch-dot{width:9px;height:9px;right:-4px;top:-4px;background:var(--accent)}
-.ch-ours .ch-val{color:var(--accent);font-weight:600}
-.ch-ours .ch-sub{color:var(--accent)}
-.ch-zone{background:rgba(45,138,78,0.025)}
-.ch-zone .ch-name{color:var(--text)}
-.ch-zone .ch-dot{background:#2D8A4E}
-.ch-zone .ch-val{color:#085041}
-.ch-hint{padding:12px 0 12px 24px;border-left:2px solid #2D8A4E;margin:4px 0;font-size:13px;color:#085041;line-height:1.5;letter-spacing:-0.01em}
-.ch-hint strong{font-weight:500}
-.ch-legend{display:flex;gap:24px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);letter-spacing:0.02em}
-.ch-legend-item{display:flex;align-items:center;gap:6px}
-.ch-legend-dot{width:7px;height:7px;border-radius:50%}
+/* ── CHART: vertical lollipop ── */
+.ch-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.ch-area{position:relative;display:flex;align-items:flex-end;gap:0;min-height:280px;padding-left:40px}
+.ch-col{flex:1;display:flex;flex-direction:column;align-items:center;min-width:40px;position:relative;z-index:2}
+.ch-val{font-size:10px;font-weight:500;margin-bottom:6px;white-space:nowrap;letter-spacing:-0.02em}
+.ch-ball{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.ch-stick{width:1.5px;flex-shrink:0}
+.ch-num{font-size:10px;margin-top:8px;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ch-grid{position:absolute;left:0;right:0;border-top:1px solid rgba(0,0,0,0.04);z-index:0}
+.ch-grid-label{position:absolute;right:100%;padding-right:6px;font-size:9px;color:rgba(0,0,0,0.18);white-space:nowrap;transform:translateY(-50%)}
+.ch-zone{position:absolute;left:0;right:0;z-index:1;background:rgba(45,138,78,0.04);border-top:1px dashed rgba(45,138,78,0.35);border-bottom:1px dashed rgba(45,138,78,0.35)}
+.ch-zone-label{position:absolute;right:4px;top:-15px;font-size:9px;color:#0F6E56;font-weight:500;white-space:nowrap}
+.ch-legend{margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:5px}
+.ch-leg-row{display:flex;align-items:center;gap:8px;font-size:12px;line-height:1.4}
+.ch-leg-num{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0}
+.ch-leg-addr{color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ch-leg-price{font-size:11px;color:var(--muted);flex-shrink:0;text-align:right;opacity:0.6}
 
 /* ── COMPETITOR TABLE (desktop) ── */
 .comp-table-wrap{overflow-x:auto}
@@ -667,7 +659,7 @@ function renderChart(s, comps){
   const el=document.getElementById('chartContainer');
   const points=comps.filter(c=>c.price>0&&parseNum(c.area)>0).map((c,i)=>({
     idx:i+1,ppm:calcPpm(c.price,c.area),label:c.address||'#'+(i+1),
-    ours:!!c.ours,price:c.price
+    ours:!!c.ours,price:c.price,area:c.area
   }));
 
   if(points.length<2){el.innerHTML='<p style="color:var(--muted);font-size:14px;padding:32px 0;">Добавьте минимум 2 конкурента с ценой и площадью</p>';return;}
@@ -677,45 +669,76 @@ function renderChart(s, comps){
   const recLo=s.priceFrom&&area?Math.round(Math.min(s.priceFrom,s.priceTo)/area):0;
   const recHi=s.priceTo&&area?Math.round(Math.max(s.priceFrom,s.priceTo)/area):0;
 
+  const allPpms=sorted.map(p=>p.ppm);
+  if(recLo)allPpms.push(recLo);
+  const maxP=Math.max(...allPpms)*1.08;
+  const minP=Math.min(...allPpms)*0.88;
+  const range=maxP-minP;
+  const plotH=260;
+
+  function pct(v){return Math.max(0,Math.min(100,((v-minP)/range)*100));}
   function inZone(v){return recLo&&recHi&&v>=recLo&&v<=recHi;}
-  function belowZone(v){return recLo&&v<recLo;}
 
-  let html='';
-  let hintDone=false;
+  // Grid lines (5)
+  let gridHtml='';
+  for(let i=0;i<=4;i++){
+    const b=i*25;
+    const val=Math.round(minP+(range*i/4));
+    gridHtml+='<div class="ch-grid" style="bottom:'+b+'%;"><div class="ch-grid-label">'+Math.round(val/1000)+'\u043a</div></div>';
+  }
 
+  // Rec zone
+  let zoneHtml='';
+  if(recLo&&recHi){
+    const zBot=pct(recLo);
+    const zTop=pct(recHi);
+    zoneHtml='<div class="ch-zone" style="bottom:'+zBot+'%;height:'+(zTop-zBot)+'%;"><div class="ch-zone-label">\u0440\u0435\u043a. '+Math.round(recLo/1000)+'\u2013'+Math.round(recHi/1000)+'\u043a \u20bd/\u043c\u00b2</div></div>';
+  }
+
+  // Lollipop columns
+  let colsHtml='';
   sorted.forEach((p,i)=>{
-    // Rec zone hint
-    if(!hintDone&&recLo&&(inZone(p.ppm)||belowZone(p.ppm))){
-      html+='<div class="ch-hint"><strong>Рекомендуемый диапазон: '+fmt(recLo)+' \u2013 '+fmt(recHi)+' \u20bd/\u043c\u00b2</strong><br>Объекты ниже находятся в зоне реального спроса</div>';
-      hintDone=true;
-    }
+    const h=pct(p.ppm);
+    const stickH=Math.round(h/100*plotH);
+    const isOurs=p.ours;
+    const isZone=inZone(p.ppm);
+    const valK=Math.round(p.ppm/1000);
 
-    const cls=p.ours?'ch-ours':inZone(p.ppm)?'ch-zone':'';
-    html+='<div class="ch-row '+cls+'">'
-      +'<div class="ch-num">'+(i+1)+'</div>'
-      +'<div class="ch-body">'
-      +'<div class="ch-name">'+escHtml(p.label)+(p.ours?' \u2014 ваш объект':'')+'</div>'
-      +'<div class="ch-line"><div class="ch-dot"></div></div>'
-      +'</div>'
-      +'<div class="ch-right">'
-      +'<div class="ch-val">'+fmt(p.ppm)+' \u20bd/\u043c\u00b2</div>'
-      +'<div class="ch-sub">'+fmtPrice(p.price)+'</div>'
-      +'</div>'
+    // Colors
+    let valCol='rgba(0,0,0,0.35)',ballCol='rgba(0,0,0,0.15)',stickCol='rgba(0,0,0,0.08)',numBg='rgba(0,0,0,0.04)',numCol='rgba(0,0,0,0.3)';
+    let ballSize=10,stickW=1.5,valW='500',shadow='';
+    if(isOurs){valCol='#0066FF';ballCol='#0066FF';stickCol='#0066FF';numBg='#0066FF';numCol='white';ballSize=14;stickW=2;valW='600';shadow='box-shadow:0 2px 8px rgba(0,102,255,0.3);';}
+    else if(isZone){valCol='#085041';ballCol='#2D8A4E';stickCol='rgba(45,138,78,0.2)';numBg='rgba(45,138,78,0.08)';numCol='#0F6E56';}
+
+    colsHtml+='<div class="ch-col">'
+      +'<div class="ch-val" style="color:'+valCol+';font-weight:'+valW+';">'+valK+'\u043a</div>'
+      +'<div class="ch-ball" style="background:'+ballCol+';width:'+ballSize+'px;height:'+ballSize+'px;'+shadow+'"></div>'
+      +'<div class="ch-stick" style="height:'+stickH+'px;background:'+stickCol+';width:'+stickW+'px;"></div>'
+      +'<div class="ch-num" style="background:'+numBg+';color:'+numCol+';">'+(i+1)+'</div>'
       +'</div>';
   });
 
-  if(!hintDone&&recLo){
-    html+='<div class="ch-hint"><strong>Рек. диапазон: '+fmt(recLo)+' \u2013 '+fmt(recHi)+' \u20bd/\u043c\u00b2</strong></div>';
-  }
+  // Legend rows
+  let legHtml='';
+  sorted.forEach((p,i)=>{
+    const isOurs=p.ours;
+    const isZone=inZone(p.ppm);
+    let numBg='rgba(0,0,0,0.04)',numCol='rgba(0,0,0,0.3)',addrStyle='',priceStyle='';
+    if(isOurs){numBg='#0066FF';numCol='white';addrStyle='color:#0066FF;font-weight:500;';priceStyle='color:#0066FF;';}
+    else if(isZone){numBg='rgba(45,138,78,0.08)';numCol='#0F6E56';}
 
-  // Legend
-  html+='<div class="ch-legend">'
-    +'<div class="ch-legend-item"><div class="ch-legend-dot" style="background:var(--accent);"></div>Ваш объект</div>'
-    +'<div class="ch-legend-item"><div class="ch-legend-dot" style="background:var(--muted);"></div>Конкуренты</div>'
-    +(recLo?'<div class="ch-legend-item"><div class="ch-legend-dot" style="background:#2D8A4E;"></div>В рек. диапазоне</div>':'')
-    +'</div>';
+    legHtml+='<div class="ch-leg-row">'
+      +'<div class="ch-leg-num" style="background:'+numBg+';color:'+numCol+';">'+(i+1)+'</div>'
+      +'<div class="ch-leg-addr" style="'+addrStyle+'">'+escHtml(p.label)+(isOurs?' \u2014 \u0432\u0430\u0448 \u043e\u0431\u044a\u0435\u043a\u0442':'')+'</div>'
+      +'<div class="ch-leg-price" style="'+priceStyle+'">'+fmtPrice(p.price)+' \u00b7 '+p.area+' \u043c\u00b2</div>'
+      +'</div>';
+  });
 
-  el.innerHTML=html;
+  el.innerHTML='<div class="ch-wrap"><div style="position:relative;padding-left:40px;">'
+    +'<div class="ch-area" style="height:'+plotH+'px;">'
+    +gridHtml+zoneHtml+colsHtml
+    +'</div></div></div>'
+    +'<div class="ch-legend">'+legHtml+'</div>';
 }
 
 // ─── EDIT PANEL ───
