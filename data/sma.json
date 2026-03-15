@@ -214,6 +214,23 @@
           "comment": "Прямая продажа, без обременений. ",
           "ours": false,
           "visited": false
+        },
+        {
+          "address": "",
+          "agent": "",
+          "area": "",
+          "rooms": "",
+          "floor": "",
+          "condition": "",
+          "price": 0,
+          "ppm": 0,
+          "bargain": "",
+          "adDate": "",
+          "adViews": "",
+          "url": "https://www.cian.ru/sale/flat/327758196/",
+          "comment": "",
+          "ours": false,
+          "visited": false
         }
       ],
       "recommendations": [
