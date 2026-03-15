@@ -55,21 +55,21 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .hero-meta-value{font-size:15px;color:rgba(229,229,229,0.75)}
 
 /* ── SECTIONS ── */
-.report-section{max-width:900px;margin:0 auto;padding:64px 40px;border-bottom:1px solid var(--border)}
+.report-section{max-width:900px;margin:0 auto;padding:80px 40px;border-bottom:1px solid var(--border)}
 .report-section:last-of-type{border-bottom:none}
-.section-label{font-size:11px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-.section-title{font-family:var(--serif);font-size:clamp(24px,3.5vw,36px);font-weight:400;line-height:1.2;margin-bottom:36px}
+.section-label{font-size:11px;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.section-title{font-family:var(--serif);font-size:clamp(26px,4vw,42px);font-weight:400;line-height:1.15;letter-spacing:-0.01em;margin-bottom:40px}
 
 /* ── SUMMARY CARDS ── */
 .summary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:2px;margin-bottom:32px}
-.summary-card{background:white;padding:24px}
+.summary-card{background:white;padding:28px 24px}
 .summary-card:first-child{border-radius:8px 0 0 8px}
 .summary-card:last-child{border-radius:0 8px 8px 0}
-.summary-num{font-family:var(--serif);font-size:32px;font-weight:400;line-height:1;margin-bottom:6px}
-.summary-label{font-size:12px;color:var(--muted);letter-spacing:0.04em}
+.summary-num{font-family:var(--serif);font-size:32px;font-weight:400;line-height:1;margin-bottom:8px}
+.summary-label{font-size:11px;color:var(--muted);letter-spacing:0.03em;font-weight:300}
 
 /* ── TAGS ── */
-.tag{font-size:10px;font-weight:500;letter-spacing:0.03em;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+.tag{font-size:10px;font-weight:500;letter-spacing:0.03em;padding:3px 8px;border-radius:3px;display:inline-block;white-space:nowrap}
 .tag-repair{background:#E8F5E9;color:#2D8A4E}
 .tag-needs{background:#FFF8E1;color:#B8860B}
 .tag-stale{background:#FBEAEA;color:#C0392B}
@@ -108,18 +108,44 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 /* ── COMPETITOR TABLE (desktop) ── */
 .comp-table-wrap{overflow-x:auto}
 .comp-table{width:100%;border-collapse:collapse}
-.comp-table th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:12px 12px;border-bottom:2px solid var(--text)}
-.comp-table td{font-size:13px;padding:14px 12px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
-.comp-table tr:hover{background:rgba(0,0,0,0.015)}
-.comp-table tr.our-object{background:rgba(0,102,255,0.04)}
-.comp-table a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
+.comp-table th{font-size:10px;font-weight:400;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:16px 16px 12px;border-bottom:1px solid var(--text)}
+.comp-table td{font-size:13px;padding:20px 16px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.6}
+.comp-table tr:hover{background:rgba(0,0,0,0.01)}
+.comp-table tr.our-object{background:rgba(0,102,255,0.03)}
+.comp-table a{color:var(--text);text-decoration:underline;text-decoration-color:rgba(0,0,0,0.12);text-underline-offset:3px;transition:text-decoration-color 0.2s}
+.comp-table a:hover{text-decoration-color:var(--text)}
 
 /* ── COMPETITOR CARDS (mobile) ── */
 .comp-cards{display:none}
-.comp-card{background:white;padding:16px;border-top:1px solid var(--border)}
-.comp-card:first-child{border-top:none;border-radius:8px 8px 0 0}
-.comp-card:last-child{border-radius:0 0 8px 8px}
-.comp-card.our-object{background:rgba(0,102,255,0.03);border-left:2px solid var(--accent)}
+.comp-card{padding:24px 0;border-bottom:1px solid var(--border)}
+.comp-card:last-child{border-bottom:none}
+.comp-card.our-object{margin:0 -20px;padding:24px 20px;background:rgba(0,102,255,0.02);border-left:3px solid var(--accent)}
+.comp-card-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.comp-card-addr{font-size:16px;font-weight:500;color:var(--text);text-decoration:none;line-height:1.3}
+a.comp-card-addr{text-decoration:underline;text-decoration-color:rgba(0,0,0,0.1);text-underline-offset:3px}
+.comp-card-num{font-family:var(--serif);font-size:14px;color:rgba(0,0,0,0.12);flex-shrink:0;margin-left:16px}
+.comp-card-meta{font-size:12px;color:var(--muted);margin-bottom:12px;font-weight:300;letter-spacing:0.01em}
+.comp-card-prices{display:flex;align-items:baseline;gap:12px;margin-bottom:10px}
+.comp-card-price{font-family:var(--serif);font-size:20px;font-weight:400;letter-spacing:-0.02em}
+.comp-card-ppm{font-size:12px;color:var(--muted);font-weight:300}
+.comp-card-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.comp-card-bargain{font-size:13px;color:#2D8A4E;margin-bottom:6px;font-weight:400}
+.comp-card-ad{font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:300}
+.comp-card-comment{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+
+/* ── CTA BLOCK ── */
+.cta-section{max-width:900px;margin:0 auto;padding:80px 40px}
+.cta-inner{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.cta-text{font-size:15px;line-height:1.8;color:var(--muted);font-weight:300}
+.cta-text p{margin-bottom:12px}
+.cta-text p:last-child{margin-bottom:0}
+.cta-quote{font-family:var(--serif);font-size:clamp(20px,3vw,28px);font-weight:400;line-height:1.35;letter-spacing:-0.01em;color:var(--text);margin-bottom:24px}
+.cta-contact{display:flex;flex-direction:column;gap:12px}
+.cta-link{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);padding:16px 20px;border:1px solid var(--border);border-radius:8px;transition:all 0.2s;font-size:14px}
+.cta-link:hover{border-color:var(--text);background:white}
+.cta-link-icon{font-size:18px;width:24px;text-align:center;flex-shrink:0}
+.cta-link-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;font-weight:400}
+.cta-link-value{font-weight:500}
 
 /* ── HERO DATE ── */
 .hero-date{font-size:12px;color:rgba(229,229,229,0.3);margin-top:20px}
@@ -198,7 +224,7 @@ body.editing .hero{padding-right:500px}
 @media(max-width:768px){
   .site-header{padding:0 20px}
   .hero{padding:60px 20px 48px}
-  .report-section{padding:48px 20px}
+  .report-section{padding:60px 20px}
   .hero-meta{gap:24px}
   .summary-grid{grid-template-columns:1fr 1fr}
   .summary-card:first-child{border-radius:8px 0 0 0}
@@ -216,6 +242,8 @@ body.editing .hero{padding-right:500px}
   .intro-step:last-child{border-radius:0 0 8px 0}
   .comp-table-wrap{display:none}
   .comp-cards{display:block}
+  .cta-inner{grid-template-columns:1fr;gap:32px}
+  .cta-section{padding:60px 20px}
 }
 @media print{
   .edit-toggle,.edit-panel,.sync-status,.loading-bar{display:none!important}
@@ -323,15 +351,40 @@ body.editing .hero{padding-right:500px}
   <div class="price-box" id="priceBox"></div>
 </section>
 
+<!-- CTA -->
+<section class="cta-section" id="ctaSection" style="display:none;">
+  <div class="cta-inner">
+    <div>
+      <div class="cta-quote">Данные собраны.<br>Следующий шаг — стратегия.</div>
+      <div class="cta-text">
+        <p>Этот анализ — отправная точка. На основе собранных данных я подготовлю индивидуальный план продажи: ценообразование, подготовку объекта, рекламную стратегию и переговорную тактику.</p>
+        <p>Каждый объект уникален — обсудим детали лично.</p>
+      </div>
+    </div>
+    <div class="cta-contact">
+      <a class="cta-link" href="https://t.me/semengme" target="_blank">
+        <div class="cta-link-icon">→</div>
+        <div><div class="cta-link-label">Telegram</div><div class="cta-link-value">t.me/semengme</div></div>
+      </a>
+      <a class="cta-link" href="tel:+79118461965">
+        <div class="cta-link-icon">→</div>
+        <div><div class="cta-link-label">Телефон</div><div class="cta-link-value">+7 911 846-19-65</div></div>
+      </a>
+      <a class="cta-link" href="https://fastbroker21.ru" target="_blank">
+        <div class="cta-link-icon">→</div>
+        <div><div class="cta-link-label">Сайт</div><div class="cta-link-value">fastbroker21.ru</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
 <!-- PICKER -->
 <div id="pickerContainer" style="display:none;"></div>
 
 <!-- FOOTER -->
 <footer class="report-footer" id="footerEl" style="display:none;">
-  <p class="footer-name">Семён Гончаров · Агент по недвижимости</p>
+  <p class="footer-name">Семён Гончаров</p>
   <p class="footer-contact">
-    <a href="tel:+79118461965">+7 911 846-19-65</a> · 
-    <a href="https://t.me/semengme">t.me/semengme</a> · 
     <a href="https://fastbroker21.ru">fastbroker21.ru</a>
   </p>
 </footer>
@@ -401,7 +454,7 @@ const editPanel=document.getElementById('editPanel'),editBtn=document.getElement
 const backLink=document.getElementById('backLink'),pickerEl=document.getElementById('pickerContainer');
 const loadingBar=document.getElementById('loadingBar'),syncDot=document.getElementById('syncDot'),syncText=document.getElementById('syncText');
 const footerEl=document.getElementById('footerEl');
-const reportEls=['heroSection','introSection','summarySection','chartSection','compSection','recSection'];
+const reportEls=['heroSection','introSection','summarySection','chartSection','compSection','recSection','ctaSection'];
 
 // ─── HELPERS ───
 function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
@@ -610,18 +663,19 @@ function render(){
       +'</tr>';
   }).join(''):'<tr><td colspan="7" style="color:var(--muted);padding:20px 12px;">Добавьте конкурентов в панели редактирования</td></tr>';
 
-  // Cards (mobile)
+  // Cards (mobile) — editorial
   document.getElementById('compCards').innerHTML=comps.length?comps.map((c,i)=>{
     const ppm=calcPpm(c.price,c.area);
-    const addrTag=c.url?'<a href="'+escAttr(c.url)+'" target="_blank" style="font-size:15px;font-weight:500;color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px;">'+escHtml(c.address)+'</a>':'<span style="font-size:15px;font-weight:500;">'+escHtml(c.address)+'</span>';
-    const meta=[c.rooms?c.rooms+' комн.':'',c.area?c.area+' м\u00b2':'',c.floor?c.floor+' \u044d\u0442.':''].filter(Boolean).join(' \u00b7 ');
+    const addrTag=c.url?'<a href="'+escAttr(c.url)+'" target="_blank" class="comp-card-addr">'+escHtml(c.address)+'</a>':'<span class="comp-card-addr">'+escHtml(c.address)+'</span>';
+    const meta=[c.rooms?c.rooms+' комн.':'',c.area?c.area+' м\u00b2':'',c.floor?c.floor+' эт.':''].filter(Boolean).join(' \u00b7 ');
     return '<div class="comp-card'+(c.ours?' our-object':'')+'">'
-      +'<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;"><div>'+addrTag+(c.ours?'<span style="font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:var(--accent);color:white;padding:2px 6px;border-radius:3px;margin-left:8px;vertical-align:middle;">Оцениваемый</span>':'')+'<div style="font-size:12px;color:var(--muted);margin-top:3px;">'+escHtml(meta)+'</div></div><span style="font-size:12px;font-weight:500;color:var(--muted);flex-shrink:0;margin-left:12px;">#'+(i+1)+'</span></div>'
-      +'<div style="display:flex;justify-content:space-between;align-items:baseline;"><span style="font-family:var(--serif);font-size:18px;">'+(c.price?fmt(c.price)+' \u20bd':'\u2014')+'</span><span style="font-size:12px;color:var(--muted);">'+(ppm?fmt(ppm)+' \u20bd/\u043c\u00b2':'')+'</span></div>'
-      +(c.bargain?'<div style="font-size:12px;color:#2D8A4E;margin-top:6px;font-weight:500;">Торг: '+escHtml(c.bargain)+'</div>':'')
-      +'<div style="margin-top:6px;">'+badges(c)+'</div>'
-      +(c.adDate?'<div style="font-size:11px;color:var(--muted);margin-top:6px;">С '+escHtml(c.adDate)+(c.adViews?' \u00b7 '+escHtml(c.adViews)+' просм.':'')+'</div>':'')
-      +(c.comment?'<div style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;">'+escHtml(c.comment)+'</div>':'')
+      +'<div class="comp-card-head"><div>'+addrTag+(c.ours?'<span class="tag" style="background:var(--accent);color:white;margin-left:8px;vertical-align:middle;">Ваш объект</span>':'')+'</div><div class="comp-card-num">'+(i+1)+'</div></div>'
+      +'<div class="comp-card-meta">'+escHtml(meta)+'</div>'
+      +'<div class="comp-card-prices"><span class="comp-card-price">'+(c.price?fmt(c.price)+' \u20bd':'\u2014')+'</span><span class="comp-card-ppm">'+(ppm?fmt(ppm)+' \u20bd/м\u00b2':'')+'</span></div>'
+      +(badges(c)?'<div class="comp-card-badges">'+badges(c)+'</div>':'')
+      +(c.bargain?'<div class="comp-card-bargain">Торг: '+escHtml(c.bargain)+'</div>':'')
+      +(c.adDate?'<div class="comp-card-ad">В рекламе с '+escHtml(c.adDate)+(c.adViews?' \u00b7 '+escHtml(c.adViews)+' просм.':'')+'</div>':'')
+      +(c.comment?'<div class="comp-card-comment">'+escHtml(c.comment)+'</div>':'')
       +'</div>';
   }).join(''):'<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
 
