@@ -52,15 +52,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .sc-tab{flex:1;padding:20px 8px;text-align:center;font-size:14px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;line-height:1.3}
 .sc-tab:hover{color:var(--text)}.sc-tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
 .sc-tab-sub{font-size:11px;color:var(--muted);margin-top:4px;font-weight:300}
-.sc-body{padding:48px 0 0}
+.sc-body{padding:48px 0 0;animation:fadeUp 0.4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── SCENARIO ALERTS ── */
-.sc-alert{font-size:15px;line-height:1.7;border-radius:0;padding:24px 0;margin-bottom:40px;border-bottom:1px solid var(--border);font-weight:300}
+.sc-alert{font-size:14px;line-height:1.7;border-radius:8px;padding:20px 24px;margin-bottom:40px;font-weight:300}
 .sc-alert strong{font-weight:500}
 .sc-alert a{text-underline-offset:3px}
-.sc-alert-warn{color:#791F1F}.sc-alert-warn a{color:#791F1F}
-.sc-alert-rec{color:#085041;padding-left:24px;border-left:2px solid #2D8A4E}
-.sc-alert-info{color:#0C447C}.sc-alert-info a{color:#0C447C}
+.sc-alert-warn{color:#791F1F;background:#FCEBEB}.sc-alert-warn a{color:#791F1F}
+.sc-alert-rec{color:#085041;background:rgba(45,138,78,0.06);border-left:3px solid #2D8A4E;border-radius:0 8px 8px 0}.sc-alert-rec a{color:#085041}
+.sc-alert-info{color:#0C447C;background:#E6F1FB}.sc-alert-info a{color:#0C447C}
 
 /* ── SCENARIO METRICS ── */
 .sc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:40px}
@@ -87,14 +88,17 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 /* ── CALCULATOR ── */
 .calc{background:white;border-radius:8px;padding:32px;margin:40px 0 0}
 .calc-title{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
-.calc-input-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.calc-input-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;margin-bottom:12px;border-bottom:1px solid var(--border)}
 .calc-input-label{font-size:14px;color:var(--muted);font-weight:300}
 .calc-input{font-family:var(--serif);font-size:24px;font-weight:400;text-align:right;border:none;background:transparent;color:var(--text);width:200px;padding:0;outline:none;letter-spacing:-0.02em}
 .calc-input::placeholder{color:var(--border)}
+.calc-input-sm{font-family:var(--sans);font-size:14px;font-weight:400;text-align:right;border:none;background:transparent;color:var(--text);width:160px;padding:4px 0;outline:none;border-bottom:1px dashed var(--border)}
+.calc-input-sm::placeholder{color:rgba(0,0,0,0.15)}
+.calc-input-sm:focus{border-bottom-color:var(--text)}
 .calc-currency{font-size:14px;color:var(--muted);margin-left:4px}
 .calc-toggle{display:flex;align-items:center;gap:12px;margin-bottom:20px;font-size:13px;color:var(--muted);font-weight:300}
 .calc-switch{position:relative;width:36px;height:20px;background:rgba(0,0,0,0.1);border-radius:10px;cursor:pointer;transition:background 0.2s;flex-shrink:0}
-.calc-switch.on{background:#2D8A4E}
+.calc-switch.on{background:var(--dark)}
 .calc-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:white;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
 .calc-switch.on::after{left:18px}
 .calc-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;font-size:14px}
@@ -223,7 +227,7 @@ body.editing .s{margin-right:460px}body.editing .hero{padding-right:500px}
 <div class="edit-panel" id="editPanel"><div class="edit-panel-inner"><h3>Редактор стратегии</h3><div class="edit-group"><div class="edit-group-title">Объект</div><div class="edit-row"><label class="edit-label">Адрес</label><input class="edit-input" id="e-address" onchange="sav()"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Площадь, м²</label><input class="edit-input" id="e-area" type="number" step="0.1" onchange="sav()"></div><div class="edit-row"><label class="edit-label">Комнат</label><input class="edit-input" id="e-rooms" type="number" onchange="sav()"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Этаж</label><input class="edit-input" id="e-floor" onchange="sav()"></div><div class="edit-row"><label class="edit-label">Район</label><input class="edit-input" id="e-location" onchange="sav()"></div></div><div class="edit-row"><label class="edit-label">Дата</label><input class="edit-input" id="e-date" onchange="sav()"></div></div><div class="edit-group"><div class="edit-group-title">Рек. цена из СМА</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">От (руб.)</label><input class="edit-input" id="e-priceFrom" type="number" onchange="sav()"></div><div class="edit-row"><label class="edit-label">До (руб.)</label><input class="edit-input" id="e-priceTo" type="number" onchange="sav()"></div></div><div class="auto-calc" id="autoHint"></div></div><div class="edit-group"><div class="edit-group-title">Комиссия (%)</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Классика</label><input class="edit-input" id="e-comm1" type="number" step="0.1" value="2.5" onchange="sav()"></div><div class="edit-row"><label class="edit-label">М. торги</label><input class="edit-input" id="e-comm2" type="number" step="0.1" value="3" onchange="sav()"></div><div class="edit-row"><label class="edit-label">Аукцион</label><input class="edit-input" id="e-comm3" type="number" step="0.1" value="6" onchange="sav()"></div></div></div><button class="btn-save" onclick="saveData()">Сохранить</button><p class="save-hint" id="saveHint">Данные синхронизируются через GitHub.</p><button class="btn-del" onclick="resetObj()">Удалить эту стратегию</button></div></div>
 <script>
 const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_FILE='data/strategy.json',GH_BRANCH='main',TOKEN_KEY='wr_gh_token';
-let allData={items:{}},currentId=null,fileSha=null,isEditMode=false,saveTimeout=null,taxState=[false,false,false],activeTab=1,calcPrices=[0,0,0];
+let allData={items:{}},currentId=null,fileSha=null,isEditMode=false,saveTimeout=null,taxState=[false,false,false],activeTab=1,calcPrices=[0,0,0],purchasePrices=[0,0,0];
 const editPanel=document.getElementById('editPanel'),editBtn=document.getElementById('editToggle'),backLink=document.getElementById('backLink'),pickerEl=document.getElementById('pickerContainer'),loadingBar=document.getElementById('loadingBar'),syncDot=document.getElementById('syncDot'),syncText=document.getElementById('syncText'),footerEl=document.getElementById('footerEl');
 const reportEls=['heroSection','introSection','scenarioSection','adSection','condSection','ctaSection'];
 function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
@@ -252,7 +256,7 @@ async function createItem(){const n=document.getElementById('newAddr').value.tri
 async function deleteItem(id){if(!confirm('Удалить?'))return;delete allData.items[id];await saveToGitHub();renderPicker();}
 function resetObj(){if(!confirm('Удалить?'))return;delete allData.items[currentId];saveToGitHub();showPicker();}
 function copyLink(id,btn){const url=location.origin+location.pathname+'?id='+id;try{navigator.clipboard.writeText(url).then(()=>{btn.textContent='✓';setTimeout(()=>btn.textContent='Ссылка',1500);});}catch(e){prompt('Скопируйте:',url);}}
-function openItem(id){const s=allData.items[id];if(!s)return;currentId=id;calcPrices=[0,0,0];pickerEl.style.display='none';showReportEls();if(isEditMode){editBtn.style.display='';backLink.style.display='';}try{history.pushState({id},'',location.pathname+'?id='+id+(isEditMode?'&edit=1':''));}catch(e){}render();if(editPanel.classList.contains('open'))populatePanel();}
+function openItem(id){const s=allData.items[id];if(!s)return;currentId=id;calcPrices=[0,0,0];purchasePrices=[0,0,0];pickerEl.style.display='none';showReportEls();if(isEditMode){editBtn.style.display='';backLink.style.display='';}try{history.pushState({id},'',location.pathname+'?id='+id+(isEditMode?'&edit=1':''));}catch(e){}render();if(editPanel.classList.contains('open'))populatePanel();}
 function showTab(i,el){activeTab=i;document.querySelectorAll('.sc-tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');else document.querySelectorAll('.sc-tab')[i].classList.add('active');render();}
 function toggleTax(idx){taxState[idx]=!taxState[idx];render();}
 function render(){
@@ -272,22 +276,39 @@ function render(){
     var deal=calcPrices[ti]||defaultDeal||0;
     if(!deal&&!defaultDeal)return'';
     if(!calcPrices[ti])calcPrices[ti]=defaultDeal;
+    var pp=purchasePrices[ti]||0;
     const cm=deal?Math.round(deal*cp/100):0;
-    const tax=taxState[ti]&&deal?calcNdfl(deal):0;
+    // Tax base = deal - purchase price (if known), minimum 0
+    var taxBase=deal;
+    if(taxState[ti]&&pp>0)taxBase=Math.max(0,deal-pp);
+    const tax=taxState[ti]&&deal?calcNdfl(taxBase):0;
     const net=deal?deal-cm-mk-tax:0;
     var th='<div class="calc"><div class="calc-title">Калькулятор «на руки»</div>';
+    // Sale price input
     th+='<div class="calc-input-row"><span class="calc-input-label">Цена сделки</span><div><input class="calc-input" type="text" value="'+fmt(deal)+'" onfocus="this.value=this.value.replace(/[^0-9]/g,\'\')" onblur="calcPrices['+ti+']=parseInt(this.value)||0;render();" onkeydown="if(event.key===\'Enter\'){calcPrices['+ti+']=parseInt(this.value)||0;render();}"><span class="calc-currency">₽</span></div></div>';
+    // Tax toggle
     th+='<div class="calc-toggle"><div class="calc-switch'+(taxState[ti]?' on':'')+'" onclick="toggleTax('+ti+')"></div><span>Владение менее 5 лет (НДФЛ)</span></div>';
     if(deal){
+      // Purchase price input (only shown when tax is on)
+      if(taxState[ti]){
+        th+='<div class="calc-row" style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px dashed var(--border);"><span class="calc-label">Цена покупки <span style="font-size:11px;">(если есть)</span></span><span><input class="calc-input-sm" type="text" placeholder="не указана" value="'+(pp?fmt(pp):'')+'" onfocus="this.value=this.value.replace(/[^0-9]/g,\'\')" onblur="purchasePrices['+ti+']=parseInt(this.value)||0;render();" onkeydown="if(event.key===\'Enter\'){purchasePrices['+ti+']=parseInt(this.value)||0;render();}"> <span style="font-size:12px;color:var(--muted);">₽</span></span></div>';
+      }
       th+='<div class="calc-row"><span class="calc-label">Комиссия ('+cp+'%)</span><span class="calc-val dim">− '+fmt(cm)+' ₽</span></div>';
       th+='<div class="calc-row"><span class="calc-label">Маркетинг</span><span class="calc-val dim">− '+fmt(mk)+' ₽</span></div>';
       if(taxState[ti]){
-        th+='<div class="calc-row"><span class="calc-label">НДФЛ</span><span class="calc-val dim">− '+fmt(tax)+' ₽</span></div>';
-        if(deal>2400000){
-          var t1=Math.round(2400000*0.13),t2=Math.round((deal-2400000)*0.15);
-          th+='<div class="calc-breakdown">Первые 2,4 млн × 13% = '+fmt(t1)+' ₽<br>Сумма свыше 2,4 млн × 15% = '+fmt(t2)+' ₽</div>';
+        // Show tax base explanation
+        if(pp>0){
+          th+='<div class="calc-row"><span class="calc-label">Налогооблагаемая база</span><span class="calc-val dim">'+fmt(taxBase)+' ₽</span></div>';
+          th+='<div class="calc-note" style="margin-bottom:4px;">'+fmt(deal)+' (продажа) − '+fmt(pp)+' (покупка) = '+fmt(taxBase)+' ₽</div>';
         }
-        th+='<div class="calc-note">Расчёт с полной суммы. Если есть документы о покупке — налог считается с разницы (продажа минус покупка). Также применяется имущественный вычет 1 млн ₽.</div>';
+        th+='<div class="calc-row"><span class="calc-label">НДФЛ</span><span class="calc-val dim">− '+fmt(tax)+' ₽</span></div>';
+        if(taxBase>2400000){
+          var t1=Math.round(2400000*0.13),t2=Math.round((taxBase-2400000)*0.15);
+          th+='<div class="calc-breakdown">Первые 2,4 млн × 13% = '+fmt(t1)+' ₽<br>Сумма свыше 2,4 млн × 15% = '+fmt(t2)+' ₽</div>';
+        }else if(taxBase>0){
+          th+='<div class="calc-breakdown">'+fmt(taxBase)+' × 13% = '+fmt(tax)+' ₽</div>';
+        }
+        if(!pp){th+='<div class="calc-note">Расчёт с полной суммы продажи. Укажите цену покупки выше — налог будет считаться с разницы.</div>';}
       }else{
         th+='<div class="calc-row"><span class="calc-label">НДФЛ</span><span class="calc-val dim">не применяется</span></div>';
       }
@@ -325,7 +346,7 @@ function render(){
   // ═══ SOFT BIDDING ═══
   h+='<div class="sc-body" style="display:'+(activeTab===1?'block':'none')+';">';
   h+='<div class="sc-alert sc-alert-rec"><strong>Рекомендуемый сценарий.</strong> Управляемый процесс с еженедельной корректировкой на основе данных. Итоговая цена будет <strong>максимально возможной для этого объекта</strong> — она формируется реальным спросом покупателей.</div>';
-  h+=met(p2S,'2–2,5 мес.','#085041','Ориент. срок','Максимум рынка','Определяется спросом');
+  h+=met(p2S,'2–2,5 мес.','#085041','Ориент. срок','По максимуму','Цена = реальный спрос');
   h+=pt('01','Суть','Это мягкий аукцион — без агрессивного маркетинга, но с управляемым спросом. Стартовая цена — как правило, середина рекомендуемого диапазона из СМА. Если интерес рынка при этом слишком высокий — корректируем вверх. Если спрос слабый — сдвигаем вниз. Задача — нащупать идеальный баланс: активный, но не ажиотажный спрос.');
   h+=pt('02','Как формируется цена','Через спрос, а не через ваши ожидания. Мы привлекаем несколько заинтересованных покупателей и создаём ситуацию, в которой <strong>каждый знает, что есть другие</strong>. Покупатель больше не торгует вас вниз — он конкурирует с другими. Если интерес выше ожидаемого — цена корректируется вверх. Если ниже — адаптируемся за 1–2 недели. Итоговая цена — максимально возможная для этого объекта.');
   h+=pt('03','Управляемый спрос','Каждый показ — это сбор данных. Обратная связь от покупателей, анализ возражений, понимание что работает и что нет. Еженедельный отчёт с цифрами и выводами. Если нужна корректировка — действуем на основе фактов, а не эмоций. Подробнее — <a href="/meeting-pack.html#showings" target="_blank">правила показов</a>.');
@@ -338,7 +359,7 @@ function render(){
   // ═══ AUCTION ═══
   h+='<div class="sc-body" style="display:'+(activeTab===2?'block':'none')+';">';
   h+='<div class="sc-alert sc-alert-info"><strong>Самый быстрый способ продать по максимальной цене.</strong> 21 день в стандартном формате, 14 дней в ускоренном. Итоговая цена формируется конкуренцией покупателей. Подходит только самым мотивированным собственникам. Подробнее — <a href="/meeting-pack.html#plan" target="_blank">маркетинговый план</a>.</div>';
-  h+=met(p3S,'14–21 день','#0C447C','Ориент. срок','Максимум рынка','Конкуренция покупателей');
+  h+=met(p3S,'14–21 день','#0C447C','Ориент. срок','По максимуму','Покупатели конкурируют');
   h+=pt('01','Суть','Полноценный аукцион. Стартовая цена намеренно ниже рынка — это инструмент создания ажиотажного спроса. Интенсивный маркетинг привлекает максимум покупателей за короткий срок. Все показы концентрируются в 2 дня. Покупатели конкурируют друг с другом — итоговая цена формируется их готовностью платить.');
   h+=pt('02','Как формируется цена','Конкуренция покупателей. Стартовая цена — точка входа, которая привлекает максимальное количество заинтересованных. Когда 8–15 человек приходят на показ в один день и видят друг друга — <strong>каждый понимает: если не он, то кто-то другой</strong>. Офферы поступают выше стартовой цены. Вы выбираете лучшее предложение по цене и условиям.');
   h+=pt('03','Почему вложения серьёзнее','Аукцион работает только при критической массе покупателей. Чтобы собрать 8–15 показов за 2 дня, нужен интенсивный маркетинг: премиум-размещение на всех площадках, таргетированная реклама, работа на территории, рассылка по агентской сети. Бюджет 45 000 – 120 000 ₽ зависит от объекта и сегмента.');
