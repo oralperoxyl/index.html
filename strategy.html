@@ -259,6 +259,17 @@ function copyLink(id,btn){const url=location.origin+location.pathname+'?id='+id;
 function openItem(id){const s=allData.items[id];if(!s)return;currentId=id;calcPrices=[0,0,0];purchasePrices=[0,0,0];pickerEl.style.display='none';showReportEls();if(isEditMode){editBtn.style.display='';backLink.style.display='';}try{history.pushState({id},'',location.pathname+'?id='+id+(isEditMode?'&edit=1':''));}catch(e){}render();if(editPanel.classList.contains('open'))populatePanel();}
 function showTab(i,el){activeTab=i;document.querySelectorAll('.sc-tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');else document.querySelectorAll('.sc-tab')[i].classList.add('active');render();}
 function toggleTax(idx){taxState[idx]=!taxState[idx];render();}
+function fmtInput(el,arr,idx){
+  var v=el.value.replace(/[^0-9]/g,'');
+  var n=parseInt(v)||0;
+  arr[idx]=n;
+  var cur=el.selectionStart;
+  var oldLen=el.value.length;
+  el.value=n?n.toLocaleString('ru-RU'):'';
+  var newLen=el.value.length;
+  var pos=cur+(newLen-oldLen);
+  el.setSelectionRange(pos,pos);
+}
 function render(){
   const s=allData.items[currentId];if(!s)return;
   const pF=Number(s.priceFrom)||0,pT=Number(s.priceTo)||0,avg=pF&&pT?Math.round((pF+pT)/2):0;
@@ -272,47 +283,42 @@ function render(){
 
   function calcNdfl(b){if(b<=0)return 0;if(b<=2400000)return Math.round(b*0.13);return Math.round(2400000*0.13+(b-2400000)*0.15);}
 
-  function cH(defaultDeal,cp,mk,ti){
+  function cH(defaultDeal,cp,ti){
     var deal=calcPrices[ti]||defaultDeal||0;
     if(!deal&&!defaultDeal)return'';
     if(!calcPrices[ti])calcPrices[ti]=defaultDeal;
     var pp=purchasePrices[ti]||0;
     const cm=deal?Math.round(deal*cp/100):0;
-    // Tax base = deal - purchase price (if known), minimum 0
     var taxBase=deal;
     if(taxState[ti]&&pp>0)taxBase=Math.max(0,deal-pp);
     const tax=taxState[ti]&&deal?calcNdfl(taxBase):0;
-    const net=deal?deal-cm-mk-tax:0;
-    var th='<div class="calc"><div class="calc-title">Калькулятор «на руки»</div>';
-    // Sale price input
-    th+='<div class="calc-input-row"><span class="calc-input-label">Цена сделки</span><div><input class="calc-input" type="text" value="'+fmt(deal)+'" onfocus="this.value=this.value.replace(/[^0-9]/g,\'\')" onblur="calcPrices['+ti+']=parseInt(this.value)||0;render();" onkeydown="if(event.key===\'Enter\'){calcPrices['+ti+']=parseInt(this.value)||0;render();}"><span class="calc-currency">₽</span></div></div>';
-    // Tax toggle
+    const net=deal?deal-cm-tax:0;
+    var th='<div class="calc"><div class="calc-title">Калькулятор \u00abна руки\u00bb</div>';
+    th+='<div class="calc-input-row"><span class="calc-input-label">Цена сделки</span><div><input class="calc-input" type="text" inputmode="numeric" value="'+fmt(deal)+'" oninput="fmtInput(this,calcPrices,'+ti+')" onblur="render();" onkeydown="if(event.key===\'Enter\'){event.target.blur();}"><span class="calc-currency">\u20bd</span></div></div>';
     th+='<div class="calc-toggle"><div class="calc-switch'+(taxState[ti]?' on':'')+'" onclick="toggleTax('+ti+')"></div><span>Владение менее 5 лет (НДФЛ)</span></div>';
     if(deal){
-      // Purchase price input (only shown when tax is on)
       if(taxState[ti]){
-        th+='<div class="calc-row" style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px dashed var(--border);"><span class="calc-label">Цена покупки <span style="font-size:11px;">(если есть)</span></span><span><input class="calc-input-sm" type="text" placeholder="не указана" value="'+(pp?fmt(pp):'')+'" onfocus="this.value=this.value.replace(/[^0-9]/g,\'\')" onblur="purchasePrices['+ti+']=parseInt(this.value)||0;render();" onkeydown="if(event.key===\'Enter\'){purchasePrices['+ti+']=parseInt(this.value)||0;render();}"> <span style="font-size:12px;color:var(--muted);">₽</span></span></div>';
+        th+='<div class="calc-row" style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px dashed var(--border);"><span class="calc-label">Цена покупки <span style="font-size:11px;">(если есть)</span></span><span><input class="calc-input-sm" type="text" inputmode="numeric" placeholder="не указана" value="'+(pp?fmt(pp):'')+'" oninput="fmtInput(this,purchasePrices,'+ti+')" onblur="render();" onkeydown="if(event.key===\'Enter\'){event.target.blur();}"> <span style="font-size:12px;color:var(--muted);">\u20bd</span></span></div>';
       }
-      th+='<div class="calc-row"><span class="calc-label">Комиссия ('+cp+'%)</span><span class="calc-val dim">− '+fmt(cm)+' ₽</span></div>';
-      th+='<div class="calc-row"><span class="calc-label">Маркетинг</span><span class="calc-val dim">− '+fmt(mk)+' ₽</span></div>';
+      th+='<div class="calc-row"><span class="calc-label">Комиссия ('+cp+'%)</span><span class="calc-val dim">\u2212 '+fmt(cm)+' \u20bd</span></div>';
       if(taxState[ti]){
-        // Show tax base explanation
         if(pp>0){
-          th+='<div class="calc-row"><span class="calc-label">Налогооблагаемая база</span><span class="calc-val dim">'+fmt(taxBase)+' ₽</span></div>';
-          th+='<div class="calc-note" style="margin-bottom:4px;">'+fmt(deal)+' (продажа) − '+fmt(pp)+' (покупка) = '+fmt(taxBase)+' ₽</div>';
+          th+='<div class="calc-row"><span class="calc-label">Налогооблагаемая база</span><span class="calc-val dim">'+fmt(taxBase)+' \u20bd</span></div>';
+          th+='<div class="calc-note" style="margin-bottom:4px;">'+fmt(deal)+' (продажа) \u2212 '+fmt(pp)+' (покупка) = '+fmt(taxBase)+' \u20bd</div>';
         }
-        th+='<div class="calc-row"><span class="calc-label">НДФЛ</span><span class="calc-val dim">− '+fmt(tax)+' ₽</span></div>';
+        th+='<div class="calc-row"><span class="calc-label">НДФЛ</span><span class="calc-val dim">\u2212 '+fmt(tax)+' \u20bd</span></div>';
         if(taxBase>2400000){
           var t1=Math.round(2400000*0.13),t2=Math.round((taxBase-2400000)*0.15);
-          th+='<div class="calc-breakdown">Первые 2,4 млн × 13% = '+fmt(t1)+' ₽<br>Сумма свыше 2,4 млн × 15% = '+fmt(t2)+' ₽</div>';
+          th+='<div class="calc-breakdown">Первые 2,4 млн \u00d7 13% = '+fmt(t1)+' \u20bd<br>Сумма свыше 2,4 млн \u00d7 15% = '+fmt(t2)+' \u20bd</div>';
         }else if(taxBase>0){
-          th+='<div class="calc-breakdown">'+fmt(taxBase)+' × 13% = '+fmt(tax)+' ₽</div>';
+          th+='<div class="calc-breakdown">'+fmt(taxBase)+' \u00d7 13% = '+fmt(tax)+' \u20bd</div>';
         }
-        if(!pp){th+='<div class="calc-note">Расчёт с полной суммы продажи. Укажите цену покупки выше — налог будет считаться с разницы.</div>';}
+        if(!pp){th+='<div class="calc-note">Расчёт с полной суммы. Укажите цену покупки \u2014 налог будет считаться с разницы.</div>';}
       }else{
         th+='<div class="calc-row"><span class="calc-label">НДФЛ</span><span class="calc-val dim">не применяется</span></div>';
       }
-      th+='<div class="calc-row total"><span class="calc-total-label">На руки</span><span class="calc-total-val">'+fmt(net)+' ₽</span></div>';
+      th+='<div class="calc-row total"><span class="calc-total-label">На руки</span><span class="calc-total-val">'+fmt(net)+' \u20bd</span></div>';
+      th+='<div class="calc-note" style="margin-top:8px;">Маркетинговый бюджет оплачивается отдельно, поэтапно до начала и в процессе продажи.</div>';
     }
     th+='</div>';return th;
   }
@@ -325,8 +331,8 @@ function render(){
     return '<div class="sc-point"><div class="sc-point-num">'+num+'</div><div><div class="sc-point-title">'+title+'</div><div class="sc-point-text">'+text+'</div></div></div>';
   }
 
-  function costs(cp,mkText){
-    return '<div class="sc-costs"><div class="sc-cost"><div class="sc-cost-num">'+cp+'%</div><div class="sc-cost-label">Комиссия агента</div></div><div class="sc-cost"><div class="sc-cost-num">'+mkText+'</div><div class="sc-cost-label">Маркетинг (оплата продавца)</div></div></div>';
+  function costs(cp,mkText,mkDesc){
+    return '<div class="sc-costs"><div class="sc-cost"><div class="sc-cost-num">'+cp+'%</div><div class="sc-cost-label">Комиссия агента</div></div><div class="sc-cost"><div class="sc-cost-num">'+mkText+'</div><div class="sc-cost-label">Маркетинг (оплата продавца)</div>'+(mkDesc?'<div style="font-size:12px;color:var(--muted);line-height:1.5;margin-top:8px;font-weight:300;">'+mkDesc+'</div>':'')+'</div></div>';
   }
 
   var h='';
@@ -339,8 +345,8 @@ function render(){
   h+=pt('02','Как формируется цена','Сверху вниз. Вы начинаете с максимума и постепенно снижаете под давлением рынка. Каждый покупатель торгует вас один на один — нет конкуренции за объект, покупатель не торопится с решением. Цена определяется не реальной стоимостью, а тем, насколько вы готовы уступить. <strong>Нет никакой уверенности, что нельзя было продать дороже.</strong>');
   h+=pt('03','Что происходит со временем','После 60–90 дней на рынке объект начинают воспринимать как проблемный. Покупатели видят дату публикации, отслеживают историю цены и торгуются агрессивнее. Агенты рекомендуют своим клиентам подождать — «снизит ещё». Репутация объекта на рынке портится, даже если с ним всё в порядке.');
   h+=pt('04','Что получает продавец','Минимальные вложения в маркетинг (~10 000 ₽). Минимальную комиссию ('+c1+'%). Но и минимальный контроль над процессом. Нет управляемого спроса, нет данных для принятия решений. Можно продешевить — и никогда об этом не узнать.');
-  h+=costs(c1,'~10 000 ₽');
-  h+=cH(p1D,c1,10000,0);
+  h+=costs(c1,'~10 000 ₽','Базовые рекламные площадки: ЦИАН, Авито, Яндекс.Недвижимость — стандартное размещение.');
+  h+=cH(p1D,c1,0);
   h+='</div>';
 
   // ═══ SOFT BIDDING ═══
@@ -352,8 +358,8 @@ function render(){
   h+=pt('03','Управляемый спрос','Каждый показ — это сбор данных. Обратная связь от покупателей, анализ возражений, понимание что работает и что нет. Еженедельный отчёт с цифрами и выводами. Если нужна корректировка — действуем на основе фактов, а не эмоций. Подробнее — <a href="/meeting-pack.html#showings" target="_blank">правила показов</a>.');
   h+=pt('04','Почему 2–2,5 месяца','Без агрессивного маркетингового бюджета сбор мотивированных покупателей занимает 3–6 недель. Ещё 2–3 недели — переговоры и выход на сделку. Это не долго — это управляемый процесс, в котором каждый шаг обоснован данными.');
   h+=pt('05','Что получает продавец','Максимальную возможную цену для этого объекта, подтверждённую спросом. Полный контроль через еженедельные отчёты. Уверенность, что не продешевили. Понимание, почему именно эта цена — лучшая.');
-  h+=costs(c2,'20 000 – 35 000 ₽');
-  h+=cH(p2D,c2,28000,1);
+  h+=costs(c2,'20 000 – 35 000 ₽','Премиум-размещение на площадках, точечная таргетированная реклама, работа с агентской сетью. Мягче аукционного формата, но значительно шире классического.');
+  h+=cH(p2D,c2,1);
   h+='</div>';
 
   // ═══ AUCTION ═══
@@ -365,8 +371,8 @@ function render(){
   h+=pt('03','Почему вложения серьёзнее','Аукцион работает только при критической массе покупателей. Чтобы собрать 8–15 показов за 2 дня, нужен интенсивный маркетинг: премиум-размещение на всех площадках, таргетированная реклама, работа на территории, рассылка по агентской сети. Бюджет 45 000 – 120 000 ₽ зависит от объекта и сегмента.');
   h+=pt('04','Кому подходит','Мотивированным собственникам, которым важна скорость и готовность довериться процессу. Объект должен быть полностью готов: документы, состояние, доступ. Подробнее — <a href="/meeting-pack.html#prep" target="_blank">подготовка к продаже</a>.');
   h+=pt('05','Что получает продавец','Самый быстрый результат на рынке. Цену, сформированную конкуренцией покупателей — максимально возможную. Полную прозрачность: вы видите все офферы и сами выбираете покупателя. 21 день от старта до аванса.');
-  h+=costs(c3,'45 000 – 120 000 ₽');
-  h+=cH(p3D,c3,80000,2);
+  h+=costs(c3,'45 000 – 120 000 ₽','Полный интенсивный маркетинг: премиум на всех площадках, таргет, работа на территории, агентская сеть, профессиональные фото/видео. Подробности — в <a href="/meeting-pack.html#plan" target="_blank" style="color:var(--text);text-underline-offset:3px;">маркетинговом плане</a>.');
+  h+=cH(p3D,c3,2);
   h+='</div>';
 
   document.getElementById('scBodies').innerHTML=h;
