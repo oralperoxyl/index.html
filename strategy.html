@@ -47,6 +47,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .s-intro a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
 .s-intro strong{color:var(--text);font-weight:500}
 
+.sc-compare{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;margin-bottom:48px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.sc-col{padding:28px 20px;background:white;border-right:1px solid var(--border)}
+.sc-col:last-child{border-right:none}
+.sc-col-rec{background:rgba(45,138,78,0.03)}
+.sc-col-name{font-size:13px;font-weight:500;margin-bottom:16px}
+.sc-col-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;font-size:13px;border-bottom:1px solid var(--border)}
+.sc-col-row:last-child{border-bottom:none}
+.sc-col-label{color:var(--muted);font-weight:300;font-size:12px}
+.sc-col-val{font-weight:400;text-align:right}
+
 /* ── SCENARIO TABS ── */
 .sc-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0}
 .sc-tab{flex:1;padding:20px 8px;text-align:center;font-size:14px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;line-height:1.3}
@@ -90,8 +100,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .calc-title{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
 .calc-input-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;margin-bottom:12px;border-bottom:1px solid var(--border)}
 .calc-input-label{font-size:14px;color:var(--muted);font-weight:300}
-.calc-input{font-family:var(--serif);font-size:24px;font-weight:400;text-align:right;border:none;background:transparent;color:var(--text);width:200px;padding:0;outline:none;letter-spacing:-0.02em}
-.calc-input::placeholder{color:var(--border)}
+.calc-input{font-family:var(--serif);font-size:24px;font-weight:400;text-align:right;border:none;border-bottom:2px solid var(--border);background:transparent;color:var(--text);width:200px;padding:4px 0;outline:none;letter-spacing:-0.02em;transition:border-color 0.2s}
+.calc-input:focus{border-bottom-color:var(--text)}
+.calc-input::placeholder{color:rgba(0,0,0,0.12);font-family:var(--sans);font-size:16px;font-weight:300}
 .calc-input-sm{font-family:var(--sans);font-size:14px;font-weight:400;text-align:right;border:none;background:transparent;color:var(--text);width:160px;padding:4px 0;outline:none;border-bottom:1px dashed var(--border)}
 .calc-input-sm::placeholder{color:rgba(0,0,0,0.15)}
 .calc-input-sm:focus{border-bottom-color:var(--text)}
@@ -160,6 +171,7 @@ body.editing .s{margin-right:460px}body.editing .hero{padding-right:500px}
   .hero-meta{gap:24px}
   .sc-grid,.sc-costs{grid-template-columns:1fr}
   .sc-metric,.sc-cost{border-radius:0!important}.sc-metric:first-child,.sc-cost:first-child{border-radius:8px 8px 0 0!important}.sc-metric:last-child,.sc-cost:last-child{border-radius:0 0 8px 8px!important}
+  .sc-compare{grid-template-columns:1fr;border:none;gap:8px;border-radius:0}.sc-col{border-right:none;border-radius:8px;border:1px solid var(--border)}
   .sc-point{grid-template-columns:28px 1fr;gap:0 16px}
   .sc-point-num{font-size:18px}
   .cond{grid-template-columns:28px 1fr;gap:0 16px}.cond-num{font-size:18px}
@@ -187,10 +199,12 @@ body.editing .s{margin-right:460px}body.editing .hero{padding-right:500px}
 <section class="s" id="scenarioSection" style="display:none;">
   <span class="s-num">01 / 03</span>
   <h2 class="s-title">Три модели продажи</h2>
+  <p class="s-intro">Выбор сценария — это выбор того, как будет формироваться цена. Сверху вниз — или через спрос покупателей.</p>
+  <div id="scCompare"></div>
   <div class="sc-tabs">
-    <div class="sc-tab" onclick="showTab(0,this)">Классическая<div class="sc-tab-sub">4+ месяцев</div></div>
-    <div class="sc-tab active" onclick="showTab(1,this)">Мягкие торги<div class="sc-tab-sub">2–2,5 месяца</div></div>
-    <div class="sc-tab" onclick="showTab(2,this)">Аукцион<div class="sc-tab-sub">14–21 день</div></div>
+    <div class="sc-tab" onclick="showTab(0,this)">Классическая<div class="sc-tab-sub">подробнее</div></div>
+    <div class="sc-tab active" onclick="showTab(1,this)">Мягкие торги<div class="sc-tab-sub">подробнее</div></div>
+    <div class="sc-tab" onclick="showTab(2,this)">Аукцион<div class="sc-tab-sub">подробнее</div></div>
   </div>
   <div id="scBodies"></div>
 </section>
@@ -205,16 +219,18 @@ body.editing .s{margin-right:460px}body.editing .hero{padding-right:500px}
 
 <section class="s" id="condSection" style="display:none;">
   <span class="s-num">03 / 03</span>
-  <h2 class="s-title">Что входит и что требуется</h2>
-  <div class="cond"><div class="cond-num">01</div><div><div class="cond-title">Эксклюзивный договор</div><div class="cond-text">Управление ценой, показами и переговорами требует полного контроля. Без эксклюзива невозможно создать конкуренцию покупателей. Подробнее — <a href="/meeting-pack.html#mistakes" target="_blank">ошибки продавцов</a>.</div></div></div>
-  <div class="cond"><div class="cond-num">02</div><div><div class="cond-title">Подготовка объекта</div><div class="cond-text">Расхламление, мелкий ремонт при необходимости, доступ для фото и показов. Подробнее — <a href="/meeting-pack.html#prep" target="_blank">подготовка к продаже</a>.</div></div></div>
-  <div class="cond"><div class="cond-num">03</div><div><div class="cond-title">Рекламный бюджет</div><div class="cond-text">Оплачивается продавцом. Размер зависит от сценария и согласовывается до старта.</div></div></div>
-  <div class="cond"><div class="cond-num">04</div><div><div class="cond-title">Что я беру на себя</div><div class="cond-text">Стратегия, фото/видеосъёмка, тексты, рекламные кампании, организация показов, обратная связь, переговоры с покупателями, сопровождение сделки до регистрации.</div></div></div>
+  <h2 class="s-title">Как мы работаем</h2>
+  <p class="s-intro">Несколько принципов, которые я считаю обязательными — вне зависимости от выбранного сценария.</p>
+  <div class="cond"><div class="cond-num">01</div><div><div class="cond-title">Эксклюзивный договор</div><div class="cond-text">Это не формальность. Без эксклюзива я не контролирую процесс — а значит не могу гарантировать результат. Когда объект продают несколько агентов одновременно, покупатели видят одну квартиру от разных людей по разным ценам. Доверие к объекту падает, агенты начинают конкурировать друг с другом за комиссию — за ваш счёт. Подробнее — <a href="/meeting-pack.html#mistakes" target="_blank">ошибки продавцов</a>.</div></div></div>
+  <div class="cond"><div class="cond-num">02</div><div><div class="cond-title">Подготовка объекта</div><div class="cond-text">Покупатель принимает решение в первые 30 секунд после того, как открыл дверь. Расхламление, порядок, нейтральный запах, свет — это не мелочи, а инструменты, которые напрямую влияют на цену. Я помогу с рекомендациями, а при необходимости — с организацией. Подробнее — <a href="/meeting-pack.html#prep" target="_blank">подготовка к продаже</a>.</div></div></div>
+  <div class="cond"><div class="cond-num">03</div><div><div class="cond-title">Рекламный бюджет</div><div class="cond-text">Оплачивается продавцом поэтапно. Сумма зависит от сценария и согласовывается до старта. Я не трачу ваши деньги на «рекламу ради рекламы» — каждый канал выбирается под конкретный объект и целевую аудиторию покупателя. Полный список инструментов — в маркетинговом плане выше.</div></div></div>
+  <div class="cond"><div class="cond-num">04</div><div><div class="cond-title">Прозрачность на каждом этапе</div><div class="cond-text">Вы всегда знаете, что происходит. Еженедельный отчёт с цифрами: звонки, показы, обратная связь, мои выводы и рекомендации. Никаких «работаем, ждите». Если нужна корректировка стратегии — обсуждаем вместе, решение принимаете вы.</div></div></div>
+  <div class="cond"><div class="cond-num">05</div><div><div class="cond-title">Что я беру на себя</div><div class="cond-text">Разработку стратегии. Профессиональную фото и видеосъёмку. Написание текстов. Ведение рекламных кампаний. Организацию и проведение показов. Сбор обратной связи. Переговоры с покупателями. Юридическое сопровождение сделки до регистрации. Вы занимаетесь своими делами — я занимаюсь продажей.</div></div></div>
 </section>
 
 <section class="cta-s" id="ctaSection" style="display:none;">
-  <div class="cta-quote">Стратегия готова.<br><em>Осталось выбрать сценарий.</em></div>
-  <div class="cta-sub">Обсудим детали, ответим на вопросы и определим дату старта.</div>
+  <div class="cta-quote">Стратегия — это не документ.<br><em>Это начало работы.</em></div>
+  <div class="cta-sub">Выберем сценарий, согласуем маркетинговый план, определим дату старта. Дальше — я беру процесс на себя, а вы получаете еженедельный отчёт с результатами.</div>
 </section>
 
 <div id="pickerContainer" style="display:none;"></div>
@@ -303,8 +319,7 @@ function render(){
 
   function cH(defaultDeal,cp,ti){
     var deal=calcPrices[ti]||defaultDeal||0;
-    if(!deal&&!defaultDeal)return'';
-    if(!calcPrices[ti])calcPrices[ti]=defaultDeal;
+    if(!calcPrices[ti]&&defaultDeal)calcPrices[ti]=defaultDeal;
     var pp=purchasePrices[ti]||0;
     const cm=deal?Math.round(deal*cp/100):0;
     var taxBase=deal;
@@ -312,7 +327,8 @@ function render(){
     const tax=taxState[ti]&&deal?calcNdfl(taxBase):0;
     const net=deal?deal-cm-tax:0;
     var th='<div class="calc"><div class="calc-title">Калькулятор \u00abна руки\u00bb</div>';
-    th+='<div class="calc-input-row"><span class="calc-input-label">Цена сделки</span><div><input class="calc-input" type="text" inputmode="numeric" value="'+fmt(deal)+'" oninput="fmtInput(this,calcPrices,'+ti+')" onblur="render();" onkeydown="if(event.key===\'Enter\'){event.target.blur();}"><span class="calc-currency">\u20bd</span></div></div>';
+    th+='<div class="calc-input-row"><span class="calc-input-label">Введите предполагаемую<br>цену сделки</span><div><input class="calc-input" type="text" inputmode="numeric" placeholder="0" value="'+(deal?fmt(deal):'')+'" oninput="fmtInput(this,calcPrices,'+ti+')" onblur="render();" onkeydown="if(event.key===\'Enter\'){event.target.blur();}"><span class="calc-currency">\u20bd</span></div></div>';
+    if(!deal){th+='<div style="font-size:12px;color:var(--muted);font-weight:300;margin-bottom:16px;">Введите сумму — калькулятор покажет сколько вы получите после вычета комиссии и налогов.</div>';}
     th+='<div class="calc-toggle"><div class="calc-switch'+(taxState[ti]?' on':'')+'" onclick="toggleTax('+ti+')"></div><span>Владение менее 5 лет (НДФЛ)</span></div>';
     if(deal){
       if(taxState[ti]){
@@ -354,6 +370,19 @@ function render(){
   }
 
   var h='';
+
+  // ═══ COMPARISON TABLE ═══
+  function compCol(name,cls,rows){
+    var c='<div class="sc-col'+cls+'">';
+    c+='<div class="sc-col-name">'+name+'</div>';
+    rows.forEach(function(r){c+='<div class="sc-col-row"><span class="sc-col-label">'+r[0]+'</span><span class="sc-col-val">'+r[1]+'</span></div>';});
+    c+='</div>';return c;
+  }
+  document.getElementById('scCompare').innerHTML='<div class="sc-compare">'
+    +compCol('Классическая','',[['Срок','<span style="color:#791F1F;">4+ мес.</span>'],['Цена','Сверху вниз'],['Комиссия',c1+'%'],['Маркетинг','~10 000 ₽'],['Конкуренция','Нет'],['Контроль','Минимальный']])
+    +compCol('Мягкие торги',' sc-col-rec',[['Срок','<span style="color:#085041;">2–2,5 мес.</span>'],['Цена','Через спрос'],['Комиссия',c2+'%'],['Маркетинг','20–35 000 ₽'],['Конкуренция','Мягкая'],['Контроль','Еженедельный']])
+    +compCol('Аукцион','',[['Срок','<span style="color:#0C447C;">14–21 день</span>'],['Цена','Конкуренция'],['Комиссия',c3+'%'],['Маркетинг','45–120 000 ₽'],['Конкуренция','Максимальная'],['Контроль','Полный']])
+    +'</div>';
 
   // ═══ CLASSIC ═══
   h+='<div class="sc-body" style="display:'+(activeTab===0?'block':'none')+';">';
