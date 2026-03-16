@@ -6,7 +6,7 @@
       "rooms": 1,
       "floor": "6/16",
       "location": "м. Академическая",
-      "priceFrom": 17000000,
+      "priceFrom": 16500000,
       "priceTo": 18500000,
       "comm1": 2.5,
       "comm2": 3,
@@ -127,7 +127,10 @@
           "price": 0,
           "on": false
         }
-      ]
+      ],
+      "start1": 0,
+      "start2": 0,
+      "start3": 0
     }
   }
 }
