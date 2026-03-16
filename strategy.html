@@ -9,45 +9,217 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-::selection{background:#0066FF;color:#fff}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+::selection{background:#0066FF;color:#fff}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--serif:'Playfair Display',serif;--sans:'Inter',sans-serif;--bg:#FAFAF8;--dark:#1C1C1E;--text:#1A1A1A;--muted:#666;--border:rgba(0,0,0,0.08);--accent:#0066FF}
-html{scroll-behavior:smooth}body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6}
+
+/* ── HEADER ── */
 .site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
-.header-left{display:flex;align-items:center;gap:16px}.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}.back-link{font-size:12px;color:var(--muted);text-decoration:none}
-.header-right{display:flex;align-items:center;gap:12px}.sync-status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer}.sync-dot{width:6px;height:6px;border-radius:50%;background:#ccc;display:inline-block}.sync-dot.ok{background:#2D8A4E}.sync-dot.error{background:#C0392B}.sync-dot.loading{background:#B8860B;animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-.edit-toggle{font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--border);border-radius:4px;background:transparent;color:var(--muted);cursor:pointer}.edit-toggle:hover{border-color:var(--text);color:var(--text)}.edit-toggle.active{background:var(--dark);color:#E5E5E5;border-color:var(--dark)}
-.hero{background:var(--dark);color:#E5E5E5;padding:80px 40px 60px}.hero-inner{max-width:900px;margin:0 auto}.hero-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:24px}.hero-title{font-family:var(--serif);font-size:clamp(28px,5vw,52px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;margin-bottom:12px}.hero-meta{display:flex;gap:40px;margin-top:24px;flex-wrap:wrap}.hero-meta-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.35);margin-bottom:4px}.hero-meta-value{font-size:15px;color:rgba(229,229,229,0.75)}.hero-date{font-size:12px;color:rgba(229,229,229,0.3);margin-top:20px}
-.s{max-width:900px;margin:0 auto;padding:80px 40px;border-bottom:1px solid var(--border)}.s:last-of-type{border-bottom:none}.s-label{font-size:11px;font-weight:400;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}.s-title{font-family:var(--serif);font-size:clamp(26px,4vw,42px);font-weight:400;line-height:1.15;letter-spacing:-0.01em;margin-bottom:40px}.s-text{font-size:15px;line-height:1.8;color:var(--muted);max-width:720px;font-weight:300}.s-text p{margin-bottom:16px}.s-text strong{color:var(--text);font-weight:500}.s-text a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
-.sc-tabs{display:flex;gap:0;border-bottom:1px solid var(--border)}.sc-tab{flex:1;padding:18px 8px;text-align:center;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;line-height:1.4}.sc-tab:hover{color:var(--text)}.sc-tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}.sc-tab-sub{font-size:10px;color:var(--muted);margin-top:3px;font-weight:300}
-.sc-body{padding:36px 0 0}.sc-alert{font-size:14px;line-height:1.7;border-radius:8px;padding:20px 24px;margin-bottom:28px;font-weight:300}.sc-alert a{text-underline-offset:3px}.sc-alert-warn{color:#791F1F;background:#FCEBEB}.sc-alert-rec{color:#085041;background:rgba(45,138,78,0.05);border-left:3px solid #2D8A4E;border-radius:0 8px 8px 0}.sc-alert-info{color:#0C447C;background:#E6F1FB}
-.sc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:28px}.sc-metric{background:white;padding:24px 16px;text-align:center}.sc-metric:first-child{border-radius:8px 0 0 8px}.sc-metric:last-child{border-radius:0 8px 8px 0}.sc-metric-num{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:4px;letter-spacing:-0.02em}.sc-metric-label{font-size:10px;color:var(--muted);letter-spacing:0.02em;font-weight:300}
-.sc-desc{font-size:14px;line-height:1.8;color:var(--muted);max-width:680px;font-weight:300;margin-bottom:28px}.sc-desc strong{color:var(--text);font-weight:500}.sc-desc a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
-.sc-costs{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:28px}.sc-cost{background:white;padding:20px 16px}.sc-cost:first-child{border-radius:8px 0 0 8px}.sc-cost:last-child{border-radius:0 8px 8px 0}.sc-cost-num{font-size:16px;font-weight:500;margin-bottom:2px}.sc-cost-label{font-size:10px;color:var(--muted);letter-spacing:0.02em;font-weight:300}
-.calc{background:white;border-radius:8px;padding:28px;margin-bottom:28px}.calc-title{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}.calc-toggle{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:13px;color:var(--muted)}.calc-switch{position:relative;width:36px;height:20px;background:rgba(0,0,0,0.12);border-radius:10px;cursor:pointer;transition:background 0.2s;flex-shrink:0}.calc-switch.on{background:#2D8A4E}.calc-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:white;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.1)}.calc-switch.on::after{left:18px}
-.calc-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;font-size:14px}.calc-row.total{border-top:1px solid var(--border);margin-top:8px;padding-top:16px;font-weight:500;font-size:16px}.calc-label{color:var(--muted);font-weight:300}.calc-val{font-weight:500;font-variant-numeric:tabular-nums}.calc-val.dim{color:var(--muted);font-weight:300}
-.ad-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px}.ad-card{background:white;padding:24px 20px}.ad-card:first-child{border-radius:8px 0 0 8px}.ad-card:last-child{border-radius:0 8px 8px 0}.ad-card-title{font-size:13px;font-weight:500;margin-bottom:6px}.ad-card-text{font-size:12px;color:var(--muted);line-height:1.6;font-weight:300}
-.cond{padding:20px 0;border-bottom:1px solid var(--border)}.cond:last-child{border-bottom:none}.cond-title{font-size:14px;font-weight:500;margin-bottom:4px}.cond-text{font-size:13px;color:var(--muted);line-height:1.7;font-weight:300}.cond-text a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
-.cta-s{max-width:900px;margin:0 auto;padding:80px 40px;text-align:center}.cta-quote{font-family:var(--serif);font-size:clamp(22px,3.5vw,32px);font-weight:400;line-height:1.3;margin-bottom:20px}.cta-quote em{font-style:italic;color:var(--muted)}.cta-sub{font-size:15px;color:var(--muted);font-weight:300;max-width:560px;margin:0 auto;line-height:1.7}
-.report-footer{background:var(--dark);padding:60px 40px;text-align:center}.footer-name{font-family:var(--serif);font-size:16px;color:rgba(229,229,229,0.6);margin-bottom:8px}.footer-contact{font-size:13px;color:rgba(229,229,229,0.35)}.footer-contact a{color:rgba(229,229,229,0.5);text-decoration:none}
-.edit-panel{display:none;position:fixed;top:64px;right:0;bottom:0;width:460px;background:white;border-left:1px solid var(--border);z-index:200;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,0.06)}.edit-panel.open{display:block}.edit-panel-inner{padding:28px}.edit-panel h3{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}.edit-group{margin-bottom:28px}.edit-group-title{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}.edit-row{margin-bottom:12px}.edit-label{font-size:12px;color:var(--muted);margin-bottom:4px;display:block}.edit-input{width:100%;font-family:var(--sans);font-size:14px;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text)}.edit-input:focus{outline:none;border-color:var(--accent)}.btn-save{width:100%;padding:14px;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:var(--dark);color:#E5E5E5;border:none;border-radius:4px;cursor:pointer;margin-top:20px}.save-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:8px}.btn-del{width:100%;padding:10px;font-family:var(--sans);font-size:12px;color:#C0392B;background:none;border:1px dashed #C0392B;border-radius:4px;cursor:pointer;margin-top:12px}.auto-calc{font-size:10px;color:var(--accent);margin-top:4px}
-.loading-bar{position:fixed;top:64px;left:0;right:0;height:2px;z-index:300;display:none}.loading-bar.active{display:block}.loading-bar::after{content:'';display:block;height:100%;width:30%;background:var(--accent);animation:loadSlide 1.2s ease infinite}@keyframes loadSlide{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
-.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center}.modal-overlay.open{display:flex}.modal-box{background:white;border-radius:12px;padding:40px;max-width:440px;width:90%}.modal-box h3{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:12px}.modal-box p{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px}.modal-box input{width:100%;font-size:14px;padding:10px 14px;border:1px solid var(--border);border-radius:6px;margin-bottom:16px}.modal-box button{width:100%;padding:12px;font-size:13px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:var(--dark);color:#E5E5E5;border:none;border-radius:6px;cursor:pointer}.modal-error{font-size:12px;color:#C0392B;margin-top:8px;display:none}
-#pickerContainer{max-width:600px;margin:0 auto;padding:80px 40px}body.editing .s{margin-right:460px}body.editing .hero{padding-right:500px}
-@media(max-width:768px){.site-header{padding:0 20px}.hero{padding:60px 20px 48px}.s{padding:60px 20px}.hero-meta{gap:24px}.sc-grid,.sc-costs{grid-template-columns:1fr}.sc-metric,.sc-cost{border-radius:0!important}.sc-metric:first-child,.sc-cost:first-child{border-radius:8px 8px 0 0!important}.sc-metric:last-child,.sc-cost:last-child{border-radius:0 0 8px 8px!important}.ad-grid{grid-template-columns:1fr}.ad-card{border-radius:0!important}.ad-card:first-child{border-radius:8px 8px 0 0!important}.ad-card:last-child{border-radius:0 0 8px 8px!important}.edit-panel{width:100%;left:0}body.editing .s{margin-right:0}body.editing .hero{padding-right:20px}.cta-s,.report-footer{padding:60px 20px}.sync-status{display:none!important}}
+.header-left{display:flex;align-items:center;gap:16px}
+.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;letter-spacing:0.01em;text-decoration:none;color:var(--text)}
+.back-link{font-size:12px;color:var(--muted);text-decoration:none}
+.header-right{display:flex;align-items:center;gap:12px}
+.sync-status{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:#ccc;display:inline-block}
+.sync-dot.ok{background:#2D8A4E}.sync-dot.error{background:#C0392B}.sync-dot.loading{background:#B8860B;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.edit-toggle{font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;padding:8px 16px;border:1px solid var(--border);border-radius:4px;background:transparent;color:var(--muted);cursor:pointer}
+.edit-toggle:hover{border-color:var(--text);color:var(--text)}.edit-toggle.active{background:var(--dark);color:#E5E5E5;border-color:var(--dark)}
+
+/* ── HERO ── */
+.hero{background:var(--dark);color:#E5E5E5;padding:100px 40px 80px}
+.hero-inner{max-width:900px;margin:0 auto}
+.hero-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:28px}
+.hero-title{font-family:var(--serif);font-size:clamp(32px,5.5vw,56px);font-weight:400;line-height:1.1;letter-spacing:-0.02em;margin-bottom:16px}
+.hero-meta{display:flex;gap:40px;margin-top:28px;flex-wrap:wrap}
+.hero-meta-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.35);margin-bottom:4px}
+.hero-meta-value{font-size:15px;color:rgba(229,229,229,0.75)}
+.hero-date{font-size:12px;color:rgba(229,229,229,0.25);margin-top:24px}
+
+/* ── SECTIONS (matching meeting-pack) ── */
+.s{max-width:900px;margin:0 auto;padding:80px 40px;border-bottom:1px solid var(--border)}
+.s:last-of-type{border-bottom:none}
+.s-num{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:block}
+.s-title{font-family:var(--serif);font-size:clamp(28px,4vw,48px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;margin-bottom:16px}
+.s-intro{font-size:16px;line-height:1.7;color:var(--muted);max-width:620px;margin-bottom:52px}
+.s-intro a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
+.s-intro strong{color:var(--text);font-weight:500}
+
+/* ── SCENARIO TABS ── */
+.sc-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:0}
+.sc-tab{flex:1;padding:20px 8px;text-align:center;font-size:14px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;line-height:1.3}
+.sc-tab:hover{color:var(--text)}.sc-tab.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
+.sc-tab-sub{font-size:11px;color:var(--muted);margin-top:4px;font-weight:300}
+.sc-body{padding:48px 0 0}
+
+/* ── SCENARIO ALERTS ── */
+.sc-alert{font-size:15px;line-height:1.7;border-radius:0;padding:24px 0;margin-bottom:40px;border-bottom:1px solid var(--border);font-weight:300}
+.sc-alert strong{font-weight:500}
+.sc-alert a{text-underline-offset:3px}
+.sc-alert-warn{color:#791F1F}.sc-alert-warn a{color:#791F1F}
+.sc-alert-rec{color:#085041;padding-left:24px;border-left:2px solid #2D8A4E}
+.sc-alert-info{color:#0C447C}.sc-alert-info a{color:#0C447C}
+
+/* ── SCENARIO METRICS ── */
+.sc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:40px}
+.sc-metric{background:white;padding:28px 20px;text-align:center}
+.sc-metric:first-child{border-radius:8px 0 0 8px}.sc-metric:last-child{border-radius:0 8px 8px 0}
+.sc-metric-num{font-family:var(--serif);font-size:28px;font-weight:400;margin-bottom:6px;letter-spacing:-0.02em}
+.sc-metric-label{font-size:11px;color:var(--muted);letter-spacing:0.02em;font-weight:300}
+
+/* ── SCENARIO POINTS (rule-style from meeting-pack) ── */
+.sc-point{display:grid;grid-template-columns:40px 1fr;gap:0 24px;padding:28px 0;border-top:1px solid var(--border)}
+.sc-point:last-child{border-bottom:1px solid var(--border)}
+.sc-point-num{font-family:var(--serif);font-size:24px;font-weight:400;color:rgba(0,0,0,0.1);line-height:1;padding-top:2px}
+.sc-point-title{font-size:15px;font-weight:500;margin-bottom:6px;line-height:1.4}
+.sc-point-text{font-size:14px;line-height:1.7;color:var(--muted);font-weight:300}
+.sc-point-text strong{color:var(--text);font-weight:500}
+.sc-point-text a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
+
+/* ── COSTS ROW ── */
+.sc-costs{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin:40px 0}
+.sc-cost{background:white;padding:24px 20px}.sc-cost:first-child{border-radius:8px 0 0 8px}.sc-cost:last-child{border-radius:0 8px 8px 0}
+.sc-cost-num{font-family:var(--serif);font-size:20px;font-weight:400;margin-bottom:4px}
+.sc-cost-label{font-size:11px;color:var(--muted);letter-spacing:0.02em;font-weight:300}
+
+/* ── CALCULATOR ── */
+.calc{background:white;border-radius:8px;padding:32px;margin:40px 0 0}
+.calc-title{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+.calc-input-row{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.calc-input-label{font-size:14px;color:var(--muted);font-weight:300}
+.calc-input{font-family:var(--serif);font-size:24px;font-weight:400;text-align:right;border:none;background:transparent;color:var(--text);width:200px;padding:0;outline:none;letter-spacing:-0.02em}
+.calc-input::placeholder{color:var(--border)}
+.calc-currency{font-size:14px;color:var(--muted);margin-left:4px}
+.calc-toggle{display:flex;align-items:center;gap:12px;margin-bottom:20px;font-size:13px;color:var(--muted);font-weight:300}
+.calc-switch{position:relative;width:36px;height:20px;background:rgba(0,0,0,0.1);border-radius:10px;cursor:pointer;transition:background 0.2s;flex-shrink:0}
+.calc-switch.on{background:#2D8A4E}
+.calc-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:white;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.1)}
+.calc-switch.on::after{left:18px}
+.calc-row{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;font-size:14px}
+.calc-row.total{border-top:1px solid var(--border);margin-top:12px;padding-top:20px}
+.calc-total-label{font-size:14px;color:var(--text);font-weight:400}
+.calc-total-val{font-family:var(--serif);font-size:28px;font-weight:400;letter-spacing:-0.02em}
+.calc-label{color:var(--muted);font-weight:300}.calc-val{font-weight:400;font-variant-numeric:tabular-nums}.calc-val.dim{color:var(--muted);font-weight:300}
+.calc-note{font-size:12px;color:var(--muted);line-height:1.6;font-weight:300;padding:4px 0;margin-top:4px}
+.calc-breakdown{font-size:12px;color:var(--muted);line-height:1.7;font-weight:300;padding:4px 0 8px}
+
+/* ── AD GRID ── */
+.ad-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px}
+.ad-card{background:white;padding:28px 24px}.ad-card:first-child{border-radius:8px 0 0 8px}.ad-card:last-child{border-radius:0 8px 8px 0}
+.ad-card-title{font-size:14px;font-weight:500;margin-bottom:8px}
+.ad-card-text{font-size:13px;color:var(--muted);line-height:1.65;font-weight:300}
+
+/* ── CONDITIONS (rule-style) ── */
+.cond{display:grid;grid-template-columns:40px 1fr;gap:0 24px;padding:28px 0;border-top:1px solid var(--border)}
+.cond:last-child{border-bottom:1px solid var(--border)}
+.cond-num{font-family:var(--serif);font-size:24px;font-weight:400;color:rgba(0,0,0,0.1);line-height:1;padding-top:2px}
+.cond-title{font-size:15px;font-weight:500;margin-bottom:6px}
+.cond-text{font-size:14px;color:var(--muted);line-height:1.65;font-weight:300}
+.cond-text a{color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px}
+
+/* ── CTA + FOOTER ── */
+.cta-s{max-width:900px;margin:0 auto;padding:80px 40px;text-align:center}
+.cta-quote{font-family:var(--serif);font-size:clamp(24px,3.5vw,36px);font-weight:400;line-height:1.25;margin-bottom:20px}
+.cta-quote em{font-style:italic;color:var(--muted)}
+.cta-sub{font-size:16px;color:var(--muted);font-weight:300;max-width:560px;margin:0 auto;line-height:1.7}
+.report-footer{background:var(--dark);padding:60px 40px;text-align:center}
+.footer-name{font-family:var(--serif);font-size:16px;color:rgba(229,229,229,0.6);margin-bottom:8px}
+.footer-contact{font-size:13px;color:rgba(229,229,229,0.35)}.footer-contact a{color:rgba(229,229,229,0.5);text-decoration:none}
+
+/* ── EDIT PANEL ── */
+.edit-panel{display:none;position:fixed;top:64px;right:0;bottom:0;width:460px;background:white;border-left:1px solid var(--border);z-index:200;overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,0.06)}
+.edit-panel.open{display:block}.edit-panel-inner{padding:28px}
+.edit-panel h3{font-family:var(--serif);font-size:18px;font-weight:400;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.edit-group{margin-bottom:28px}.edit-group-title{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.edit-row{margin-bottom:12px}.edit-label{font-size:12px;color:var(--muted);margin-bottom:4px;display:block}
+.edit-input{width:100%;font-family:var(--sans);font-size:14px;padding:8px 12px;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text)}.edit-input:focus{outline:none;border-color:var(--accent)}
+.btn-save{width:100%;padding:14px;font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:var(--dark);color:#E5E5E5;border:none;border-radius:4px;cursor:pointer;margin-top:20px}
+.save-hint{font-size:11px;color:var(--muted);text-align:center;margin-top:8px}
+.btn-del{width:100%;padding:10px;font-family:var(--sans);font-size:12px;color:#C0392B;background:none;border:1px dashed #C0392B;border-radius:4px;cursor:pointer;margin-top:12px}
+.auto-calc{font-size:10px;color:var(--accent);margin-top:4px}
+
+.loading-bar{position:fixed;top:64px;left:0;right:0;height:2px;z-index:300;display:none}.loading-bar.active{display:block}
+.loading-bar::after{content:'';display:block;height:100%;width:30%;background:var(--accent);animation:loadSlide 1.2s ease infinite}
+@keyframes loadSlide{0%{transform:translateX(-100%)}100%{transform:translateX(400%)}}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center}.modal-overlay.open{display:flex}
+.modal-box{background:white;border-radius:12px;padding:40px;max-width:440px;width:90%}.modal-box h3{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:12px}
+.modal-box p{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px}.modal-box input{width:100%;font-size:14px;padding:10px 14px;border:1px solid var(--border);border-radius:6px;margin-bottom:16px}
+.modal-box button{width:100%;padding:12px;font-size:13px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:var(--dark);color:#E5E5E5;border:none;border-radius:6px;cursor:pointer}
+.modal-error{font-size:12px;color:#C0392B;margin-top:8px;display:none}
+#pickerContainer{max-width:600px;margin:0 auto;padding:80px 40px}
+body.editing .s{margin-right:460px}body.editing .hero{padding-right:500px}
+
+@media(max-width:768px){
+  .site-header{padding:0 20px}.hero{padding:60px 20px 48px}.s{padding:60px 20px}
+  .hero-meta{gap:24px}
+  .sc-grid,.sc-costs{grid-template-columns:1fr}
+  .sc-metric,.sc-cost{border-radius:0!important}.sc-metric:first-child,.sc-cost:first-child{border-radius:8px 8px 0 0!important}.sc-metric:last-child,.sc-cost:last-child{border-radius:0 0 8px 8px!important}
+  .sc-point{grid-template-columns:28px 1fr;gap:0 16px}
+  .sc-point-num{font-size:18px}
+  .cond{grid-template-columns:28px 1fr;gap:0 16px}.cond-num{font-size:18px}
+  .ad-grid{grid-template-columns:1fr}.ad-card{border-radius:0!important}.ad-card:first-child{border-radius:8px 8px 0 0!important}.ad-card:last-child{border-radius:0 0 8px 8px!important}
+  .calc{padding:24px}.calc-input{font-size:20px;width:140px}.calc-input-row{flex-direction:column;align-items:flex-start;gap:8px}
+  .edit-panel{width:100%;left:0}body.editing .s{margin-right:0}body.editing .hero{padding-right:20px}
+  .cta-s,.report-footer{padding:60px 20px}
+  .sync-status{display:none!important}
+}
 </style>
 </head>
 <body>
 <div class="loading-bar" id="loadingBar"></div>
 <div class="modal-overlay" id="tokenModal"><div class="modal-box"><h3>GitHub Token</h3><p>Введите Personal Access Token.</p><input type="password" id="tokenInput" placeholder="github_pat_..."><button onclick="saveToken()">Подключить</button><div class="modal-error" id="tokenError"></div></div></div>
 <header class="site-header"><div class="header-left"><a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a><a class="back-link" id="backLink" href="#" onclick="event.preventDefault();showPicker();" style="display:none;">← Все стратегии</a></div><div class="header-right"><span class="sync-status" id="syncStatus" onclick="if(!getToken())showTokenModal();" style="display:none;"><span class="sync-dot" id="syncDot"></span><span id="syncText">—</span></span><button class="edit-toggle" id="editToggle" onclick="toggleEdit()" style="display:none;">Редактировать</button></div></header>
+
 <section class="hero" id="heroSection" style="display:none;"><div class="hero-inner"><p class="hero-label">Индивидуальная стратегия продажи</p><h1 class="hero-title" id="heroTitle"></h1><div class="hero-meta" id="heroMeta"></div><div class="hero-date" id="heroDate"></div></div></section>
-<section class="s" id="introSection" style="display:none;"><div class="s-label">О документе</div><h2 class="s-title">Зачем нужна стратегия</h2><div class="s-text"><p>На основе <strong>сравнительно маркетингового анализа</strong> я подготовил три сценария продажи вашего объекта. Каждый отличается по модели ценообразования, срокам, затратам и уровню контроля над итоговой ценой.</p><p>Это не три варианта «подороже или подешевле». Это три <strong>принципиально разные модели поведения на рынке</strong>: как формируется цена, кто управляет процессом, и почему итог отличается.</p><p>Подробнее о каждом этапе работы — в <a href="/meeting-pack.html#plan" target="_blank">маркетинговом плане</a> и <a href="/meeting-pack.html#prep" target="_blank">подготовке к продаже</a>.</p></div></section>
-<section class="s" id="scenarioSection" style="display:none;"><div class="s-label">01 — Сценарии</div><h2 class="s-title">Три модели продажи</h2><div class="sc-tabs"><div class="sc-tab" onclick="showTab(0,this)">Классическая<div class="sc-tab-sub">4+ месяцев</div></div><div class="sc-tab active" onclick="showTab(1,this)">Мягкие торги<div class="sc-tab-sub">2–2,5 месяца</div></div><div class="sc-tab" onclick="showTab(2,this)">Аукцион<div class="sc-tab-sub">14–21 день</div></div></div><div id="scBodies"></div></section>
-<section class="s" id="adSection" style="display:none;"><div class="s-label">02 — Продвижение</div><h2 class="s-title">Рекламная стратегия</h2><div class="s-text" style="margin-bottom:32px;"><p>Рекламный бюджет оплачивается продавцом и зависит от выбранного сценария.</p></div><div class="ad-grid"><div class="ad-card"><div class="ad-card-title">Площадки</div><div class="ad-card-text">ЦИАН, Авито, Яндекс.Недвижимость — премиум-размещение с профессиональными фото</div></div><div class="ad-card"><div class="ad-card-title">Целевая реклама</div><div class="ad-card-text">Таргетированная реклама в соцсетях на аудиторию покупателей в вашем сегменте</div></div><div class="ad-card"><div class="ad-card-title">Агентская сеть</div><div class="ad-card-text">Рассылка по базе агентов-партнёров, работающих с покупателями в вашем сегменте</div></div></div></section>
-<section class="s" id="condSection" style="display:none;"><div class="s-label">03 — Условия</div><h2 class="s-title">Что входит и что требуется</h2><div class="cond"><div class="cond-title">Эксклюзивный договор</div><div class="cond-text">Управление ценой, показами и переговорами требует полного контроля. Без эксклюзива невозможно создать конкуренцию покупателей. Подробнее — <a href="/meeting-pack.html#mistakes" target="_blank">ошибки продавцов</a>.</div></div><div class="cond"><div class="cond-title">Подготовка объекта</div><div class="cond-text">Расхламление, мелкий ремонт при необходимости, доступ для фото и показов. Подробнее — <a href="/meeting-pack.html#prep" target="_blank">подготовка к продаже</a>.</div></div><div class="cond"><div class="cond-title">Рекламный бюджет</div><div class="cond-text">Оплачивается продавцом. Размер зависит от сценария и согласовывается до старта.</div></div><div class="cond"><div class="cond-title">Что я беру на себя</div><div class="cond-text">Стратегия, фото/видеосъёмка, тексты, рекламные кампании, показы, обратная связь, переговоры с покупателями, сопровождение сделки до регистрации.</div></div></section>
-<section class="cta-s" id="ctaSection" style="display:none;"><div class="cta-quote">Стратегия готова.<br><em>Осталось выбрать сценарий.</em></div><div class="cta-sub">Обсудим детали, ответим на вопросы и определим дату старта.</div></section>
+
+<section class="s" id="introSection" style="display:none;">
+  <span class="s-num">О документе</span>
+  <h2 class="s-title">Зачем нужна стратегия</h2>
+  <p class="s-intro">На основе <strong>сравнительно маркетингового анализа</strong> я подготовил три сценария продажи вашего объекта. Каждый отличается по модели ценообразования, срокам, затратам и уровню контроля над итоговой ценой. Это не три варианта «подороже или подешевле» — это три принципиально разные модели поведения на рынке. Подробнее — в <a href="/meeting-pack.html#plan" target="_blank">маркетинговом плане</a>.</p>
+</section>
+
+<section class="s" id="scenarioSection" style="display:none;">
+  <span class="s-num">01 / 03</span>
+  <h2 class="s-title">Три модели продажи</h2>
+  <div class="sc-tabs">
+    <div class="sc-tab" onclick="showTab(0,this)">Классическая<div class="sc-tab-sub">4+ месяцев</div></div>
+    <div class="sc-tab active" onclick="showTab(1,this)">Мягкие торги<div class="sc-tab-sub">2–2,5 месяца</div></div>
+    <div class="sc-tab" onclick="showTab(2,this)">Аукцион<div class="sc-tab-sub">14–21 день</div></div>
+  </div>
+  <div id="scBodies"></div>
+</section>
+
+<section class="s" id="adSection" style="display:none;">
+  <span class="s-num">02 / 03</span>
+  <h2 class="s-title">Рекламная стратегия</h2>
+  <p class="s-intro">Рекламный бюджет оплачивается продавцом и зависит от выбранного сценария. Ниже — каналы, которые будут задействованы для вашего объекта.</p>
+  <div class="ad-grid">
+    <div class="ad-card"><div class="ad-card-title">Площадки</div><div class="ad-card-text">ЦИАН, Авито, Яндекс.Недвижимость — премиум-размещение с профессиональными фото и продающим текстом</div></div>
+    <div class="ad-card"><div class="ad-card-title">Целевая реклама</div><div class="ad-card-text">Таргетированная реклама в соцсетях на аудиторию покупателей в вашем ценовом сегменте и районе</div></div>
+    <div class="ad-card"><div class="ad-card-title">Агентская сеть</div><div class="ad-card-text">Рассылка по базе агентов-партнёров, работающих с покупателями в вашем сегменте</div></div>
+  </div>
+</section>
+
+<section class="s" id="condSection" style="display:none;">
+  <span class="s-num">03 / 03</span>
+  <h2 class="s-title">Что входит и что требуется</h2>
+  <div class="cond"><div class="cond-num">01</div><div><div class="cond-title">Эксклюзивный договор</div><div class="cond-text">Управление ценой, показами и переговорами требует полного контроля. Без эксклюзива невозможно создать конкуренцию покупателей. Подробнее — <a href="/meeting-pack.html#mistakes" target="_blank">ошибки продавцов</a>.</div></div></div>
+  <div class="cond"><div class="cond-num">02</div><div><div class="cond-title">Подготовка объекта</div><div class="cond-text">Расхламление, мелкий ремонт при необходимости, доступ для фото и показов. Подробнее — <a href="/meeting-pack.html#prep" target="_blank">подготовка к продаже</a>.</div></div></div>
+  <div class="cond"><div class="cond-num">03</div><div><div class="cond-title">Рекламный бюджет</div><div class="cond-text">Оплачивается продавцом. Размер зависит от сценария и согласовывается до старта.</div></div></div>
+  <div class="cond"><div class="cond-num">04</div><div><div class="cond-title">Что я беру на себя</div><div class="cond-text">Стратегия, фото/видеосъёмка, тексты, рекламные кампании, организация показов, обратная связь, переговоры с покупателями, сопровождение сделки до регистрации.</div></div></div>
+</section>
+
+<section class="cta-s" id="ctaSection" style="display:none;">
+  <div class="cta-quote">Стратегия готова.<br><em>Осталось выбрать сценарий.</em></div>
+  <div class="cta-sub">Обсудим детали, ответим на вопросы и определим дату старта.</div>
+</section>
+
 <div id="pickerContainer" style="display:none;"></div>
+
 <footer class="report-footer" id="footerEl" style="display:none;"><p class="footer-name">Семён Гончаров · Агент по недвижимости</p><p class="footer-contact"><a href="tel:+79118461965">+7 911 846-19-65</a> · <a href="https://t.me/semengme">t.me/semengme</a> · <a href="https://fastbroker21.ru">fastbroker21.ru</a></p></footer>
+
 <div class="edit-panel" id="editPanel"><div class="edit-panel-inner"><h3>Редактор стратегии</h3><div class="edit-group"><div class="edit-group-title">Объект</div><div class="edit-row"><label class="edit-label">Адрес</label><input class="edit-input" id="e-address" onchange="sav()"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Площадь, м²</label><input class="edit-input" id="e-area" type="number" step="0.1" onchange="sav()"></div><div class="edit-row"><label class="edit-label">Комнат</label><input class="edit-input" id="e-rooms" type="number" onchange="sav()"></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Этаж</label><input class="edit-input" id="e-floor" onchange="sav()"></div><div class="edit-row"><label class="edit-label">Район</label><input class="edit-input" id="e-location" onchange="sav()"></div></div><div class="edit-row"><label class="edit-label">Дата</label><input class="edit-input" id="e-date" onchange="sav()"></div></div><div class="edit-group"><div class="edit-group-title">Рек. цена из СМА</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">От (руб.)</label><input class="edit-input" id="e-priceFrom" type="number" onchange="sav()"></div><div class="edit-row"><label class="edit-label">До (руб.)</label><input class="edit-input" id="e-priceTo" type="number" onchange="sav()"></div></div><div class="auto-calc" id="autoHint"></div></div><div class="edit-group"><div class="edit-group-title">Комиссия (%)</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;"><div class="edit-row"><label class="edit-label">Классика</label><input class="edit-input" id="e-comm1" type="number" step="0.1" value="2.5" onchange="sav()"></div><div class="edit-row"><label class="edit-label">М. торги</label><input class="edit-input" id="e-comm2" type="number" step="0.1" value="3" onchange="sav()"></div><div class="edit-row"><label class="edit-label">Аукцион</label><input class="edit-input" id="e-comm3" type="number" step="0.1" value="6" onchange="sav()"></div></div></div><button class="btn-save" onclick="saveData()">Сохранить</button><p class="save-hint" id="saveHint">Данные синхронизируются через GitHub.</p><button class="btn-del" onclick="resetObj()">Удалить эту стратегию</button></div></div>
 <script>
 const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_FILE='data/strategy.json',GH_BRANCH='main',TOKEN_KEY='wr_gh_token';
@@ -94,14 +266,7 @@ function render(){
   document.getElementById('heroMeta').innerHTML=[['Площадь',s.area?s.area+' м²':'—'],['Комнат',s.rooms||'—'],['Этаж',s.floor||'—'],['Район',s.location||'—']].map(x=>'<div><div class="hero-meta-label">'+x[0]+'</div><div class="hero-meta-value">'+esc(String(x[1]))+'</div></div>').join('');
   document.getElementById('heroDate').textContent=s.date?'Актуально на '+s.date:'';
 
-  // NDFL calculator: two-tier scale for property sales
-  // Tax base = sale price - purchase price (or - 1M deduction if no docs)
-  // 13% on first 2.4M of taxable income, 15% on amount above 2.4M
-  function calcNdfl(taxBase){
-    if(taxBase<=0)return 0;
-    if(taxBase<=2400000)return Math.round(taxBase*0.13);
-    return Math.round(2400000*0.13+(taxBase-2400000)*0.15);
-  }
+  function calcNdfl(b){if(b<=0)return 0;if(b<=2400000)return Math.round(b*0.13);return Math.round(2400000*0.13+(b-2400000)*0.15);}
 
   function cH(defaultDeal,cp,mk,ti){
     var deal=calcPrices[ti]||defaultDeal||0;
@@ -110,94 +275,75 @@ function render(){
     const cm=deal?Math.round(deal*cp/100):0;
     const tax=taxState[ti]&&deal?calcNdfl(deal):0;
     const net=deal?deal-cm-mk-tax:0;
-    var th='<div class="calc" id="calc'+ti+'">';
-    th+='<div class="calc-title">Расчёт «на руки»</div>';
-    // Price input
-    th+='<div class="calc-row" style="margin-bottom:12px;"><span class="calc-label">Цена сделки</span><span class="calc-val"><input type="text" value="'+fmt(deal)+'" style="font-family:var(--sans);font-size:16px;font-weight:500;text-align:right;border:none;border-bottom:1px solid var(--border);background:transparent;color:var(--text);width:160px;padding:4px 0;outline:none;" onfocus="this.value=this.value.replace(/[^0-9]/g,\'\')" onblur="calcPrices['+ti+']=parseInt(this.value)||0;render();" onkeydown="if(event.key===\'Enter\'){calcPrices['+ti+']=parseInt(this.value)||0;render();}"> ₽</span></div>';
-    // Tax toggle
+    var th='<div class="calc"><div class="calc-title">Калькулятор «на руки»</div>';
+    th+='<div class="calc-input-row"><span class="calc-input-label">Цена сделки</span><div><input class="calc-input" type="text" value="'+fmt(deal)+'" onfocus="this.value=this.value.replace(/[^0-9]/g,\'\')" onblur="calcPrices['+ti+']=parseInt(this.value)||0;render();" onkeydown="if(event.key===\'Enter\'){calcPrices['+ti+']=parseInt(this.value)||0;render();}"><span class="calc-currency">₽</span></div></div>';
     th+='<div class="calc-toggle"><div class="calc-switch'+(taxState[ti]?' on':'')+'" onclick="toggleTax('+ti+')"></div><span>Владение менее 5 лет (НДФЛ)</span></div>';
-    // Rows
     if(deal){
       th+='<div class="calc-row"><span class="calc-label">Комиссия ('+cp+'%)</span><span class="calc-val dim">− '+fmt(cm)+' ₽</span></div>';
       th+='<div class="calc-row"><span class="calc-label">Маркетинг</span><span class="calc-val dim">− '+fmt(mk)+' ₽</span></div>';
       if(taxState[ti]){
+        th+='<div class="calc-row"><span class="calc-label">НДФЛ</span><span class="calc-val dim">− '+fmt(tax)+' ₽</span></div>';
         if(deal>2400000){
-          var t1=Math.round(2400000*0.13), t2=Math.round((deal-2400000)*0.15);
-          th+='<div class="calc-row"><span class="calc-label">НДФЛ</span><span class="calc-val dim">− '+fmt(tax)+' ₽</span></div>';
-          th+='<div style="font-size:12px;color:var(--muted);padding:2px 0 4px;line-height:1.6;font-weight:300;">'+fmt(2400000)+' × 13% = '+fmt(t1)+' ₽<br>'+'('+fmt(deal)+' − '+fmt(2400000)+') × 15% = '+fmt(t2)+' ₽</div>';
-        }else{
-          th+='<div class="calc-row"><span class="calc-label">НДФЛ (13%)</span><span class="calc-val dim">− '+fmt(tax)+' ₽</span></div>';
+          var t1=Math.round(2400000*0.13),t2=Math.round((deal-2400000)*0.15);
+          th+='<div class="calc-breakdown">Первые 2,4 млн × 13% = '+fmt(t1)+' ₽<br>Сумма свыше 2,4 млн × 15% = '+fmt(t2)+' ₽</div>';
         }
-        th+='<div style="font-size:11px;color:var(--muted);padding:4px 0 8px;line-height:1.5;font-weight:300;">Расчёт с полной суммы. Если есть документы о покупке — налог считается с разницы (цена продажи минус цена покупки). Также применяется имущественный вычет 1 млн ₽.</div>';
+        th+='<div class="calc-note">Расчёт с полной суммы. Если есть документы о покупке — налог считается с разницы (продажа минус покупка). Также применяется имущественный вычет 1 млн ₽.</div>';
       }else{
         th+='<div class="calc-row"><span class="calc-label">НДФЛ</span><span class="calc-val dim">не применяется</span></div>';
       }
-      th+='<div class="calc-row total"><span class="calc-label">На руки</span><span class="calc-val">'+fmt(net)+' ₽</span></div>';
+      th+='<div class="calc-row total"><span class="calc-total-label">На руки</span><span class="calc-total-val">'+fmt(net)+' ₽</span></div>';
     }
-    th+='</div>';
-    return th;
+    th+='</div>';return th;
   }
 
-  function metrics(start,term,termColor,termLabel,dealText,dealLabel){
-    return '<div class="sc-grid"><div class="sc-metric"><div class="sc-metric-num">'+(start?fmtP(start):'—')+'</div><div class="sc-metric-label">Стартовая цена</div></div><div class="sc-metric"><div class="sc-metric-num" style="color:'+termColor+';">'+term+'</div><div class="sc-metric-label">'+termLabel+'</div></div><div class="sc-metric"><div class="sc-metric-num" style="font-size:16px;">'+dealText+'</div><div class="sc-metric-label">'+dealLabel+'</div></div></div>';
+  function met(start,term,tCol,tLab,dTxt,dLab){
+    return '<div class="sc-grid"><div class="sc-metric"><div class="sc-metric-num">'+(start?fmtP(start):'—')+'</div><div class="sc-metric-label">Стартовая цена</div></div><div class="sc-metric"><div class="sc-metric-num" style="color:'+tCol+';">'+term+'</div><div class="sc-metric-label">'+tLab+'</div></div><div class="sc-metric"><div class="sc-metric-num" style="font-size:18px;">'+dTxt+'</div><div class="sc-metric-label">'+dLab+'</div></div></div>';
+  }
+
+  function pt(num,title,text){
+    return '<div class="sc-point"><div class="sc-point-num">'+num+'</div><div><div class="sc-point-title">'+title+'</div><div class="sc-point-text">'+text+'</div></div></div>';
   }
 
   function costs(cp,mkText){
     return '<div class="sc-costs"><div class="sc-cost"><div class="sc-cost-num">'+cp+'%</div><div class="sc-cost-label">Комиссия агента</div></div><div class="sc-cost"><div class="sc-cost-num">'+mkText+'</div><div class="sc-cost-label">Маркетинг (оплата продавца)</div></div></div>';
   }
+
   var h='';
 
-  // ═══ S1: CLASSIC ═══
+  // ═══ CLASSIC ═══
   h+='<div class="sc-body" style="display:'+(activeTab===0?'block':'none')+';">';
-  h+='<div class="sc-alert sc-alert-warn"><strong>Этот сценарий несёт риски.</strong> Срок продажи не определён. Цена движется только сверху вниз. Нет конкуренции покупателей за объект. Нет уверенности, что вы продали по максимальной цене. Подробнее — <a href="/meeting-pack.html#mistakes" target="_blank" style="color:#791F1F;">ошибки продавцов</a>.</div>';
-  h+=metrics(p1S,'4+ мес.','#791F1F','Срок не определён','Сверху вниз','Цена снижается торгом');
-
-  h+='<div class="sc-desc"><strong>Суть.</strong> Объект выставляется по верхней границе рекомендуемого коридора. Ожидание покупателя, который готов заплатить именно эту цену. Продажа может произойти быстро — если повезёт. Может затянуться на неопределённый срок.</div>';
-
-  h+='<div class="sc-desc"><strong>Как формируется цена.</strong> Сверху вниз. Вы начинаете с максимума и постепенно снижаете под давлением рынка. Каждый покупатель торгует вас один на один — нет конкуренции за объект, покупатель не чувствует давления и не торопится с решением. Цена определяется не реальной стоимостью, а тем, насколько вы готовы уступить. <strong>Нет никакой уверенности, что нельзя было продать дороже.</strong></div>';
-
-  h+='<div class="sc-desc"><strong>Что происходит со временем.</strong> После 60–90 дней на рынке объект начинают воспринимать как проблемный. Покупатели видят дату публикации, отслеживают историю цены и торгуются агрессивнее. Агенты рекомендуют своим клиентам подождать — «снизит ещё». Репутация объекта на рынке портится, даже если с ним всё в порядке. Снятие и повторная публикация не помогают — рынок помнит.</div>';
-
-  h+='<div class="sc-desc"><strong>Что получает продавец.</strong> Минимальные вложения в маркетинг (~10 000 ₽). Минимальную комиссию ('+c1+'%). Но и минимальный контроль над процессом. Нет управляемого спроса, нет данных для принятия решений, нет уверенности в итоговой цене. Можно продешевить — и никогда об этом не узнать.</div>';
-
+  h+='<div class="sc-alert sc-alert-warn"><strong>Этот сценарий несёт риски.</strong> Срок продажи не определён. Цена движется только сверху вниз. Нет конкуренции покупателей за объект. Нет уверенности, что вы продали по максимальной цене. Подробнее — <a href="/meeting-pack.html#mistakes" target="_blank">ошибки продавцов</a>.</div>';
+  h+=met(p1S,'4+ мес.','#791F1F','Срок не определён','Сверху вниз','Цена снижается торгом');
+  h+=pt('01','Суть','Объект выставляется по верхней границе рекомендуемого коридора. Ожидание покупателя, который готов заплатить именно эту цену. Продажа может произойти быстро — если повезёт. Может затянуться на неопределённый срок.');
+  h+=pt('02','Как формируется цена','Сверху вниз. Вы начинаете с максимума и постепенно снижаете под давлением рынка. Каждый покупатель торгует вас один на один — нет конкуренции за объект, покупатель не торопится с решением. Цена определяется не реальной стоимостью, а тем, насколько вы готовы уступить. <strong>Нет никакой уверенности, что нельзя было продать дороже.</strong>');
+  h+=pt('03','Что происходит со временем','После 60–90 дней на рынке объект начинают воспринимать как проблемный. Покупатели видят дату публикации, отслеживают историю цены и торгуются агрессивнее. Агенты рекомендуют своим клиентам подождать — «снизит ещё». Репутация объекта на рынке портится, даже если с ним всё в порядке.');
+  h+=pt('04','Что получает продавец','Минимальные вложения в маркетинг (~10 000 ₽). Минимальную комиссию ('+c1+'%). Но и минимальный контроль над процессом. Нет управляемого спроса, нет данных для принятия решений. Можно продешевить — и никогда об этом не узнать.');
   h+=costs(c1,'~10 000 ₽');
   h+=cH(p1D,c1,10000,0);
   h+='</div>';
 
-  // ═══ S2: SOFT BIDDING ═══
+  // ═══ SOFT BIDDING ═══
   h+='<div class="sc-body" style="display:'+(activeTab===1?'block':'none')+';">';
   h+='<div class="sc-alert sc-alert-rec"><strong>Рекомендуемый сценарий.</strong> Управляемый процесс с еженедельной корректировкой на основе данных. Итоговая цена будет <strong>максимально возможной для этого объекта</strong> — она формируется реальным спросом покупателей.</div>';
-  h+=metrics(p2S,'2–2,5 мес.','#085041','Ориент. срок','Максимум рынка','Определяется спросом');
-
-  h+='<div class="sc-desc"><strong>Суть.</strong> Это мягкий аукцион — без агрессивного маркетинга, но с управляемым спросом. Стартовая цена — как правило, середина рекомендуемого диапазона из СМА. Если интерес рынка при этом слишком высокий — корректируем вверх. Если спрос слабый — сдвигаем вниз. Задача — нащупать идеальный баланс: активный, но не ажиотажный спрос. Каждую неделю анализируем данные и корректируем тактику.</div>';
-
-  h+='<div class="sc-desc"><strong>Как формируется цена.</strong> Через спрос, а не через ваши ожидания. Мы выставляем объект по середине рекомендуемого коридора, привлекаем несколько заинтересованных покупателей и создаём ситуацию, в которой <strong>каждый знает, что есть другие</strong>. Покупатель больше не торгует вас вниз — он конкурирует с другими покупателями. Если интерес выше ожидаемого — цена корректируется вверх. Если ниже — мы понимаем это за 1–2 недели и адаптируемся. Итоговая цена подтверждена реальным спросом — это максимально возможная цена для этого объекта.</div>';
-
-  h+='<div class="sc-desc"><strong>Управляемый спрос.</strong> Каждый показ — это сбор данных. Обратная связь от покупателей, анализ возражений, понимание что работает и что нет. Еженедельный отчёт с цифрами и выводами. Если нужна корректировка — действуем на основе фактов, а не эмоций. Вы всегда понимаете, что происходит и почему. Подробнее — <a href="/meeting-pack.html#showings" target="_blank">правила показов</a>.</div>';
-
-  h+='<div class="sc-desc"><strong>Почему 2–2,5 месяца.</strong> Без агрессивного маркетингового бюджета сбор мотивированных покупателей занимает 3–6 недель. Ещё 2–3 недели — переговоры и выход на сделку. Это не долго — это управляемый процесс, в котором каждый шаг обоснован данными.</div>';
-
-  h+='<div class="sc-desc"><strong>Что получает продавец.</strong> Максимальную возможную цену для этого объекта, подтверждённую спросом. Полный контроль через еженедельные отчёты. Уверенность, что не продешевили. Понимание, почему именно эта цена — лучшая.</div>';
-
+  h+=met(p2S,'2–2,5 мес.','#085041','Ориент. срок','Максимум рынка','Определяется спросом');
+  h+=pt('01','Суть','Это мягкий аукцион — без агрессивного маркетинга, но с управляемым спросом. Стартовая цена — как правило, середина рекомендуемого диапазона из СМА. Если интерес рынка при этом слишком высокий — корректируем вверх. Если спрос слабый — сдвигаем вниз. Задача — нащупать идеальный баланс: активный, но не ажиотажный спрос.');
+  h+=pt('02','Как формируется цена','Через спрос, а не через ваши ожидания. Мы привлекаем несколько заинтересованных покупателей и создаём ситуацию, в которой <strong>каждый знает, что есть другие</strong>. Покупатель больше не торгует вас вниз — он конкурирует с другими. Если интерес выше ожидаемого — цена корректируется вверх. Если ниже — адаптируемся за 1–2 недели. Итоговая цена — максимально возможная для этого объекта.');
+  h+=pt('03','Управляемый спрос','Каждый показ — это сбор данных. Обратная связь от покупателей, анализ возражений, понимание что работает и что нет. Еженедельный отчёт с цифрами и выводами. Если нужна корректировка — действуем на основе фактов, а не эмоций. Подробнее — <a href="/meeting-pack.html#showings" target="_blank">правила показов</a>.');
+  h+=pt('04','Почему 2–2,5 месяца','Без агрессивного маркетингового бюджета сбор мотивированных покупателей занимает 3–6 недель. Ещё 2–3 недели — переговоры и выход на сделку. Это не долго — это управляемый процесс, в котором каждый шаг обоснован данными.');
+  h+=pt('05','Что получает продавец','Максимальную возможную цену для этого объекта, подтверждённую спросом. Полный контроль через еженедельные отчёты. Уверенность, что не продешевили. Понимание, почему именно эта цена — лучшая.');
   h+=costs(c2,'20 000 – 35 000 ₽');
   h+=cH(p2D,c2,28000,1);
   h+='</div>';
 
-  // ═══ S3: AUCTION ═══
+  // ═══ AUCTION ═══
   h+='<div class="sc-body" style="display:'+(activeTab===2?'block':'none')+';">';
-  h+='<div class="sc-alert sc-alert-info"><strong>Самый быстрый способ продать по максимальной цене.</strong> 21 день в стандартном формате, 14 дней в ускоренном. Итоговая цена формируется конкуренцией покупателей. Подходит только самым мотивированным собственникам. Подробнее — <a href="/meeting-pack.html#plan" target="_blank" style="color:#0C447C;">маркетинговый план</a>.</div>';
-  h+=metrics(p3S,'14–21 день','#0C447C','Ориент. срок','Максимум рынка','Конкуренция покупателей');
-
-  h+='<div class="sc-desc"><strong>Суть.</strong> Полноценный аукцион. Стартовая цена намеренно ниже рынка — это инструмент создания ажиотажного спроса. Интенсивный маркетинг привлекает максимум покупателей за короткий срок. Все показы концентрируются в 2 дня. Покупатели конкурируют друг с другом — итоговая цена формируется их готовностью платить.</div>';
-
-  h+='<div class="sc-desc"><strong>Как формируется цена.</strong> Конкуренция покупателей. Стартовая цена — не потолок и не потеря. Это точка входа, которая привлекает максимальное количество заинтересованных. Когда 8–15 человек приходят на показ в один день и видят друг друга — <strong>каждый понимает: если не он, то кто-то другой</strong>. Офферы поступают выше стартовой цены. Вы выбираете лучшее предложение по цене и условиям.</div>';
-
-  h+='<div class="sc-desc"><strong>Почему вложения серьёзнее.</strong> Аукцион работает только при критической массе покупателей. Чтобы собрать 8–15 показов за 2 дня, нужен интенсивный маркетинг: премиум-размещение на всех площадках, таргетированная реклама, работа на территории, рассылка по агентской сети. Бюджет 45 000 – 120 000 ₽ зависит от объекта и сегмента.</div>';
-
-  h+='<div class="sc-desc"><strong>Кому подходит.</strong> Мотивированным собственникам, которым важна скорость и готовность довериться процессу. Объект должен быть полностью готов: документы, состояние, доступ для показов. Подробнее — <a href="/meeting-pack.html#prep" target="_blank">подготовка к продаже</a>.</div>';
-
-  h+='<div class="sc-desc"><strong>Что получает продавец.</strong> Самый быстрый результат на рынке. Цену, сформированную конкуренцией покупателей — максимально возможную. Полную прозрачность: вы видите все офферы и сами выбираете покупателя. 21 день от старта до аванса.</div>';
-
+  h+='<div class="sc-alert sc-alert-info"><strong>Самый быстрый способ продать по максимальной цене.</strong> 21 день в стандартном формате, 14 дней в ускоренном. Итоговая цена формируется конкуренцией покупателей. Подходит только самым мотивированным собственникам. Подробнее — <a href="/meeting-pack.html#plan" target="_blank">маркетинговый план</a>.</div>';
+  h+=met(p3S,'14–21 день','#0C447C','Ориент. срок','Максимум рынка','Конкуренция покупателей');
+  h+=pt('01','Суть','Полноценный аукцион. Стартовая цена намеренно ниже рынка — это инструмент создания ажиотажного спроса. Интенсивный маркетинг привлекает максимум покупателей за короткий срок. Все показы концентрируются в 2 дня. Покупатели конкурируют друг с другом — итоговая цена формируется их готовностью платить.');
+  h+=pt('02','Как формируется цена','Конкуренция покупателей. Стартовая цена — точка входа, которая привлекает максимальное количество заинтересованных. Когда 8–15 человек приходят на показ в один день и видят друг друга — <strong>каждый понимает: если не он, то кто-то другой</strong>. Офферы поступают выше стартовой цены. Вы выбираете лучшее предложение по цене и условиям.');
+  h+=pt('03','Почему вложения серьёзнее','Аукцион работает только при критической массе покупателей. Чтобы собрать 8–15 показов за 2 дня, нужен интенсивный маркетинг: премиум-размещение на всех площадках, таргетированная реклама, работа на территории, рассылка по агентской сети. Бюджет 45 000 – 120 000 ₽ зависит от объекта и сегмента.');
+  h+=pt('04','Кому подходит','Мотивированным собственникам, которым важна скорость и готовность довериться процессу. Объект должен быть полностью готов: документы, состояние, доступ. Подробнее — <a href="/meeting-pack.html#prep" target="_blank">подготовка к продаже</a>.');
+  h+=pt('05','Что получает продавец','Самый быстрый результат на рынке. Цену, сформированную конкуренцией покупателей — максимально возможную. Полную прозрачность: вы видите все офферы и сами выбираете покупателя. 21 день от старта до аванса.');
   h+=costs(c3,'45 000 – 120 000 ₽');
   h+=cH(p3D,c3,80000,2);
   h+='</div>';
