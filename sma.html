@@ -965,8 +965,17 @@ async function initApp(){
   }
 
   // Re-render or navigate after data loaded
-  if(initId&&allData.analyses[initId])openSma(initId);
-  else if(!initId&&loaded)renderPicker(); // refresh picker with loaded data
+  if(initId){
+    // Exact match first, then fuzzy by address slug
+    let resolvedId = initId;
+    if(!allData.analyses[initId]){
+      for(const [k,v] of Object.entries(allData.analyses||{})){
+        if(slugify(v.address||'')===initId){resolvedId=k;break;}
+      }
+    }
+    if(allData.analyses[resolvedId]) openSma(resolvedId);
+    else if(!loaded) {} // data not loaded yet, nothing to show
+  } else if(loaded) renderPicker(); // refresh picker with loaded data
 }
 
 (async function(){try{await initApp();}catch(e){console.error(e);showPicker();}})();
