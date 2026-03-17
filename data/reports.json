@@ -68,6 +68,54 @@
               "url": "https://www.cian.ru/sale/flat/325334472/",
               "ours": false,
               "isNew": false
+            },
+            {
+              "address": "ул. Дмитрия Ульянова, д.23к1",
+              "rooms": "1",
+              "area": "35,9",
+              "price": "19 500 000 ₽",
+              "status": "active",
+              "statusText": "В продаже",
+              "note": "",
+              "url": "https://www.cian.ru/sale/flat/326984369",
+              "ours": false,
+              "isNew": false
+            },
+            {
+              "address": "ул. Ивана Бабушкина ",
+              "rooms": "2",
+              "area": "54",
+              "price": "21 900 000 ₽",
+              "status": "active",
+              "statusText": "В продаже",
+              "note": "",
+              "url": "https://www.cian.ru/sale/flat/319294137",
+              "ours": false,
+              "isNew": false
+            },
+            {
+              "address": "ул. Гарибальди, д. 11",
+              "rooms": "1",
+              "area": "39",
+              "price": "18 500 000 ₽",
+              "status": "active",
+              "statusText": "В продаже",
+              "note": "",
+              "url": "https://www.cian.ru/sale/flat/327454429",
+              "ours": false,
+              "isNew": false
+            },
+            {
+              "address": "ул. Вавилова, д. 25",
+              "rooms": "1",
+              "area": "37",
+              "price": "16 500 000 ₽",
+              "status": "active",
+              "statusText": "В продаже",
+              "note": "",
+              "url": "https://www.cian.ru/sale/flat/327758196/",
+              "ours": false,
+              "isNew": false
             }
           ],
           "recommendations": [],
