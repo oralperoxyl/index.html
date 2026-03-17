@@ -92,6 +92,30 @@
               "url": "https://www.cian.ru/sale/flat/327758196/",
               "ours": false,
               "isNew": false
+            },
+            {
+              "address": "ул. Вавилова, д. 44к4",
+              "rooms": "1",
+              "area": "34,8",
+              "price": "17 500 000 ₽",
+              "status": "active",
+              "statusText": "В продаже",
+              "note": "",
+              "url": "https://www.cian.ru/sale/flat/327455618/",
+              "ours": false,
+              "isNew": false
+            },
+            {
+              "address": "ул. Новочеремушкинская, д.53к1",
+              "rooms": "2",
+              "area": "37,7",
+              "price": "14 500 000 ₽",
+              "status": "active",
+              "statusText": "В продаже",
+              "note": "",
+              "url": "https://www.cian.ru/sale/flat/325334472/",
+              "ours": false,
+              "isNew": false
             }
           ],
           "recommendations": [],
