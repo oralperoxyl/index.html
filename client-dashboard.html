@@ -18,119 +18,105 @@
   --dark:#1C1C1E;
   --text:#1A1A1A;
   --muted:#888;
-  --border:rgba(0,0,0,0.08);
+  --border:rgba(0,0,0,0.07);
   --accent:#0066FF;
   --green:#2D8A4E;
 }
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;min-height:100vh}
 
-/* ── HEADER ── */
 .site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
 .header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}
-.header-badge{font-size:10px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);padding:4px 10px;border:1px solid var(--border);border-radius:20px}
+.header-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
 
-/* ── HERO ── */
-.hero{background:var(--dark);color:#E5E5E5;padding:72px 40px 56px}
+.hero{background:var(--dark);color:#E5E5E5;padding:80px 40px 64px}
 .hero-inner{max-width:860px;margin:0 auto}
-.hero-eyebrow{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(229,229,229,0.35);margin-bottom:20px}
-.hero-title{font-family:var(--serif);font-size:clamp(28px,5vw,52px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:8px}
-.hero-subtitle{font-size:14px;color:rgba(229,229,229,0.4);font-weight:300;margin-bottom:32px}
-.hero-chips{display:flex;gap:8px;flex-wrap:wrap}
-.chip{font-size:11px;font-weight:400;padding:5px 12px;border-radius:20px;background:rgba(255,255,255,0.07);color:rgba(229,229,229,0.6);border:1px solid rgba(255,255,255,0.1)}
+.hero-eyebrow{font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:24px}
+.hero-title{font-family:var(--serif);font-size:clamp(30px,5vw,56px);font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:10px}
+.hero-sub{font-size:13px;color:rgba(229,229,229,0.35);font-weight:300;margin-bottom:36px}
+.hero-chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:11px;font-weight:300;padding:4px 12px;border-radius:2px;background:rgba(255,255,255,0.06);color:rgba(229,229,229,0.5)}
 
-/* ── MAIN CONTENT ── */
-.main{max-width:860px;margin:0 auto;padding:56px 40px 80px}
+.main{max-width:860px;margin:0 auto;padding:64px 40px 100px}
+.s-label{font-size:10px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:rgba(0,0,0,0.25);margin-bottom:4px}
+.s-title{font-family:var(--serif);font-size:26px;font-weight:400;margin-bottom:32px;line-height:1.2}
 
-/* ── SECTION TITLE ── */
-.section-label{font-size:10px;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+/* Flat stage rows */
+.stages{display:grid;gap:0;margin-bottom:72px}
+.stage-row{display:grid;grid-template-columns:72px 1fr 180px auto;align-items:start;padding:28px 0;border-top:1px solid var(--border);gap:28px;text-decoration:none;color:var(--text)}
+.stage-row:last-child{border-bottom:1px solid var(--border)}
+.stage-row.clickable{cursor:pointer;transition:padding-left 0.2s}
+.stage-row.clickable:hover{padding-left:8px}
+.stage-row.locked{opacity:0.35;pointer-events:none}
 
-/* ── STAGE CARDS ── */
-.stages{display:grid;gap:12px;margin-bottom:56px}
-.stage-card{background:white;border-radius:12px;border:1px solid var(--border);overflow:hidden;transition:box-shadow 0.2s,transform 0.2s;cursor:pointer;text-decoration:none;display:block;color:var(--text)}
-.stage-card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.08);transform:translateY(-1px)}
-.stage-card.locked{opacity:0.45;cursor:default;pointer-events:none}
-.stage-card.locked:hover{box-shadow:none;transform:none}
-.stage-inner{display:grid;grid-template-columns:56px 1fr auto;align-items:center;padding:20px 24px;gap:20px}
-.stage-num{font-family:var(--serif);font-size:28px;font-weight:400;color:rgba(0,0,0,0.1);line-height:1;text-align:center}
-.stage-num.active{color:var(--accent)}
-.stage-num.done{color:var(--green)}
-.stage-body{}
-.stage-title{font-size:15px;font-weight:500;margin-bottom:2px}
-.stage-desc{font-size:12px;color:var(--muted);font-weight:300}
-.stage-meta{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
-.stage-arrow{font-size:18px;color:rgba(0,0,0,0.15);margin-left:8px}
-.stage-card:not(.locked) .stage-arrow{color:var(--accent)}
-.stage-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;padding:3px 8px;border-radius:10px}
-.status-done{background:#E8F5E9;color:var(--green)}
-.status-active{background:#E6EEFF;color:var(--accent)}
-.status-pending{background:rgba(0,0,0,0.04);color:var(--muted)}
+.stage-n{font-family:var(--serif);font-size:40px;font-weight:400;line-height:1;color:rgba(0,0,0,0.07);padding-top:2px}
+.stage-n.is-done{color:rgba(45,138,78,0.2)}
+.stage-n.is-active{color:rgba(0,102,255,0.18)}
 
-/* ── WEEKLY SNAPSHOT ── */
-.weekly-snap{background:white;border-radius:12px;border:1px solid var(--border);padding:28px;margin-bottom:56px}
-.weekly-snap-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;gap:16px}
-.weekly-snap-title{font-family:var(--serif);font-size:20px;font-weight:400}
-.weekly-snap-period{font-size:11px;color:var(--muted);margin-top:2px}
-.weekly-snap-link{font-size:12px;color:var(--accent);text-decoration:none;white-space:nowrap;flex-shrink:0}
-.weekly-snap-link:hover{text-decoration:underline}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
-.stat-cell{background:var(--bg);padding:18px 16px;text-align:center}
-.stat-cell:first-child{border-radius:8px 0 0 8px}
-.stat-cell:last-child{border-radius:0 8px 8px 0}
-.stat-val{font-family:var(--serif);font-size:28px;font-weight:400;line-height:1;margin-bottom:4px}
-.stat-label{font-size:10px;color:var(--muted);letter-spacing:0.04em;text-transform:uppercase}
-.stat-delta{font-size:10px;margin-top:3px;font-weight:500}
-.delta-up{color:var(--green)}
-.delta-down{color:#C0392B}
-.delta-neutral{color:var(--muted)}
-.weekly-summary{margin-top:20px;padding-top:20px;border-top:1px solid var(--border);font-size:13px;color:var(--muted);line-height:1.7}
-.weekly-summary strong{color:var(--text);font-weight:500}
+.stage-title{font-size:15px;font-weight:500;margin-bottom:8px;line-height:1.3}
+.stage-body{font-size:12px;color:var(--muted);line-height:1.7;font-weight:300}
 
-/* ── PRICE BOX ── */
-.price-section{margin-bottom:56px}
-.price-card{background:var(--dark);border-radius:12px;padding:32px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
-.price-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:10px}
-.price-range{font-family:var(--serif);font-size:clamp(20px,3vw,32px);font-weight:400;color:#E5E5E5;line-height:1.2}
-.price-ppm{font-size:12px;color:rgba(229,229,229,0.35);margin-top:6px;font-weight:300}
-.price-note{font-size:12px;color:rgba(229,229,229,0.35);text-align:right;line-height:1.6;max-width:200px}
+.stage-detail-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.2);margin-bottom:6px}
+.stage-detail-val{font-size:13px;color:var(--muted);font-weight:300;line-height:1.6}
+.stage-detail-val strong{color:var(--text);font-weight:500}
 
-/* ── CTA ── */
-.cta-block{background:white;border-radius:12px;border:1px solid var(--border);padding:32px;display:flex;justify-content:space-between;align-items:center;gap:24px}
-.cta-text{}
-.cta-title{font-size:16px;font-weight:500;margin-bottom:4px}
+.stage-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;padding-top:4px}
+.stage-status{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:4px 8px}
+.st-done{color:#1E7B3A;background:#E8F5E9}
+.st-active{color:#0050CC;background:#E6EEFF}
+.st-pending{color:rgba(0,0,0,0.25);background:rgba(0,0,0,0.04)}
+.stage-arrow{font-size:18px;color:rgba(0,0,0,0.1)}
+.stage-row.clickable .stage-arrow{color:var(--accent)}
+
+/* Weekly */
+.weekly-section{margin-bottom:72px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:28px}
+.stat-box{background:var(--bg);padding:24px 20px}
+.stat-lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.25);margin-bottom:6px}
+.stat-val{font-family:var(--serif);font-size:36px;font-weight:400;line-height:1;margin-bottom:5px}
+.stat-delta{font-size:11px;font-weight:500}
+.d-up{color:var(--green)}.d-dn{color:#C0392B}.d-neu{color:rgba(0,0,0,0.22)}
+.weekly-summary-text{font-size:14px;color:var(--muted);line-height:1.8;font-weight:300;max-width:640px}
+.weekly-summary-text strong{color:var(--text);font-weight:500}
+.weekly-link{display:inline-block;margin-top:16px;font-size:12px;color:var(--accent);text-decoration:none}
+.weekly-link:hover{text-decoration:underline}
+
+/* Price */
+.price-section{margin-bottom:72px}
+.price-band{padding:40px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
+.price-range-val{font-family:var(--serif);font-size:clamp(26px,4vw,44px);font-weight:400;line-height:1;margin-bottom:8px;letter-spacing:-0.02em}
+.price-ppm{font-size:12px;color:var(--muted);font-weight:300}
+.price-note{font-size:12px;color:rgba(0,0,0,0.3);text-align:right;line-height:1.7;max-width:220px}
+
+/* CTA */
+.cta-section{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;padding:40px 0;border-top:1px solid var(--border)}
+.cta-title{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:6px;line-height:1.3}
 .cta-sub{font-size:13px;color:var(--muted);font-weight:300}
-.cta-btn{font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:0.04em;padding:12px 24px;background:var(--dark);color:#E5E5E5;border:none;border-radius:8px;cursor:pointer;text-decoration:none;white-space:nowrap;display:inline-block;transition:opacity 0.2s}
-.cta-btn:hover{opacity:0.85}
+.cta-btn{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:14px 28px;background:var(--dark);color:#E5E5E5;text-decoration:none;display:inline-block;white-space:nowrap;transition:opacity 0.2s}
+.cta-btn:hover{opacity:0.82}
 
-/* ── FOOTER ── */
-.report-footer{background:var(--dark);padding:48px 40px;text-align:center;margin-top:0}
-.footer-name{font-family:var(--serif);font-size:15px;color:rgba(229,229,229,0.5);margin-bottom:6px}
-.footer-contact{font-size:12px;color:rgba(229,229,229,0.3)}
-.footer-contact a{color:rgba(229,229,229,0.4);text-decoration:none}
-.footer-contact a:hover{color:rgba(229,229,229,0.7)}
+.report-footer{background:var(--dark);padding:56px 40px;text-align:center}
+.footer-name{font-family:var(--serif);font-size:15px;color:rgba(229,229,229,0.45);margin-bottom:8px}
+.footer-contact{font-size:12px;color:rgba(229,229,229,0.25)}
+.footer-contact a{color:rgba(229,229,229,0.35);text-decoration:none}
+.footer-contact a:hover{color:rgba(229,229,229,0.65)}
 
-/* ── LOADING / ERROR ── */
-.state-block{max-width:860px;margin:120px auto;padding:0 40px;text-align:center}
-.state-icon{font-size:48px;margin-bottom:20px;opacity:0.3}
-.state-title{font-family:var(--serif);font-size:28px;font-weight:400;margin-bottom:8px}
-.state-sub{font-size:14px;color:var(--muted);line-height:1.7}
-.spinner{width:32px;height:32px;border:2px solid var(--border);border-top-color:var(--text);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 24px}
+.state-block{max-width:860px;margin:140px auto;padding:0 40px;text-align:center}
+.spinner{width:28px;height:28px;border:1.5px solid rgba(0,0,0,0.1);border-top-color:rgba(0,0,0,0.3);border-radius:50%;animation:spin 0.75s linear infinite;margin:0 auto 28px}
 @keyframes spin{to{transform:rotate(360deg)}}
+.state-title{font-family:var(--serif);font-size:32px;font-weight:400;margin-bottom:10px}
+.state-sub{font-size:14px;color:var(--muted);line-height:1.7;max-width:440px;margin:0 auto}
 
-/* ── MOBILE ── */
-@media(max-width:640px){
+@media(max-width:700px){
   .site-header{padding:0 20px}
-  .hero{padding:56px 20px 44px}
-  .main{padding:40px 20px 60px}
-  .stage-inner{grid-template-columns:40px 1fr;gap:12px}
-  .stage-meta{display:none}
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .stat-cell:nth-child(2){border-radius:0 8px 0 0}
-  .stat-cell:nth-child(3){border-radius:0 0 0 8px}
-  .price-card{grid-template-columns:1fr}
+  .hero{padding:56px 20px 48px}
+  .main{padding:48px 20px 80px}
+  .stage-row{grid-template-columns:48px 1fr;gap:16px}
+  .stage-detail,.stage-right{display:none}
+  .stats-row{grid-template-columns:repeat(2,1fr)}
+  .price-band,.cta-section{grid-template-columns:1fr;gap:20px}
   .price-note{text-align:left;max-width:100%}
-  .cta-block{flex-direction:column;align-items:flex-start}
-  .report-footer{padding:40px 20px}
+  .report-footer{padding:44px 20px}
 }
 </style>
 </head>
@@ -138,7 +124,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 
 <header class="site-header">
   <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
-  <span class="header-badge">Личный кабинет объекта</span>
+  <span class="header-label">Ваш объект</span>
 </header>
 
 <div id="appRoot"></div>
@@ -153,301 +139,181 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 </footer>
 
 <script>
-// ─── CONFIG ───
-const GH_OWNER = 'oralperoxyl';
-const GH_REPO  = 'index.html';
-const GH_BRANCH = 'main';
-const FILES = {
-  sma:      'data/sma.json',
-  strategy: 'data/strategy.json',
-  reports:  'data/reports.json'
-};
-const TG_USERNAME = 'semengme';
-const BASE_URL = window.location.origin + window.location.pathname.replace('client-dashboard.html','');
+const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_BRANCH='main';
+const FILES={sma:'data/sma.json',strategy:'data/strategy.json',reports:'data/reports.json'};
+const TG='semengme';
+const BASE=window.location.origin+window.location.pathname.replace(/[^/]*$/,'');
 
-// ─── HELPERS ───
-function fmt(n){if(!n)return '—';return Number(n).toLocaleString('ru-RU');}
-function fmtP(n){if(!n)return '—';const m=Number(n);if(m>=1e6)return (m/1e6).toFixed(1).replace('.0','').replace('.',',')+' млн ₽';return fmt(m)+' ₽';}
+function fmt(n){if(!n&&n!==0)return'—';return Number(n).toLocaleString('ru-RU');}
+function fmtP(n){if(!n)return'—';const m=Number(n);if(m>=1e6)return(m/1e6).toFixed(1).replace('.0','').replace('.',',')+' млн ₽';return fmt(m)+' ₽';}
 function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML;}
-function calcPpm(price,area){const p=Number(price)||0,a=Number(area)||0;if(!p||!a)return 0;return Math.round(p/a);}
+function calcPpm(p,a){return(!p||!a)?0:Math.round(Number(p)/Number(a));}
+function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
+
+// Fuzzy match: exact key → address slug → prefix
+function findEntry(col, urlId, nameField){
+  if(!col) return [null,null];
+  if(col[urlId]) return [urlId, col[urlId]];
+  for(const [k,v] of Object.entries(col)){
+    const addr=v[nameField]||v.address||v.name||'';
+    if(slugify(addr)===urlId||k===slugify(addr)&&urlId.startsWith(k.substring(0,15))) return [k,v];
+  }
+  // strip квартира suffix and try prefix
+  const short=urlId.replace(/-кв-?\d+$/,'').replace(/-кв\d+$/,'');
+  for(const [k,v] of Object.entries(col)){
+    if(k.startsWith(short)||short.startsWith(k.substring(0,Math.min(short.length,k.length)))) return [k,v];
+  }
+  return [null,null];
+}
 
 async function ghGet(file){
   try{
-    const r = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}?ref=${GH_BRANCH}`);
+    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}?ref=${GH_BRANCH}`);
     if(!r.ok) return null;
-    const j = await r.json();
-    const content = atob(j.content.replace(/\n/g,''));
-    return JSON.parse(new TextDecoder().decode(Uint8Array.from(content, c=>c.charCodeAt(0))));
-  }catch(e){ return null; }
+    const j=await r.json();
+    const raw=atob(j.content.replace(/\n/g,''));
+    return JSON.parse(new TextDecoder().decode(Uint8Array.from(raw,c=>c.charCodeAt(0))));
+  }catch(e){return null;}
 }
 
-// ─── RENDER STATES ───
-function showLoading(){
-  document.getElementById('appRoot').innerHTML = `
-    <div class="state-block">
-      <div class="spinner"></div>
-      <p class="state-sub">Загружаем данные по объекту…</p>
-    </div>`;
+function showLoading(){document.getElementById('appRoot').innerHTML='<div class="state-block"><div class="spinner"></div><p class="state-sub">Загружаем данные…</p></div>';}
+function showError(m){document.getElementById('appRoot').innerHTML=`<div class="state-block"><p class="state-title">Объект не найден</p><p class="state-sub">${esc(m)}</p></div>`;}
+
+function dlt(curr,prev,key){
+  const c=curr?.stats?.[key]||0,p=prev?.stats?.[key]||0;
+  if(c===0&&p===0) return{t:'—',cls:'d-neu'};
+  if(p===0&&c>0)   return{t:'+∞',cls:'d-up'};
+  const pct=Math.round((c-p)/p*100);
+  if(pct===0) return{t:'0%',cls:'d-neu'};
+  return{t:(pct>0?'+':'')+pct+'%',cls:pct>0?'d-up':'d-dn'};
 }
 
-function showError(msg){
-  document.getElementById('appRoot').innerHTML = `
-    <div class="state-block">
-      <div class="state-icon">∅</div>
-      <h2 class="state-title">Объект не найден</h2>
-      <p class="state-sub">${esc(msg||'Проверьте правильность ссылки или обратитесь к Семёну.')}</p>
-    </div>`;
-}
+const DESC={
+  meeting:'Первая встреча: знакомство с объектом, методология работы, план дальнейших шагов. Вы получили полный пакет материалов о том, как устроен процесс продажи.',
+  sma:'Детальное исследование рынка: отобраны объекты-конкуренты по метражу, локации и бюджету, проведены переговоры с агентами, в части случаев — личные осмотры. На основе этого определён рекомендованный коридор цены.',
+  strategy:'Индивидуальный план продажи: три сценария ценообразования с расчётом суммы на руки, набор рекламных каналов и бюджет под ваш объект, условия работы и тайминг выхода на рынок.',
+  weekly:'Обновления после выхода в рекламу: статистика просмотров, звонков и показов, обратная связь от потенциальных покупателей, анализ конкурентов и рекомендации по корректировке цены.',
+};
 
-// ─── DELTA CALC ───
-function calcDelta(curr, prev, key){
-  if(prev===null) return {text:'—',cls:'delta-neutral'};
-  const c = curr?.stats?.[key]||0, p = prev?.stats?.[key]||0;
-  if(c===0&&p===0) return {text:'—',cls:'delta-neutral'};
-  if(p===0&&c>0) return {text:'+∞',cls:'delta-up'};
-  const pct = Math.round((c-p)/p*100);
-  if(pct===0) return {text:'0%',cls:'delta-neutral'};
-  return {text:(pct>0?'+':'')+pct+'%', cls: pct>0?'delta-up':'delta-down'};
-}
+function render(urlId, smaData, stratData, repData){
+  const [smaId,sma]    = findEntry(smaData?.analyses,  urlId, 'address');
+  const [stratId,strat]= findEntry(stratData?.items,   urlId, 'address');
+  const [repId,repObj] = findEntry(repData?.objects,   urlId, 'name');
+  const canon = smaId||stratId||repId||urlId;
 
-// ─── MAIN RENDER ───
-function render(id, smaData, stratData, repData){
-  const sma      = smaData?.analyses?.[id] || null;
-  const strategy = stratData?.items?.[id]  || null;
-  const repObj   = repData?.objects?.[id]  || null;
+  const address = sma?.address||strat?.address||repObj?.name||urlId;
+  const area    = parseFloat(sma?.area||strat?.area||0);
+  const rooms   = parseInt(sma?.rooms||strat?.rooms||0);
+  const floor   = sma?.floor||strat?.floor||'';
+  const location= sma?.location||strat?.location||'';
 
-  // Derive address/meta from whatever we have
-  const address = sma?.address || strategy?.address || repObj?.name || id;
-  const area    = sma?.area || strategy?.area || 0;
-  const rooms   = sma?.rooms || strategy?.rooms || 0;
-  const floor   = sma?.floor || strategy?.floor || '';
-  const location= sma?.location || strategy?.location || '';
+  const pF=Number(sma?.priceFrom||strat?.priceFrom||0),pT=Number(sma?.priceTo||strat?.priceTo||0);
+  const ppmF=pF&&area?fmt(calcPpm(pF,area)):'', ppmT=pT&&area?fmt(calcPpm(pT,area)):'';
 
-  // Price from SMA or strategy
-  const priceFrom = sma?.priceFrom || strategy?.priceFrom || 0;
-  const priceTo   = sma?.priceTo   || strategy?.priceTo   || 0;
-  const ppmFrom   = priceFrom&&area ? fmt(calcPpm(priceFrom,area)) : '';
-  const ppmTo     = priceTo&&area   ? fmt(calcPpm(priceTo,area))   : '';
+  const weeks=repObj?.weeks||[], lastW=weeks.length?weeks[weeks.length-1]:null, prevW=weeks.length>1?weeks[weeks.length-2]:null;
+  const chips=[rooms?rooms+'к':null,area?area+' м²':null,floor?floor+' эт.':null,location||null].filter(Boolean);
+  const tgLink=`https://t.me/${TG}?text=${encodeURIComponent('По объекту '+address+': ')}`;
 
-  // Weekly — last week
-  const weeks     = repObj?.weeks || [];
-  const lastWeek  = weeks.length ? weeks[weeks.length-1] : null;
-  const prevWeek  = weeks.length>1 ? weeks[weeks.length-2] : null;
-
-  // Chips
-  const chips = [
-    rooms ? rooms+'к' : null,
-    area  ? area+' м²' : null,
-    floor ? floor+' эт.' : null,
-    location || null,
-  ].filter(Boolean);
-
-  // Telegram link
-  const tgText = encodeURIComponent(`По объекту ${address}: `);
-  const tgLink = `https://t.me/${TG_USERNAME}?text=${tgText}`;
-
-  // Stage helpers
-  function stageCard({num, title, desc, href, status, meta, statusLabel}){
-    const isLocked = status === 'pending';
-    const numCls   = status==='done' ? 'done' : status==='active' ? 'active' : '';
-    const statusHtml = `<span class="stage-status status-${status}">${esc(statusLabel)}</span>`;
-    const arrow = isLocked ? '' : '<span class="stage-arrow">→</span>';
-    return `
-      <a class="stage-card ${isLocked?'locked':''}" href="${isLocked?'#':esc(href)}" ${isLocked?'':'target="_blank"'} rel="noopener">
-        <div class="stage-inner">
-          <div class="stage-num ${numCls}">${num}</div>
-          <div class="stage-body">
-            <div class="stage-title">${esc(title)}</div>
-            <div class="stage-desc">${esc(desc)}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-            ${statusHtml}
-            ${meta?`<div class="stage-meta">${meta}</div>`:''}
-            ${arrow}
-          </div>
-        </div>
-      </a>`;
+  function row({num,numCls,title,body,dlabel,dval,href,scls,stxt,locked}){
+    return `<a class="stage-row ${locked?'locked':'clickable'}" href="${locked?'#':esc(href)}" ${locked?'':'target="_blank" rel="noopener"'}>
+      <div class="stage-n ${numCls||''}">${num}</div>
+      <div><div class="stage-title">${esc(title)}</div><div class="stage-body">${esc(body)}</div></div>
+      <div>${dlabel?`<div class="stage-detail-label">${dlabel}</div><div class="stage-detail-val">${dval}</div>`:''}</div>
+      <div class="stage-right"><span class="stage-status ${scls}">${esc(stxt)}</span><span class="stage-arrow">→</span></div>
+    </a>`;
   }
 
-  // Stage statuses
-  const meetingStatus  = 'done';
-  const smaStatus      = sma      ? 'done'    : 'pending';
-  const stratStatus    = strategy ? (sma?'done':'active') : 'pending';
-  const weeklyStatus   = repObj   ? 'active'  : 'pending';
+  // marketing total for strategy detail
+  const mk=strat?.marketing||[];
+  const mkTotal=mk.filter(m=>m.on).reduce((a,m)=>a+(m.price||0),0);
+  const mkCount=mk.filter(m=>m.on).length;
 
-  // Stage meta
-  const smaMeta     = sma      ? (sma.date||'') : '';
-  const stratMeta   = strategy ? (strategy.date||'') : '';
-  const weeklyMeta  = lastWeek ? ('Неделя '+lastWeek.week+(lastWeek.period?' · '+lastWeek.period:'')) : '';
-
-  // Stage labels
-  function statusLabel(s){return s==='done'?'Готово':s==='active'?'Актуально':'Ожидает';}
-
-  const stagesHtml = [
-    stageCard({
-      num:'01', title:'Встреча и материалы',
-      desc:'Знакомство, методология, план совместной работы',
-      href: BASE_URL+'meeting-pack.html',
-      status: meetingStatus,
-      meta: '',
-      statusLabel: statusLabel(meetingStatus)
-    }),
-    stageCard({
-      num:'02', title:'Сравнительный анализ (СМА)',
-      desc: sma
-        ? `Рек. цена: ${fmtP(priceFrom)} — ${fmtP(priceTo)}`
-        : 'Анализ конкурентов и рекомендованный коридор цены',
-      href: BASE_URL+'sma.html?id='+encodeURIComponent(id),
-      status: smaStatus,
-      meta: smaMeta,
-      statusLabel: statusLabel(smaStatus)
-    }),
-    stageCard({
-      num:'03', title:'Стратегия продажи',
-      desc: strategy
-        ? `Маркетинговый план и сценарии ценообразования`
-        : 'Индивидуальный план: реклама, торг, тайминг',
-      href: BASE_URL+'strategy.html?id='+encodeURIComponent(id),
-      status: stratStatus,
-      meta: stratMeta,
-      statusLabel: statusLabel(stratStatus)
-    }),
-    stageCard({
-      num:'04', title:'Еженедельные отчёты',
-      desc: lastWeek
-        ? (lastWeek.summary ? lastWeek.summary.substring(0,80)+(lastWeek.summary.length>80?'…':'') : 'Статистика рекламы, показов и обратная связь')
-        : 'Регулярные обновления после выхода в рекламу',
-      href: BASE_URL+'weekly-report.html?id='+encodeURIComponent(id),
-      status: weeklyStatus,
-      meta: weeklyMeta,
-      statusLabel: statusLabel(weeklyStatus)
-    }),
+  const stages=[
+    row({num:'01',numCls:'is-done',title:'Встреча и материалы',body:DESC.meeting,
+      dlabel:null,dval:null,href:BASE+'meeting-pack.html',scls:'st-done',stxt:'Готово',locked:false}),
+    row({num:'02',numCls:sma?'is-done':'',title:'Сравнительный анализ рынка',body:DESC.sma,
+      dlabel:sma?'Рек. стоимость':null,
+      dval:sma?`<strong>${fmtP(pF)} — ${fmtP(pT)}</strong>${ppmF?'<br><span style="font-size:11px;opacity:.55">'+ppmF+'–'+ppmT+' ₽/м²</span>':''}`:null,
+      href:BASE+'sma.html?id='+encodeURIComponent(canon),
+      scls:sma?'st-done':'st-pending',stxt:sma?'Готово':'Ожидает',locked:!sma}),
+    row({num:'03',numCls:strat?'is-done':sma?'is-active':'',title:'Стратегия продажи',body:DESC.strategy,
+      dlabel:strat?'Рекл. план':null,
+      dval:strat?(mkTotal?`<strong>${fmt(mkTotal)} ₽</strong><br><span style="font-size:11px;opacity:.55">${mkCount} инструментов</span>`:'—'):null,
+      href:BASE+'strategy.html?id='+encodeURIComponent(stratId||canon),
+      scls:strat?'st-done':sma?'st-active':'st-pending',stxt:strat?'Готово':sma?'Актуально':'Ожидает',locked:!strat&&!sma}),
+    row({num:'04',numCls:lastW?'is-active':'',title:'Еженедельные отчёты',body:DESC.weekly,
+      dlabel:lastW?'Последний отчёт':null,
+      dval:lastW?`<strong>Неделя ${lastW.week}</strong>${lastW.period?'<br><span style="font-size:11px;opacity:.55">'+esc(lastW.period)+'</span>':''}`:null,
+      href:BASE+'weekly-report.html?id='+encodeURIComponent(repId||canon),
+      scls:lastW?'st-active':'st-pending',stxt:lastW?'Актуально':'Ожидает',locked:!lastW&&!strat}),
   ].join('');
 
-  // Weekly snapshot block
-  let weeklySnapHtml = '';
-  if(lastWeek){
-    const s = lastWeek.stats || {};
-    const dViews    = calcDelta(lastWeek, prevWeek, 'views');
-    const dCalls    = calcDelta(lastWeek, prevWeek, 'calls');
-    const dShowings = calcDelta(lastWeek, prevWeek, 'showings');
-    const dOffers   = calcDelta(lastWeek, prevWeek, 'offers');
-    weeklySnapHtml = `
-      <div class="weekly-snap">
-        <div class="weekly-snap-head">
-          <div>
-            <div class="weekly-snap-title">Неделя ${lastWeek.week}</div>
-            <div class="weekly-snap-period">${esc(lastWeek.period||'')}</div>
-          </div>
-          <a class="weekly-snap-link" href="${BASE_URL}weekly-report.html?id=${encodeURIComponent(id)}" target="_blank">Полный отчёт →</a>
-        </div>
-        <div class="stats-grid">
-          <div class="stat-cell">
-            <div class="stat-val">${s.views||0}</div>
-            <div class="stat-label">Просмотры</div>
-            <div class="stat-delta ${dViews.cls}">${dViews.text}</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-val">${s.calls||0}</div>
-            <div class="stat-label">Звонки</div>
-            <div class="stat-delta ${dCalls.cls}">${dCalls.text}</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-val">${s.showings||0}</div>
-            <div class="stat-label">Показы</div>
-            <div class="stat-delta ${dShowings.cls}">${dShowings.text}</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-val">${s.offers||0}</div>
-            <div class="stat-label">Предложения</div>
-            <div class="stat-delta ${dOffers.cls}">${dOffers.text}</div>
-          </div>
-        </div>
-        ${lastWeek.summary ? `<div class="weekly-summary">${esc(lastWeek.summary)}</div>` : ''}
-      </div>`;
-  }
-
-  // Price block
-  let priceHtml = '';
-  if(priceFrom || priceTo){
-    const avg = priceFrom&&priceTo ? Math.round((Number(priceFrom)+Number(priceTo))/2) : 0;
-    priceHtml = `
-      <div class="price-section">
-        <div class="section-label">Рекомендованная стоимость</div>
-        <div class="price-card">
-          <div>
-            <div class="price-label">Рыночный коридор цены</div>
-            <div class="price-range">${fmtP(priceFrom)} — ${fmtP(priceTo)}</div>
-            ${(ppmFrom&&ppmTo)?`<div class="price-ppm">${ppmFrom} — ${ppmTo} ₽/м²</div>`:''}
-            ${avg?`<div style="font-size:13px;color:rgba(229,229,229,0.4);margin-top:12px;">Средняя: ${fmtP(avg)}</div>`:''}
-          </div>
-          <div class="price-note">Актуально на дату последнего СМА. Может корректироваться в процессе.</div>
-        </div>
-      </div>`;
-  }
-
-  // Assemble
-  document.getElementById('appRoot').innerHTML = `
-    <div class="hero">
-      <div class="hero-inner">
-        <div class="hero-eyebrow">Ваш объект · Семён Гончаров</div>
-        <h1 class="hero-title">${esc(address)}</h1>
-        <div class="hero-subtitle">Все материалы по продаже в одном месте</div>
-        ${chips.length ? `<div class="hero-chips">${chips.map(c=>`<span class="chip">${esc(c)}</span>`).join('')}</div>` : ''}
+  let weeklyHtml='';
+  if(lastW){
+    const s=lastW.stats||{};
+    const dV=dlt(lastW,prevW,'views'),dC=dlt(lastW,prevW,'calls'),dS=dlt(lastW,prevW,'showings'),dO=dlt(lastW,prevW,'offers');
+    weeklyHtml=`<div class="weekly-section">
+      <div class="s-label">Последний отчёт</div>
+      <div class="s-title">Неделя ${lastW.week}${lastW.period?' · '+esc(lastW.period):''}</div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-lbl">Просмотры</div><div class="stat-val">${s.views||0}</div><div class="stat-delta ${dV.cls}">${dV.t} к прошлой</div></div>
+        <div class="stat-box"><div class="stat-lbl">Звонки</div><div class="stat-val">${s.calls||0}</div><div class="stat-delta ${dC.cls}">${dC.t} к прошлой</div></div>
+        <div class="stat-box"><div class="stat-lbl">Показы</div><div class="stat-val">${s.showings||0}</div><div class="stat-delta ${dS.cls}">${dS.t} к прошлой</div></div>
+        <div class="stat-box"><div class="stat-lbl">Предложения</div><div class="stat-val">${s.offers||0}</div><div class="stat-delta ${dO.cls}">${dO.t}</div></div>
       </div>
-    </div>
-
-    <div class="main">
-
-      <div style="margin-bottom:32px;">
-        <div class="section-label">Этапы работы</div>
-      </div>
-      <div class="stages">${stagesHtml}</div>
-
-      ${weeklySnapHtml}
-
-      ${priceHtml}
-
-      <div class="cta-block">
-        <div class="cta-text">
-          <div class="cta-title">Есть вопросы или хотите что-то обсудить?</div>
-          <div class="cta-sub">Напишите напрямую — отвечу быстро</div>
-        </div>
-        <a class="cta-btn" href="${tgLink}" target="_blank">Написать в Telegram →</a>
-      </div>
-
+      ${lastW.summary?`<p class="weekly-summary-text">${esc(lastW.summary)}</p>`:''}
+      <a class="weekly-link" href="${BASE}weekly-report.html?id=${encodeURIComponent(repId||canon)}" target="_blank">Открыть полный отчёт →</a>
     </div>`;
+  }
+
+  let priceHtml='';
+  if(pF||pT){
+    const avg=pF&&pT?Math.round((pF+pT)/2):0;
+    priceHtml=`<div class="price-section">
+      <div class="s-label">Рекомендованная стоимость</div>
+      <div class="price-band">
+        <div>
+          <div class="price-range-val">${fmtP(pF)} — ${fmtP(pT)}</div>
+          ${ppmF?`<div class="price-ppm">${ppmF} — ${ppmT} ₽/м²</div>`:''}
+          ${avg?`<div style="font-size:13px;color:var(--muted);margin-top:12px;font-weight:300">Средняя: ${fmtP(avg)}</div>`:''}
+        </div>
+        <div class="price-note">Определена на основе СМА. Может корректироваться при наличии активных покупателей.</div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('appRoot').innerHTML=`
+  <div class="hero"><div class="hero-inner">
+    <div class="hero-eyebrow">Ваш объект · Семён Гончаров</div>
+    <h1 class="hero-title">${esc(address)}</h1>
+    <div class="hero-sub">Все материалы по продаже в одном месте</div>
+    ${chips.length?`<div class="hero-chips">${chips.map(c=>`<span class="chip">${esc(c)}</span>`).join('')}</div>`:''}
+  </div></div>
+  <div class="main">
+    <div style="margin-bottom:8px"><div class="s-label">Этапы работы</div></div>
+    <div class="stages">${stages}</div>
+    ${weeklyHtml}${priceHtml}
+    <div class="cta-section">
+      <div>
+        <div class="cta-title">Есть вопросы или хотите что-то обсудить?</div>
+        <div class="cta-sub">Напишите напрямую — отвечу быстро</div>
+      </div>
+      <a class="cta-btn" href="${tgLink}" target="_blank">Написать в Telegram</a>
+    </div>
+  </div>`;
 }
 
-// ─── INIT ───
 async function init(){
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-
-  if(!id){
-    showError('Ссылка не содержит идентификатора объекта. Запросите актуальную ссылку у Семёна.');
-    return;
-  }
-
+  const id=new URLSearchParams(window.location.search).get('id');
+  if(!id){showError('Ссылка не содержит идентификатора объекта.');return;}
   showLoading();
-
-  // Fetch all three JSONs in parallel
-  const [smaData, stratData, repData] = await Promise.all([
-    ghGet(FILES.sma),
-    ghGet(FILES.strategy),
-    ghGet(FILES.reports),
-  ]);
-
-  // Check that at least one source knows this id
-  const known = (smaData?.analyses?.[id]) || (stratData?.items?.[id]) || (repData?.objects?.[id]);
-  if(!known){
-    showError(`Объект с ID «${id}» не найден. Возможно, ссылка устарела — попросите актуальную у Семёна.`);
-    return;
-  }
-
-  render(id, smaData, stratData, repData);
+  const [smaData,stratData,repData]=await Promise.all([ghGet(FILES.sma),ghGet(FILES.strategy),ghGet(FILES.reports)]);
+  const [,s1]=findEntry(smaData?.analyses,id,'address');
+  const [,s2]=findEntry(stratData?.items,id,'address');
+  const [,s3]=findEntry(repData?.objects,id,'name');
+  if(!s1&&!s2&&!s3){showError('Объект не найден. Проверьте ссылку или запросите актуальную у Семёна.');return;}
+  render(id,smaData,stratData,repData);
 }
-
 init();
 </script>
 </body>
