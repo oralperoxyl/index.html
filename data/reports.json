@@ -46,30 +46,6 @@
           ],
           "competitors": [
             {
-              "address": "ул. Вавилова 44к4",
-              "rooms": "1",
-              "area": "34,8",
-              "price": "17,5 млн",
-              "status": "active",
-              "statusText": "В продаже",
-              "note": "Прямой конкурент, цену снижать не планируют. ",
-              "url": "https://www.cian.ru/sale/flat/327455618/",
-              "ours": false,
-              "isNew": false
-            },
-            {
-              "address": "ул. Новочеремушкинская 53к1",
-              "rooms": "1",
-              "area": "37,7",
-              "price": "14,5 млн ",
-              "status": "active",
-              "statusText": "В продаже",
-              "note": "Снизили цену на 200к, устали продавать. ",
-              "url": "https://www.cian.ru/sale/flat/325334472/",
-              "ours": false,
-              "isNew": false
-            },
-            {
               "address": "ул. Дмитрия Ульянова, д.23к1",
               "rooms": "1",
               "area": "35,9",
