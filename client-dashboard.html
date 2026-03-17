@@ -273,7 +273,7 @@ function render(urlId, smaData, stratData, repData){
         <div class="stat-box"><div class="stat-lbl">Показы</div><div class="stat-val">${s.showings||0}</div><div class="stat-delta ${dS.cls}">${dS.t} к прошлой</div></div>
         <div class="stat-box"><div class="stat-lbl">Предложения</div><div class="stat-val">${s.offers||0}</div><div class="stat-delta ${dO.cls}">${dO.t}</div></div>
       </div>
-      ${lastW.summary?`<p class="weekly-summary-text">${esc(lastW.summary)}</p>`:''}
+      ${lastW.summary?`<div style="border-left:2px solid var(--border);padding:16px 20px;margin-bottom:4px;"><p class="weekly-summary-text" style="font-size:14px;color:var(--text);font-weight:300;line-height:1.8">${esc(lastW.summary)}</p></div>`:''}
       <a class="weekly-link" href="${BASE}weekly-report.html?id=${encodeURIComponent(repId||canon)}" target="_blank">Открыть полный отчёт →</a>
     </div>`;
   }
@@ -294,11 +294,23 @@ function render(urlId, smaData, stratData, repData){
     </div>`;
   }
 
+  // Дата последнего обновления из любого источника
+  const dates = [
+    sma?.date, strat?.date,
+    lastW?.period
+  ].filter(Boolean);
+  if(dates.length){
+    setTimeout(()=>{
+      const el=document.getElementById('updateDate');
+      if(el) el.textContent='обновлено '+dates[dates.length-1];
+    },0);
+  }
+
   document.getElementById('appRoot').innerHTML=`
   <div class="hero"><div class="hero-inner">
     <div class="hero-eyebrow">Ваш объект · Семён Гончаров</div>
     <h1 class="hero-title">${esc(address)}</h1>
-    <div class="hero-sub">Все материалы по продаже в одном месте</div>
+    <div class="hero-sub">Все материалы по продаже в одном месте · <span id="updateDate" style="opacity:0.6"></span></div>
     ${chips.length?`<div class="hero-chips">${chips.map(c=>`<span class="chip">${esc(c)}</span>`).join('')}</div>`:''}
   </div></div>
   <div class="main">
