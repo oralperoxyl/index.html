@@ -747,8 +747,44 @@ const GH_FILE = 'data/reports.json';
 const GH_BRANCH = 'main';
 const TOKEN_KEY = 'wr_gh_token';
 
+// ─── SMA HELPERS ───
+function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
+function findSmaEntry(id){
+  if(!smaData?.analyses) return null;
+  const col = smaData.analyses;
+  if(col[id]) return col[id];
+  for(const [k,v] of Object.entries(col)){
+    const addr=v.address||'';
+    if(addr && slugify(addr)===id) return v;
+  }
+  for(const [k,v] of Object.entries(col)){
+    if(k.startsWith(id)||id.startsWith(k)) return v;
+  }
+  const short=id.replace(/-кв-?\d+$/,'').replace(/-кв\d+$/,'');
+  if(short!==id) for(const [k,v] of Object.entries(col)){
+    if(k===short||k.startsWith(short)||short.startsWith(k)) return v;
+  }
+  // token match
+  const tokens=id.split('-').filter(t=>t.length>2);
+  for(const [k,v] of Object.entries(col)){
+    const hits=k.split('-').filter(t=>t.length>2&&id.includes(t)).length;
+    if(hits>=Math.min(3,tokens.length)) return v;
+  }
+  return null;
+}
+async function ghGetPublic(file){
+  try{
+    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}?ref=${GH_BRANCH}`);
+    if(!r.ok) return null;
+    const j=await r.json();
+    const raw=atob(j.content.replace(/\n/g,''));
+    return JSON.parse(new TextDecoder().decode(Uint8Array.from(raw,c=>c.charCodeAt(0))));
+  }catch(e){return null;}
+}
+
 // ─── STATE ───
 let allData = { objects: {} }; // full data from GitHub
+let smaData = null; // loaded from sma.json for reference
 let currentId = null;
 let currentWeekIdx = null; // index into the weeks array for current object
 let fileSha = null; // SHA of the file on GitHub for updates
@@ -1162,10 +1198,17 @@ function render() {
   const statNames = { views: 'Просмотров', calls: 'Звонков', showings: 'Показов', offers: 'Офферов' };
 
   document.getElementById('heroTitle').innerHTML = 'Неделя ' + w.week + '<br><em>' + escHtml(obj.name || 'Новый объект') + '</em>';
+  const smaEntry = currentId ? findSmaEntry(currentId) : null;
+  const fmtP = n => { if(!n) return '—'; const m=Number(n); return m>=1e6?(m/1e6).toFixed(1).replace('.0','').replace('.',',')+'млн':Number(n).toLocaleString('ru-RU'); };
+  const recRange = smaEntry?.priceFrom && smaEntry?.priceTo
+    ? fmtP(smaEntry.priceFrom) + ' — ' + fmtP(smaEntry.priceTo) + ' ₽'
+    : null;
+
   document.getElementById('heroMeta').innerHTML = `
     <div class="hero-meta-item"><div class="hero-meta-label">Период</div><div class="hero-meta-value">${escHtml(w.period || '—')}</div></div>
     <div class="hero-meta-item"><div class="hero-meta-label">Дней на рынке</div><div class="hero-meta-value">${w.dayOnMarket || '—'}</div></div>
-    <div class="hero-meta-item"><div class="hero-meta-label">Цена</div><div class="hero-meta-value">${escHtml(w.price || '—')}</div></div>`;
+    <div class="hero-meta-item"><div class="hero-meta-label">Цена</div><div class="hero-meta-value">${escHtml(w.price || '—')}</div></div>
+    ${recRange ? `<div class="hero-meta-item"><div class="hero-meta-label">Рек. коридор (СМА)</div><div class="hero-meta-value" style="font-size:13px;opacity:0.7">${recRange}</div></div>` : ''}`;
 
   // Hero week navigation (visible to everyone, shown if > 1 week)
   const heroWeeksEl = document.getElementById('heroWeeks');
@@ -1197,6 +1240,47 @@ function render() {
         <div class="feedback-text">${escHtml(f.text)}</div>
       </div>`).join('')
     : '<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
+
+  // Auto-populate from SMA if competitors empty
+  if (!w.competitors.length && smaEntry?.competitors?.length) {
+    const smaComps = smaEntry.competitors
+      .filter(sc => sc.address)
+      .map(sc => ({
+        address: sc.address || '',
+        rooms:   String(sc.rooms || ''),
+        area:    String(sc.area || ''),
+        price:   sc.price ? Number(sc.price).toLocaleString('ru-RU') + ' ₽' : '',
+        status:  sc.ours ? 'ours' : 'active',
+        statusText: sc.ours ? 'Наш объект' : 'В продаже',
+        note:    sc.comment || '',
+        url:     sc.url || '',
+        ours:    !!sc.ours
+      }));
+    // Show read-only note that data is from SMA
+    document.getElementById('compBody').innerHTML = smaComps.map(c => {
+      const addrHtml = c.url
+        ? `<a href="${escHtml(c.url)}" target="_blank" style="color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px;">${escHtml(c.address)}</a>`
+        : escHtml(c.address);
+      return `<tr class="${c.ours ? 'our-object' : ''}">
+        <td>${addrHtml}</td><td>${escHtml(c.rooms)}</td><td>${escHtml(c.area)}</td>
+        <td>${escHtml(c.price)}</td><td><span class="comp-status ${c.status}">${escHtml(c.statusText)}</span></td>
+        <td style="color:var(--muted);font-size:11px;">${escHtml(c.note)}</td></tr>`;
+    }).join('') + `<tr><td colspan="6" style="font-size:11px;color:rgba(0,0,0,0.25);padding:12px 16px;border-top:1px solid var(--border);">Данные из СМА · обновите вручную при изменениях</td></tr>`;
+
+    document.getElementById('compCards').innerHTML = smaComps.map(c => {
+      const cls = c.ours ? ' our-object' : '';
+      const addrTag = c.url
+        ? `<a href="${escHtml(c.url)}" target="_blank" class="comp-card-addr">${escHtml(c.address)}</a>`
+        : `<span class="comp-card-addr">${escHtml(c.address)}</span>`;
+      const badge = c.ours ? '<span class="comp-card-badge">Наш</span>' : '';
+      const meta = [c.rooms ? c.rooms + ' комн.' : '', c.area || ''].filter(Boolean).join(' · ');
+      return `<div class="comp-card${cls}">
+        <div class="comp-card-top"><div>${addrTag}${badge}<div class="comp-card-meta">${escHtml(meta)}</div></div></div>
+        <div class="comp-card-price-row"><span class="comp-card-price">${escHtml(c.price)}</span></div>
+        ${c.note ? '<div class="comp-card-note">' + escHtml(c.note) + '</div>' : ''}
+      </div>`;
+    }).join('');
+  } else {
 
   document.getElementById('compBody').innerHTML = w.competitors.length
     ? w.competitors.map(c => {
@@ -1235,6 +1319,8 @@ function render() {
       </div>`;
     }).join('')
     : '<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
+
+  } // end else (not auto-populated from SMA)
 
   document.getElementById('recList').innerHTML = w.recommendations.map((r, i) => `
     <div class="rec-item">
