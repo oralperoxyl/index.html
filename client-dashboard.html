@@ -45,28 +45,26 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .stages{display:grid;gap:0;margin-bottom:72px}
 .stage-row{display:grid;grid-template-columns:72px 1fr 180px auto;align-items:start;padding:28px 0;border-top:1px solid var(--border);gap:28px;text-decoration:none;color:var(--text)}
 .stage-row:last-child{border-bottom:1px solid var(--border)}
-.stage-row.clickable{cursor:pointer;transition:padding-left 0.2s}
-.stage-row.clickable:hover{padding-left:8px}
+.stage-row.clickable{cursor:pointer}
+.stage-row.clickable:hover .stage-title{text-decoration:underline;text-decoration-color:rgba(0,0,0,0.15);text-underline-offset:3px}
 .stage-row.locked{opacity:0.35;pointer-events:none}
 
 .stage-n{font-family:var(--serif);font-size:40px;font-weight:400;line-height:1;color:rgba(0,0,0,0.07);padding-top:2px}
 .stage-n.is-done{color:rgba(45,138,78,0.2)}
 .stage-n.is-active{color:rgba(0,102,255,0.18)}
 
-.stage-title{font-size:15px;font-weight:500;margin-bottom:8px;line-height:1.3}
+.stage-title{font-size:15px;font-weight:500;margin-bottom:8px;line-height:1.3;transition:text-decoration-color 0.2s}
 .stage-body{font-size:12px;color:var(--muted);line-height:1.7;font-weight:300}
 
 .stage-detail-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.2);margin-bottom:6px}
 .stage-detail-val{font-size:13px;color:var(--muted);font-weight:300;line-height:1.6}
 .stage-detail-val strong{color:var(--text);font-weight:500}
 
-.stage-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;padding-top:4px}
-.stage-status{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:4px 8px}
-.st-done{color:#1E7B3A;background:#E8F5E9}
-.st-active{color:#0050CC;background:#E6EEFF}
-.st-pending{color:rgba(0,0,0,0.25);background:rgba(0,0,0,0.04)}
-.stage-arrow{font-size:18px;color:rgba(0,0,0,0.1)}
-.stage-row.clickable .stage-arrow{color:var(--accent)}
+.stage-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;padding-top:4px}
+.stage-status{font-size:10px;font-weight:400;letter-spacing:0.04em}
+.st-done{color:var(--green)}
+.st-active{color:var(--accent)}
+.st-pending{color:rgba(0,0,0,0.22)}
 
 /* Weekly */
 .weekly-section{margin-bottom:72px}
@@ -232,7 +230,7 @@ function render(urlId, smaData, stratData, repData){
       <div class="stage-n ${numCls||''}">${num}</div>
       <div><div class="stage-title">${esc(title)}</div><div class="stage-body">${esc(body)}</div>${locked&&hint?`<div style="font-size:11px;color:rgba(0,0,0,0.28);margin-top:8px;font-style:italic;">${esc(hint)}</div>`:''}</div>
       <div>${dlabel?`<div class="stage-detail-label">${dlabel}</div><div class="stage-detail-val">${dval}</div>`:''}</div>
-      <div class="stage-right"><span class="stage-status ${scls}">${esc(stxt)}</span><span class="stage-arrow">→</span></div>
+      <div class="stage-right"><span class="stage-status ${scls}">${esc(stxt)}</span></div>
     </a>`;
   }
 
