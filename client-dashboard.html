@@ -351,11 +351,24 @@ function render(urlId, smaData, stratData, repData){
 // ── AGENT PICKER ──
 async function showAgentPicker(token){
   showLoading();
+  if(!token){
+    document.getElementById('appRoot').innerHTML=`<div class="agent-picker">
+      <div class="agent-picker-title">Список объектов</div>
+      <div class="agent-picker-sub">Введите GitHub Token для доступа</div>
+      ${tokenBar()}
+    </div>`;
+    return;
+  }
   const [smaData,stratData,repData] = await Promise.all([
     ghGetWithToken(FILES.sma, token),
     ghGetWithToken(FILES.strategy, token),
     ghGetWithToken(FILES.reports, token),
   ]);
+  console.log('picker data:', {
+    sma: Object.keys(smaData?.analyses||{}),
+    strategy: Object.keys(stratData?.items||{}),
+    reports: Object.keys(repData?.objects||{}),
+  });
 
   // Collect all unique IDs across all three sources
   const allIds = new Set([
@@ -451,7 +464,7 @@ async function init(){
     } else {
       document.getElementById('appRoot').innerHTML=`<div class="agent-picker">
         <div class="agent-picker-title">Список объектов</div>
-        <div class="agent-picker-sub">Введите GitHub Token чтобы увидеть все объекты</div>
+        <div class="agent-picker-sub">Введите GitHub Token для доступа</div>
         ${tokenBar()}
       </div>`;
     }
