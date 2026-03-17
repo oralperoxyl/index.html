@@ -154,26 +154,29 @@ function esc(s){const d=document.createElement('div');d.textContent=String(s||''
 function calcPpm(p,a){return(!p||!a)?0:Math.round(Number(p)/Number(a));}
 function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
 
-// Fuzzy match: exact key → address slug → prefix/substring
+// Fuzzy match: exact → address slug → prefix → substring
 function findEntry(col, urlId, nameField){
   if(!col) return [null,null];
   // 1. Exact key match
   if(col[urlId]) return [urlId, col[urlId]];
-  // 2. Slug of stored address matches urlId
+  // 2. Slug of stored address/name matches urlId exactly
   for(const [k,v] of Object.entries(col)){
     const addr = v[nameField]||v.address||v.name||'';
     if(addr && slugify(addr)===urlId) return [k,v];
   }
-  // 3. Key starts with urlId or urlId starts with key (handles apartment suffix differences)
+  // 3. urlId starts with key (key is shorter — e.g. no city prefix, no apt)
   for(const [k,v] of Object.entries(col)){
-    if(k.startsWith(urlId)||urlId.startsWith(k)) return [k,v];
+    if(urlId.startsWith(k) && k.length >= 6) return [k,v];
   }
-  // 4. Strip apartment suffix from urlId and retry
-  const short = urlId.replace(/-кв[-\s]?\d+$/, '').replace(/(-кв)$/, '');
-  if(short !== urlId){
-    for(const [k,v] of Object.entries(col)){
-      if(k===short||k.startsWith(short)||short.startsWith(k)) return [k,v];
-    }
+  // 4. key contains meaningful part of urlId or vice versa (substring match)
+  // Split both into tokens and check overlap
+  function tokens(s){ return s.split('-').filter(t=>t.length>2); }
+  const urlTokens = tokens(urlId);
+  for(const [k,v] of Object.entries(col)){
+    const kTokens = tokens(k);
+    // count how many tokens of k appear in urlId
+    const hits = kTokens.filter(t => urlId.includes(t)).length;
+    if(hits >= Math.min(3, kTokens.length)) return [k,v];
   }
   return [null,null];
 }
@@ -308,15 +311,13 @@ function render(urlId, smaData, stratData, repData){
     <div class="cta-section">
       <div class="cta-n">05</div>
       <div>
-        <div class="cta-title">Связь с агентом</div>
-        <div class="cta-sub">Есть вопросы по объекту или хотите что-то обсудить — напишите напрямую. Укажу контекст автоматически.</div>
+        <div class="cta-title">Есть вопросы?</div>
+        <div class="cta-sub">Напишите напрямую — я отвечу быстро и смогу сразу понять по какому объекту вопрос. Всё общение удобнее вести лично, вне этой страницы.</div>
       </div>
       <div>
-        <div class="cta-contact-label">Контакты</div>
+        <div class="cta-contact-label">Написать</div>
         <div class="cta-contact-val">
-          <a href="${tgLink}" target="_blank">Telegram</a><br>
-          <a href="tel:+79118461965">+7 911 846-19-65</a><br>
-          <a href="https://t.me/semengme">@semengme</a>
+          <a href="${tgLink}" target="_blank">Telegram →</a>
         </div>
       </div>
     </div>
