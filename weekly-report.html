@@ -716,7 +716,25 @@
     <div class="edit-group">
       <div class="edit-group-title">Конкуренты</div>
       <div id="e-competitors"></div>
-      <button class="btn-add" onclick="addCompetitor()">+ Добавить объект</button>
+      <div style="display:flex;gap:8px;margin-top:4px;">
+        <button class="btn-add" onclick="addCompetitor()" style="flex:1;">+ Добавить вручную</button>
+        <button class="btn-add" onclick="showSmaImport()" style="flex:1;color:#2D8A4E;border-color:rgba(45,138,78,0.3);">↓ Импорт из СМА</button>
+      </div>
+    </div>
+
+    <!-- SMA IMPORT MODAL -->
+    <div id="smaImportModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+      <div style="background:white;border-radius:12px;padding:32px;max-width:480px;width:90%;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h3 style="font-family:var(--serif);font-size:18px;font-weight:400;">Конкуренты из СМА</h3>
+          <button onclick="hideSmaImport()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px;">✕</button>
+        </div>
+        <div id="smaImportList" style="overflow-y:auto;flex:1;margin-bottom:20px;"></div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="importSelectedFromSma()" style="flex:1;font-family:var(--sans);font-size:13px;font-weight:500;padding:12px;background:var(--dark);color:#E5E5E5;border:none;border-radius:4px;cursor:pointer;">Добавить выбранные</button>
+          <button onclick="hideSmaImport()" style="font-family:var(--sans);font-size:13px;padding:12px 20px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);">Отмена</button>
+        </div>
+      </div>
     </div>
 
     <!-- RECOMMENDATIONS -->
@@ -1537,6 +1555,71 @@ function removeFeedback(i) {
 function addCompetitor() {
   const w = getCurrentWeek();
   w.competitors.push({ address: '', rooms: '', area: '', price: '', status: 'active', statusText: 'В продаже', note: '', url: '', ours: false });
+  renderCompPanel(); render(); debounceSave();
+}
+
+function showSmaImport() {
+  const modal = document.getElementById('smaImportModal');
+  const list  = document.getElementById('smaImportList');
+  modal.style.display = 'flex';
+
+  if (!smaData?.analyses) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:16px 0;">СМА не загружен. Убедитесь что объект существует в sma.html с тем же ID.</p>';
+    return;
+  }
+
+  const smaEntry = findSmaEntry(currentId);
+  if (!smaEntry?.competitors?.length) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:16px 0;">В СМА нет конкурентов для этого объекта.</p>';
+    return;
+  }
+
+  const w = getCurrentWeek();
+  const existingAddrs = new Set(w.competitors.map(c => c.address.toLowerCase().trim()));
+
+  list.innerHTML = smaEntry.competitors
+    .filter(sc => sc.address)
+    .map((sc, i) => {
+      const alreadyAdded = existingAddrs.has((sc.address||'').toLowerCase().trim());
+      const price = sc.price ? Number(sc.price).toLocaleString('ru-RU') + ' ₽' : '—';
+      const meta  = [sc.rooms ? sc.rooms+'к' : '', sc.area ? sc.area+' м²' : ''].filter(Boolean).join(' · ');
+      return `<label style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);cursor:${alreadyAdded?'default':'pointer'};">
+        <input type="checkbox" data-sma-idx="${i}" ${alreadyAdded?'checked disabled':''} style="margin-top:3px;accent-color:var(--dark);flex-shrink:0;">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:500;${alreadyAdded?'color:var(--muted);':''}">${escHtml(sc.address)}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">${escHtml(meta)} · ${escHtml(price)}</div>
+          ${sc.comment?`<div style="font-size:11px;color:var(--muted);margin-top:2px;font-style:italic;">${escHtml(sc.comment)}</div>`:''}
+        </div>
+        ${alreadyAdded?'<span style="font-size:10px;color:var(--muted);flex-shrink:0;padding-top:3px;">уже добавлен</span>':''}
+      </label>`;
+    }).join('');
+}
+
+function hideSmaImport() {
+  document.getElementById('smaImportModal').style.display = 'none';
+}
+
+function importSelectedFromSma() {
+  const smaEntry = findSmaEntry(currentId);
+  if (!smaEntry?.competitors) return;
+  const w = getCurrentWeek();
+  const checkboxes = document.querySelectorAll('#smaImportList input[data-sma-idx]:checked:not(:disabled)');
+  checkboxes.forEach(cb => {
+    const sc = smaEntry.competitors[+cb.dataset.smaIdx];
+    if (!sc) return;
+    w.competitors.push({
+      address:    sc.address || '',
+      rooms:      String(sc.rooms || ''),
+      area:       String(sc.area || ''),
+      price:      sc.price ? Number(sc.price).toLocaleString('ru-RU') + ' ₽' : '',
+      status:     sc.ours ? 'ours' : 'active',
+      statusText: sc.ours ? 'Наш объект' : 'В продаже',
+      note:       sc.comment || '',
+      url:        sc.url || '',
+      ours:       !!sc.ours
+    });
+  });
+  hideSmaImport();
   renderCompPanel(); render(); debounceSave();
 }
 function removeComp(i) {
