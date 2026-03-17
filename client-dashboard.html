@@ -98,6 +98,23 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .footer-contact a{color:rgba(229,229,229,0.35);text-decoration:none}
 .footer-contact a:hover{color:rgba(229,229,229,0.65)}
 
+.agent-picker{max-width:860px;margin:0 auto;padding:64px 40px 100px}
+.agent-picker-title{font-family:var(--serif);font-size:32px;font-weight:400;margin-bottom:8px}
+.agent-picker-sub{font-size:14px;color:var(--muted);margin-bottom:48px;font-weight:300}
+.agent-obj-row{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--border);gap:16px}
+.agent-obj-row:last-of-type{border-bottom:1px solid var(--border)}
+.agent-obj-main{flex:1;min-width:0}
+.agent-obj-addr{font-size:15px;font-weight:500;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.agent-obj-meta{font-size:12px;color:var(--muted);font-weight:300}
+.agent-obj-btns{display:flex;gap:8px;flex-shrink:0}
+.agent-btn{font-size:11px;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:5px 12px;font-family:var(--sans);color:var(--muted);transition:color 0.15s,border-color 0.15s}
+.agent-btn:hover{color:var(--text);border-color:rgba(0,0,0,0.2)}
+.agent-btn.green{color:#2D8A4E;border-color:rgba(45,138,78,0.3)}
+.agent-btn.green:hover{border-color:#2D8A4E}
+.agent-token-bar{display:flex;gap:8px;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);align-items:center}
+.agent-token-input{flex:1;font-family:var(--sans);font-size:13px;padding:8px 12px;border:1px solid var(--border);border-radius:3px;background:var(--bg);color:var(--text)}
+.agent-token-input:focus{outline:none;border-color:rgba(0,0,0,0.25)}
+.agent-token-btn{font-family:var(--sans);font-size:12px;font-weight:500;padding:8px 18px;background:var(--dark);color:#E5E5E5;border:none;border-radius:3px;cursor:pointer;white-space:nowrap}
 .state-block{max-width:860px;margin:140px auto;padding:0 40px;text-align:center}
 .spinner{width:28px;height:28px;border:1.5px solid rgba(0,0,0,0.1);border-top-color:rgba(0,0,0,0.3);border-radius:50%;animation:spin 0.75s linear infinite;margin:0 auto 28px}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -145,6 +162,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 
 <script>
 const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_BRANCH='main';
+const TOKEN_KEY='wr_gh_token';
+function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
 const FILES={sma:'data/sma.json',strategy:'data/strategy.json',reports:'data/reports.json'};
 const TG='semengme';
 const BASE=window.location.origin+window.location.pathname.replace(/[^/]*$/,'');
@@ -329,9 +348,117 @@ function render(urlId, smaData, stratData, repData){
   </div>`;
 }
 
+// ── AGENT PICKER ──
+async function showAgentPicker(token){
+  showLoading();
+  const [smaData,stratData,repData] = await Promise.all([
+    ghGetWithToken(FILES.sma, token),
+    ghGetWithToken(FILES.strategy, token),
+    ghGetWithToken(FILES.reports, token),
+  ]);
+
+  // Collect all unique IDs across all three sources
+  const allIds = new Set([
+    ...Object.keys(smaData?.analyses||{}),
+    ...Object.keys(stratData?.items||{}),
+    ...Object.keys(repData?.objects||{}),
+  ]);
+
+  if(!allIds.size){
+    document.getElementById('appRoot').innerHTML=`<div class="agent-picker">
+      <div class="agent-picker-title">Объекты не найдены</div>
+      <div class="agent-picker-sub">Создайте первый объект в СМА.</div>
+      ${tokenBar()}
+    </div>`;
+    return;
+  }
+
+  const rows = [...allIds].map(id => {
+    const sma  = smaData?.analyses?.[id];
+    const strat= stratData?.items?.[id];
+    const rep  = repData?.objects?.[id];
+    const address = sma?.address || strat?.address || rep?.name || id;
+    const area    = sma?.area || strat?.area || '';
+    const rooms   = sma?.rooms || strat?.rooms || '';
+    const weeks   = rep?.weeks||[];
+    const lastW   = weeks.length ? weeks[weeks.length-1] : null;
+    const meta = [rooms?rooms+'к':'', area?area+' м²':'', lastW?'Неделя '+lastW.week:''].filter(Boolean).join(' · ');
+    const dashUrl = window.location.origin+window.location.pathname+'?id='+encodeURIComponent(id);
+
+    return `<div class="agent-obj-row">
+      <div class="agent-obj-main">
+        <div class="agent-obj-addr">${esc(address)}</div>
+        <div class="agent-obj-meta">${esc(meta)||'—'}</div>
+      </div>
+      <div class="agent-obj-btns">
+        <button class="agent-btn" onclick="window.open('${esc(dashUrl)}','_blank')">Открыть</button>
+        <button class="agent-btn green" onclick="copyDashUrl('${esc(id)}',this)">Скопировать ссылку</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('appRoot').innerHTML=`<div class="agent-picker">
+    <div class="agent-picker-title">Все объекты</div>
+    <div class="agent-picker-sub">Скопируйте ссылку и отправьте клиенту</div>
+    ${rows}
+    ${tokenBar()}
+  </div>`;
+}
+
+function tokenBar(){
+  return `<div class="agent-token-bar">
+    <input class="agent-token-input" type="password" id="tokenInput" placeholder="Сменить GitHub Token…">
+    <button class="agent-token-btn" onclick="saveAgentToken()">Подключить</button>
+  </div>`;
+}
+
+function saveAgentToken(){
+  const t=document.getElementById('tokenInput')?.value?.trim();
+  if(!t) return;
+  try{localStorage.setItem(TOKEN_KEY,t);}catch(e){}
+  showAgentPicker(t);
+}
+
+function copyDashUrl(id, btn){
+  const url = window.location.origin+window.location.pathname+'?id='+encodeURIComponent(id);
+  navigator.clipboard.writeText(url).then(()=>{
+    const o=btn.textContent; btn.textContent='✓ Скопировано'; btn.style.color='#2D8A4E';
+    setTimeout(()=>{btn.textContent=o;btn.style.color='';},2000);
+  }).catch(()=>prompt('Ссылка:', url));
+}
+
+async function ghGetWithToken(file, token){
+  try{
+    const headers = token ? {'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'} : {};
+    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}?ref=${GH_BRANCH}`,{headers});
+    if(!r.ok) return null;
+    const j=await r.json();
+    const raw=atob(j.content.replace(/
+/g,''));
+    return JSON.parse(new TextDecoder().decode(Uint8Array.from(raw,c=>c.charCodeAt(0))));
+  }catch(e){return null;}
+}
+
+// ── INIT ──
 async function init(){
   const id=new URLSearchParams(window.location.search).get('id');
-  if(!id){showError('Ссылка не содержит идентификатора объекта.');return;}
+  const token=getToken();
+
+  // No ?id= → agent picker (if token) or prompt
+  if(!id){
+    if(token){
+      await showAgentPicker(token);
+    } else {
+      document.getElementById('appRoot').innerHTML=`<div class="agent-picker">
+        <div class="agent-picker-title">Список объектов</div>
+        <div class="agent-picker-sub">Введите GitHub Token чтобы увидеть все объекты</div>
+        ${tokenBar()}
+      </div>`;
+    }
+    return;
+  }
+
+  // Has ?id= → show client dashboard (public read)
   showLoading();
   const [smaData,stratData,repData]=await Promise.all([ghGet(FILES.sma),ghGet(FILES.strategy),ghGet(FILES.reports)]);
   const [,s1]=findEntry(smaData?.analyses,id,'address');
