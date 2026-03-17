@@ -89,14 +89,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .price-note{font-size:12px;color:rgba(0,0,0,0.3);text-align:right;line-height:1.7;max-width:220px}
 
 /* CTA */
-.cta-section{display:grid;grid-template-columns:72px 1fr 180px;gap:28px;align-items:start;padding:28px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.cta-n{font-family:var(--serif);font-size:40px;font-weight:400;line-height:1;color:rgba(0,0,0,0.07);padding-top:2px}
-.cta-title{font-size:15px;font-weight:500;margin-bottom:8px;line-height:1.3}
-.cta-sub{font-size:12px;color:var(--muted);line-height:1.7;font-weight:300}
-.cta-contact-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.2);margin-bottom:6px}
-.cta-contact-val{font-size:13px;color:var(--muted);font-weight:300;line-height:1.9}
-.cta-contact-val a{color:var(--text);text-decoration:none;font-weight:500}
-.cta-contact-val a:hover{text-decoration:underline}
+.cta-section{padding:80px 0;text-align:center;border-top:1px solid var(--border)}
+.cta-quote{font-family:var(--serif);font-size:clamp(22px,3.5vw,34px);font-weight:400;line-height:1.3;letter-spacing:-0.01em;color:var(--text);margin-bottom:16px}
+.cta-quote em{font-style:italic;color:var(--muted)}
+.cta-sub{font-size:14px;color:var(--muted);line-height:1.8;font-weight:300;max-width:520px;margin:0 auto}
 
 .report-footer{background:var(--dark);padding:56px 40px;text-align:center}
 .footer-name{font-family:var(--serif);font-size:15px;color:rgba(229,229,229,0.45);margin-bottom:8px}
@@ -118,7 +114,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
   .stage-detail,.stage-right{display:none}
   .stats-row{grid-template-columns:repeat(2,1fr)}
   .price-band{grid-template-columns:1fr;gap:20px}
-  .cta-section{grid-template-columns:48px 1fr;gap:16px}
+  .cta-section{padding:56px 0;}
   .price-note{text-align:left;max-width:100%}
   .report-footer{padding:44px 20px}
 }
@@ -309,17 +305,8 @@ function render(urlId, smaData, stratData, repData){
     <div class="stages">${stages}</div>
     ${weeklyHtml}${priceHtml}
     <div class="cta-section">
-      <div class="cta-n">05</div>
-      <div>
-        <div class="cta-title">Есть вопросы?</div>
-        <div class="cta-sub">Напишите напрямую — я отвечу быстро и смогу сразу понять по какому объекту вопрос. Всё общение удобнее вести лично, вне этой страницы.</div>
-      </div>
-      <div>
-        <div class="cta-contact-label">Написать</div>
-        <div class="cta-contact-val">
-          <a href="${tgLink}" target="_blank">Telegram →</a>
-        </div>
-      </div>
+      <div class="cta-quote">Данные собраны.<br><em>Следующий шаг — за вами.</em></div>
+      <p class="cta-sub">Если есть вопросы по любому из разделов — мои контакты внизу страницы.</p>
     </div>
   </div>`;
 }
