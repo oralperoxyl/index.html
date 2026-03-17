@@ -233,21 +233,21 @@
           "visited": false
         },
         {
-          "address": "",
+          "address": "ул. Кедрова, д.3 ",
           "agent": "",
-          "area": "",
-          "rooms": "",
-          "floor": "",
-          "condition": "",
-          "price": 0,
+          "area": "35,9",
+          "rooms": "1",
+          "floor": "6/16",
+          "condition": "с ремонтом ",
+          "price": 17500000,
           "ppm": 0,
           "bargain": "",
           "adDate": "",
           "adViews": "",
           "url": "",
           "comment": "",
-          "ours": false,
-          "visited": false
+          "ours": true,
+          "visited": true
         }
       ],
       "recommendations": [
