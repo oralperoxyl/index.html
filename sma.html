@@ -555,7 +555,8 @@ function renderPicker(){
           <div style="font-size:12px;color:var(--muted);margin-top:2px;">${s.rooms||'?'}к · ${s.area||'?'} м² · ${s.competitors?s.competitors.length:0} конкурентов</div>
         </a>
         <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
-          <button onclick="copyLink('${id}',this)" style="font-size:11px;color:var(--accent);background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:4px 10px;">Ссылка</button>
+          <button onclick="copyLink('${id}',this)" style="font-size:11px;color:var(--accent);background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:4px 10px;">Ссылка СМА</button>
+          <button onclick="copyDashboard('${id}',this)" style="font-size:11px;color:#2D8A4E;background:none;border:1px solid rgba(45,138,78,0.25);border-radius:3px;cursor:pointer;padding:4px 10px;">Дашборд клиента</button>
           <button onclick="deleteSma('${id}')" style="font-size:11px;color:#C0392B;background:none;border:none;cursor:pointer;padding:4px 8px;">✕</button>
         </div>
       </div>`;
@@ -583,6 +584,10 @@ function resetSma(){if(!confirm('Удалить этот СМА и все его
 function copyLink(id,btn){
   const url=window.location.origin+window.location.pathname+'?id='+id;
   try{navigator.clipboard.writeText(url).then(()=>{const o=btn.textContent;btn.textContent='✓';btn.style.color='#2D8A4E';setTimeout(()=>{btn.textContent=o;btn.style.color='';},1500);}).catch(()=>prompt('Скопируйте:',url));}catch(e){prompt('Скопируйте:',url);}
+}
+function copyDashboard(id,btn){
+  const url=window.location.origin+window.location.pathname.replace('sma.html','client-dashboard.html')+'?id='+id;
+  try{navigator.clipboard.writeText(url).then(()=>{const o=btn.textContent;btn.textContent='✓ Скопировано';btn.style.color='#2D8A4E';btn.style.borderColor='rgba(45,138,78,0.4)';setTimeout(()=>{btn.textContent=o;btn.style.color='';btn.style.borderColor='';},2000);}).catch(()=>prompt('Ссылка дашборда:',url));}catch(e){prompt('Ссылка дашборда:',url);}
 }
 
 // ─── OPEN SMA ───
@@ -740,6 +745,7 @@ function renderChart(s, comps){
   let colsHtml='';
   sorted.forEach((p,i)=>{
     const h=pct(p.ppm);
+    const stickH=Math.round(h/100*plotH);
     const isOurs=p.ours;
     const isZone=inZone(p.ppm);
     const valK=Math.round(p.ppm/1000);
@@ -749,9 +755,6 @@ function renderChart(s, comps){
     let ballSize=10,stickW=1.5,valW='500',shadow='';
     if(isOurs){valCol='#0066FF';ballCol='#0066FF';stickCol='#0066FF';numBg='#0066FF';numCol='white';ballSize=14;stickW=2;valW='600';shadow='box-shadow:0 2px 8px rgba(0,102,255,0.3);';}
     else if(isZone){valCol='#085041';ballCol='#2D8A4E';stickCol='rgba(45,138,78,0.2)';numBg='rgba(45,138,78,0.08)';numCol='#0F6E56';}
-
-    // Subtract half ball size so the CENTER of the ball sits at the correct value height
-    const stickH=Math.max(0, Math.round(h/100*plotH) - Math.round(ballSize/2));
 
     colsHtml+='<div class="ch-col">'
       +'<div class="ch-val" style="color:'+valCol+';font-weight:'+valW+';">'+valK+'\u043a</div>'
