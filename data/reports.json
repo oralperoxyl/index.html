@@ -54,7 +54,8 @@
               "statusText": "В продаже",
               "note": "Прямой конкурент, цену снижать не планируют. ",
               "url": "https://www.cian.ru/sale/flat/327455618/",
-              "ours": false
+              "ours": false,
+              "isNew": false
             },
             {
               "address": "ул. Новочеремушкинская 53к1",
@@ -65,11 +66,12 @@
               "statusText": "В продаже",
               "note": "Снизили цену на 200к, устали продавать. ",
               "url": "https://www.cian.ru/sale/flat/325334472/",
-              "ours": false
+              "ours": false,
+              "isNew": false
             }
           ],
           "recommendations": [],
-          "summary": "Подвижки идут, наблюдаем. Прямых конкурентов мало. "
+          "summary": "Начало работы. Принимаем первые звонки, планируем показы. "
         }
       ]
     },
