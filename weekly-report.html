@@ -1558,13 +1558,18 @@ function addCompetitor() {
   renderCompPanel(); render(); debounceSave();
 }
 
-function showSmaImport() {
+async function showSmaImport() {
   const modal = document.getElementById('smaImportModal');
   const list  = document.getElementById('smaImportList');
   modal.style.display = 'flex';
 
   if (!smaData?.analyses) {
-    list.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:16px 0;">СМА не загружен. Убедитесь что объект существует в sma.html с тем же ID.</p>';
+    list.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:16px 0;">Загружаю данные СМА…</p>';
+    smaData = await ghGetPublic('data/sma.json');
+  }
+
+  if (!smaData?.analyses) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:16px 0;">СМА не найден. Убедитесь что объект создан в sma.html с тем же адресом.</p>';
     return;
   }
 
