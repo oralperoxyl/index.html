@@ -740,7 +740,6 @@ function renderChart(s, comps){
   let colsHtml='';
   sorted.forEach((p,i)=>{
     const h=pct(p.ppm);
-    const stickH=Math.round(h/100*plotH);
     const isOurs=p.ours;
     const isZone=inZone(p.ppm);
     const valK=Math.round(p.ppm/1000);
@@ -750,6 +749,9 @@ function renderChart(s, comps){
     let ballSize=10,stickW=1.5,valW='500',shadow='';
     if(isOurs){valCol='#0066FF';ballCol='#0066FF';stickCol='#0066FF';numBg='#0066FF';numCol='white';ballSize=14;stickW=2;valW='600';shadow='box-shadow:0 2px 8px rgba(0,102,255,0.3);';}
     else if(isZone){valCol='#085041';ballCol='#2D8A4E';stickCol='rgba(45,138,78,0.2)';numBg='rgba(45,138,78,0.08)';numCol='#0F6E56';}
+
+    // Subtract half ball size so the CENTER of the ball sits at the correct value height
+    const stickH=Math.max(0, Math.round(h/100*plotH) - Math.round(ballSize/2));
 
     colsHtml+='<div class="ch-col">'
       +'<div class="ch-val" style="color:'+valCol+';font-weight:'+valW+';">'+valK+'\u043a</div>'
