@@ -1290,7 +1290,7 @@ function render() {
       const addrTag = c.url
         ? `<a href="${escHtml(c.url)}" target="_blank" class="comp-card-addr">${escHtml(c.address)}</a>`
         : `<span class="comp-card-addr">${escHtml(c.address)}</span>`;
-      const badge = c.ours ? '<span class="comp-card-badge">Наш</span>' : '';
+      const badge = c.ours ? '<span class="comp-card-badge">Наш</span>' : (c.isNew ? '<span class="comp-card-badge" style="background:#FFF3CD;color:#856404;">Новый</span>' : '');
       const meta = [c.rooms ? c.rooms + ' комн.' : '', c.area || ''].filter(Boolean).join(' · ');
       return `<div class="comp-card${cls}">
         <div class="comp-card-top"><div>${addrTag}${badge}<div class="comp-card-meta">${escHtml(meta)}</div></div></div>
@@ -1305,8 +1305,9 @@ function render() {
       const addrHtml = c.url
         ? `<a href="${escHtml(c.url)}" target="_blank" style="color:var(--text);text-decoration:underline;text-decoration-color:var(--border);text-underline-offset:3px;">${escHtml(c.address)}</a>`
         : escHtml(c.address);
+      const newBadge = c.isNew ? '<span style="font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;background:#FFF3CD;color:#856404;padding:2px 6px;border-radius:2px;margin-left:6px;vertical-align:middle;">Новый</span>' : '';
       return `<tr class="${c.ours ? 'our-object' : ''}">
-        <td>${addrHtml}</td><td>${escHtml(c.rooms)}</td><td>${escHtml(c.area)}</td>
+        <td>${addrHtml}${newBadge}</td><td>${escHtml(c.rooms)}</td><td>${escHtml(c.area)}</td>
         <td>${escHtml(c.price)}</td><td><span class="comp-status ${c.status}">${escHtml(c.statusText)}</span></td>
         <td>${escHtml(c.note)}</td></tr>`;
     }).join('')
@@ -1320,7 +1321,7 @@ function render() {
       const addrTag = c.url
         ? `<a href="${escHtml(c.url)}" target="_blank" class="comp-card-addr">${escHtml(c.address)}</a>`
         : `<span class="comp-card-addr">${escHtml(c.address)}</span>`;
-      const badge = c.ours ? '<span class="comp-card-badge">Наш</span>' : '';
+      const badge = c.ours ? '<span class="comp-card-badge">Наш</span>' : (c.isNew ? '<span class="comp-card-badge" style="background:#FFF3CD;color:#856404;">Новый</span>' : '');
       const statusColor = c.status === 'active' ? '#2D8A4E' : c.status === 'reduced' ? '#C0392B' : 'var(--muted)';
       const statusStyle = isSold ? 'text-decoration:line-through;' : '';
       const priceStyle = c.status === 'reduced' ? 'text-decoration:line-through;text-decoration-color:var(--border);' : '';
@@ -1483,6 +1484,9 @@ function renderCompPanel() {
       <div class="edit-row"><label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
         <input type="checkbox" data-comp="${i}" data-field="ours" ${c.ours?'checked':''} onchange="saveFromPanel()"> Наш объект
       </label></div>
+      <div class="edit-row"><label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+        <input type="checkbox" data-comp="${i}" data-field="isNew" ${c.isNew?'checked':''} onchange="saveFromPanel()"> Новый конкурент
+      </label></div>
     </div>`).join('');
 }
 
@@ -1524,6 +1528,7 @@ function saveFromPanel() {
     const i = +el.dataset.comp, f = el.dataset.field;
     if (w.competitors[i]) {
       if (f === 'ours') w.competitors[i].ours = el.checked;
+      else if (f === 'isNew') w.competitors[i].isNew = el.checked;
       else w.competitors[i][f] = el.value;
     }
   });
@@ -1554,7 +1559,7 @@ function removeFeedback(i) {
 }
 function addCompetitor() {
   const w = getCurrentWeek();
-  w.competitors.push({ address: '', rooms: '', area: '', price: '', status: 'active', statusText: 'В продаже', note: '', url: '', ours: false });
+  w.competitors.push({ address: '', rooms: '', area: '', price: '', status: 'active', statusText: 'В продаже', note: '', url: '', ours: false, isNew: false });
   renderCompPanel(); render(); debounceSave();
 }
 
@@ -1619,9 +1624,10 @@ function importSelectedFromSma() {
       price:      sc.price ? Number(sc.price).toLocaleString('ru-RU') + ' ₽' : '',
       status:     sc.ours ? 'ours' : 'active',
       statusText: sc.ours ? 'Наш объект' : 'В продаже',
-      note:       sc.comment || '',
+      note:       '',  // не импортируем — заметки в отчёте про изменения цен
       url:        sc.url || '',
-      ours:       !!sc.ours
+      ours:       !!sc.ours,
+      isNew:      false
     });
   });
   hideSmaImport();
