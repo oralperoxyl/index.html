@@ -442,8 +442,7 @@ async function ghGetWithToken(file, token){
     const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}?ref=${GH_BRANCH}`,{headers});
     if(!r.ok) return null;
     const j=await r.json();
-    const raw=atob(j.content.replace(/
-/g,''));
+    const raw=atob(j.content.replace(/\n/g,''));
     return JSON.parse(new TextDecoder().decode(Uint8Array.from(raw,c=>c.charCodeAt(0))));
   }catch(e){return null;}
 }
