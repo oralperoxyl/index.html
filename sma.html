@@ -672,7 +672,7 @@ function render(){
   }).join(''):'<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
 
   // Recommendations
-  const recs=s.recommendations||[];
+  const recs=s.sma?.recommendations||[];
   document.getElementById('recList').innerHTML=recs.map((r,i)=>`
     <div class="rec-item"><div class="rec-num">${String(i+1).padStart(2,'0')}</div><div class="rec-text">${r}</div></div>`).join('');
 
@@ -806,15 +806,15 @@ function populatePanel(){
   document.getElementById('e-floor').value=s.floor||'';
   document.getElementById('e-location').value=s.location||'';
   document.getElementById('e-date').value=s.date||'';
-  document.getElementById('e-priceFrom').value=s.priceFrom||'';
-  document.getElementById('e-priceTo').value=s.priceTo||'';
+  document.getElementById('e-priceFrom').value=s.sma?.priceFrom||'';
+  document.getElementById('e-priceTo').value=s.sma?.priceTo||'';
   updatePriceHint();
   renderCompPanel();renderRecPanel();
 }
 
 function updatePriceHint(){
   const s=allData.objects[currentId];if(!s)return;
-  const f=Number(s.priceFrom),t=Number(s.priceTo),a=parseNum(s.area);
+  const f=Number(s.sma?.priceFrom),t=Number(s.sma?.priceTo),a=parseNum(s.area);
   if(f&&t&&a){
     const avg=Math.round((f+t)/2);
     document.getElementById('priceCalcHint').textContent=`Средняя: ${fmtPrice(avg)} (${fmt(Math.round(avg/a))} ₽/м²)`;
@@ -858,7 +858,7 @@ function renderCompPanel(){
 
 function renderRecPanel(){
   const s=allData.objects[currentId];if(!s)return;
-  const recs=s.recommendations||[];
+  const recs=smaObj.recommendations||[];
   document.getElementById('e-recs').innerHTML=recs.map((r,i)=>`
     <div class="edit-rec-block">
       <button class="btn-remove" onclick="removeRec(${i})">✕</button>
@@ -875,8 +875,8 @@ function saveFromPanel(){
   s.floor=document.getElementById('e-floor').value;
   s.location=document.getElementById('e-location').value;
   s.date=document.getElementById('e-date').value;
-  s.priceFrom=parseInt(document.getElementById('e-priceFrom').value)||0;
-  s.priceTo=parseInt(document.getElementById('e-priceTo').value)||0;
+  s.sma.priceFrom=parseInt(document.getElementById('e-priceFrom').value)||0;
+  s.sma.priceTo=parseInt(document.getElementById('e-priceTo').value)||0;
 
   document.querySelectorAll('[data-c]').forEach(el=>{
     const i=+el.dataset.c,f=el.dataset.f;
@@ -889,7 +889,7 @@ function saveFromPanel(){
 
   const recs=[];
   document.querySelectorAll('[data-r]').forEach(el=>{recs[+el.dataset.r]=el.value;});
-  s.recommendations=recs.filter(r=>r!==undefined);
+  s.sma.recommendations=recs.filter(r=>r!==undefined);
 
   updatePriceHint();render();debounceSave();
 }
@@ -923,7 +923,7 @@ function generateRecs(){
     `По статистике на текущем рынке покупатель выбирает 2–3 самых выгодных объекта из сегмента. Квартира — рыночный товар. Если объект не входит в число наиболее привлекательных предложений по цене и качеству, покупатель его просто не выберет.`,
     `Анализ проводится по выставленным предложениям, а <strong>реальная стоимость покупки</strong> определяется при переговорах и торге между сторонами. Имеет смысл говорить о <strong>потенциальной стоимости спроса</strong>, а не стоимости покупки.`,
     `Стоимость спроса и стоимость покупки могут отличаться на 10–15%. Объекты, где собственники не готовы к корректировке, стоят на рынке месяцами без реального спроса.`,
-    s.priceFrom&&s.priceTo?`<strong>Сравнивая выставленные на продажу объекты, а также учитывая тенденции рынка, рекомендуемая рыночная стоимость может составлять: ${fmtPrice(smaData.priceFrom)} (${ppmFrom} ₽/м²) — ${fmtPrice(smaData.priceTo)} (${ppmTo} ₽/м²), средняя ${fmtPrice(avg)}${avgPpm?' ('+avgPpm+' ₽/м²)':''}.</strong>`:'<strong>Рекомендуемая стоимость: [заполните диапазон цен выше]</strong>',
+    smaD.priceFrom&&smaD.priceTo?`<strong>Сравнивая выставленные на продажу объекты, а также учитывая тенденции рынка, рекомендуемая рыночная стоимость может составлять: ${fmtPrice(smaData.priceFrom)} (${ppmFrom} ₽/м²) — ${fmtPrice(smaData.priceTo)} (${ppmTo} ₽/м²), средняя ${fmtPrice(avg)}${avgPpm?' ('+avgPpm+' ₽/м²)':''}.</strong>`:'<strong>Рекомендуемая стоимость: [заполните диапазон цен выше]</strong>',
     `Стоимость может быть скорректирована в большую или меньшую сторону при наличии или отсутствии реальных покупателей и при согласовании с продавцом.`
   ];
   renderRecPanel();render();debounceSave();

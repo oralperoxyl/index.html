@@ -308,6 +308,7 @@ function fmtInput(el,arr,idx){
 }
 function render(){
   const s=allData.objects[currentId];if(!s)return;
+  const strat=s.strategy||{};
   const pF=Number(strat.priceFrom)||0,pT=Number(strat.priceTo)||0,avg=pF&&pT?Math.round((pF+pT)/2):0;
   const c1=Number(strat.comm1)||2.5,c2=Number(strat.comm2)||3,c3=Number(strat.comm3)||6;
   const p1S=Number(strat.start1)||pT;
