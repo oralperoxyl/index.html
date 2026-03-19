@@ -881,11 +881,11 @@ function saveFromPanel(){
 
   document.querySelectorAll('[data-c]').forEach(el=>{
     const i=+el.dataset.c,f=el.dataset.f;
-    if(!s.competitors[i])return;
-    if(f==='ours')s.competitors[i].ours=el.checked;
-    else if(f==='visited')s.competitors[i].visited=el.checked;
-    else if(f==='price')s.competitors[i].price=parseInt(el.value)||0;
-    else s.competitors[i][f]=el.value;
+    if(!s.sma||!s.sma.competitors[i])return;
+    if(f==='ours')s.sma.competitors[i].ours=el.checked;
+    else if(f==='visited')s.sma.competitors[i].visited=el.checked;
+    else if(f==='price')s.sma.competitors[i].price=parseInt(el.value)||0;
+    else s.sma.competitors[i][f]=el.value;
   });
 
   const recs=[];

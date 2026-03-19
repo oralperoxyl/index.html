@@ -768,25 +768,25 @@ const TOKEN_KEY = 'wr_gh_token';
 // ─── SMA HELPERS ───
 function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
 function findSmaEntry(id){
-  if(!smaData?.analyses) return null;
-  const col = smaData.analyses;
-  if(col[id]) return col[id];
+  // Now data comes from unified objects.json
+  if(!smaData?.objects) return null;
+  const col = smaData.objects;
+  // Direct key match — return the sma sub-object
+  if(col[id]) return col[id].sma||null;
+  // Fuzzy match by address
   for(const [k,v] of Object.entries(col)){
-    const addr=v.address||'';
-    if(addr && slugify(addr)===id) return v;
-  }
-  for(const [k,v] of Object.entries(col)){
-    if(k.startsWith(id)||id.startsWith(k)) return v;
+    const addr=v.address||v.name||'';
+    if(addr && slugify(addr)===id) return v.sma||null;
+    if(k.startsWith(id)||id.startsWith(k)) return v.sma||null;
   }
   const short=id.replace(/-кв-?\d+$/,'').replace(/-кв\d+$/,'');
   if(short!==id) for(const [k,v] of Object.entries(col)){
-    if(k===short||k.startsWith(short)||short.startsWith(k)) return v;
+    if(k===short||k.startsWith(short)||short.startsWith(k)) return v.sma||null;
   }
-  // token match
   const tokens=id.split('-').filter(t=>t.length>2);
   for(const [k,v] of Object.entries(col)){
     const hits=k.split('-').filter(t=>t.length>2&&id.includes(t)).length;
-    if(hits>=Math.min(3,tokens.length)) return v;
+    if(hits>=Math.min(3,tokens.length)) return v.sma||null;
   }
   return null;
 }
@@ -1575,12 +1575,12 @@ async function showSmaImport() {
   const list  = document.getElementById('smaImportList');
   modal.style.display = 'flex';
 
-  if (!smaData?.analyses) {
+  if (!smaData?.objects) {
     list.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:16px 0;">Загружаю данные СМА…</p>';
-    smaData = await ghGetPublic('data/sma.json');
+    smaData = await ghGetPublic('data/objects.json');
   }
 
-  if (!smaData?.analyses) {
+  if (!smaData?.objects) {
     list.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:16px 0;">СМА не найден. Убедитесь что объект создан в sma.html с тем же адресом.</p>';
     return;
   }
