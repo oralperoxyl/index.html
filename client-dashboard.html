@@ -419,9 +419,7 @@ async function showAgentPicker(token){
     const priceStr = pF&&pT ? fmtP(pF)+' — '+fmtP(pT) : '';
     const meta = [rooms?rooms+'к':'', area?area+' м²':'', lastW?'Неделя '+lastW.week:'', priceStr].filter(Boolean).join(' · ');
     const dashUrl = window.location.origin+window.location.pathname+'?id='+encodeURIComponent(primaryId);
-    const idsJson = esc(JSON.stringify(allIds));
-
-    return `<div class="agent-obj-row" id="row-${esc(primaryId)}">
+    return `<div class="agent-obj-row" id="row-${esc(primaryId)}" data-ids="${esc(JSON.stringify(allIds))}">
       <div class="agent-obj-main">
         <div class="agent-obj-addr">${esc(address)}</div>
         <div class="agent-obj-meta">${esc(meta)||'—'}</div>
@@ -429,7 +427,7 @@ async function showAgentPicker(token){
       <div class="agent-obj-btns">
         <button class="agent-btn" onclick="window.open('${esc(dashUrl)}','_blank')">Открыть</button>
         <button class="agent-btn green" onclick="copyDashUrl('${esc(primaryId)}',this)">Скопировать ссылку</button>
-        <button class="agent-btn" style="color:#C0392B;border-color:rgba(192,57,43,0.25);" onclick="deleteObject('${esc(primaryId)}','${idsJson}',this)">✕</button>
+        <button class="agent-btn" style="color:#C0392B;border-color:rgba(192,57,43,0.25);" onclick="deleteObject(this)">✕</button>
       </div>
     </div>`;
   }).join('');
@@ -465,15 +463,15 @@ function copyDashUrl(id, btn){
 }
 
 // ── DELETE OBJECT ──
-async function deleteObject(primaryId, idsJson, btn){
-  const address = btn.closest('.agent-obj-row').querySelector('.agent-obj-addr').textContent;
+async function deleteObject(btn){
+  const row = btn.closest('.agent-obj-row');
+  const address = row.querySelector('.agent-obj-addr').textContent;
+  const ids = JSON.parse(row.dataset.ids || '[]');
+
   if(!confirm('Удалить «' + address + '» из всех разделов?\n\nЭто удалит объект из СМА, Стратегии и Еженедельных отчётов.')) return;
 
   const token = getToken();
   if(!token){ alert('Нет токена. Введите GitHub Token внизу страницы.'); return; }
-
-  const ids = JSON.parse(idsJson);
-  const row = btn.closest('.agent-obj-row');
   const btns = row.querySelectorAll('button');
   btns.forEach(b => b.disabled = true);
 
