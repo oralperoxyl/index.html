@@ -602,7 +602,8 @@ function openSma(id){
 // ─── RENDER ───
 function render(){
   const s=allData.objects[currentId];if(!s)return;
-  const comps=s.sma?.competitors||[];
+  const smaData=s.sma||{};
+  const comps=smaData.competitors||[];
 
   // Hero
   document.getElementById('heroTitle').innerHTML=escHtml(s.address||'Новый объект');

@@ -433,6 +433,7 @@ function render(){
 }
 
 function renderAd(s){
+  const strat=s?.strategy||{};
   var mk=strat.marketing||defaultMarketing();
   var active=mk.filter(function(t){return t.on;});
   if(!active.length){document.getElementById('adList').innerHTML='<p style="color:var(--muted);font-size:14px;padding:20px 0;">Маркетинговые инструменты не выбраны — настройте в панели редактирования.</p>';document.getElementById('adTotal').innerHTML='';return;}
