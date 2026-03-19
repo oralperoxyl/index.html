@@ -366,7 +366,7 @@ async function showAgentPicker(token){
   ]);
 
 
-  // Collect all unique IDs across all three sources
+  // Collect all IDs from all three sources
   const allIds = new Set([
     ...Object.keys(smaData?.analyses||{}),
     ...Object.keys(stratData?.items||{}),
@@ -382,17 +382,43 @@ async function showAgentPicker(token){
     return;
   }
 
-  const rows = [...allIds].map(id => {
-    const sma  = smaData?.analyses?.[id];
-    const strat= stratData?.items?.[id];
-    const rep  = repData?.objects?.[id];
+  // Deduplicate: группируем по нормализованному адресу
+  // Для каждой группы выбираем «главный» ID — тот что из СМА (самый полный)
+  const groups = new Map(); // normalizedAddr → {primaryId, sma, strat, rep}
+
+  for(const id of allIds){
+    const sma   = smaData?.analyses?.[id];
+    const strat = stratData?.items?.[id];
+    const rep   = repData?.objects?.[id];
     const address = sma?.address || strat?.address || rep?.name || id;
-    const area    = sma?.area || strat?.area || '';
-    const rooms   = sma?.rooms || strat?.rooms || '';
-    const weeks   = rep?.weeks||[];
-    const lastW   = weeks.length ? weeks[weeks.length-1] : null;
-    const meta = [rooms?rooms+'к':'', area?area+' м²':'', lastW?'Неделя '+lastW.week:''].filter(Boolean).join(' · ');
-    const dashUrl = window.location.origin+window.location.pathname+'?id='+encodeURIComponent(id);
+    // Нормализуем адрес: нижний регистр, убираем лишние символы
+    const norm = address.toLowerCase().replace(/[^а-яёa-z0-9]/gi,' ').replace(/\s+/g,' ').trim();
+
+    if(!groups.has(norm)){
+      groups.set(norm, {primaryId: id, sma, strat, rep, address, allIds:[id]});
+    } else {
+      const g = groups.get(norm);
+      g.allIds.push(id);
+      // Предпочитаем ID из СМА как основной (наиболее полные данные)
+      if(sma && !g.sma){ g.sma = sma; g.primaryId = id; }
+      if(strat && !g.strat) g.strat = strat;
+      if(rep && !g.rep) g.rep = rep;
+      // Берём адрес из наиболее полного источника
+      if(sma?.address) g.address = sma.address;
+      else if(strat?.address && !g.sma) g.address = strat.address;
+    }
+  }
+
+  const rows = [...groups.values()].map(({primaryId, sma, strat, rep, address}) => {
+    const area  = sma?.area || strat?.area || '';
+    const rooms = sma?.rooms || strat?.rooms || '';
+    const weeks = rep?.weeks||[];
+    const lastW = weeks.length ? weeks[weeks.length-1] : null;
+    const pF = Number(sma?.priceFrom||strat?.priceFrom||0);
+    const pT = Number(sma?.priceTo||strat?.priceTo||0);
+    const priceStr = pF&&pT ? fmtP(pF)+' — '+fmtP(pT) : '';
+    const meta = [rooms?rooms+'к':'', area?area+' м²':'', lastW?'Неделя '+lastW.week:'', priceStr].filter(Boolean).join(' · ');
+    const dashUrl = window.location.origin+window.location.pathname+'?id='+encodeURIComponent(primaryId);
 
     return `<div class="agent-obj-row">
       <div class="agent-obj-main">
@@ -401,7 +427,7 @@ async function showAgentPicker(token){
       </div>
       <div class="agent-obj-btns">
         <button class="agent-btn" onclick="window.open('${esc(dashUrl)}','_blank')">Открыть</button>
-        <button class="agent-btn green" onclick="copyDashUrl('${esc(id)}',this)">Скопировать ссылку</button>
+        <button class="agent-btn green" onclick="copyDashUrl('${esc(primaryId)}',this)">Скопировать ссылку</button>
       </div>
     </div>`;
   }).join('');
