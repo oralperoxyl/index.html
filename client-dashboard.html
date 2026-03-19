@@ -419,7 +419,7 @@ async function showAgentPicker(token){
     const priceStr = pF&&pT ? fmtP(pF)+' — '+fmtP(pT) : '';
     const meta = [rooms?rooms+'к':'', area?area+' м²':'', lastW?'Неделя '+lastW.week:'', priceStr].filter(Boolean).join(' · ');
     const dashUrl = window.location.origin+window.location.pathname+'?id='+encodeURIComponent(primaryId);
-    return `<div class="agent-obj-row" id="row-${esc(primaryId)}" data-ids="${esc(JSON.stringify(allIds))}">
+    return `<div class="agent-obj-row" id="row-${esc(primaryId)}" data-ids='${JSON.stringify(allIds).replace(/'/g, "&apos;")}'>
       <div class="agent-obj-main">
         <div class="agent-obj-addr">${esc(address)}</div>
         <div class="agent-obj-meta">${esc(meta)||'—'}</div>
@@ -466,7 +466,7 @@ function copyDashUrl(id, btn){
 async function deleteObject(btn){
   const row = btn.closest('.agent-obj-row');
   const address = row.querySelector('.agent-obj-addr').textContent;
-  const ids = JSON.parse(row.dataset.ids || '[]');
+  const ids = JSON.parse((row.dataset.ids || '[]').replace(/&apos;/g, "'"));
 
   if(!confirm('Удалить «' + address + '» из всех разделов?\n\nЭто удалит объект из СМА, Стратегии и Еженедельных отчётов.')) return;
 
