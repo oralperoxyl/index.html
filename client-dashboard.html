@@ -164,7 +164,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_BRANCH='main';
 const TOKEN_KEY='wr_gh_token';
 function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
-const FILES={sma:'data/sma.json',strategy:'data/strategy.json',reports:'data/reports.json'};
+const GH_FILE='data/objects.json';
+const FILES={objects:'data/objects.json'};
 const TG='semengme';
 const BASE=window.location.origin+window.location.pathname.replace(/[^/]*$/,'');
 
@@ -230,24 +231,26 @@ const DESC={
   weekly:'Обновления после выхода в рекламу: статистика просмотров, звонков и показов, обратная связь от потенциальных покупателей, анализ конкурентов и рекомендации по корректировке цены.',
 };
 
-function render(urlId, smaData, stratData, repData){
-  const [smaId,sma]    = findEntry(smaData?.analyses,  urlId, 'address');
-  const [stratId,strat]= findEntry(stratData?.items,   urlId, 'address');
-  const [repId,repObj] = findEntry(repData?.objects,   urlId, 'name');
-  const canon = smaId||stratId||repId||urlId;
+function render(urlId, objData){
+  // Find object with fuzzy match
+  let [canon, obj] = findEntry(objData?.objects, urlId, 'address');
+  if(!obj){ showError('Объект не найден.'); return; }
 
-  const address = sma?.address||strat?.address||repObj?.name||urlId;
-  const area    = parseFloat(sma?.area||strat?.area||0);
-  const rooms   = parseInt(sma?.rooms||strat?.rooms||0);
-  const floor   = sma?.floor||strat?.floor||'';
-  const location= sma?.location||strat?.location||'';
+  const address  = obj.address || urlId;
+  const area     = parseFloat(obj.area||0);
+  const rooms    = parseInt(obj.rooms||0);
+  const floor    = obj.floor||'';
+  const location = obj.location||'';
 
-  const pF=Number(sma?.priceFrom||strat?.priceFrom||0),pT=Number(sma?.priceTo||strat?.priceTo||0);
+  const sma   = obj.sma||{};
+  const strat = obj.strategy||{};
+  const pF=Number(sma.priceFrom||strat.priceFrom||0), pT=Number(sma.priceTo||strat.priceTo||0);
   const ppmF=pF&&area?fmt(calcPpm(pF,area)):'', ppmT=pT&&area?fmt(calcPpm(pT,area)):'';
 
-  const weeks=repObj?.weeks||[], lastW=weeks.length?weeks[weeks.length-1]:null, prevW=weeks.length>1?weeks[weeks.length-2]:null;
+  const weeks=obj.reports?.weeks||[], lastW=weeks.length?weeks[weeks.length-1]:null, prevW=weeks.length>1?weeks[weeks.length-2]:null;
   const chips=[rooms?rooms+'к':null,area?area+' м²':null,floor?floor+' эт.':null,location||null].filter(Boolean);
   const tgLink=`https://t.me/${TG}?text=${encodeURIComponent('По объекту '+address+': ')}`;
+  const stratId=canon, repId=canon;
 
   function row({num,numCls,title,body,dlabel,dval,href,scls,stxt,locked,hint}){
     return `<a class="stage-row ${locked?'locked':'clickable'}" href="${locked?'#':esc(href)}" ${locked?'':'target="_blank" rel="noopener"'}>
@@ -259,7 +262,7 @@ function render(urlId, smaData, stratData, repData){
   }
 
   // marketing total for strategy detail
-  const mk=strat?.marketing||[];
+  const mk=strat.marketing||[];
   const mkTotal=mk.filter(m=>m.on).reduce((a,m)=>a+(m.price||0),0);
   const mkCount=mk.filter(m=>m.on).length;
 
@@ -298,7 +301,7 @@ function render(urlId, smaData, stratData, repData){
         <div class="stat-box"><div class="stat-lbl">Предложения</div><div class="stat-val">${s.offers||0}</div><div class="stat-delta ${dO.cls}">${dO.t}</div></div>
       </div>
       ${lastW.summary?`<div style="border-left:2px solid var(--border);padding:16px 20px;margin-bottom:4px;"><p class="weekly-summary-text" style="font-size:14px;color:var(--text);font-weight:300;line-height:1.8">${esc(lastW.summary)}</p></div>`:''}
-      <a class="weekly-link" href="${BASE}weekly-report.html?id=${encodeURIComponent(repId||canon)}" target="_blank">Открыть полный отчёт →</a>
+      <a class="weekly-link" href="${BASE}weekly-report.html?id=${encodeURIComponent(canon)}" target="_blank">Открыть полный отчёт →</a>
     </div>`;
   }
 
@@ -320,7 +323,7 @@ function render(urlId, smaData, stratData, repData){
 
   // Дата последнего обновления из любого источника
   const dates = [
-    sma?.date, strat?.date,
+    obj.date, strat.date,
     lastW?.period
   ].filter(Boolean);
   if(dates.length){
@@ -359,19 +362,8 @@ async function showAgentPicker(token){
     </div>`;
     return;
   }
-  const [smaData,stratData,repData] = await Promise.all([
-    ghGet(FILES.sma),
-    ghGet(FILES.strategy),
-    ghGet(FILES.reports),
-  ]);
-
-
-  // Collect all IDs from all three sources
-  const allIds = new Set([
-    ...Object.keys(smaData?.analyses||{}),
-    ...Object.keys(stratData?.items||{}),
-    ...Object.keys(repData?.objects||{}),
-  ]);
+  const objData = await ghGet(FILES.objects);
+  const allIds = new Set(Object.keys(objData?.objects||{}));
 
   if(!allIds.size){
     document.getElementById('appRoot').innerHTML=`<div class="agent-picker">
@@ -382,44 +374,23 @@ async function showAgentPicker(token){
     return;
   }
 
-  // Deduplicate: группируем по нормализованному адресу
-  // Для каждой группы выбираем «главный» ID — тот что из СМА (самый полный)
-  const groups = new Map(); // normalizedAddr → {primaryId, sma, strat, rep}
+  // Single source — no deduplication needed
 
-  for(const id of allIds){
-    const sma   = smaData?.analyses?.[id];
-    const strat = stratData?.items?.[id];
-    const rep   = repData?.objects?.[id];
-    const address = sma?.address || strat?.address || rep?.name || id;
-    // Нормализуем адрес: нижний регистр, убираем лишние символы
-    const norm = address.toLowerCase().replace(/[^а-яёa-z0-9]/gi,' ').replace(/\s+/g,' ').trim();
-
-    if(!groups.has(norm)){
-      groups.set(norm, {primaryId: id, sma, strat, rep, address, allIds:[id]});
-    } else {
-      const g = groups.get(norm);
-      g.allIds.push(id);
-      // Предпочитаем ID из СМА как основной (наиболее полные данные)
-      if(sma && !g.sma){ g.sma = sma; g.primaryId = id; }
-      if(strat && !g.strat) g.strat = strat;
-      if(rep && !g.rep) g.rep = rep;
-      // Берём адрес из наиболее полного источника
-      if(sma?.address) g.address = sma.address;
-      else if(strat?.address && !g.sma) g.address = strat.address;
-    }
-  }
-
-  const rows = [...groups.values()].map(({primaryId, sma, strat, rep, address, allIds}) => {
-    const area  = sma?.area || strat?.area || '';
-    const rooms = sma?.rooms || strat?.rooms || '';
-    const weeks = rep?.weeks||[];
+  const rows = [...allIds].map(id => {
+    const obj = objData?.objects?.[id];
+    if(!obj) return '';
+    const address = obj.address || id;
+    const area  = obj.area || '';
+    const rooms = obj.rooms || '';
+    const weeks = obj.reports?.weeks||[];
     const lastW = weeks.length ? weeks[weeks.length-1] : null;
-    const pF = Number(sma?.priceFrom||strat?.priceFrom||0);
-    const pT = Number(sma?.priceTo||strat?.priceTo||0);
+    const pF = Number(obj.sma?.priceFrom||obj.strategy?.priceFrom||0);
+    const pT = Number(obj.sma?.priceTo||obj.strategy?.priceTo||0);
+    const primaryId = id;
     const priceStr = pF&&pT ? fmtP(pF)+' — '+fmtP(pT) : '';
     const meta = [rooms?rooms+'к':'', area?area+' м²':'', lastW?'Неделя '+lastW.week:'', priceStr].filter(Boolean).join(' · ');
     const dashUrl = window.location.origin+window.location.pathname+'?id='+encodeURIComponent(primaryId);
-    return `<div class="agent-obj-row" id="row-${esc(primaryId)}" data-ids='${JSON.stringify(allIds).replace(/'/g, "&apos;")}'>
+    return `<div class="agent-obj-row" id="row-${esc(primaryId)}" data-ids="${esc(JSON.stringify(allIds))}">
       <div class="agent-obj-main">
         <div class="agent-obj-addr">${esc(address)}</div>
         <div class="agent-obj-meta">${esc(meta)||'—'}</div>
@@ -466,7 +437,7 @@ function copyDashUrl(id, btn){
 async function deleteObject(btn){
   const row = btn.closest('.agent-obj-row');
   const address = row.querySelector('.agent-obj-addr').textContent;
-  const ids = JSON.parse((row.dataset.ids || '[]').replace(/&apos;/g, "'"));
+  const ids = JSON.parse(row.dataset.ids || '[]');
 
   if(!confirm('Удалить «' + address + '» из всех разделов?\n\nЭто удалит объект из СМА, Стратегии и Еженедельных отчётов.')) return;
 
@@ -483,12 +454,8 @@ async function deleteObject(btn){
   function setStatus(msg){ statusEl.textContent = msg; }
 
   try {
-    setStatus('Удаляю из СМА…');
-    await ghDeleteFromJson('data/sma.json', 'analyses', ids, token);
-    setStatus('Удаляю из Стратегии…');
-    await ghDeleteFromJson('data/strategy.json', 'items', ids, token);
-    setStatus('Удаляю из Отчётов…');
-    await ghDeleteFromJson('data/reports.json', 'objects', ids, token);
+    setStatus('Удаляю объект…');
+    await ghDeleteFromJson('data/objects.json', 'objects', ids, token);
     setStatus('Готово');
     setTimeout(() => { row.style.opacity='0'; row.style.transition='opacity 0.3s'; setTimeout(()=>row.remove(), 300); }, 600);
   } catch(e) {
@@ -562,12 +529,11 @@ async function init(){
 
   // Has ?id= → show client dashboard (public read)
   showLoading();
-  const [smaData,stratData,repData]=await Promise.all([ghGet(FILES.sma),ghGet(FILES.strategy),ghGet(FILES.reports)]);
-  const [,s1]=findEntry(smaData?.analyses,id,'address');
-  const [,s2]=findEntry(stratData?.items,id,'address');
-  const [,s3]=findEntry(repData?.objects,id,'name');
-  if(!s1&&!s2&&!s3){showError('Объект не найден. Проверьте ссылку или запросите актуальную у Семёна.');return;}
-  render(id,smaData,stratData,repData);
+  const objData=await ghGet(FILES.objects);
+  if(!objData?.objects?.[id] && !findEntry(objData?.objects,id,'address')[1]){
+    showError('Объект не найден. Проверьте ссылку или запросите актуальную у Семёна.');return;
+  }
+  render(id,objData);
 }
 init();
 </script>

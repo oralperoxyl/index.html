@@ -4,7 +4,7 @@
 <!--
   СМА — СРАВНИТЕЛЬНО МАРКЕТИНГОВЫЙ АНАЛИЗ
   Один файл на все объекты, SPA-архитектура
-  Синхронизация через GitHub API (data/sma.json)
+  Синхронизация через GitHub API (data/objects.json)
 
   Агент: sma.html (с токеном в localStorage — режим редактирования)
   Клиент: sma.html?id=slug — только просмотр
@@ -431,10 +431,10 @@ body.editing .hero{padding-right:500px}
 
 <script>
 // ─── CONFIG ───
-const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_FILE='data/sma.json',GH_BRANCH='main',TOKEN_KEY='wr_gh_token';
+const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_FILE='data/objects.json',GH_BRANCH='main',TOKEN_KEY='wr_gh_token';
 
 // ─── STATE ───
-let allData={analyses:{}},currentId=null,fileSha=null,isEditMode=false,saveTimeout=null;
+let allData={objects:{}},currentId=null,fileSha=null,isEditMode=false,saveTimeout=null;
 
 // ─── ELEMENTS ───
 const editPanel=document.getElementById('editPanel'),editBtn=document.getElementById('editToggle');
@@ -475,12 +475,12 @@ async function loadFromGitHub(){
   try{
     const resp=await ghFetch('GET');
     if(!resp){setSyncError('Нет токена');return false;}
-    if(resp.status===404){allData={analyses:{}};fileSha=null;setSyncOk('Новый файл');return true;}
+    if(resp.status===404){allData={objects:{}};fileSha=null;setSyncOk('Новый файл');return true;}
     if(!resp.ok){setSyncError('Ошибка '+resp.status);return false;}
     const json=await resp.json();fileSha=json.sha;
     const content=atob(json.content.replace(/\n/g,''));
     const decoded=new TextDecoder().decode(Uint8Array.from(content,c=>c.charCodeAt(0)));
-    allData=JSON.parse(decoded);if(!allData.analyses)allData.analyses={};
+    allData=JSON.parse(decoded);if(!allData.objects)allData.objects={};
     setSyncOk();return true;
   }catch(e){setSyncError('Ошибка сети');return false;}
   finally{setLoading(false);}
@@ -519,7 +519,7 @@ async function saveToken(){
 function changeToken(){try{localStorage.removeItem(TOKEN_KEY);}catch(e){}showTokenModal();}
 
 // ─── BLANK DATA ───
-function blankSma(){return{address:'',area:0,rooms:0,floor:'',location:'',competitors:[],recommendations:[],priceFrom:0,priceTo:0,date:todayStr()};}
+function blankSma(){return{address:'',area:0,rooms:0,floor:'',location:'',date:todayStr(),sma:{competitors:[],recommendations:[],priceFrom:0,priceTo:0},strategy:null,reports:null};}
 function blankComp(){return{address:'',agent:'',area:'',rooms:'',floor:'',condition:'',price:0,ppm:0,bargain:'',adDate:'',adViews:'',url:'',comment:'',ours:false,visited:false};}
 
 // ─── UI ───
@@ -541,18 +541,18 @@ function showPicker(){
   renderPicker();
 }
 function renderPicker(){
-  const ids=Object.keys(allData.analyses);
+  const ids=Object.keys(allData.objects);
   pickerEl.innerHTML=`
     <div style="margin-bottom:48px;">
       <h1 style="font-family:var(--serif);font-size:32px;font-weight:400;margin-bottom:8px;">Маркетинговые анализы</h1>
       <p style="color:var(--muted);font-size:15px;">Выберите объект или создайте новый СМА</p>
     </div>
     ${ids.length?ids.map(id=>{
-      const s=allData.analyses[id];
+      const s=allData.objects[id];
       return `<div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--border);">
         <a href="#" onclick="event.preventDefault();openSma('${id}')" style="text-decoration:none;color:var(--text);flex:1;transition:padding-left 0.2s;" onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
           <div style="font-size:15px;font-weight:500;">${escHtml(s.address||'Без адреса')}</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px;">${s.rooms||'?'}к · ${s.area||'?'} м² · ${s.competitors?s.competitors.length:0} конкурентов</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px;">${s.rooms||'?'}к · ${s.area||'?'} м² · ${s.sma?.competitors?.length||0} конкурентов</div>
         </a>
         <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
           <button onclick="copyLink('${id}',this)" style="font-size:11px;color:var(--accent);background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:4px 10px;">Ссылка СМА</button>
@@ -575,12 +575,12 @@ function renderPicker(){
 async function createSma(){
   const input=document.getElementById('newSmaAddr');const name=input.value.trim();if(!name)return;
   const id=slugify(name)||('sma-'+Date.now());
-  if(allData.analyses[id]){alert('Анализ с таким адресом уже существует');return;}
-  const s=blankSma();s.address=name;allData.analyses[id]=s;
+  if(allData.objects[id]){alert('Анализ с таким адресом уже существует');return;}
+  const s=blankSma();s.address=name;allData.objects[id]=s;
   await saveToGitHub();openSma(id);
 }
-async function deleteSma(id){if(!confirm('Удалить этот СМА?'))return;delete allData.analyses[id];await saveToGitHub();renderPicker();}
-function resetSma(){if(!confirm('Удалить этот СМА и все его данные?'))return;delete allData.analyses[currentId];saveToGitHub();showPicker();}
+async function deleteSma(id){if(!confirm('Удалить этот СМА?'))return;delete allData.objects[id];await saveToGitHub();renderPicker();}
+function resetSma(){if(!confirm('Удалить этот СМА и все его данные?'))return;delete allData.objects[currentId];saveToGitHub();showPicker();}
 function copyLink(id,btn){
   const url=window.location.origin+window.location.pathname+'?id='+id;
   try{navigator.clipboard.writeText(url).then(()=>{const o=btn.textContent;btn.textContent='✓';btn.style.color='#2D8A4E';setTimeout(()=>{btn.textContent=o;btn.style.color='';},1500);}).catch(()=>prompt('Скопируйте:',url));}catch(e){prompt('Скопируйте:',url);}
@@ -592,7 +592,7 @@ function copyDashboard(id,btn){
 
 // ─── OPEN SMA ───
 function openSma(id){
-  const s=allData.analyses[id];if(!s)return;currentId=id;
+  const s=allData.objects[id];if(!s)return;currentId=id;
   pickerEl.style.display='none';showReportEls();
   if(isEditMode){editBtn.style.display='';backLink.style.display='';}
   try{history.pushState({view:'sma',id},'',window.location.pathname+'?id='+id+(isEditMode?'&edit=1':''));}catch(e){}
@@ -601,8 +601,8 @@ function openSma(id){
 
 // ─── RENDER ───
 function render(){
-  const s=allData.analyses[currentId];if(!s)return;
-  const comps=s.competitors||[];
+  const s=allData.objects[currentId];if(!s)return;
+  const comps=s.sma?.competitors||[];
 
   // Hero
   document.getElementById('heroTitle').innerHTML=escHtml(s.address||'Новый объект');
@@ -677,19 +677,19 @@ function render(){
     <div class="rec-item"><div class="rec-num">${String(i+1).padStart(2,'0')}</div><div class="rec-text">${r}</div></div>`).join('');
 
   // Price box
-  const avg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
+  const avg=smaData.priceFrom&&smaData.priceTo?Math.round((Number(smaData.priceFrom)+Number(smaData.priceTo))/2):0;
   const sArea=parseNum(s.area);
-  const ppmFrom=s.priceFrom&&sArea?fmt(Math.round(s.priceFrom/sArea))+' \u20bd/\u043c\u00b2':'';
-  const ppmTo=s.priceTo&&sArea?fmt(Math.round(s.priceTo/sArea))+' \u20bd/\u043c\u00b2':'';
+  const ppmFrom=smaData.priceFrom&&sArea?fmt(Math.round(smaData.priceFrom/sArea))+' \u20bd/\u043c\u00b2':'';
+  const ppmTo=smaData.priceTo&&sArea?fmt(Math.round(smaData.priceTo/sArea))+' \u20bd/\u043c\u00b2':'';
   const avgPpmRec=avg&&sArea?fmt(Math.round(avg/sArea))+' \u20bd/\u043c\u00b2':'';
-  if(s.priceFrom||s.priceTo){
+  if(smaData.priceFrom||smaData.priceTo){
     document.getElementById('priceBox').innerHTML=
       '<div class="price-box-label">\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0435\u043c\u0430\u044f \u0440\u044b\u043d\u043e\u0447\u043d\u0430\u044f \u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c</div>'
       +'<div class="price-range">'
-      +'<span class="price-val">'+fmtPrice(s.priceFrom)+'</span>'
+      +'<span class="price-val">'+fmtPrice(smaData.priceFrom)+'</span>'
       +(ppmFrom?'<span style="font-size:13px;color:rgba(229,229,229,0.4);margin-left:-8px;">('+ppmFrom+')</span>':'')
       +'<span class="price-sep">\u2014</span>'
-      +'<span class="price-val">'+fmtPrice(s.priceTo)+'</span>'
+      +'<span class="price-val">'+fmtPrice(smaData.priceTo)+'</span>'
       +(ppmTo?'<span style="font-size:13px;color:rgba(229,229,229,0.4);margin-left:-8px;">('+ppmTo+')</span>':'')
       +'</div>'
       +(avg?'<div class="price-avg">\u0421\u0440\u0435\u0434\u043d\u044f\u044f: <strong>'+fmtPrice(avg)+'</strong>'+(avgPpmRec?' ('+avgPpmRec+')':'')+'</div>':'')
@@ -712,8 +712,9 @@ function renderChart(s, comps){
 
   const sorted=[...points].sort((a,b)=>b.ppm-a.ppm);
   const area=parseNum(s.area);
-  const recLo=s.priceFrom&&area?Math.round(Math.min(s.priceFrom,s.priceTo)/area):0;
-  const recHi=s.priceTo&&area?Math.round(Math.max(s.priceFrom,s.priceTo)/area):0;
+  const smaData=s.sma||{};
+  const recLo=smaData.priceFrom&&area?Math.round(Math.min(smaData.priceFrom,smaData.priceTo)/area):0;
+  const recHi=smaData.priceTo&&area?Math.round(Math.max(smaData.priceFrom,smaData.priceTo)/area):0;
 
   const allPpms=sorted.map(p=>p.ppm);
   if(recLo)allPpms.push(recLo);
@@ -798,7 +799,7 @@ function toggleEdit(){
 }
 
 function populatePanel(){
-  const s=allData.analyses[currentId];if(!s)return;
+  const s=allData.objects[currentId];if(!s)return;
   document.getElementById('e-address').value=s.address||'';
   document.getElementById('e-area').value=s.area||'';
   document.getElementById('e-rooms').value=s.rooms||'';
@@ -812,7 +813,7 @@ function populatePanel(){
 }
 
 function updatePriceHint(){
-  const s=allData.analyses[currentId];if(!s)return;
+  const s=allData.objects[currentId];if(!s)return;
   const f=Number(s.priceFrom),t=Number(s.priceTo),a=parseNum(s.area);
   if(f&&t&&a){
     const avg=Math.round((f+t)/2);
@@ -821,8 +822,8 @@ function updatePriceHint(){
 }
 
 function renderCompPanel(){
-  const s=allData.analyses[currentId];if(!s)return;
-  const comps=s.competitors||[];
+  const s=allData.objects[currentId];if(!s)return;
+  const comps=s.sma?.competitors||[];
   document.getElementById('e-comps').innerHTML=comps.map((c,i)=>{
     const ppm=calcPpm(c.price,c.area);
     return `<div class="edit-comp-block">
@@ -856,7 +857,7 @@ function renderCompPanel(){
 }
 
 function renderRecPanel(){
-  const s=allData.analyses[currentId];if(!s)return;
+  const s=allData.objects[currentId];if(!s)return;
   const recs=s.recommendations||[];
   document.getElementById('e-recs').innerHTML=recs.map((r,i)=>`
     <div class="edit-rec-block">
@@ -867,7 +868,7 @@ function renderRecPanel(){
 
 // ─── SAVE FROM PANEL ───
 function saveFromPanel(){
-  const s=allData.analyses[currentId];if(!s)return;
+  const s=allData.objects[currentId];if(!s)return;
   s.address=document.getElementById('e-address').value;
   s.area=parseFloat(document.getElementById('e-area').value)||0;
   s.rooms=parseInt(document.getElementById('e-rooms').value)||0;
@@ -895,33 +896,34 @@ function saveFromPanel(){
 
 // ─── ADD / REMOVE ───
 function addComp(){
-  const s=allData.analyses[currentId];if(!s)return;
-  if(!s.competitors)s.competitors=[];
-  s.competitors.push(blankComp());renderCompPanel();render();debounceSave();
+  const s=allData.objects[currentId];if(!s)return;
+  if(!s.sma)s.sma={};if(!s.sma.competitors)s.sma.competitors=[];
+  s.sma.competitors.push(blankComp());renderCompPanel();render();debounceSave();
 }
-function removeComp(i){const s=allData.analyses[currentId];if(!s)return;s.competitors.splice(i,1);renderCompPanel();render();debounceSave();}
-function addRec(){const s=allData.analyses[currentId];if(!s)return;if(!s.recommendations)s.recommendations=[];s.recommendations.push('');renderRecPanel();debounceSave();}
-function removeRec(i){const s=allData.analyses[currentId];if(!s)return;s.recommendations.splice(i,1);renderRecPanel();render();debounceSave();}
+function removeComp(i){const s=allData.objects[currentId];if(!s)return;s.sma.competitors.splice(i,1);renderCompPanel();render();debounceSave();}
+function addRec(){const s=allData.objects[currentId];if(!s)return;if(!s.sma)s.sma={};if(!s.sma.recommendations)s.sma.recommendations=[];s.sma.recommendations.push('');renderRecPanel();debounceSave();}
+function removeRec(i){const s=allData.objects[currentId];if(!s)return;s.sma.recommendations.splice(i,1);renderRecPanel();render();debounceSave();}
 
 // ─── GENERATE TEMPLATE RECS ───
 function generateRecs(){
-  const s=allData.analyses[currentId];if(!s)return;
-  const comps=s.competitors||[];
+  const s=allData.objects[currentId];if(!s)return;
+  const comps=s.sma?.competitors||[];
   const n=comps.length;
   const area=parseNum(s.area);
-  const avg=s.priceFrom&&s.priceTo?Math.round((Number(s.priceFrom)+Number(s.priceTo))/2):0;
+  const smaD=s.sma||{};
+  const avg=smaD.priceFrom&&smaD.priceTo?Math.round((Number(smaD.priceFrom)+Number(smaD.priceTo))/2):0;
   const avgPpm=avg&&area?fmt(Math.round(avg/area)):0;
   const loc=s.location||'данной локации';
-  const ppmFrom=s.priceFrom&&area?fmt(Math.round(s.priceFrom/area)):'-';
-  const ppmTo=s.priceTo&&area?fmt(Math.round(s.priceTo/area)):'-';
+  const ppmFrom=smaD.priceFrom&&area?fmt(Math.round(smaD.priceFrom/area)):'-';
+  const ppmTo=smaD.priceTo&&area?fmt(Math.round(smaD.priceTo/area)):'-';
 
-  s.recommendations=[
+  if(!s.sma)s.sma={};s.sma.recommendations=[
     `На рынке СПб в локации ${loc} выставлено на продажу более <strong>${n*2}</strong> объектов, сравнимых с оцениваемым (учитывается метраж, местность, высота потолков, парадная, вид из окна, этаж, класс дома). В таблице представлены тщательно отобранные варианты — <strong>конкуренты за бюджет</strong> в ближайшем окружении.`,
     `Выбор потенциального покупателя будет состоять как минимум из более чем <strong>${n}</strong> вариантов.`,
     `По статистике на текущем рынке покупатель выбирает 2–3 самых выгодных объекта из сегмента. Квартира — рыночный товар. Если объект не входит в число наиболее привлекательных предложений по цене и качеству, покупатель его просто не выберет.`,
     `Анализ проводится по выставленным предложениям, а <strong>реальная стоимость покупки</strong> определяется при переговорах и торге между сторонами. Имеет смысл говорить о <strong>потенциальной стоимости спроса</strong>, а не стоимости покупки.`,
     `Стоимость спроса и стоимость покупки могут отличаться на 10–15%. Объекты, где собственники не готовы к корректировке, стоят на рынке месяцами без реального спроса.`,
-    s.priceFrom&&s.priceTo?`<strong>Сравнивая выставленные на продажу объекты, а также учитывая тенденции рынка, рекомендуемая рыночная стоимость может составлять: ${fmtPrice(s.priceFrom)} (${ppmFrom} ₽/м²) — ${fmtPrice(s.priceTo)} (${ppmTo} ₽/м²), средняя ${fmtPrice(avg)}${avgPpm?' ('+avgPpm+' ₽/м²)':''}.</strong>`:'<strong>Рекомендуемая стоимость: [заполните диапазон цен выше]</strong>',
+    s.priceFrom&&s.priceTo?`<strong>Сравнивая выставленные на продажу объекты, а также учитывая тенденции рынка, рекомендуемая рыночная стоимость может составлять: ${fmtPrice(smaData.priceFrom)} (${ppmFrom} ₽/м²) — ${fmtPrice(smaData.priceTo)} (${ppmTo} ₽/м²), средняя ${fmtPrice(avg)}${avgPpm?' ('+avgPpm+' ₽/м²)':''}.</strong>`:'<strong>Рекомендуемая стоимость: [заполните диапазон цен выше]</strong>',
     `Стоимость может быть скорректирована в большую или меньшую сторону при наличии или отсутствии реальных покупателей и при согласовании с продавцом.`
   ];
   renderRecPanel();render();debounceSave();
@@ -937,7 +939,7 @@ async function saveData(){
 // ─── SPA NAV ───
 window.addEventListener('popstate',e=>{
   const st=e.state;
-  if(st&&st.view==='sma'&&st.id&&allData.analyses[st.id]){currentId=st.id;pickerEl.style.display='none';showReportEls();if(isEditMode){editBtn.style.display='';backLink.style.display='';}render();if(editPanel.classList.contains('open'))populatePanel();}
+  if(st&&st.view==='sma'&&st.id&&allData.objects[st.id]){currentId=st.id;pickerEl.style.display='none';showReportEls();if(isEditMode){editBtn.style.display='';backLink.style.display='';}render();if(editPanel.classList.contains('open'))populatePanel();}
   else{currentId=null;hideReport();pickerEl.style.display='block';footerEl.style.display='';renderPicker();}
 });
 
@@ -961,19 +963,19 @@ async function initApp(){
   if(token)loaded=await loadFromGitHub();
   if(!loaded&&initId){
     try{const resp=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`);
-    if(resp.ok){const json=await resp.json();const content=atob(json.content.replace(/\n/g,''));const decoded=new TextDecoder().decode(Uint8Array.from(content,c=>c.charCodeAt(0)));allData=JSON.parse(decoded);if(!allData.analyses)allData.analyses={};loaded=true;}}catch(e){}
+    if(resp.ok){const json=await resp.json();const content=atob(json.content.replace(/\n/g,''));const decoded=new TextDecoder().decode(Uint8Array.from(content,c=>c.charCodeAt(0)));allData=JSON.parse(decoded);if(!allData.objects)allData.objects={};loaded=true;}}catch(e){}
   }
 
   // Re-render or navigate after data loaded
   if(initId){
     // Exact match first, then fuzzy by address slug
     let resolvedId = initId;
-    if(!allData.analyses[initId]){
-      for(const [k,v] of Object.entries(allData.analyses||{})){
+    if(!allData.objects[initId]){
+      for(const [k,v] of Object.entries(allData.objects||{})){
         if(slugify(v.address||'')===initId){resolvedId=k;break;}
       }
     }
-    if(allData.analyses[resolvedId]) openSma(resolvedId);
+    if(allData.objects[resolvedId]) openSma(resolvedId);
     else if(!loaded) {} // data not loaded yet, nothing to show
   } else if(loaded) renderPicker(); // refresh picker with loaded data
 }

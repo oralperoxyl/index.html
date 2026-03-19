@@ -761,7 +761,7 @@
 // ─── CONFIG ───
 const GH_OWNER = 'oralperoxyl';
 const GH_REPO = 'index.html';
-const GH_FILE = 'data/reports.json';
+const GH_FILE = 'data/objects.json';
 const GH_BRANCH = 'main';
 const TOKEN_KEY = 'wr_gh_token';
 
@@ -801,7 +801,7 @@ async function ghGetPublic(file){
 }
 
 // ─── STATE ───
-let allData = { objects: {} }; // full data from GitHub
+let allData = { objects: {} }; // full data from unified objects.json
 let smaData = null; // loaded from sma.json for reference
 let currentId = null;
 let currentWeekIdx = null; // index into the weeks array for current object
@@ -966,10 +966,6 @@ function changeToken() {
 }
 
 // ─── SLUG / HELPERS ───
-function slugify(t) {
-  return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').substring(0, 60);
-}
-
 function blankWeek(weekNum) {
   return {
     week: weekNum || 1,
@@ -990,19 +986,24 @@ function blankWeek(weekNum) {
 }
 
 function getObjData(id) {
-  return allData.objects[id] || null;
+  const obj = allData.objects[id];
+  if(!obj) return null;
+  // Ensure reports sub-object exists
+  if(!obj.reports) obj.reports = {weeks:[]};
+  if(!obj.reports.weeks) obj.reports.weeks = [];
+  return obj;
 }
 
 function getCurrentWeek() {
   const obj = getObjData(currentId);
-  if (!obj || !obj.weeks || !obj.weeks[currentWeekIdx]) return blankWeek(1);
-  return obj.weeks[currentWeekIdx];
+  if (!obj || !obj.reports?.weeks || !obj.reports.weeks[currentWeekIdx]) return blankWeek(1);
+  return obj.reports.weeks[currentWeekIdx];
 }
 
 function getPrevWeek() {
   const obj = getObjData(currentId);
-  if (!obj || !obj.weeks || currentWeekIdx < 1) return null;
-  return obj.weeks[currentWeekIdx - 1] || null;
+  if (!obj || !obj.reports?.weeks || currentWeekIdx < 1) return null;
+  return obj.reports.weeks[currentWeekIdx - 1] || null;
 }
 
 // ─── AUTO DELTA CALCULATION ───
@@ -1077,10 +1078,11 @@ function renderPicker() {
     </div>
     ${ids.length ? ids.map(id => {
       const obj = allData.objects[id];
-      const lastWeek = obj.weeks && obj.weeks.length ? obj.weeks[obj.weeks.length - 1] : null;
-      const name = obj.name || 'Без названия';
-      const weekNum = lastWeek ? lastWeek.week : '?';
-      const period = lastWeek ? (lastWeek.period || '—') : '—';
+      const lastWeek = obj.reports?.weeks?.length ? obj.reports.weeks[obj.reports.weeks.length - 1] : null;
+      const name = obj.address || obj.name || 'Без названия';
+      const lastWeekData = obj.reports?.weeks?.[obj.reports.weeks.length-1];
+      const weekNum = lastWeekData ? lastWeekData.week : '?';
+      const period = lastWeekData ? (lastWeekData.period || '—') : '—';
       return `
       <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-top:1px solid var(--border);">
         <a href="#" onclick="event.preventDefault();openObject('${id}')" style="text-decoration:none;color:var(--text);flex:1;transition:padding-left 0.2s;" onmouseover="this.style.paddingLeft='8px'" onmouseout="this.style.paddingLeft='0'">
@@ -1115,8 +1117,11 @@ async function createObject() {
   const id = slugify(name) || ('obj-' + Date.now());
   if (allData.objects[id]) { alert('Объект с таким адресом уже существует'); return; }
   allData.objects[id] = {
-    name: name,
-    weeks: [blankWeek(1)]
+    address: name,
+    area: 0, rooms: 0, floor: '', location: '', date: '',
+    sma: null,
+    strategy: null,
+    reports: { weeks: [blankWeek(1)] }
   };
   await saveToGitHub();
   openObject(id);
@@ -1157,10 +1162,11 @@ function openObject(id, weekIdx) {
   if (weekIdx !== undefined) {
     currentWeekIdx = weekIdx;
   } else {
-    currentWeekIdx = obj.weeks ? obj.weeks.length - 1 : 0;
+    currentWeekIdx = obj.reports?.weeks ? obj.reports.weeks.length - 1 : 0;
   }
-  if (!obj.weeks || !obj.weeks.length) {
-    obj.weeks = [blankWeek(1)];
+  if (!obj.reports) obj.reports = {};
+  if (!obj.reports.weeks || !obj.reports.weeks.length) {
+    obj.reports.weeks = [blankWeek(1)];
   }
   pickerEl.style.display = 'none';
   showReportEls();
@@ -1178,19 +1184,20 @@ function openObject(id, weekIdx) {
 async function addWeek() {
   const obj = allData.objects[currentId];
   if (!obj) return;
-  const lastWeek = obj.weeks[obj.weeks.length - 1];
+  const lastWeek = obj.reports.weeks[obj.reports.weeks.length - 1];
   const newWeekNum = (lastWeek ? lastWeek.week : 0) + 1;
   // Copy competitors from previous week as starting point
   const newWeek = blankWeek(newWeekNum);
   if (lastWeek && lastWeek.competitors) {
-    newWeek.competitors = JSON.parse(JSON.stringify(lastWeek.competitors));
+    newWeek.competitors = JSON.parse(JSON.stringify(lastWeek.competitors))
+      .map(c => ({ ...c, isNew: false })); // сбрасываем «Новый» — актуально только для недели появления
   }
   if (lastWeek) {
     newWeek.price = lastWeek.price;
     newWeek.dayOnMarket = lastWeek.dayOnMarket + 7;
   }
-  obj.weeks.push(newWeek);
-  currentWeekIdx = obj.weeks.length - 1;
+  obj.reports.weeks.push(newWeek);
+  currentWeekIdx = obj.reports.weeks.length - 1;
   await saveToGitHub();
   render();
   if (editPanel.classList.contains('open')) populatePanel();
@@ -1198,10 +1205,10 @@ async function addWeek() {
 
 async function deleteWeek(idx) {
   const obj = allData.objects[currentId];
-  if (!obj || obj.weeks.length <= 1) { alert('Нельзя удалить единственную неделю'); return; }
-  if (!confirm('Удалить неделю ' + obj.weeks[idx].week + '?')) return;
-  obj.weeks.splice(idx, 1);
-  if (currentWeekIdx >= obj.weeks.length) currentWeekIdx = obj.weeks.length - 1;
+  if (!obj || obj.reports.weeks.length <= 1) { alert('Нельзя удалить единственную неделю'); return; }
+  if (!confirm('Удалить неделю ' + obj.reports.weeks[idx].week + '?')) return;
+  obj.reports.weeks.splice(idx, 1);
+  if (currentWeekIdx >= obj.reports.weeks.length) currentWeekIdx = obj.reports.weeks.length - 1;
   await saveToGitHub();
   render();
   if (editPanel.classList.contains('open')) populatePanel();
@@ -1215,9 +1222,9 @@ function render() {
   const deltas = calcAllDeltas(w);
   const statNames = { views: 'Просмотров', calls: 'Звонков', showings: 'Показов', offers: 'Офферов' };
 
-  document.getElementById('heroTitle').innerHTML = 'Неделя ' + w.week + '<br><em>' + escHtml(obj.name || 'Новый объект') + '</em>';
+  document.getElementById('heroTitle').innerHTML = 'Неделя ' + w.week + '<br><em>' + escHtml(obj.address || obj.name || 'Новый объект') + '</em>';
   const smaEntry = currentId ? findSmaEntry(currentId) : null;
-  const fmtP = n => { if(!n) return '—'; const m=Number(n); return m>=1e6?(m/1e6).toFixed(1).replace('.0','').replace('.',',')+'млн':Number(n).toLocaleString('ru-RU'); };
+  const fmtP = n => { if(!n) return '—'; const m=Number(n); return m>=1e6?(m/1e6).toFixed(1).replace('.0','').replace('.',',')+' млн':Number(n).toLocaleString('ru-RU'); };
   const recRange = smaEntry?.priceFrom && smaEntry?.priceTo
     ? fmtP(smaEntry.priceFrom) + ' — ' + fmtP(smaEntry.priceTo) + ' ₽'
     : null;
@@ -1230,8 +1237,8 @@ function render() {
 
   // Hero week navigation (visible to everyone, shown if > 1 week)
   const heroWeeksEl = document.getElementById('heroWeeks');
-  if (obj.weeks.length > 1) {
-    heroWeeksEl.innerHTML = obj.weeks.map((wk, i) => {
+  if (obj.reports.weeks.length > 1) {
+    heroWeeksEl.innerHTML = obj.reports.weeks.map((wk, i) => {
       const cls = i === currentWeekIdx ? ' active' : '';
       const label = wk.period ? `Н${wk.week} · ${escHtml(wk.period)}` : `Неделя ${wk.week}`;
       return `<button class="hero-week-btn${cls}" onclick="switchWeekClient(${i})">${label}</button>`;
@@ -1368,7 +1375,7 @@ function populatePanel() {
   // Week navigation
   renderWeekNav();
 
-  document.getElementById('e-object').value = obj.name;
+  document.getElementById('e-object').value = obj.address || obj.name || '';
   document.getElementById('e-period').value = w.period;
   document.getElementById('e-dayOnMarket').value = w.dayOnMarket;
   document.getElementById('e-price').value = w.price;
@@ -1398,12 +1405,12 @@ function renderWeekNav() {
   const obj = allData.objects[currentId];
   if (!obj) return;
   let html = '<span class="week-nav-label">Недели:</span>';
-  obj.weeks.forEach((w, i) => {
+  obj.reports.weeks.forEach((w, i) => {
     const cls = i === currentWeekIdx ? ' active' : '';
     html += `<button class="week-btn${cls}" onclick="switchWeek(${i})">Н${w.week}</button>`;
   });
   html += `<button class="week-btn-add" onclick="addWeek()">+</button>`;
-  if (obj.weeks.length > 1) {
+  if (obj.reports?.weeks?.length > 1) {
     html += `<button class="btn-remove" style="float:none;padding:6px 10px;font-size:10px;" onclick="deleteWeek(${currentWeekIdx})">Удалить Н${getCurrentWeek().week}</button>`;
   }
   document.getElementById('weekNav').innerHTML = html;
@@ -1508,7 +1515,7 @@ function saveFromPanel() {
   if (!obj) return;
   const w = getCurrentWeek();
 
-  obj.name = document.getElementById('e-object').value;
+  obj.address = document.getElementById('e-object').value;
   w.period = document.getElementById('e-period').value;
   w.dayOnMarket = parseInt(document.getElementById('e-dayOnMarket').value) || 0;
   w.price = document.getElementById('e-price').value;
@@ -1664,7 +1671,7 @@ async function resetData() {
   if (!confirm('Сбросить все данные этой недели?')) return;
   const obj = allData.objects[currentId];
   if (!obj) return;
-  obj.weeks[currentWeekIdx] = blankWeek(getCurrentWeek().week);
+  obj.reports.weeks[currentWeekIdx] = blankWeek(getCurrentWeek().week);
   await saveToGitHub();
   render(); populatePanel();
 }
@@ -1683,7 +1690,7 @@ function openObjectSilent(id) {
   const obj = allData.objects[id];
   if (!obj) { showPickerSilent(); return; }
   currentId = id;
-  currentWeekIdx = obj.weeks ? obj.weeks.length - 1 : 0;
+  currentWeekIdx = obj.reports?.weeks ? obj.reports.weeks.length - 1 : 0;
   pickerEl.style.display = 'none';
   showReportEls();
   if (isEditMode) editBtn.style.display = '';
