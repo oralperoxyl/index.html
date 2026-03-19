@@ -409,7 +409,7 @@ async function showAgentPicker(token){
     }
   }
 
-  const rows = [...groups.values()].map(({primaryId, sma, strat, rep, address}) => {
+  const rows = [...groups.values()].map(({primaryId, sma, strat, rep, address, allIds}) => {
     const area  = sma?.area || strat?.area || '';
     const rooms = sma?.rooms || strat?.rooms || '';
     const weeks = rep?.weeks||[];
@@ -419,8 +419,9 @@ async function showAgentPicker(token){
     const priceStr = pF&&pT ? fmtP(pF)+' — '+fmtP(pT) : '';
     const meta = [rooms?rooms+'к':'', area?area+' м²':'', lastW?'Неделя '+lastW.week:'', priceStr].filter(Boolean).join(' · ');
     const dashUrl = window.location.origin+window.location.pathname+'?id='+encodeURIComponent(primaryId);
+    const idsJson = esc(JSON.stringify(allIds));
 
-    return `<div class="agent-obj-row">
+    return `<div class="agent-obj-row" id="row-${esc(primaryId)}">
       <div class="agent-obj-main">
         <div class="agent-obj-addr">${esc(address)}</div>
         <div class="agent-obj-meta">${esc(meta)||'—'}</div>
@@ -428,6 +429,7 @@ async function showAgentPicker(token){
       <div class="agent-obj-btns">
         <button class="agent-btn" onclick="window.open('${esc(dashUrl)}','_blank')">Открыть</button>
         <button class="agent-btn green" onclick="copyDashUrl('${esc(primaryId)}',this)">Скопировать ссылку</button>
+        <button class="agent-btn" style="color:#C0392B;border-color:rgba(192,57,43,0.25);" onclick="deleteObject('${esc(primaryId)}','${idsJson}',this)">✕</button>
       </div>
     </div>`;
   }).join('');
@@ -460,6 +462,74 @@ function copyDashUrl(id, btn){
     const o=btn.textContent; btn.textContent='✓ Скопировано'; btn.style.color='#2D8A4E';
     setTimeout(()=>{btn.textContent=o;btn.style.color='';},2000);
   }).catch(()=>prompt('Ссылка:', url));
+}
+
+// ── DELETE OBJECT ──
+async function deleteObject(primaryId, idsJson, btn){
+  const address = btn.closest('.agent-obj-row').querySelector('.agent-obj-addr').textContent;
+  if(!confirm('Удалить «' + address + '» из всех разделов?\n\nЭто удалит объект из СМА, Стратегии и Еженедельных отчётов.')) return;
+
+  const token = getToken();
+  if(!token){ alert('Нет токена. Введите GitHub Token внизу страницы.'); return; }
+
+  const ids = JSON.parse(idsJson);
+  const row = btn.closest('.agent-obj-row');
+  const btns = row.querySelectorAll('button');
+  btns.forEach(b => b.disabled = true);
+
+  // Status element
+  const statusEl = document.createElement('div');
+  statusEl.style.cssText = 'font-size:11px;color:var(--muted);margin-top:6px;grid-column:1/-1;';
+  row.appendChild(statusEl);
+
+  function setStatus(msg){ statusEl.textContent = msg; }
+
+  try {
+    setStatus('Удаляю из СМА…');
+    await ghDeleteFromJson('data/sma.json', 'analyses', ids, token);
+    setStatus('Удаляю из Стратегии…');
+    await ghDeleteFromJson('data/strategy.json', 'items', ids, token);
+    setStatus('Удаляю из Отчётов…');
+    await ghDeleteFromJson('data/reports.json', 'objects', ids, token);
+    setStatus('Готово');
+    setTimeout(() => { row.style.opacity='0'; row.style.transition='opacity 0.3s'; setTimeout(()=>row.remove(), 300); }, 600);
+  } catch(e) {
+    setStatus('Ошибка: ' + e.message);
+    btns.forEach(b => b.disabled = false);
+  }
+}
+
+async function ghDeleteFromJson(file, rootKey, ids, token){
+  // Read current file
+  const r1 = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}?ref=${GH_BRANCH}`, {
+    headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}
+  });
+  if(!r1.ok) return; // file doesn't exist — skip silently
+  const j1 = await r1.json();
+  const raw = atob(j1.content.replace(/\n/g,''));
+  const data = JSON.parse(new TextDecoder().decode(Uint8Array.from(raw, c=>c.charCodeAt(0))));
+
+  // Delete all matching IDs
+  let changed = false;
+  for(const id of ids){
+    if(data[rootKey] && data[rootKey][id] !== undefined){
+      delete data[rootKey][id];
+      changed = true;
+    }
+  }
+  if(!changed) return; // nothing to delete in this file
+
+  // Write back
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+  const r2 = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}`, {
+    method:'PUT',
+    headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+    body: JSON.stringify({message:'Delete object', content: encoded, sha: j1.sha, branch: GH_BRANCH})
+  });
+  if(!r2.ok){
+    const err = await r2.json().catch(()=>({}));
+    throw new Error(file + ': ' + (err.message||r2.status));
+  }
 }
 
 async function ghGetWithToken(file, token){
