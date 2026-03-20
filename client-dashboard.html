@@ -169,6 +169,50 @@ const FILES={objects:'data/objects.json'};
 const TG='semengme';
 const BASE=window.location.origin+window.location.pathname.replace(/[^/]*$/,'');
 
+// ── ANALYTICS TRACKING ──
+// URL Railway бота — замените на актуальный если изменится
+const TRACK_URL = 'https://crm-bot-production-7458.up.railway.app/track';
+let trackStartTime = null;
+let trackAddress = null;
+
+function trackEvent(event, extra = {}) {
+  if (!trackAddress) return;
+  try {
+    fetch(TRACK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event, address: trackAddress, ...extra }),
+      keepalive: true // важно для события close
+    }).catch(() => {}); // игнорируем ошибки сети
+  } catch(e) {}
+}
+
+function initTracking(address) {
+  trackAddress = address;
+  trackStartTime = Date.now();
+  trackEvent('open');
+
+  // Время на странице при закрытии
+  window.addEventListener('beforeunload', () => {
+    const seconds = Math.round((Date.now() - trackStartTime) / 1000);
+    trackEvent('close', { seconds });
+  });
+
+  // Видимость вкладки — пауза при сворачивании
+  let hiddenAt = null;
+  let totalHidden = 0;
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      hiddenAt = Date.now();
+    } else if (hiddenAt) {
+      totalHidden += Date.now() - hiddenAt;
+      hiddenAt = null;
+    }
+  });
+}
+
+
+
 function fmt(n){if(!n&&n!==0)return'—';return Number(n).toLocaleString('ru-RU');}
 function fmtP(n){if(!n)return'—';const m=Number(n);if(m>=1e6)return(m/1e6).toFixed(1).replace('.0','').replace('.',',')+' млн ₽';return fmt(m)+' ₽';}
 function esc(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML;}
@@ -251,6 +295,16 @@ function render(urlId, objData){
   const chips=[rooms?rooms+'к':null,area?area+' м²':null,floor?floor+' эт.':null,location||null].filter(Boolean);
   const tgLink=`https://t.me/${TG}?text=${encodeURIComponent('По объекту '+address+': ')}`;
   const stratId=canon, repId=canon;
+
+  // Map href to section name for tracking
+  function hrefToSection(href) {
+    if(!href) return null;
+    if(href.includes('sma.html')) return 'sma';
+    if(href.includes('strategy.html')) return 'strategy';
+    if(href.includes('weekly-report.html')) return 'weekly';
+    if(href.includes('meeting-pack.html')) return 'meeting';
+    return null;
+  }
 
   function row({num,numCls,title,body,dlabel,dval,href,scls,stxt,locked,hint}){
     return `<a class="stage-row ${locked?'locked':'clickable'}" href="${locked?'#':esc(href)}" ${locked?'':'target="_blank" rel="noopener"'}>
@@ -534,6 +588,22 @@ async function init(){
     showError('Объект не найден. Проверьте ссылку или запросите актуальную у Семёна.');return;
   }
   render(id,objData);
+  // Start tracking after address is resolved
+  const trackedObj = objData?.objects?.[id] || findEntry(objData?.objects, id, 'address')[1];
+  if (trackedObj) initTracking(trackedObj.address || id);
+
+  // Track section clicks via event delegation
+  setTimeout(() => {
+    document.querySelectorAll('.stage-row.clickable').forEach(el => {
+      el.addEventListener('click', () => {
+        const href = el.getAttribute('href') || '';
+        if(href.includes('sma.html')) trackEvent('section', {section:'sma'});
+        else if(href.includes('strategy.html')) trackEvent('section', {section:'strategy'});
+        else if(href.includes('weekly-report.html')) trackEvent('section', {section:'weekly'});
+        else if(href.includes('meeting-pack.html')) trackEvent('section', {section:'meeting'});
+      });
+    });
+  }, 500);
 }
 init();
 </script>
