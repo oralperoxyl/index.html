@@ -1,93 +1,183 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Политика обработки персональных данных</title>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Политика обработки персональных данных — Семён Гончаров</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: 'Manrope', sans-serif;
-      margin: 0;
-      padding: 24px;
-      color: #0f172a;
-      background: #f7f9fc;
-      line-height: 1.6;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --serif: 'Playfair Display', serif;
+      --sans: 'Inter', sans-serif;
+      --bg: #FAFAF8; --dark: #1C1C1E;
+      --text: #1A1A1A; --muted: #666; --border: rgba(0,0,0,0.08);
     }
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #ffffff;
-      border: 1px solid rgba(15,23,42,0.06);
-      box-shadow: 0 20px 44px rgba(15,23,42,0.12);
-      border-radius: 18px;
-      padding: 28px;
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+    .site-header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(250,250,248,0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border); padding: 0 40px; height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    h1 { margin-top: 0; margin-bottom: 16px; font-size: 28px; }
-    h2 { margin-bottom: 12px; margin-top: 28px; font-size: 20px; }
-    p, li { color: #475569; }
-    ul { padding-left: 18px; }
+    .header-brand { font-family: var(--serif); font-size: 15px; font-weight: 400; text-decoration: none; color: var(--text); }
+    .header-back { font-size: 13px; color: var(--muted); text-decoration: none; font-weight: 300; transition: color 0.2s; }
+    .header-back:hover { color: var(--text); }
+
+    .hero { background: var(--dark); padding: 72px 40px 60px; }
+    .hero-inner { max-width: 720px; margin: 0 auto; }
+    .hero-label { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(229,229,229,0.3); margin-bottom: 20px; }
+    .hero-title { font-family: var(--serif); font-size: clamp(28px,4vw,44px); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; color: #E5E5E5; }
+
+    .content { max-width: 720px; margin: 0 auto; padding: 64px 40px 80px; }
+
+    .section { margin-bottom: 48px; }
+    .section-title { font-family: var(--serif); font-size: 20px; font-weight: 400; color: var(--text); margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .section-body { font-size: 14px; line-height: 1.8; color: var(--muted); font-weight: 300; }
+    .section-body p { margin-bottom: 12px; }
+    .section-body p:last-child { margin-bottom: 0; }
+    .section-body ul { padding-left: 0; list-style: none; display: grid; gap: 8px; margin-top: 4px; }
+    .section-body li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; align-items: baseline; }
+    .section-body li::before { content: '—'; color: rgba(0,0,0,0.2); font-size: 12px; }
+
+    .intro { font-size: 15px; line-height: 1.8; color: var(--muted); font-weight: 300; margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--border); }
+
+    .site-footer { border-top: 1px solid var(--border); padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; }
+    .footer-copy { font-size: 13px; color: var(--muted); font-weight: 300; }
+    .footer-link { font-size: 13px; color: var(--muted); text-decoration: none; font-weight: 300; transition: color 0.2s; }
+    .footer-link:hover { color: var(--text); }
+
+    @media (max-width: 600px) {
+      .site-header { padding: 0 20px; }
+      .hero { padding: 52px 20px 44px; }
+      .content { padding: 48px 20px 64px; }
+      .site-footer { padding: 20px; flex-direction: column; gap: 8px; align-items: flex-start; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Политика обработки персональных данных</h1>
-    <p>Настоящая Политика обработки персональных данных (далее — «Политика») действует в отношении всей информации, которую получает Семён Гончаров (самозанятый, ИНН 701708532973) от пользователей сайта и лиц, обращающихся за консультацией или услугами в сфере недвижимости.</p>
 
-    <h2>1. Общие положения</h2>
-    <p>1.1. Политика составлена в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных», Федеральным законом от 06.04.2011 № 63-ФЗ «Об электронной подписи», а также иными нормативными актами Российской Федерации.</p>
-    <p>1.2. Предоставляя свои данные на сайте, через формы обратной связи, мессенджеры или иным способом, пользователь подтверждает согласие на обработку персональных данных в соответствии с настоящей Политикой.</p>
+<header class="site-header">
+  <a class="header-brand" href="/">Goncharov Semen</a>
+  <a class="header-back" href="/">← На главную</a>
+</header>
 
-    <h2>2. Состав обрабатываемых персональных данных</h2>
-    <p>Обрабатываются следующие данные, предоставляемые пользователем добровольно:</p>
-    <ul>
-      <li>имя или псевдоним;</li>
-      <li>номер телефона;</li>
-      <li>адрес электронной почты;</li>
-      <li>ссылки на мессенджеры;</li>
-      <li>дополнительная информация, предоставленная пользователем самостоятельно (описание объекта недвижимости, вопросы консультации и др.).</li>
-    </ul>
-
-    <h2>3. Цели обработки персональных данных</h2>
-    <p>Персональные данные обрабатываются исключительно для:</p>
-    <ul>
-      <li>связи с пользователем по его запросу;</li>
-      <li>подготовки консультации;</li>
-      <li>составления отчётов (например, оценки стоимости объекта);</li>
-      <li>заключения и выполнения договоров в рамках деятельности самозанятого;</li>
-      <li>улучшения качества сервиса и коммуникации.</li>
-    </ul>
-
-    <h2>4. Принципы и способы обработки</h2>
-    <p>4.1. Обработка осуществляется законно, добросовестно и в объёме, необходимом для заявленных целей.</p>
-    <p>4.2. Обработка включает: сбор, запись, систематизацию, хранение, уточнение (обновление), использование, обезличивание, блокирование и уничтожение персональных данных.</p>
-    <p>4.3. Обработка может осуществляться как с использованием автоматизированных средств, так и без них.</p>
-
-    <h2>5. Передача персональных данных третьим лицам</h2>
-    <p>5.1. Персональные данные не передаются третьим лицам, за исключением случаев, предусмотренных законодательством Российской Федерации или прямо согласованных с пользователем.</p>
-    <p>5.2. Данные не продаются, не распространяются и не передаются сторонним маркетинговым или рекламным сервисам.</p>
-
-    <h2>6. Хранение и защита персональных данных</h2>
-    <p>6.1. Персональные данные хранятся в защищённых информационных средах, обеспечивающих безопасность в соответствии с требованиями законодательства РФ.</p>
-    <p>6.2. Срок хранения — до момента достижения целей обработки или до отзыва согласия пользователем.</p>
-
-    <h2>7. Права пользователя</h2>
-    <p>Пользователь имеет право:</p>
-    <ul>
-      <li>на получение информации об обработке своих данных;</li>
-      <li>требовать уточнения, блокирования или уничтожения данных;</li>
-      <li>отзывать согласие на обработку персональных данных;</li>
-      <li>направлять запросы на удаление данных в мессенджер или по указанным контактам.</li>
-    </ul>
-
-    <h2>8. Согласие на обработку персональных данных</h2>
-    <p>Предоставляя свои данные на сайте, пользователь выражает согласие на их обработку в соответствии с настоящей Политикой. Согласие действует до момента его отзыва.</p>
-
-    <h2>9. Контакты оператора данных</h2>
-    <p>Оператор персональных данных: Семён Гончаров, самозанятый.<br>Контакт для запросов: +7 911 846-19-65 (телефон/мессенджеры) или по запросу через форму на сайте.</p>
-
-    <h2>10. Изменение политики</h2>
-    <p>Политика может обновляться без предварительного уведомления. Актуальная версия всегда доступна на сайте по ссылке внизу страницы.</p>
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Правовые документы</p>
+    <h1 class="hero-title">Политика обработки<br>персональных данных</h1>
   </div>
+</section>
+
+<div class="content">
+
+  <p class="intro">Настоящая Политика действует в отношении всей информации, которую получает Семён Гончаров (самозанятый, ИНН 701708532973) от пользователей сайта и лиц, обращающихся за консультацией или услугами в сфере недвижимости.</p>
+
+  <div class="section">
+    <h2 class="section-title">1. Общие положения</h2>
+    <div class="section-body">
+      <p>Политика составлена в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных», Федеральным законом от 06.04.2011 № 63-ФЗ «Об электронной подписи», а также иными нормативными актами Российской Федерации.</p>
+      <p>Предоставляя свои данные на сайте, через формы обратной связи, мессенджеры или иным способом, пользователь подтверждает согласие на обработку персональных данных в соответствии с настоящей Политикой.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">2. Состав обрабатываемых данных</h2>
+    <div class="section-body">
+      <p>Обрабатываются следующие данные, предоставляемые пользователем добровольно:</p>
+      <ul>
+        <li>имя или псевдоним</li>
+        <li>номер телефона</li>
+        <li>адрес электронной почты</li>
+        <li>ссылки на мессенджеры</li>
+        <li>дополнительная информация, предоставленная пользователем самостоятельно (описание объекта недвижимости, вопросы консультации и др.)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">3. Цели обработки</h2>
+    <div class="section-body">
+      <p>Персональные данные обрабатываются исключительно для:</p>
+      <ul>
+        <li>связи с пользователем по его запросу</li>
+        <li>подготовки консультации</li>
+        <li>составления отчётов (например, оценки стоимости объекта)</li>
+        <li>заключения и выполнения договоров в рамках деятельности самозанятого</li>
+        <li>улучшения качества сервиса и коммуникации</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">4. Принципы и способы обработки</h2>
+    <div class="section-body">
+      <p>Обработка осуществляется законно, добросовестно и в объёме, необходимом для заявленных целей.</p>
+      <p>Обработка включает: сбор, запись, систематизацию, хранение, уточнение (обновление), использование, обезличивание, блокирование и уничтожение персональных данных.</p>
+      <p>Обработка может осуществляться как с использованием автоматизированных средств, так и без них.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">5. Передача данных третьим лицам</h2>
+    <div class="section-body">
+      <p>Персональные данные не передаются третьим лицам, за исключением случаев, предусмотренных законодательством Российской Федерации или прямо согласованных с пользователем.</p>
+      <p>Данные не продаются, не распространяются и не передаются сторонним маркетинговым или рекламным сервисам.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">6. Хранение и защита</h2>
+    <div class="section-body">
+      <p>Персональные данные хранятся в защищённых информационных средах, обеспечивающих безопасность в соответствии с требованиями законодательства РФ.</p>
+      <p>Срок хранения — до момента достижения целей обработки или до отзыва согласия пользователем.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">7. Права пользователя</h2>
+    <div class="section-body">
+      <p>Пользователь имеет право:</p>
+      <ul>
+        <li>на получение информации об обработке своих данных</li>
+        <li>требовать уточнения, блокирования или уничтожения данных</li>
+        <li>отзывать согласие на обработку персональных данных</li>
+        <li>направлять запросы на удаление данных в мессенджер или по указанным контактам</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">8. Согласие</h2>
+    <div class="section-body">
+      <p>Предоставляя свои данные на сайте, пользователь выражает согласие на их обработку в соответствии с настоящей Политикой. Согласие действует до момента его отзыва.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">9. Контакты</h2>
+    <div class="section-body">
+      <p>Оператор персональных данных: Семён Гончаров, самозанятый.</p>
+      <p>Контакт для запросов: +7 911 846-19-65 (телефон/мессенджеры) или по запросу через форму на сайте.</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2 class="section-title">10. Изменение политики</h2>
+    <div class="section-body">
+      <p>Политика может обновляться без предварительного уведомления. Актуальная версия всегда доступна на сайте по ссылке внизу страницы.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <span class="footer-copy">© 2025 Семён Гончаров</span>
+  <a class="footer-link" href="/">fastbroker21.ru</a>
+</footer>
+
 </body>
 </html>
