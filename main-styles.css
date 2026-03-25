@@ -2237,11 +2237,11 @@ textarea.contact-form-control {
 
   /* Ultra-compact spacing */
   .section-frame {
-    padding: var(--space-md) 20px;
+    padding: 80px 20px;
   }
 
   .work-container {
-    padding: var(--space-md) 20px;
+    padding: 80px 20px;
   }
 
   .hero {
@@ -2262,7 +2262,15 @@ textarea.contact-form-control {
   }
 
   h2 {
-    font-size: clamp(40px, 10vw, 48px);
+    font-size: clamp(28px, 10vw, 40px);
+  }
+
+  .work-title {
+    font-size: clamp(28px, 10vw, 40px);
+  }
+
+  .process-subtitle {
+    font-size: 17px;
   }
 
   /* Process steps tighter */
