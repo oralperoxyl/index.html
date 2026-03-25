@@ -89,7 +89,7 @@ html, body {
   background: #0F0F10;
   color: var(--text-main);
   font-family: var(--font-sans);
-  font-size: var(--fs-body);
+  font-size: 16px;
   font-weight: 400;
   line-height: var(--lh-normal);
   -webkit-font-smoothing: antialiased;
@@ -472,12 +472,12 @@ p {
 }
 
 .work-manifest {
-  font-size: 26px;
-  line-height: 1.5;
-  font-weight: var(--fw-medium);
+  font-size: 22px;
+  line-height: 1.55;
+  font-weight: var(--fw-regular);
   color: var(--text-main);
   max-width: var(--measure);
-  margin: 0 0 32px 0;
+  margin: 0 0 28px 0;
 }
 
 .work-body {
@@ -594,11 +594,11 @@ p {
 }
 
 .process-subtitle {
-  font-size: 26px;
-  line-height: 1.5;
-  font-weight: var(--fw-medium);
+  font-size: 20px;
+  line-height: 1.65;
+  font-weight: var(--fw-regular);
   margin: 0;
-  color: var(--text-main);
+  color: var(--text-muted);
   max-width: var(--measure);
 }
 
@@ -1953,7 +1953,7 @@ textarea.contact-form-control {
 
   /* Typography adjustments */
   h2 {
-    font-size: clamp(40px, 8vw, 48px);
+    font-size: clamp(32px, 8vw, 48px);
     margin-bottom: 24px;
   }
 
@@ -2078,6 +2078,7 @@ textarea.contact-form-control {
 
   /* Advantages */
   .advantages-grid {
+    grid-template-columns: 1fr;
     gap: 48px;
     margin-top: 40px;
   }
@@ -2088,7 +2089,10 @@ textarea.contact-form-control {
   }
 
   .adv-column + .adv-column {
-    padding-top: 48px;
+    border-left: none;
+    padding-left: 0;
+    padding-top: 40px;
+    border-top: 1px solid rgba(0,0,0,0.08);
   }
 
   .adv-item h4 {
