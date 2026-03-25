@@ -2445,7 +2445,7 @@ textarea.contact-form-control {
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 80px;
-  align-items: center;
+  align-items: start;
 }
 .hero-content { min-width: 0; }
 .hero-photo-wrap { flex-shrink: 0; }
