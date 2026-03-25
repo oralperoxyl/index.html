@@ -1957,6 +1957,10 @@ textarea.contact-form-control {
     margin-bottom: 24px;
   }
 
+  .work-title {
+    font-size: clamp(32px, 8vw, 48px);
+  }
+
   .text-narrow {
     font-size: 16px;
     line-height: 1.7;
