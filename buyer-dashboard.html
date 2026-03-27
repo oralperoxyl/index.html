@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Подбор квартиры — Семён Гончаров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+::selection{background:#0066FF;color:#fff}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --serif:'Playfair Display',serif;
+  --sans:'Inter',sans-serif;
+  --bg:#FAFAF8;
+  --dark:#1C1C1E;
+  --text:#1A1A1A;
+  --muted:#888;
+  --border:rgba(0,0,0,0.07);
+  --accent:#0066FF;
+  --green:#2D8A4E;
+  --red:#C0392B;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* HEADER */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}
+.header-right{display:flex;align-items:center;gap:16px}
+.header-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted)}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:#ccc;display:inline-block;margin-right:6px}
+.sync-dot.ok{background:var(--green)}
+
+/* HERO */
+.hero{background:var(--dark);padding:56px 40px 48px}
+.hero-inner{max-width:860px;margin:0 auto}
+.hero-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:16px}
+.hero-title{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:8px}
+.hero-sub{font-size:14px;color:rgba(229,229,229,0.4);font-weight:300}
+.hero-meta{display:flex;gap:24px;margin-top:20px;flex-wrap:wrap}
+.hero-chip{font-size:12px;color:rgba(229,229,229,0.5);font-weight:300}
+.hero-chip strong{color:rgba(229,229,229,0.8);font-weight:500}
+
+/* CONTENT */
+.content{max-width:860px;margin:0 auto;padding:48px 40px 80px}
+
+/* NEXT STEP */
+.next-step{background:#fff;border-radius:2px;padding:24px 28px;margin-bottom:40px;border-left:3px solid var(--dark);display:flex;align-items:baseline;gap:16px}
+.next-step-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);flex-shrink:0}
+.next-step-text{font-size:15px;font-weight:400;color:var(--text)}
+
+/* SECTION TITLE */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.section-title{font-family:var(--serif);font-size:clamp(20px,2.5vw,28px);font-weight:400;letter-spacing:-0.01em}
+.section-count{font-size:12px;color:var(--muted);font-weight:300}
+
+/* PROPERTY CARDS */
+.props-list{display:grid;gap:2px;margin-bottom:48px}
+.prop-card{background:#fff;border-radius:2px;overflow:hidden}
+.prop-card-header{padding:20px 24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;cursor:pointer;user-select:none}
+.prop-card-header:hover{background:rgba(0,0,0,0.01)}
+.prop-status-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.prop-status{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border-radius:999px;font-weight:500}
+.prop-status.planned{background:rgba(0,102,255,0.08);color:var(--accent)}
+.prop-status.viewed{background:rgba(0,0,0,0.06);color:var(--muted)}
+.prop-status.considering{background:rgba(45,138,78,0.1);color:var(--green)}
+.prop-status.declined{background:rgba(192,57,43,0.08);color:var(--red)}
+.prop-addr{font-size:16px;font-weight:500;color:var(--text);line-height:1.3}
+.prop-meta{display:flex;gap:16px;margin-top:8px;flex-wrap:wrap}
+.prop-meta-item{font-size:12px;color:var(--muted);font-weight:300}
+.prop-meta-item strong{color:var(--text);font-weight:500}
+.prop-price{font-family:var(--serif);font-size:20px;font-weight:400;color:var(--text);white-space:nowrap}
+.prop-toggle-icon{font-size:18px;color:var(--muted);transition:transform 0.25s;flex-shrink:0;margin-top:2px}
+.prop-card.open .prop-toggle-icon{transform:rotate(45deg)}
+
+.prop-body{display:none;padding:0 24px 24px;border-top:1px solid var(--border)}
+.prop-card.open .prop-body{display:block}
+
+.prop-body-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+.prop-agent-comment{grid-column:1/-1}
+.prop-body-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.prop-body-val{font-size:14px;color:var(--text);font-weight:300;line-height:1.6}
+.prop-link{font-size:13px;color:var(--accent);text-decoration:none;font-weight:400}
+.prop-link:hover{text-decoration:underline}
+
+/* RATING */
+.rating-block{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.rating-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.rating-stars{display:flex;gap:8px;margin-bottom:12px}
+.rating-star{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;color:var(--muted)}
+.rating-star:hover,.rating-star.active{background:var(--dark);border-color:var(--dark);color:#fff}
+.rating-comment-wrap{margin-top:8px}
+.rating-comment{width:100%;border:none;border-bottom:1px solid var(--border);background:none;font-family:var(--sans);font-size:14px;color:var(--text);padding:6px 0;resize:none;outline:none;line-height:1.5}
+.rating-comment::placeholder{color:var(--muted)}
+.rating-comment:focus{border-color:var(--text)}
+.rating-save{margin-top:12px;padding:8px 20px;background:var(--dark);color:#fff;border:none;border-radius:999px;font-size:12px;font-weight:500;letter-spacing:0.04em;cursor:pointer;transition:opacity 0.2s}
+.rating-save:hover{opacity:0.8}
+.rating-saved{font-size:12px;color:var(--green);display:none}
+.rating-existing{font-size:14px;color:var(--text);font-weight:300}
+.rating-stars-display{color:#F59E0B;letter-spacing:2px;font-size:16px}
+
+/* COMPARE TABLE */
+.compare-wrap{overflow-x:auto;margin-bottom:48px}
+.compare-table{width:100%;border-collapse:collapse;min-width:600px}
+.compare-table th{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:10px 16px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
+.compare-table th.prop-col{font-size:12px;font-weight:500;color:var(--text);text-transform:none;letter-spacing:0;max-width:140px}
+.compare-table td{padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted);font-weight:300;vertical-align:top}
+.compare-table td.row-label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:400;white-space:nowrap;background:rgba(0,0,0,0.015)}
+.compare-table td strong{color:var(--text);font-weight:500}
+.compare-stars{color:#F59E0B;font-size:13px}
+
+/* AGENT PANEL */
+.agent-panel{background:var(--dark);border-radius:2px;padding:32px;margin-bottom:40px}
+.agent-panel-title{font-family:var(--serif);font-size:20px;font-weight:400;color:#E5E5E5;margin-bottom:24px}
+.agent-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.agent-field{display:flex;flex-direction:column;gap:6px}
+.agent-field.full{grid-column:1/-1}
+.agent-field label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.4);font-weight:400}
+.agent-input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:2px;padding:10px 12px;font-family:var(--sans);font-size:14px;color:#E5E5E5;outline:none;transition:border-color 0.2s;width:100%}
+.agent-input:focus{border-color:rgba(255,255,255,0.3)}
+.agent-input::placeholder{color:rgba(255,255,255,0.2)}
+select.agent-input option{background:var(--dark);color:#E5E5E5}
+.agent-btn{padding:10px 24px;border:none;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;transition:opacity 0.2s;letter-spacing:0.02em}
+.agent-btn.primary{background:#fff;color:var(--dark)}
+.agent-btn.primary:hover{opacity:0.9}
+.agent-btn.danger{background:rgba(192,57,43,0.3);color:#E5E5E5;border:1px solid rgba(192,57,43,0.3)}
+.agent-btn.danger:hover{opacity:0.8}
+.agent-btn-row{display:flex;gap:12px;align-items:center;margin-top:20px;grid-column:1/-1;flex-wrap:wrap}
+
+/* PICKER (agent list of buyers) */
+.picker{max-width:860px;margin:0 auto;padding:48px 40px 80px}
+.picker-title{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:400;margin-bottom:8px}
+.picker-sub{font-size:14px;color:var(--muted);font-weight:300;margin-bottom:40px}
+.picker-list{display:grid;gap:2px}
+.picker-row{background:#fff;border-radius:2px;padding:18px 24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.picker-row-name{font-size:15px;font-weight:500}
+.picker-row-meta{font-size:13px;color:var(--muted);font-weight:300;margin-top:2px}
+.picker-row-btns{display:flex;gap:8px;flex-shrink:0}
+.picker-btn{padding:8px 16px;border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text);transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center}
+.picker-btn:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
+.picker-btn.green{background:var(--green);color:#fff;border-color:var(--green)}
+.picker-btn.green:hover{opacity:0.85}
+
+/* TOKEN FORM */
+.token-form{max-width:400px;margin:80px auto;padding:0 40px;text-align:center}
+.token-form h2{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:8px}
+.token-form p{font-size:14px;color:var(--muted);margin-bottom:24px;font-weight:300}
+.token-input{width:100%;border:none;border-bottom:1px solid var(--border);background:none;font-family:var(--sans);font-size:15px;padding:10px 0;outline:none;color:var(--text);text-align:center}
+.token-submit{margin-top:16px;padding:12px 32px;background:var(--dark);color:#fff;border:none;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;letter-spacing:0.04em}
+
+/* NEW BUYER FORM */
+.new-buyer-form{background:#fff;border-radius:2px;padding:28px;margin-bottom:24px}
+.new-buyer-form h3{font-size:14px;font-weight:500;margin-bottom:16px;color:var(--text)}
+.new-buyer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:end}
+.new-buyer-field{display:flex;flex-direction:column;gap:6px}
+.new-buyer-field label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.new-buyer-input{border:none;border-bottom:1px solid var(--border);background:none;font-family:var(--sans);font-size:14px;padding:8px 0;outline:none;color:var(--text)}
+.new-buyer-input::placeholder{color:var(--muted)}
+.new-buyer-input:focus{border-color:var(--text)}
+
+/* EDIT PROP PANEL */
+.edit-prop-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+.edit-prop-overlay.open{display:flex}
+.edit-prop-modal{background:#1C1C1E;border-radius:4px;padding:32px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
+.edit-prop-modal h3{font-family:var(--serif);font-size:20px;font-weight:400;color:#E5E5E5;margin-bottom:24px}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(229,229,229,0.5);font-size:20px;cursor:pointer;line-height:1}
+.edit-prop-overlay{position:relative}
+
+/* FOOTER */
+.site-footer{border-top:1px solid var(--border);padding:24px 40px;text-align:center}
+.site-footer p{font-size:12px;color:var(--muted);font-weight:300}
+.site-footer a{color:var(--muted);text-decoration:none}
+.site-footer a:hover{color:var(--text)}
+
+/* STATUS BADGES in picker */
+.status-badge{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px;font-weight:500}
+.status-badge.planned{background:rgba(0,102,255,0.08);color:var(--accent)}
+.status-badge.active{background:rgba(45,138,78,0.1);color:var(--green)}
+
+@media(max-width:640px){
+  .site-header{padding:0 20px}
+  .hero{padding:40px 20px 36px}
+  .content{padding:32px 20px 60px}
+  .picker{padding:32px 20px 60px}
+  .token-form{padding:0 20px;margin:60px auto}
+  .site-footer{padding:20px}
+  .prop-body-grid{grid-template-columns:1fr}
+  .agent-form-grid{grid-template-columns:1fr}
+  .new-buyer-grid{grid-template-columns:1fr}
+  .picker-row{grid-template-columns:1fr}
+  .picker-row-btns{justify-content:flex-start}
+  .hero-meta{gap:12px}
+  .compare-table th.prop-col{max-width:100px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+  <div class="header-right">
+    <span class="header-label" id="syncStatus"><span class="sync-dot" id="syncDot"></span><span id="syncText">Загрузка…</span></span>
+  </div>
+</header>
+
+<div id="appRoot"></div>
+
+<footer class="site-footer">
+  <p>Семён Гончаров · <a href="tel:+79118461965">+7 911 846-19-65</a> · <a href="https://t.me/semengme">Telegram</a></p>
+</footer>
+
+<!-- EDIT PROPERTY MODAL -->
+<div class="edit-prop-overlay" id="editModal">
+  <div class="edit-prop-modal" style="position:relative">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle">Объект</h3>
+    <div class="agent-form-grid" id="modalFields"></div>
+    <div class="agent-btn-row" style="grid-column:1/-1">
+      <button class="agent-btn primary" onclick="saveModalProp()">Сохранить</button>
+      <button class="agent-btn danger" onclick="deleteModalProp()">Удалить объект</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────
+const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_BRANCH='main';
+const GH_FILE='data/buyers.json';
+const TOKEN_KEY='wr_gh_token';
+
+function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
+function setToken(t){try{localStorage.setItem(TOKEN_KEY,t);}catch(e){}}
+
+// ── STATE ───────────────────────────────────────────────────
+let allData={buyers:{}};
+let fileSha=null;
+let currentBuyerId=null;
+let editingPropIdx=null;
+
+// ── SYNC STATUS ─────────────────────────────────────────────
+function setSyncOk(msg){
+  document.getElementById('syncDot').className='sync-dot ok';
+  document.getElementById('syncText').textContent=msg||'Синхронизировано';
+}
+function setSyncPending(){
+  document.getElementById('syncDot').className='sync-dot';
+  document.getElementById('syncText').textContent='Сохранение…';
+}
+
+// ── GITHUB API ──────────────────────────────────────────────
+async function ghLoad(){
+  const token=getToken();
+  const headers=token?{Authorization:`token ${token}`}:{};
+  try{
+    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,{headers});
+    if(r.status===404){allData={buyers:{}};fileSha=null;setSyncOk('Новый файл');return;}
+    const j=await r.json();
+    fileSha=j.sha;
+    const decoded=atob(j.content.replace(/\n/g,''));
+    const text=new TextDecoder().decode(Uint8Array.from(decoded,x=>x.charCodeAt(0)));
+    allData=JSON.parse(text);
+    if(!allData.buyers)allData.buyers={};
+    setSyncOk('Синхронизировано');
+  }catch(e){setSyncOk('Ошибка загрузки');}
+}
+
+async function ghSave(){
+  const token=getToken();
+  if(!token)return;
+  setSyncPending();
+  try{
+    const text=JSON.stringify(allData,null,2);
+    const bytes=new TextEncoder().encode(text);
+    let binary='';
+    bytes.forEach(b=>binary+=String.fromCharCode(b));
+    const encoded=btoa(binary);
+    const body={message:'Update buyers',content:encoded,branch:GH_BRANCH};
+    if(fileSha)body.sha=fileSha;
+    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,{
+      method:'PUT',headers:{Authorization:`token ${token}`,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    const j=await r.json();
+    fileSha=j.content?.sha||fileSha;
+    setSyncOk('Синхронизировано');
+  }catch(e){setSyncOk('Ошибка сохранения');}
+}
+
+let saveTimer=null;
+function debounceSave(){clearTimeout(saveTimer);saveTimer=setTimeout(ghSave,1200);}
+
+// ── SLUGIFY ─────────────────────────────────────────────────
+function slugify(s){return s.toLowerCase().replace(/[^а-яёa-z0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,40);}
+function shortId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,4);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtPrice(p){if(!p)return '—';const n=Number(String(p).replace(/\D/g,''));if(!n)return p;return(n/1000000).toFixed(2).replace(/\.?0+$/,'')+' млн ₽';}
+
+// ── STATUS ──────────────────────────────────────────────────
+const STATUS_LABELS={planned:'Запланирован',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл'};
+const STATUS_CLASS={planned:'planned',viewed:'viewed',considering:'considering',declined:'declined'};
+
+// ── STAR RATING ─────────────────────────────────────────────
+function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
+
+// ── RENDER RATING BLOCK (client) ────────────────────────────
+function renderRating(buyerId,propIdx,prop){
+  const rating=prop.clientRating||0;
+  const comment=prop.clientComment||'';
+  const key=`rating-${buyerId}-${propIdx}`;
+
+  if(!getToken()&&!rating){
+    // client can rate
+    return `<div class="rating-block">
+      <div class="rating-label">Ваша оценка</div>
+      <div class="rating-stars" id="stars-${propIdx}">
+        ${[1,2,3,4,5].map(i=>`<button class="rating-star" onclick="setRating('${buyerId}',${propIdx},${i})" title="${i}">${i}</button>`).join('')}
+      </div>
+      <div class="rating-comment-wrap">
+        <textarea class="rating-comment" id="rc-${propIdx}" placeholder="Комментарий (необязательно)" rows="2">${esc(comment)}</textarea>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:10px">
+        <button class="rating-save" onclick="saveRating('${buyerId}',${propIdx})">Сохранить оценку</button>
+        <span class="rating-saved" id="rs-${propIdx}">✓ Сохранено</span>
+      </div>
+    </div>`;
+  }
+  if(rating){
+    return `<div class="rating-block">
+      <div class="rating-label">Ваша оценка</div>
+      <div class="rating-existing">
+        <span class="rating-stars-display">${starsHtml(rating)}</span>
+        ${comment?`<div style="margin-top:6px;font-size:13px;color:var(--muted);font-weight:300">${esc(comment)}</div>`:''}
+        ${!getToken()?`<button style="margin-top:8px;background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="resetRating('${buyerId}',${propIdx})">Изменить оценку</button>`:''}
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+function setRating(buyerId,propIdx,val){
+  document.querySelectorAll(`#stars-${propIdx} .rating-star`).forEach((btn,i)=>{
+    btn.classList.toggle('active',i<val);
+    btn.dataset.val=val;
+  });
+  document.querySelector(`#stars-${propIdx}`).dataset.selected=val;
+}
+
+async function saveRating(buyerId,propIdx){
+  const starsEl=document.querySelector(`#stars-${propIdx}`);
+  const val=parseInt(starsEl?.dataset.selected||0);
+  if(!val){alert('Выберите оценку от 1 до 5');return;}
+  const comment=document.getElementById(`rc-${propIdx}`)?.value||'';
+  const buyer=allData.buyers[buyerId];
+  if(!buyer||!buyer.props[propIdx])return;
+  buyer.props[propIdx].clientRating=val;
+  buyer.props[propIdx].clientComment=comment;
+  // Save to GH without token (public write not possible — use localStorage fallback)
+  try{localStorage.setItem(`rating-${buyerId}-${propIdx}`,JSON.stringify({val,comment}));}catch(e){}
+  const saved=document.getElementById(`rs-${propIdx}`);
+  if(saved){saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000);}
+  // If agent is viewing — save to GH
+  if(getToken()){debounceSave();}
+  renderApp();
+}
+
+async function resetRating(buyerId,propIdx){
+  try{localStorage.removeItem(`rating-${buyerId}-${propIdx}`);}catch(e){}
+  const buyer=allData.buyers[buyerId];
+  if(buyer?.props[propIdx]){buyer.props[propIdx].clientRating=0;buyer.props[propIdx].clientComment='';}
+  renderApp();
+}
+
+// Load local ratings into data
+function loadLocalRatings(buyerId,props){
+  props.forEach((p,i)=>{
+    if(!p.clientRating){
+      try{
+        const saved=localStorage.getItem(`rating-${buyerId}-${i}`);
+        if(saved){const{val,comment}=JSON.parse(saved);p.clientRating=val;p.clientComment=comment;}
+      }catch(e){}
+    }
+  });
+}
+
+// ── RENDER PROPERTY CARD ─────────────────────────────────────
+function renderPropCard(buyerId,prop,idx,isAgent){
+  const statusLabel=STATUS_LABELS[prop.status]||prop.status||'—';
+  const statusCls=STATUS_CLASS[prop.status]||'planned';
+  const rating=prop.clientRating||0;
+
+  return `<div class="prop-card" id="prop-${idx}">
+    <div class="prop-card-header" onclick="toggleProp(${idx})">
+      <div>
+        <div class="prop-status-row">
+          <span class="prop-status ${statusCls}">${statusLabel}</span>
+          ${prop.showDate?`<span style="font-size:12px;color:var(--muted);font-weight:300">${esc(prop.showDate)}</span>`:''}
+          ${rating?`<span style="font-size:12px;color:#F59E0B">${starsHtml(rating)}</span>`:''}
+        </div>
+        <div class="prop-addr">${esc(prop.address||'Без адреса')}</div>
+        <div class="prop-meta">
+          ${prop.area?`<span class="prop-meta-item"><strong>${esc(prop.area)}</strong> м²</span>`:''}
+          ${prop.floor?`<span class="prop-meta-item"><strong>${esc(prop.floor)}</strong> эт.</span>`:''}
+          ${prop.condition?`<span class="prop-meta-item">${esc(prop.condition)}</span>`:''}
+          ${prop.renovation?`<span class="prop-meta-item">вложения <strong>${esc(prop.renovation)}</strong></span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="prop-price">${fmtPrice(prop.price)}</div>
+        <div class="prop-toggle-icon">+</div>
+      </div>
+    </div>
+    <div class="prop-body">
+      <div class="prop-body-grid">
+        ${prop.agentComment?`<div class="prop-agent-comment">
+          <div class="prop-body-label">Комментарий агента</div>
+          <div class="prop-body-val">${esc(prop.agentComment)}</div>
+        </div>`:''}
+        ${prop.url?`<div>
+          <div class="prop-body-label">Объявление</div>
+          <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть ↗</a>
+        </div>`:''}
+      </div>
+      ${renderRating(buyerId,idx,prop)}
+      ${isAgent?`<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <button class="picker-btn" onclick="openEditProp('${buyerId}',${idx});event.stopPropagation()">Редактировать</button>
+      </div>`:''}
+    </div>
+  </div>`;
+}
+
+function toggleProp(idx){
+  const card=document.getElementById(`prop-${idx}`);
+  card?.classList.toggle('open');
+}
+
+// ── COMPARE TABLE ────────────────────────────────────────────
+function renderCompare(props){
+  if(props.length<2)return '';
+  const rows=[
+    {label:'Цена',key:'price',fmt:fmtPrice},
+    {label:'Площадь',key:'area',fmt:v=>v?v+' м²':'—'},
+    {label:'Этаж',key:'floor',fmt:v=>v||'—'},
+    {label:'Состояние',key:'condition',fmt:v=>v||'—'},
+    {label:'Вложения',key:'renovation',fmt:v=>v||'—'},
+    {label:'Оценка',key:'clientRating',fmt:v=>v?`<span class="compare-stars">${starsHtml(v)}</span>`:'—'},
+    {label:'Статус',key:'status',fmt:v=>STATUS_LABELS[v]||v||'—'},
+  ];
+
+  const viewed=props.filter(p=>p.status!=='planned');
+  const list=viewed.length?viewed:props;
+
+  return `<div class="section-head"><h2 class="section-title">Сравнение</h2><span class="section-count">${list.length} объект${list.length===1?'':'ов'}</span></div>
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead><tr>
+        <th></th>
+        ${list.map(p=>`<th class="prop-col">${esc(p.address?.split(',')[0]||'Объект')}</th>`).join('')}
+      </tr></thead>
+      <tbody>
+        ${rows.map(r=>`<tr>
+          <td class="row-label">${r.label}</td>
+          ${list.map(p=>`<td>${r.fmt(p[r.key])}</td>`).join('')}
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+// ── CLIENT VIEW ──────────────────────────────────────────────
+function renderClientView(buyerId){
+  const buyer=allData.buyers[buyerId];
+  if(!buyer){
+    document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Покупатель не найден. Проверьте ссылку.</div>`;
+    return;
+  }
+  loadLocalRatings(buyerId,buyer.props||[]);
+  const props=buyer.props||[];
+  const planned=props.filter(p=>p.status==='planned').length;
+  const viewed=props.filter(p=>p.status!=='planned').length;
+
+  document.getElementById('appRoot').innerHTML=`
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-label">Подбор квартиры</p>
+        <h1 class="hero-title">${esc(buyer.name||'Ваш подбор')}</h1>
+        ${buyer.nextStep?`<p class="hero-sub">${esc(buyer.nextStep)}</p>`:''}
+        <div class="hero-meta">
+          <span class="hero-chip"><strong>${props.length}</strong> объект${props.length===1?'':'ов'}</span>
+          ${planned?`<span class="hero-chip"><strong>${planned}</strong> запланировано</span>`:''}
+          ${viewed?`<span class="hero-chip"><strong>${viewed}</strong> просмотрено</span>`:''}
+        </div>
+      </div>
+    </section>
+    <div class="content">
+      ${buyer.nextStep?`<div class="next-step"><span class="next-step-label">Следующий шаг</span><span class="next-step-text">${esc(buyer.nextStep)}</span></div>`:''}
+      <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
+      <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,false)).join('')}</div>
+      ${renderCompare(props)}
+    </div>`;
+}
+
+// ── AGENT VIEW ───────────────────────────────────────────────
+function renderAgentView(buyerId){
+  const buyer=allData.buyers[buyerId];
+  if(!buyer)return;
+  loadLocalRatings(buyerId,buyer.props||[]);
+  const props=buyer.props||[];
+  const dashUrl=window.location.origin+window.location.pathname+'?id='+buyerId;
+
+  document.getElementById('appRoot').innerHTML=`
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-label">Агент · Подбор</p>
+        <h1 class="hero-title">${esc(buyer.name||'Без имени')}</h1>
+        ${buyer.budget?`<p class="hero-sub">Бюджет: ${fmtPrice(buyer.budget)}</p>`:''}
+        <div class="hero-meta">
+          <span class="hero-chip"><strong>${props.length}</strong> объект${props.length===1?'':'ов'}</span>
+          <button onclick="copyUrl('${dashUrl}',this)" style="background:rgba(255,255,255,0.1);border:none;color:rgba(229,229,229,0.7);font-size:12px;padding:4px 12px;border-radius:999px;cursor:pointer">Скопировать ссылку клиенту</button>
+        </div>
+      </div>
+    </section>
+    <div class="content">
+      <!-- Next step edit -->
+      <div style="margin-bottom:32px">
+        <div class="prop-body-label" style="margin-bottom:8px">Следующий шаг (виден клиенту)</div>
+        <input id="nextStepInput" value="${esc(buyer.nextStep||'')}" placeholder="Например: ждём ответ по задатку на Ленина 12" style="width:100%;border:none;border-bottom:1px solid var(--border);background:none;font-size:15px;padding:8px 0;outline:none;color:var(--text);font-family:var(--sans)" oninput="saveNextStep('${buyerId}')">
+      </div>
+
+      <!-- Add property -->
+      <div class="agent-panel" style="margin-bottom:32px">
+        <div class="agent-panel-title">Добавить объект</div>
+        <div class="agent-form-grid" id="addPropForm">
+          <div class="agent-field"><label>Адрес *</label><input class="agent-input" id="np-address" placeholder="ул. Ленина, 12, кв. 45"></div>
+          <div class="agent-field"><label>Цена ₽</label><input class="agent-input" id="np-price" placeholder="8500000" type="number"></div>
+          <div class="agent-field"><label>Площадь м²</label><input class="agent-input" id="np-area" placeholder="52"></div>
+          <div class="agent-field"><label>Этаж</label><input class="agent-input" id="np-floor" placeholder="4/9"></div>
+          <div class="agent-field"><label>Состояние</label>
+            <select class="agent-input" id="np-condition">
+              <option value="">Не указано</option>
+              <option>С ремонтом</option>
+              <option>Косметический ремонт</option>
+              <option>Требует ремонта</option>
+              <option>Без ремонта</option>
+              <option>Евроремонт</option>
+            </select>
+          </div>
+          <div class="agent-field"><label>Вложения в ремонт</label><input class="agent-input" id="np-renovation" placeholder="~500 000 ₽"></div>
+          <div class="agent-field"><label>Дата показа</label><input class="agent-input" id="np-showDate" type="date"></div>
+          <div class="agent-field"><label>Статус</label>
+            <select class="agent-input" id="np-status">
+              <option value="planned">Запланирован</option>
+              <option value="viewed">Просмотрен</option>
+              <option value="considering">Рассматриваем</option>
+              <option value="declined">Не подошёл</option>
+            </select>
+          </div>
+          <div class="agent-field full"><label>Ссылка на объявление</label><input class="agent-input" id="np-url" placeholder="https://cian.ru/..."></div>
+          <div class="agent-field full"><label>Комментарий агента</label><textarea class="agent-input" id="np-comment" placeholder="Светлая квартира, тихий двор, хозяйка готова торговаться..." rows="3"></textarea></div>
+          <div class="agent-btn-row">
+            <button class="agent-btn primary" onclick="addProp('${buyerId}')">Добавить объект</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Props list -->
+      <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
+      <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,true)).join('')}</div>
+      ${renderCompare(props)}
+    </div>`;
+}
+
+// ── NEXT STEP ────────────────────────────────────────────────
+let nextStepTimer=null;
+function saveNextStep(buyerId){
+  clearTimeout(nextStepTimer);
+  nextStepTimer=setTimeout(()=>{
+    const val=document.getElementById('nextStepInput')?.value||'';
+    if(allData.buyers[buyerId])allData.buyers[buyerId].nextStep=val;
+    debounceSave();
+  },800);
+}
+
+// ── ADD PROPERTY ─────────────────────────────────────────────
+function addProp(buyerId){
+  const get=id=>document.getElementById(id)?.value?.trim()||'';
+  const address=get('np-address');
+  if(!address){alert('Укажите адрес');return;}
+  const prop={
+    address,price:get('np-price'),area:get('np-area'),floor:get('np-floor'),
+    condition:get('np-condition'),renovation:get('np-renovation'),
+    showDate:get('np-showDate'),status:get('np-status')||'planned',
+    url:get('np-url'),agentComment:get('np-comment'),
+    clientRating:0,clientComment:'',addedAt:new Date().toISOString().slice(0,10)
+  };
+  if(!allData.buyers[buyerId].props)allData.buyers[buyerId].props=[];
+  allData.buyers[buyerId].props.push(prop);
+  debounceSave();
+  renderAgentView(buyerId);
+}
+
+// ── EDIT PROPERTY MODAL ──────────────────────────────────────
+function openEditProp(buyerId,idx){
+  currentBuyerId=buyerId;
+  editingPropIdx=idx;
+  const prop=allData.buyers[buyerId]?.props[idx];
+  if(!prop)return;
+
+  document.getElementById('modalTitle').textContent='Редактировать объект';
+  document.getElementById('editModal').classList.add('open');
+
+  const fields=[
+    {id:'ep-address',label:'Адрес',val:prop.address,type:'text'},
+    {id:'ep-price',label:'Цена ₽',val:prop.price,type:'number'},
+    {id:'ep-area',label:'Площадь м²',val:prop.area,type:'text'},
+    {id:'ep-floor',label:'Этаж',val:prop.floor,type:'text'},
+    {id:'ep-renovation',label:'Вложения в ремонт',val:prop.renovation,type:'text'},
+    {id:'ep-showDate',label:'Дата показа',val:prop.showDate,type:'date'},
+    {id:'ep-url',label:'Ссылка',val:prop.url,type:'url'},
+  ];
+  const selects=`
+    <div class="agent-field"><label>Состояние</label>
+      <select class="agent-input" id="ep-condition">
+        ${['','С ремонтом','Косметический ремонт','Требует ремонта','Без ремонта','Евроремонт'].map(v=>`<option${v===prop.condition?' selected':''}>${v}</option>`).join('')}
+      </select>
+    </div>
+    <div class="agent-field"><label>Статус</label>
+      <select class="agent-input" id="ep-status">
+        ${Object.entries(STATUS_LABELS).map(([v,l])=>`<option value="${v}"${v===prop.status?' selected':''}>${l}</option>`).join('')}
+      </select>
+    </div>
+    <div class="agent-field full"><label>Комментарий агента</label>
+      <textarea class="agent-input" id="ep-comment" rows="3">${esc(prop.agentComment||'')}</textarea>
+    </div>`;
+
+  document.getElementById('modalFields').innerHTML=
+    fields.map(f=>`<div class="agent-field"><label>${f.label}</label><input class="agent-input" id="${f.id}" type="${f.type}" value="${esc(f.val||'')}"></div>`).join('')+selects;
+}
+
+function closeModal(){
+  document.getElementById('editModal').classList.remove('open');
+  currentBuyerId=null;editingPropIdx=null;
+}
+
+function saveModalProp(){
+  if(currentBuyerId===null||editingPropIdx===null)return;
+  const prop=allData.buyers[currentBuyerId]?.props[editingPropIdx];
+  if(!prop)return;
+  const get=id=>document.getElementById(id)?.value?.trim()||'';
+  prop.address=get('ep-address');prop.price=get('ep-price');prop.area=get('ep-area');
+  prop.floor=get('ep-floor');prop.condition=get('ep-condition');prop.renovation=get('ep-renovation');
+  prop.showDate=get('ep-showDate');prop.status=get('ep-status');
+  prop.url=get('ep-url');prop.agentComment=get('ep-comment');
+  closeModal();debounceSave();renderAgentView(currentBuyerId);
+}
+
+function deleteModalProp(){
+  if(currentBuyerId===null||editingPropIdx===null)return;
+  if(!confirm('Удалить этот объект?'))return;
+  allData.buyers[currentBuyerId].props.splice(editingPropIdx,1);
+  closeModal();debounceSave();renderAgentView(currentBuyerId);
+}
+
+// ── COPY URL ─────────────────────────────────────────────────
+function copyUrl(url,btn){
+  navigator.clipboard.writeText(url).then(()=>{
+    const orig=btn.textContent;btn.textContent='Скопировано!';
+    setTimeout(()=>btn.textContent=orig,1500);
+  });
+}
+
+// ── AGENT PICKER ─────────────────────────────────────────────
+function renderPicker(){
+  const buyers=Object.entries(allData.buyers);
+  document.getElementById('appRoot').innerHTML=`
+    <div class="picker">
+      <h1 class="picker-title">Покупатели</h1>
+      <p class="picker-sub">Выберите покупателя или создайте нового</p>
+
+      <!-- New buyer -->
+      <div class="new-buyer-form">
+        <h3>Новый покупатель</h3>
+        <div class="new-buyer-grid">
+          <div class="new-buyer-field"><label>Имя *</label><input class="new-buyer-input" id="nb-name" placeholder="Александр"></div>
+          <div class="new-buyer-field"><label>Бюджет ₽</label><input class="new-buyer-input" id="nb-budget" placeholder="8500000" type="number"></div>
+          <div style="display:flex;align-items:flex-end"><button class="picker-btn green" onclick="createBuyer()" style="white-space:nowrap">+ Создать</button></div>
+        </div>
+      </div>
+
+      <!-- Buyers list -->
+      <div class="picker-list">
+        ${buyers.length?buyers.map(([id,b])=>`
+          <div class="picker-row">
+            <div>
+              <div class="picker-row-name">${esc(b.name||'Без имени')}</div>
+              <div class="picker-row-meta">${(b.props||[]).length} объект${(b.props||[]).length===1?'':'ов'}${b.budget?' · '+fmtPrice(b.budget):''}</div>
+            </div>
+            <div class="picker-row-btns">
+              <button class="picker-btn" onclick="openBuyerAgent('${id}')">Открыть</button>
+              <button class="picker-btn green" onclick="copyUrl('${window.location.origin+window.location.pathname}?id=${id}',this)">Скопировать ссылку</button>
+              <button class="picker-btn" style="color:var(--red);border-color:rgba(192,57,43,0.2)" onclick="deleteBuyer('${id}',this)">✕</button>
+            </div>
+          </div>`).join(''):`<div style="padding:32px;text-align:center;color:var(--muted);font-size:14px">Нет покупателей. Создайте первого.</div>`}
+      </div>
+    </div>`;
+}
+
+function createBuyer(){
+  const name=document.getElementById('nb-name')?.value?.trim();
+  if(!name){alert('Введите имя');return;}
+  const budget=document.getElementById('nb-budget')?.value?.trim()||'';
+  const id=slugify(name)+'-'+shortId();
+  allData.buyers[id]={name,budget,props:[],nextStep:'',createdAt:new Date().toISOString().slice(0,10)};
+  debounceSave();
+  openBuyerAgent(id);
+}
+
+function openBuyerAgent(id){
+  currentBuyerId=id;
+  history.pushState({id},'',window.location.pathname+'?id='+id+'&edit=1');
+  renderAgentView(id);
+}
+
+function deleteBuyer(id,btn){
+  const name=allData.buyers[id]?.name||'этого покупателя';
+  if(!confirm(`Удалить ${name}?`))return;
+  delete allData.buyers[id];
+  debounceSave();renderPicker();
+}
+
+// ── TOKEN FORM ───────────────────────────────────────────────
+function renderTokenForm(){
+  document.getElementById('appRoot').innerHTML=`
+    <div class="token-form">
+      <h2>Вход для агента</h2>
+      <p>Введите GitHub токен для доступа</p>
+      <input class="token-input" type="password" id="tokenInput" placeholder="ghp_...">
+      <br><button class="token-submit" onclick="submitToken()">Войти</button>
+    </div>`;
+}
+
+function submitToken(){
+  const t=document.getElementById('tokenInput')?.value?.trim();
+  if(!t)return;
+  setToken(t);
+  location.reload();
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+async function initApp(){
+  const params=new URLSearchParams(window.location.search);
+  const id=params.get('id');
+  const isEdit=params.has('edit');
+  const token=getToken();
+
+  await ghLoad();
+
+  if(id){
+    if(isEdit&&token){
+      // Agent view for specific buyer
+      if(!allData.buyers[id]){
+        document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Покупатель не найден.</div>`;
+        return;
+      }
+      currentBuyerId=id;
+      renderAgentView(id);
+    } else {
+      // Client view
+      renderClientView(id);
+    }
+  } else {
+    // No id — agent picker
+    if(token){
+      renderPicker();
+    } else if(isEdit){
+      renderTokenForm();
+    } else {
+      renderTokenForm();
+    }
+  }
+}
+
+initApp();
+</script>
+</body>
+</html>
