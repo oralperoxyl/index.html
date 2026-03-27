@@ -55,14 +55,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .next-step-text{font-size:15px;color:var(--text);font-weight:400;line-height:1.6}
 
 /* HINT BLOCK — как оценивать */
-.hint-block{margin-bottom:40px;padding:28px 32px;border:1px solid var(--border);border-radius:2px}
-.hint-title{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
-.hint-items{display:grid;gap:16px}
-.hint-item{display:grid;grid-template-columns:20px 1fr;gap:12px;align-items:start}
-.hint-num{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.2);padding-top:1px}
+.hint-block{margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.hint-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;display:flex;align-items:center;gap:10px}
+.hint-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.hint-items{display:grid;gap:0}
+.hint-item{display:grid;grid-template-columns:32px 1fr;gap:0;align-items:start;padding:16px 0;border-top:1px solid var(--border)}
+.hint-item:last-child{border-bottom:1px solid var(--border)}
+.hint-num{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.18);padding-top:2px}
 .hint-item-body{}
-.hint-item-q{font-size:14px;font-weight:500;color:var(--text);margin-bottom:3px}
-.hint-item-a{font-size:13px;color:var(--muted);font-weight:300;line-height:1.65}
+.hint-item-q{font-size:15px;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.4}
+.hint-item-a{font-size:13px;color:var(--muted);font-weight:300;line-height:1.7}
 
 /* SECTION HEAD */
 .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px}
@@ -240,7 +242,7 @@ function renderFooter(){
   return `<footer class="cta-footer">
     <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости</p>
     <h2 class="cta-footer-title">Есть вопросы —<br><em>напишите.</em></h2>
-    <p class="cta-footer-sub">Напишите — отвечу честно, даже если это не в мою пользу.</p>
+    <p class="cta-footer-sub">Обратная связь важна — говорите что думаете.</p>
     <a class="tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z" fill="currentColor"/></svg>
       Написать в Telegram
@@ -432,6 +434,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
         </div>
         <div class="prop-addr">${esc(prop.address||'Без адреса')}</div>
         <div class="prop-meta">
+          ${prop.rooms?`<span class="prop-meta-item"><strong>${esc(prop.rooms)}</strong>-комн.</span>`:''}
           ${prop.area?`<span class="prop-meta-item"><strong>${esc(prop.area)}</strong> м²</span>`:''}
           ${prop.floor?`<span class="prop-meta-item"><strong>${esc(prop.floor)}</strong> эт.</span>`:''}
           ${prop.condition?`<span class="prop-meta-item">${esc(prop.condition)}</span>`:''}
@@ -474,6 +477,7 @@ function renderCompare(props){
   const rows=[
     {label:'Цена',key:'price',fmt:fmtPrice},
     {label:'Площадь',key:'area',fmt:v=>v?v+' м²':'—'},
+    {label:'Комнат',key:'rooms',fmt:v=>v||'—'},
     {label:'Этаж',key:'floor',fmt:v=>v||'—'},
     {label:'Состояние',key:'condition',fmt:v=>v||'—'},
     {label:'Вложения',key:'renovation',fmt:v=>v||'—'},
@@ -597,6 +601,7 @@ function renderAgentView(buyerId){
           <div class="af"><label>Адрес *</label><input class="ai" id="np-address" placeholder="ул. Ленина, 12, кв. 45"></div>
           <div class="af"><label>Цена ₽</label><input class="ai" id="np-price" placeholder="8500000" type="number" oninput="updatePpmHint('np')"></div>
           <div class="af"><label>Площадь м²</label><input class="ai" id="np-area" placeholder="52" oninput="updatePpmHint('np')"><span id="np-ppm" style="font-size:11px;color:rgba(229,229,229,0.4);margin-top:4px;display:block;min-height:16px"></span></div>
+          <div class="af"><label>Комнатность</label><select class="ai" id="np-rooms"><option value="">Не указано</option><option>Студия</option><option>1</option><option>2</option><option>3</option><option>4+</option></select></div>
           <div class="af"><label>Этаж</label><input class="ai" id="np-floor" placeholder="4/9"></div>
           <div class="af"><label>Состояние</label>
             <select class="ai" id="np-condition">
@@ -651,7 +656,7 @@ function addProp(buyerId){
   const address=get('np-address');
   if(!address){alert('Укажите адрес');return;}
   const prop={
-    address,price:get('np-price'),area:get('np-area'),floor:get('np-floor'),
+    address,price:get('np-price'),area:get('np-area'),rooms:get('np-rooms'),floor:get('np-floor'),
     condition:get('np-condition'),renovation:get('np-renovation'),
     showDate:get('np-showDate'),status:get('np-status')||'planned',
     url:get('np-url'),agentComment:get('np-comment'),
@@ -715,7 +720,7 @@ function saveModalProp(){
   const prop=allData.buyers[currentBuyerId]?.props[editingPropIdx];
   if(!prop)return;
   const get=id=>document.getElementById(id)?.value?.trim()||'';
-  prop.address=get('ep-address');prop.price=get('ep-price');prop.area=get('ep-area');
+  prop.address=get('ep-address');prop.price=get('ep-price');prop.area=get('ep-area');prop.rooms=get('ep-rooms');
   prop.floor=get('ep-floor');prop.condition=get('ep-condition');prop.renovation=get('ep-renovation');
   prop.showDate=get('ep-showDate');prop.status=get('ep-status');
   prop.url=get('ep-url');prop.agentComment=get('ep-comment');
