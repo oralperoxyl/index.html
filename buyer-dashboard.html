@@ -703,6 +703,7 @@ function openEditProp(buyerId,idx){
     field('ep-showDate','Дата показа','date',prop.showDate)+
     field('ep-url','Ссылка','url',prop.url)+
     select('ep-condition','Состояние',condOpts,prop.condition)+
+    select('ep-rooms','Комнатность',['','Студия','1','2','3','4+'],prop.rooms||'')+
     select('ep-status','Статус',statOpts,prop.status)+
     '<div class="af full"><label>Комментарий агента</label><textarea class="ai" id="ep-comment" rows="3">'+esc(prop.agentComment||'')+'</textarea></div>'+
     '<div class="abtn-row" style="grid-column:1/-1"><button class="abtn white" onclick="saveModalProp()">Сохранить</button><button class="abtn danger" onclick="deleteModalProp()">Удалить объект</button></div>';
