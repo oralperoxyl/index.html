@@ -105,8 +105,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .prop-body-full{grid-column:1/-1}
 .prop-field-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .prop-field-val{font-size:14px;color:var(--text);font-weight:300;line-height:1.6}
-.prop-link{font-size:13px;color:var(--accent);text-decoration:none}
-.prop-link:hover{text-decoration:underline}
+.prop-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:400;letter-spacing:0.04em;color:var(--muted);text-decoration:none;border:1px solid rgba(0,0,0,0.15);border-radius:999px;padding:6px 14px;transition:all 0.2s}
+.prop-link:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
 
 /* RATING */
 .rating-wrap{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
@@ -466,7 +466,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
         </div>`:''}
         ${prop.url?`<div>
           <div class="prop-body-label">Объявление</div>
-          <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть ↗</a>
+          <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть объявление</a>
         </div>`:''}
       </div>
       ${renderRating(buyerId,prop._origIdx!==undefined?prop._origIdx:idx,prop)}
@@ -504,7 +504,7 @@ function renderCompare(props){
     <table class="compare-table">
       <thead><tr>
         <th></th>
-        ${list.map(p=>`<th class="obj-col">${esc(p.address?.split(',')[0]||'Объект')}</th>`).join('')}
+        ${list.map(p=>`<th class="obj-col">${esc(p.address||'Объект')}</th>`).join('')}
       </tr></thead>
       <tbody>
         ${rows.map(r=>`<tr>
