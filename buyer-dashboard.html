@@ -73,7 +73,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 /* PROPERTY CARDS */
 .props-list{display:grid;gap:2px;margin-bottom:56px}
 .prop-card{background:#fff;border-radius:2px;overflow:hidden}
-.prop-card-header{padding:22px 24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start;cursor:pointer;user-select:none;transition:background 0.15s}
+.prop-card-header{padding:22px 24px;display:grid;grid-template-columns:32px 1fr auto;gap:16px;align-items:start;cursor:pointer;user-select:none;transition:background 0.15s}
+.prop-num{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.18);padding-top:3px}
 .prop-card-header:hover{background:rgba(0,0,0,0.015)}
 .prop-status-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
 .prop-status{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border-radius:999px;font-weight:500}
@@ -199,6 +200,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .footer-copy a:hover{color:rgba(229,229,229,0.6)}
 
 @media(max-width:640px){
+  .prop-card-header{grid-template-columns:28px 1fr auto}
   .site-header{padding:0 20px}
   .hero{padding:56px 20px 48px}
   .content{padding:36px 20px 60px}
@@ -425,6 +427,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
 
   return `<div class="prop-card" id="prop-${idx}">
     <div class="prop-card-header" onclick="toggleProp(${idx})">
+      <div class="prop-num">${String(idx+1).padStart(2,'0')}</div>
       <div>
         <div class="prop-status-row">
           <span class="prop-status ${statusCls}">${statusLabel}</span>
