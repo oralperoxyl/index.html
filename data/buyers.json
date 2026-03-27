@@ -78,6 +78,21 @@
           "clientRating": 0,
           "clientComment": "",
           "addedAt": "2026-03-27"
+        },
+        {
+          "address": "ул. Кораблестроителей, д. 46к1",
+          "price": "15700000",
+          "area": "75",
+          "floor": "10/14",
+          "condition": "Требует ремонта",
+          "renovation": "",
+          "showDate": "",
+          "status": "planned",
+          "url": "https://spb.cian.ru/sale/flat/327671035/",
+          "agentComment": "",
+          "clientRating": 0,
+          "clientComment": "",
+          "addedAt": "2026-03-27"
         }
       ],
       "nextStep": "",
