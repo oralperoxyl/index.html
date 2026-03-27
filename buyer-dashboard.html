@@ -55,6 +55,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .next-step-text{font-size:15px;color:var(--text);font-weight:400;line-height:1.6}
 
 /* HINT BLOCK — как оценивать */
+.logic-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.logic-block-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.logic-block-text{font-size:14px;line-height:1.8;color:var(--muted);font-weight:300;max-width:640px}
+.logic-block-text p+p{margin-top:12px}
+.logic-block-text strong{color:var(--text);font-weight:500}
+
 .hint-block{margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid var(--border)}
 .hint-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
 .hint-items{display:grid;gap:0}
@@ -550,6 +556,14 @@ function renderClientView(buyerId){
     </section>
     <div class="content">
       ${buyer.nextStep?`<div class="next-step-block"><span class="next-step-label">Следующий шаг</span><span class="next-step-text">${esc(buyer.nextStep)}</span></div>`:''}
+
+      <div class="logic-block">
+        <div class="logic-block-title">Как мы отбираем объекты</div>
+        <div class="logic-block-text">
+          <p>Здесь только те квартиры, которые прошли первичный отбор — по соотношению цены и площади в конкретной локации. <strong>Это не весь рынок, а лучшее из того что реально стоит смотреть прямо сейчас.</strong></p>
+          <p>Если какого-то объекта нет в списке — скорее всего он уступает по цене за метр, имеет скрытые сложности, или я его уже отсмотрел и не добавил намеренно. Если хотите обсудить конкретный вариант — просто напишите.</p>
+        </div>
+      </div>
 
       <div class="hint-block">
         <div class="hint-title">На что обратить внимание при оценке</div>
