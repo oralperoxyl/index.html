@@ -65,7 +65,8 @@
           "agentComment": "Ждем подтверждения.",
           "clientRating": 0,
           "clientComment": "",
-          "addedAt": "2026-03-27"
+          "addedAt": "2026-03-27",
+          "rooms": "3"
         },
         {
           "address": "ул. Кораблестроителей, д. 35б",
