@@ -141,8 +141,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .abtn{padding:10px 24px;border:none;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;transition:opacity 0.2s;letter-spacing:0.02em;font-family:var(--sans)}
 .abtn.white{background:#fff;color:var(--dark)}
 .abtn.white:hover{opacity:0.9}
-.abtn.danger{background:transparent;color:rgba(229,229,229,0.6);border:1px solid rgba(192,57,43,0.3)}
-.abtn.danger:hover{opacity:0.7}
+.abtn.danger{background:transparent;color:rgba(229,229,229,0.5);border:1px solid rgba(192,57,43,0.3)}
+.abtn.danger:hover{background:var(--red);color:#fff;border-color:var(--red);opacity:1}
 .abtn-row{display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap;grid-column:1/-1}
 
 /* PICKER */
@@ -374,7 +374,7 @@ function renderRating(buyerId,propIdx,prop){
 }
 
 function setRating(buyerId,propIdx,val){
-  document.querySelectorAll(`#stars-${propIdx} .rating-star`).forEach((btn,i)=>{
+  document.querySelectorAll(`#stars-${propIdx} .star-btn`).forEach((btn,i)=>{
     btn.classList.toggle('active',i<val);
     btn.dataset.val=val;
   });
