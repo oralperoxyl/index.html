@@ -241,7 +241,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 function renderFooter(){
   return `<footer class="cta-footer">
     <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости</p>
-    <h2 class="cta-footer-title">Есть вопросы —<br><em>напишите.</em></h2>
+    <h2 class="cta-footer-title">Есть вопросы —<br><em>свяжитесь со мной.</em></h2>
     <p class="cta-footer-sub">Обратная связь важна — говорите что думаете.</p>
     <a class="tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z" fill="currentColor"/></svg>
@@ -505,6 +505,21 @@ function renderCompare(props){
   </div>`;
 }
 
+
+// ── SORT PROPS ───────────────────────────────────────────────
+function sortProps(props){
+  const order={viewed:0,considering:1,declined:2,planned:3};
+  return props.slice().sort(function(a,b){
+    const sa=order[a.status]??2;
+    const sb=order[b.status]??2;
+    if(sa!==sb)return sa-sb;
+    // within same status — sort by date desc (newest first)
+    const da=a.showDate||a.addedAt||'';
+    const db=b.showDate||b.addedAt||'';
+    return db.localeCompare(da);
+  });
+}
+
 // ── CLIENT VIEW ──────────────────────────────────────────────
 function renderClientView(buyerId){
   const buyer=allData.buyers[buyerId];
@@ -513,7 +528,7 @@ function renderClientView(buyerId){
     return;
   }
   loadLocalRatings(buyerId,buyer.props||[]);
-  const props=buyer.props||[];
+  const props=sortProps(buyer.props||[]);
   const planned=props.filter(p=>p.status==='planned').length;
   const viewed=props.filter(p=>p.status!=='planned').length;
 
@@ -573,7 +588,7 @@ function renderAgentView(buyerId){
   const buyer=allData.buyers[buyerId];
   if(!buyer)return;
   loadLocalRatings(buyerId,buyer.props||[]);
-  const props=buyer.props||[];
+  const props=sortProps(buyer.props||[]);
   const dashUrl=window.location.origin+window.location.pathname+'?id='+buyerId;
 
   document.getElementById('appRoot').innerHTML=`
