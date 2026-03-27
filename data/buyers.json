@@ -63,6 +63,21 @@
           "clientRating": 0,
           "clientComment": "",
           "addedAt": "2026-03-27"
+        },
+        {
+          "address": "ул. Кораблестроителей, д. 35б",
+          "price": "16500000",
+          "area": "68,3",
+          "floor": "4/12",
+          "condition": "Косметический ремонт",
+          "renovation": "",
+          "showDate": "",
+          "status": "planned",
+          "url": "https://spb.cian.ru/sale/flat/328292769/",
+          "agentComment": "",
+          "clientRating": 0,
+          "clientComment": "",
+          "addedAt": "2026-03-27"
         }
       ],
       "nextStep": "",
