@@ -18,6 +18,21 @@
           "clientRating": 0,
           "clientComment": "",
           "addedAt": "2026-03-27"
+        },
+        {
+          "address": "наб. Новосмоленская, д. 8",
+          "price": "12900000",
+          "area": "51,4",
+          "floor": "4/22",
+          "condition": "Требует ремонта",
+          "renovation": "2000000",
+          "showDate": "2026-03-27",
+          "status": "declined",
+          "url": "https://www.avito.ru/sankt-peterburg/kvartiry/2-k._kvartira_514_m_422_et._7580780565?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSnmFyZLq3d3CwR3hygV--gYVPmLe_o5J1LSAAAP__GjTBGUYAAAA",
+          "agentComment": "Требует ремонта. Вторая жилая комната немного уменьшена за счет кладовки. Требуется ремонт, ориентировочно 2 млн. Цена почти на уровне трехкомнатных квартир в локации без ремонта.",
+          "clientRating": 0,
+          "clientComment": "",
+          "addedAt": "2026-03-27"
         }
       ],
       "nextStep": "",
