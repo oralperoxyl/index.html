@@ -33,6 +33,21 @@
           "clientRating": 0,
           "clientComment": "",
           "addedAt": "2026-03-27"
+        },
+        {
+          "address": "наб. Новосмоленская, д. 1лит3",
+          "price": "14000000",
+          "area": "52,7",
+          "floor": "4/11",
+          "condition": "Косметический ремонт",
+          "renovation": "2000000",
+          "showDate": "2026-03-27",
+          "status": "declined",
+          "url": "https://www.avito.ru/sankt-peterburg/kvartiry/2-k._kvartira_527_m_411_et._7858896472?context=H4sIAAAAAAAA_0q0MrKqLrYytlIqLkpWsi62srRSSkssyy_KLEktBvENrZQqQLSRkZVSnmFyZLq3d3CwR3hygV--gYVPmLe_o5J1LSAAAP__GjTBGUYAAAA",
+          "agentComment": "Вид на реку. Одно окно довольно большое, должно быть много естественного света. Ремонт требуется. Цена примерно соответствует трехкомнатным с простым ремонтом чуть дальше от метро.",
+          "clientRating": 0,
+          "clientComment": "",
+          "addedAt": "2026-03-27"
         }
       ],
       "nextStep": "",
