@@ -118,8 +118,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .rating-comment::placeholder{color:var(--muted)}
 .rating-comment:focus{border-color:var(--text)}
 .rating-actions{display:flex;align-items:center;gap:12px;margin-top:12px}
-.rating-save-btn{padding:8px 20px;background:var(--dark);color:#fff;border:none;border-radius:999px;font-size:12px;font-weight:500;letter-spacing:0.04em;cursor:pointer;transition:opacity 0.2s}
-.rating-save-btn:hover{opacity:0.8}
+.rating-save-btn{padding:8px 20px;background:none;color:var(--text);border:1px solid rgba(0,0,0,0.15);border-radius:999px;font-size:12px;font-weight:400;letter-spacing:0.04em;cursor:pointer;transition:all 0.2s;font-family:var(--sans)}
+.rating-save-btn:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
 .rating-ok{font-size:12px;color:var(--green);display:none}
 .existing-rating .stars-display{color:#F59E0B;font-size:18px;letter-spacing:2px}
 .existing-rating .rating-comment-text{font-size:13px;color:var(--muted);font-weight:300;margin-top:6px}
@@ -331,6 +331,12 @@ function debounceSave(){clearTimeout(saveTimer);saveTimer=setTimeout(ghSave,1200
 function slugify(s){return s.toLowerCase().replace(/[^а-яёa-z0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,40);}
 function shortId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,4);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtNum(v){
+  const n=Number(String(v||'').replace(/\D/g,''));
+  if(!n)return v||'';
+  return new Intl.NumberFormat('ru-RU').format(n)+' ₽';
+}
+
 function fmtPpm(price,area){
   const p=Number(String(price||'').replace(/\D/g,''));
   const a=parseFloat(area||0);
@@ -449,7 +455,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
           ${prop.area?`<span class="prop-meta-item"><strong>${esc(prop.area)}</strong> м²</span>`:''}
           ${prop.floor?`<span class="prop-meta-item"><strong>${esc(prop.floor)}</strong> эт.</span>`:''}
           ${prop.condition?`<span class="prop-meta-item">${esc(prop.condition)}</span>`:''}
-          ${prop.renovation?`<span class="prop-meta-item">вложения <strong>${esc(prop.renovation)}</strong></span>`:''}
+          ${prop.renovation?`<span class="prop-meta-item">вложения <strong>${fmtNum(prop.renovation)}</strong></span>`:''}
           ${fmtPpm(prop.price,prop.area)?`<span class="prop-meta-item" style="color:var(--accent);font-weight:400">${fmtPpm(prop.price,prop.area)}</span>`:''}
         </div>
       </div>
@@ -465,7 +471,6 @@ function renderPropCard(buyerId,prop,idx,isAgent){
           <div class="prop-body-val">${esc(prop.agentComment)}</div>
         </div>`:''}
         ${prop.url?`<div>
-          <div class="prop-body-label">Объявление</div>
           <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть объявление</a>
         </div>`:''}
       </div>
