@@ -3,7 +3,23 @@
     "дмитрий-елена-mn990sz0ij1z": {
       "name": "Дмитрий, Елена",
       "budget": "",
-      "props": [],
+      "props": [
+        {
+          "address": "ул. Беринга, 27к1",
+          "price": "16490000",
+          "area": "55,9",
+          "floor": "4/16",
+          "condition": "Косметический ремонт",
+          "renovation": "2000000",
+          "showDate": "2026-03-24",
+          "status": "declined",
+          "url": "https://spb.cian.ru/sale/flat/326580057/",
+          "agentComment": "Проходная комната, ремонт \"на любителя\". Запах в ванной. Требует косметического ремонта. Формат не подходит.",
+          "clientRating": 0,
+          "clientComment": "",
+          "addedAt": "2026-03-27"
+        }
+      ],
       "nextStep": "",
       "createdAt": "2026-03-27"
     }
