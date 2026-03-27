@@ -152,11 +152,11 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .picker-item-name{font-size:15px;font-weight:500;margin-bottom:3px}
 .picker-item-meta{font-size:13px;color:var(--muted);font-weight:300}
 .picker-btns{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap}
-.pbtn{padding:8px 16px;border-radius:999px;font-size:12px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:none;color:var(--text);transition:all 0.15s;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--sans)}
+.pbtn{padding:8px 20px;border-radius:999px;font-size:12px;font-weight:400;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.15);background:none;color:var(--muted);transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--sans)}
 .pbtn:hover{background:var(--dark);color:#fff;border-color:var(--dark)}
-.pbtn.green{background:var(--green);color:#fff;border-color:var(--green)}
-.pbtn.green:hover{opacity:0.85}
-.pbtn.red{color:var(--red);border-color:rgba(192,57,43,0.2)}
+.pbtn.green{background:none;color:var(--green);border-color:rgba(45,138,78,0.3)}
+.pbtn.green:hover{background:var(--green);color:#fff;border-color:var(--green)}
+.pbtn.red{color:rgba(192,57,43,0.6);border-color:rgba(192,57,43,0.15);background:none}
 .pbtn.red:hover{background:var(--red);color:#fff;border-color:var(--red)}
 
 /* NEW BUYER */
@@ -240,7 +240,7 @@ function renderFooter(){
   return `<footer class="cta-footer">
     <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости</p>
     <h2 class="cta-footer-title">Есть вопросы —<br><em>напишите.</em></h2>
-    <p class="cta-footer-sub">Отвечу на любой вопрос по объектам. Без давления.</p>
+    <p class="cta-footer-sub">Напишите — отвечу честно, даже если это не в мою пользу.</p>
     <a class="tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z" fill="currentColor"/></svg>
       Написать в Telegram
@@ -319,6 +319,14 @@ function debounceSave(){clearTimeout(saveTimer);saveTimer=setTimeout(ghSave,1200
 function slugify(s){return s.toLowerCase().replace(/[^а-яёa-z0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,40);}
 function shortId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,4);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtPpm(price,area){
+  const p=Number(String(price||'').replace(/\D/g,''));
+  const a=parseFloat(area||0);
+  if(!p||!a)return null;
+  const ppm=Math.round(p/a);
+  return new Intl.NumberFormat('ru-RU').format(ppm)+' ₽/м²';
+}
+
 function fmtPrice(p){if(!p)return '—';const n=Number(String(p).replace(/\D/g,''));if(!n)return p;return(n/1000000).toFixed(2).replace(/\.?0+$/,'')+' млн ₽';}
 
 // ── STATUS ──────────────────────────────────────────────────
@@ -428,6 +436,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
           ${prop.floor?`<span class="prop-meta-item"><strong>${esc(prop.floor)}</strong> эт.</span>`:''}
           ${prop.condition?`<span class="prop-meta-item">${esc(prop.condition)}</span>`:''}
           ${prop.renovation?`<span class="prop-meta-item">вложения <strong>${esc(prop.renovation)}</strong></span>`:''}
+          ${fmtPpm(prop.price,prop.area)?`<span class="prop-meta-item" style="color:var(--accent);font-weight:400">${fmtPpm(prop.price,prop.area)}</span>`:''}
         </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
@@ -586,8 +595,8 @@ function renderAgentView(buyerId){
         <div class="agent-section-title">Добавить объект</div>
         <div class="agent-grid" id="addPropForm">
           <div class="af"><label>Адрес *</label><input class="ai" id="np-address" placeholder="ул. Ленина, 12, кв. 45"></div>
-          <div class="af"><label>Цена ₽</label><input class="ai" id="np-price" placeholder="8500000" type="number"></div>
-          <div class="af"><label>Площадь м²</label><input class="ai" id="np-area" placeholder="52"></div>
+          <div class="af"><label>Цена ₽</label><input class="ai" id="np-price" placeholder="8500000" type="number" oninput="updatePpmHint('np')"></div>
+          <div class="af"><label>Площадь м²</label><input class="ai" id="np-area" placeholder="52" oninput="updatePpmHint('np')"><span id="np-ppm" style="font-size:11px;color:rgba(229,229,229,0.4);margin-top:4px;display:block;min-height:16px"></span></div>
           <div class="af"><label>Этаж</label><input class="ai" id="np-floor" placeholder="4/9"></div>
           <div class="af"><label>Состояние</label>
             <select class="ai" id="np-condition">
@@ -660,36 +669,40 @@ function openEditProp(buyerId,idx){
   editingPropIdx=idx;
   const prop=allData.buyers[buyerId]?.props[idx];
   if(!prop)return;
-
   document.getElementById('modalTitle').textContent='Редактировать объект';
   document.getElementById('editModal').classList.add('open');
 
-  const fields=[
-    {id:'ep-address',label:'Адрес',val:prop.address,type:'text'},
-    {id:'ep-price',label:'Цена ₽',val:prop.price,type:'number'},
-    {id:'ep-area',label:'Площадь м²',val:prop.area,type:'text'},
-    {id:'ep-floor',label:'Этаж',val:prop.floor,type:'text'},
-    {id:'ep-renovation',label:'Вложения в ремонт',val:prop.renovation,type:'text'},
-    {id:'ep-showDate',label:'Дата показа',val:prop.showDate,type:'date'},
-    {id:'ep-url',label:'Ссылка',val:prop.url,type:'url'},
-  ];
-  const selects=`
-    <div class="af"><label>Состояние</label>
-      <select class="ai" id="ep-condition">
-        ${['','С ремонтом','Косметический ремонт','Требует ремонта','Без ремонта','Евроремонт'].map(v=>`<option${v===prop.condition?' selected':''}>${v}</option>`).join('')}
-      </select>
-    </div>
-    <div class="af"><label>Статус</label>
-      <select class="ai" id="ep-status">
-        ${Object.entries(STATUS_LABELS).map(([v,l])=>`<option value="${v}"${v===prop.status?' selected':''}>${l}</option>`).join('')}
-      </select>
-    </div>
-    <div class="af full"><label>Комментарий агента</label>
-      <textarea class="ai" id="ep-comment" rows="3">${esc(prop.agentComment||'')}</textarea>
-    </div>`;
+  function field(id,label,type,val){
+    const ppm=id==='ep-area'?'<span id="ep-ppm" style="font-size:11px;color:rgba(229,229,229,0.4);margin-top:4px;display:block;min-height:16px"></span>':'';
+    const oninp=(id==='ep-price'||id==='ep-area')?' oninput="updatePpmHint(\u0027ep\u0027)"':'';
+    return '<div class="af"><label>'+label+'</label><input class="ai" id="'+id+'" type="'+type+'" value="'+esc(val||'')+'"'+oninp+'>'+ppm+'</div>';
+  }
+  function select(id,label,opts,curVal){
+    const options=opts.map(function(o){
+      const v=typeof o==='object'?o.v:o;
+      const l=typeof o==='object'?o.l:o;
+      return '<option value="'+v+'"'+(v===curVal?' selected':'')+'>'+l+'</option>';
+    }).join('');
+    return '<div class="af"><label>'+label+'</label><select class="ai" id="'+id+'">'+options+'</select></div>';
+  }
+
+  const condOpts=['','С ремонтом','Косметический ремонт','Требует ремонта','Без ремонта','Евроремонт'];
+  const statOpts=Object.entries(STATUS_LABELS).map(function(e){return{v:e[0],l:e[1]};});
 
   document.getElementById('modalFields').innerHTML=
-    fields.map(f=>`<div class="af"><label>${f.label}</label><input class="ai" id="${f.id}" type="${f.type}" value="${esc(f.val||'')}"></div>`).join('')+selects;
+    field('ep-address','Адрес','text',prop.address)+
+    field('ep-price','Цена ₽','number',prop.price)+
+    field('ep-area','Площадь м²','text',prop.area)+
+    field('ep-floor','Этаж','text',prop.floor)+
+    field('ep-renovation','Вложения в ремонт','text',prop.renovation)+
+    field('ep-showDate','Дата показа','date',prop.showDate)+
+    field('ep-url','Ссылка','url',prop.url)+
+    select('ep-condition','Состояние',condOpts,prop.condition)+
+    select('ep-status','Статус',statOpts,prop.status)+
+    '<div class="af full"><label>Комментарий агента</label><textarea class="ai" id="ep-comment" rows="3">'+esc(prop.agentComment||'')+'</textarea></div>'+
+    '<div class="abtn-row" style="grid-column:1/-1"><button class="abtn white" onclick="saveModalProp()">Сохранить</button><button class="abtn danger" onclick="deleteModalProp()">Удалить объект</button></div>';
+
+  setTimeout(function(){updatePpmHint('ep');},50);
 }
 
 function closeModal(){
@@ -714,6 +727,16 @@ function deleteModalProp(){
   if(!confirm('Удалить этот объект?'))return;
   allData.buyers[currentBuyerId].props.splice(editingPropIdx,1);
   closeModal();debounceSave();renderAgentView(currentBuyerId);
+}
+
+// ── PPM HINT ────────────────────────────────────────────────
+function updatePpmHint(prefix){
+  const price=document.getElementById(prefix+'-price')?.value||'';
+  const area=document.getElementById(prefix+'-area')?.value||'';
+  const hint=document.getElementById(prefix+'-ppm');
+  if(!hint)return;
+  const ppm=fmtPpm(price,area);
+  hint.textContent=ppm?'→ '+ppm:'';
 }
 
 // ── COPY URL ─────────────────────────────────────────────────
