@@ -94,6 +94,22 @@
           "clientRating": 0,
           "clientComment": "",
           "addedAt": "2026-03-27"
+        },
+        {
+          "address": "наб. Новосмоленская, д. 8",
+          "price": "10150000",
+          "area": "35,5",
+          "rooms": "1",
+          "floor": "17/22",
+          "condition": "Требует ремонта",
+          "renovation": "3000000",
+          "showDate": "2026-03-26",
+          "status": "declined",
+          "url": "https://www.avito.ru/sankt-peterburg/kvartiry/1-k._kvartira_355_m_1722_et._7955629589?utm_campaign=native&utm_medium=item_page_android&utm_source=soc_sharing",
+          "agentComment": "Проверили формат однокомнатной квартиры под аренду. При этом жить продолжать в съемной. Решение на паузу с оплатой аренды.",
+          "clientRating": 0,
+          "clientComment": "",
+          "addedAt": "2026-03-27"
         }
       ],
       "nextStep": "",
