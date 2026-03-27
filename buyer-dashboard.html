@@ -50,9 +50,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .content{max-width:860px;margin:0 auto;padding:56px 40px 80px}
 
 /* NEXT STEP */
-.next-step-block{background:#fff;border-radius:2px;padding:20px 28px;margin-bottom:40px;border-left:3px solid var(--dark);display:flex;gap:20px;align-items:baseline}
-.next-step-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);flex-shrink:0;padding-top:2px}
-.next-step-text{font-size:15px;color:var(--text);font-weight:400;line-height:1.6}
+.steps-block{display:grid;gap:2px;margin-bottom:40px}
+.step-row{background:#fff;padding:18px 28px;display:flex;gap:20px;align-items:baseline}
+.step-row.situation{border-left:3px solid rgba(0,0,0,0.1)}
+.step-row.next{border-left:3px solid var(--dark)}
+.step-row-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);flex-shrink:0;padding-top:2px;min-width:110px}
+.step-row-text{font-size:15px;color:var(--text);font-weight:400;line-height:1.6}
 
 /* HINT BLOCK — как оценивать */
 .logic-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
@@ -555,7 +558,7 @@ function renderClientView(buyerId){
       </div>
     </section>
     <div class="content">
-      ${buyer.nextStep?`<div class="next-step-block"><span class="next-step-label">Следующий шаг</span><span class="next-step-text">${esc(buyer.nextStep)}</span></div>`:''}
+      ${(buyer.situation||buyer.nextStep)?`<div class="steps-block">${buyer.situation?`<div class="step-row situation"><span class="step-row-label">Сейчас</span><span class="step-row-text">${esc(buyer.situation)}</span></div>`:''} ${buyer.nextStep?`<div class="step-row next"><span class="step-row-label">Следующий шаг</span><span class="step-row-text">${esc(buyer.nextStep)}</span></div>`:''}</div>`:''}
 
       <div class="logic-block">
         <div class="logic-block-title">Как мы отбираем объекты</div>
@@ -621,10 +624,16 @@ function renderAgentView(buyerId){
       </div>
     </section>
     <div class="content">
-      <div style="margin-bottom:32px">
-        <div class="prop-body-label" style="margin-bottom:8px">Следующий шаг (виден клиенту)</div>
-        <textarea id="nextStepInput" placeholder="Например: ждём ответ по задатку на Ленина 12" rows="3" style="width:100%;border:none;border-bottom:1px solid var(--border);background:none;font-size:15px;padding:8px 0;outline:none;color:var(--text);font-family:var(--sans);resize:none;line-height:1.6" oninput="saveNextStep('${buyerId}')">${esc(buyer.nextStep||'')}</textarea>
-      </div>
+      <div style="margin-bottom:32px;display:grid;gap:16px">
+          <div>
+            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:8px">Текущая ситуация</div>
+            <textarea id="situationInput" placeholder="Например: задаток подписан, ждём одобрения ипотеки" rows="2" style="width:100%;border:none;border-bottom:1px solid rgba(255,255,255,0.1);background:none;font-size:15px;padding:8px 0;outline:none;color:#E5E5E5;font-family:var(--sans);resize:none;line-height:1.6" oninput="saveSituation('${buyerId}')">${esc(buyer.situation||'')}</textarea>
+          </div>
+          <div>
+            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:8px">Следующий шаг</div>
+            <textarea id="nextStepInput" placeholder="Например: встреча с банком во вторник, 14:00" rows="2" style="width:100%;border:none;border-bottom:1px solid rgba(255,255,255,0.1);background:none;font-size:15px;padding:8px 0;outline:none;color:#E5E5E5;font-family:var(--sans);resize:none;line-height:1.6" oninput="saveNextStep('${buyerId}')">${esc(buyer.nextStep||'')}</textarea>
+          </div>
+        </div>
 
       <!-- Add property -->
       <div class="agent-section" style="margin-bottom:32px">
@@ -673,6 +682,16 @@ function renderAgentView(buyerId){
 
 // ── NEXT STEP ────────────────────────────────────────────────
 let nextStepTimer=null;
+let situationTimer=null;
+function saveSituation(buyerId){
+  clearTimeout(situationTimer);
+  situationTimer=setTimeout(()=>{
+    const val=document.getElementById('situationInput')?.value||'';
+    if(allData.buyers[buyerId])allData.buyers[buyerId].situation=val;
+    debounceSave();
+  },800);
+}
+
 function saveNextStep(buyerId){
   clearTimeout(nextStepTimer);
   nextStepTimer=setTimeout(()=>{
