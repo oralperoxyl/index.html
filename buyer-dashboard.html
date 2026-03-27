@@ -56,8 +56,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 
 /* HINT BLOCK — как оценивать */
 .hint-block{margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid var(--border)}
-.hint-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:24px;display:flex;align-items:center;gap:10px}
-.hint-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.hint-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
 .hint-items{display:grid;gap:0}
 .hint-item{display:grid;grid-template-columns:32px 1fr;gap:0;align-items:start;padding:16px 0;border-top:1px solid var(--border)}
 .hint-item:last-child{border-bottom:1px solid var(--border)}
@@ -458,9 +457,9 @@ function renderPropCard(buyerId,prop,idx,isAgent){
           <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть ↗</a>
         </div>`:''}
       </div>
-      ${renderRating(buyerId,idx,prop)}
+      ${renderRating(buyerId,prop._origIdx!==undefined?prop._origIdx:idx,prop)}
       ${isAgent?`<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-        <button class="pbtn" onclick="openEditProp('${buyerId}',${idx});event.stopPropagation()">Редактировать</button>
+        <button class="pbtn" onclick="openEditProp('${buyerId}',${prop._origIdx!==undefined?prop._origIdx:idx});event.stopPropagation()">Редактировать</button>
       </div>`:''}
     </div>
   </div>`;
@@ -509,7 +508,7 @@ function renderCompare(props){
 // ── SORT PROPS ───────────────────────────────────────────────
 function sortProps(props){
   const order={viewed:0,considering:1,declined:2,planned:3};
-  return props.slice().sort(function(a,b){
+  return props.map(function(p,i){return Object.assign({},p,{_origIdx:i});}).sort(function(a,b){
     const sa=order[a.status]??2;
     const sb=order[b.status]??2;
     if(sa!==sb)return sa-sb;
@@ -606,7 +605,7 @@ function renderAgentView(buyerId){
     <div class="content">
       <div style="margin-bottom:32px">
         <div class="prop-body-label" style="margin-bottom:8px">Следующий шаг (виден клиенту)</div>
-        <input id="nextStepInput" value="${esc(buyer.nextStep||'')}" placeholder="Например: ждём ответ по задатку на Ленина 12" style="width:100%;border:none;border-bottom:1px solid var(--border);background:none;font-size:15px;padding:8px 0;outline:none;color:var(--text);font-family:var(--sans)" oninput="saveNextStep('${buyerId}')">
+        <textarea id="nextStepInput" placeholder="Например: ждём ответ по задатку на Ленина 12" rows="3" style="width:100%;border:none;border-bottom:1px solid var(--border);background:none;font-size:15px;padding:8px 0;outline:none;color:var(--text);font-family:var(--sans);resize:none;line-height:1.6" oninput="saveNextStep('${buyerId}')">${esc(buyer.nextStep||'')}</textarea>
       </div>
 
       <!-- Add property -->
