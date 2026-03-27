@@ -395,14 +395,14 @@ async function saveRating(buyerId,propIdx){
   if(saved){saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000);}
   // If agent is viewing — save to GH
   if(getToken()){debounceSave();}
-  renderApp();
+  renderClientView(buyerId);
 }
 
 async function resetRating(buyerId,propIdx){
   try{localStorage.removeItem(`rating-${buyerId}-${propIdx}`);}catch(e){}
   const buyer=allData.buyers[buyerId];
   if(buyer?.props[propIdx]){buyer.props[propIdx].clientRating=0;buyer.props[propIdx].clientComment='';}
-  renderApp();
+  renderClientView(buyerId);
 }
 
 // Load local ratings into data
@@ -739,14 +739,14 @@ function saveModalProp(){
   prop.floor=get('ep-floor');prop.condition=get('ep-condition');prop.renovation=get('ep-renovation');
   prop.showDate=get('ep-showDate');prop.status=get('ep-status');
   prop.url=get('ep-url');prop.agentComment=get('ep-comment');
-  closeModal();debounceSave();renderAgentView(currentBuyerId);
+  const _bid=currentBuyerId;closeModal();debounceSave();renderAgentView(_bid);
 }
 
 function deleteModalProp(){
   if(currentBuyerId===null||editingPropIdx===null)return;
   if(!confirm('Удалить этот объект?'))return;
   allData.buyers[currentBuyerId].props.splice(editingPropIdx,1);
-  closeModal();debounceSave();renderAgentView(currentBuyerId);
+  const _bid=currentBuyerId;closeModal();debounceSave();renderAgentView(_bid);
 }
 
 // ── PPM HINT ────────────────────────────────────────────────
