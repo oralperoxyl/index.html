@@ -686,16 +686,16 @@ function renderAgentView(buyerId){
       </div>
     </section>
     <div class="content">
-      <div style="margin-bottom:32px;display:grid;gap:16px">
+      <div class="agent-section" style="margin-bottom:32px"><div class="agent-section-title">Статус работы</div><div style="display:grid;gap:16px">
           <div>
             <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.55);margin-bottom:8px">Текущая ситуация</div>
-            <textarea id="situationInput" placeholder="Например: задаток подписан, ждём одобрения ипотеки" rows="2" style="width:100%;border:none;border-bottom:1px solid rgba(255,255,255,0.1);background:none;font-size:15px;padding:8px 0;outline:none;color:#F5F5F5;font-family:var(--sans);resize:none;line-height:1.6;border-radius:10px;padding:10px 14px;background:rgba(255,255,255,0.09)" oninput="saveSituation('${buyerId}')">${esc(buyer.situation||'')}</textarea>
+            <textarea id="situationInput" placeholder="Например: задаток подписан, ждём одобрения ипотеки" rows="2" style="width:100%;border:none;border-radius:10px;background:rgba(255,255,255,0.1);font-size:15px;padding:10px 14px;outline:none;color:#fff;font-family:var(--sans);resize:none;line-height:1.6" oninput="saveSituation('${buyerId}')">${esc(buyer.situation||'')}</textarea>
           </div>
           <div>
             <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.55);margin-bottom:8px">Следующий шаг</div>
-            <textarea id="nextStepInput" placeholder="Например: встреча с банком во вторник, 14:00" rows="2" style="width:100%;border:none;border-bottom:1px solid rgba(255,255,255,0.1);background:none;font-size:15px;padding:8px 0;outline:none;color:#F5F5F5;font-family:var(--sans);resize:none;line-height:1.6;border-radius:10px;padding:10px 14px;background:rgba(255,255,255,0.09)" oninput="saveNextStep('${buyerId}')">${esc(buyer.nextStep||'')}</textarea>
+            <textarea id="nextStepInput" placeholder="Например: встреча с банком во вторник, 14:00" rows="2" style="width:100%;border:none;border-radius:10px;background:rgba(255,255,255,0.1);font-size:15px;padding:10px 14px;outline:none;color:#fff;font-family:var(--sans);resize:none;line-height:1.6" oninput="saveNextStep('${buyerId}')">${esc(buyer.nextStep||'')}</textarea>
           </div>
-        </div>
+        </div></div>
 
       <!-- Add property -->
       <div class="agent-section" style="margin-bottom:32px">
