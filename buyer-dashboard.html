@@ -829,6 +829,7 @@ function openEditProp(buyerId,idx){
     field('ep-floor','Этаж','text',prop.floor)+
     field('ep-renovation','Вложения в ремонт','text',prop.renovation)+
     field('ep-showDate','Дата показа','date',prop.showDate)+
+    field('ep-showTime','Время показа','time',prop.showTime||'')+
     field('ep-url','Ссылка','url',prop.url)+
     select('ep-condition','Состояние',condOpts,prop.condition)+
     select('ep-rooms','Комнатность',['','Студия','1','2','3','4+'],prop.rooms||'')+
