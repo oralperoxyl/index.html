@@ -806,6 +806,7 @@ function openEditProp(buyerId,idx){
   editingPropIdx=idx;
   const prop=allData.buyers[buyerId]?.props[idx];
   if(!prop)return;
+  console.log('openEditProp idx:',idx,'prop:',JSON.stringify(prop));
   document.getElementById('modalTitle').textContent='Редактировать объект';
   document.getElementById('editModal').classList.add('open');
 
@@ -856,7 +857,11 @@ function saveModalProp(){
   const get=id=>document.getElementById(id)?.value?.trim()||'';
   prop.address=get('ep-address');prop.price=get('ep-price');prop.area=get('ep-area');prop.rooms=get('ep-rooms');
   prop.floor=get('ep-floor');prop.condition=get('ep-condition');prop.renovation=get('ep-renovation');
-  prop.showDate=get('ep-showDate');prop.showTime=get('ep-showTime');prop.status=get('ep-status');
+  const sd=get('ep-showDate');const st=get('ep-showTime');
+  console.log('saveModal sd:',sd,'st:',st,'status:',get('ep-status'));
+  if(sd)prop.showDate=sd; else if(!prop.showDate)prop.showDate='';
+  if(st)prop.showTime=st;
+  prop.status=get('ep-status');
   prop.url=get('ep-url');prop.agentComment=get('ep-comment');
   const _bid=currentBuyerId;if(allData.buyers[_bid]?.props[editingPropIdx])allData.buyers[_bid].props[editingPropIdx].updatedAt=new Date().toISOString().slice(0,10);closeModal();debounceSave();renderAgentView(_bid);
 }
