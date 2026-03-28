@@ -95,6 +95,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .props-list{display:grid;gap:2px;margin-bottom:56px}
 .prop-card{background:#fff;border-radius:2px;overflow:hidden}
 .prop-card-header{padding:22px 24px;display:grid;grid-template-columns:32px 1fr auto;gap:16px;align-items:start;cursor:pointer;user-select:none;transition:background 0.15s}
+.prop-card-header::after{content:'';display:block;grid-column:1/-1;height:0}
 .prop-num{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.18);padding-top:3px}
 .prop-card-header:hover,.prop-card-header:active{background:rgba(0,0,0,0.025)}
 .prop-status-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
@@ -109,13 +110,13 @@ button,a{-webkit-tap-highlight-color:transparent}
 .prop-meta-item{font-size:12px;color:var(--muted);font-weight:300}
 .prop-meta-item strong{color:var(--text);font-weight:500}
 .prop-price{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--text);white-space:nowrap;line-height:1.2}
-.prop-toggle{font-size:20px;color:rgba(0,0,0,0.2);transition:transform 0.25s;flex-shrink:0;margin-top:4px;line-height:1}
-.prop-card.open .prop-toggle{transform:rotate(45deg)}
+.prop-toggle-icon{width:20px;height:20px;flex-shrink:0;margin-top:4px;color:rgba(0,0,0,0.25);transition:transform 0.25s;display:block}
+.prop-card.open .prop-toggle-icon{transform:rotate(180deg)}
 
-.prop-body{display:none;border-top:1px solid var(--border);padding:24px}
+.prop-body{display:none;border-top:1px solid var(--border);padding:20px 24px 24px}
 .prop-card.open .prop-body{display:block}
-.prop-body-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
-.prop-body-full{grid-column:1/-1}
+.prop-body-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;margin-bottom:0}
+.prop-body-full{grid-column:1/-1;padding-top:4px}
 .prop-field-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .prop-field-val{font-size:14px;color:var(--text);font-weight:300;line-height:1.6}
 .prop-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:400;letter-spacing:0.04em;color:var(--muted);text-decoration:none;border:1px solid rgba(0,0,0,0.15);border-radius:999px;padding:6px 14px;transition:all 0.2s}
@@ -486,7 +487,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
         <div class="prop-price">${fmtPrice(prop.price)}</div>
-        <div class="prop-toggle-icon">+</div>
+        <svg class="prop-toggle-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
     </div>
     <div class="prop-body">
@@ -513,7 +514,11 @@ function renderPropCard(buyerId,prop,idx,isAgent){
 
 function toggleProp(idx){
   const card=document.getElementById(`prop-${idx}`);
-  card?.classList.toggle('open');
+  const wasOpen=card?.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.prop-card.open').forEach(el=>el.classList.remove('open'));
+  // Open this one if it was closed
+  if(!wasOpen)card?.classList.add('open');
 }
 
 // ── COMPARE TABLE ────────────────────────────────────────────
@@ -806,7 +811,6 @@ function openEditProp(buyerId,idx){
   editingPropIdx=idx;
   const prop=allData.buyers[buyerId]?.props[idx];
   if(!prop)return;
-  console.log('openEditProp idx:',idx,'prop:',JSON.stringify(prop));
   document.getElementById('modalTitle').textContent='Редактировать объект';
   document.getElementById('editModal').classList.add('open');
 
@@ -858,7 +862,6 @@ function saveModalProp(){
   prop.address=get('ep-address');prop.price=get('ep-price');prop.area=get('ep-area');prop.rooms=get('ep-rooms');
   prop.floor=get('ep-floor');prop.condition=get('ep-condition');prop.renovation=get('ep-renovation');
   const sd=get('ep-showDate');const st=get('ep-showTime');
-  console.log('saveModal sd:',sd,'st:',st,'status:',get('ep-status'));
   if(sd)prop.showDate=sd; else if(!prop.showDate)prop.showDate='';
   if(st)prop.showTime=st;
   prop.status=get('ep-status');
