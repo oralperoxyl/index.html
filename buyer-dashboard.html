@@ -114,11 +114,14 @@ button,a{-webkit-tap-highlight-color:transparent}
 .prop-card.open .prop-toggle-icon{transform:rotate(180deg)}
 
 .prop-body{display:none;border-top:1px solid var(--border);padding:20px 24px 24px}
+.prop-section{margin-bottom:16px}
+.prop-section:last-child{margin-bottom:0}
+.prop-section-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:400}
+.prop-section-val{font-size:14px;color:var(--text);font-weight:300;line-height:1.65}
 .prop-card.open .prop-body{display:block}
-.prop-body-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;margin-bottom:0}
-.prop-body-full{grid-column:1/-1;padding-top:4px}
-.prop-field-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.prop-field-val{font-size:14px;color:var(--text);font-weight:300;line-height:1.6}
+.prop-body-grid{display:flex;flex-direction:column;gap:0;margin-bottom:0}
+.prop-field-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:400}
+.prop-field-val{font-size:14px;color:var(--text);font-weight:300;line-height:1.65}
 .prop-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:400;letter-spacing:0.04em;color:var(--muted);text-decoration:none;border:1px solid rgba(0,0,0,0.15);border-radius:999px;padding:6px 14px;transition:all 0.2s}
 .prop-link:hover,.prop-link:active,.prop-link.is-touched{background:var(--dark);color:#fff;border-color:var(--dark)}
 
@@ -491,14 +494,14 @@ function renderPropCard(buyerId,prop,idx,isAgent){
       </div>
     </div>
     <div class="prop-body">
-      <div class="prop-body-grid">
-        ${prop.agentComment?`<div class="prop-agent-comment">
-          <div class="prop-body-label">Комментарий агента</div>
-          <div class="prop-body-val">${esc(prop.agentComment)}</div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        ${prop.agentComment?`<div>
+          <div class="prop-section-label">Комментарий агента</div>
+          <div class="prop-section-val">${esc(prop.agentComment)}</div>
         </div>`:''}
         ${prop.showDate?`<div>
-          <div class="prop-body-label">Дата показа</div>
-          <div class="prop-body-val">${fmtShowDate(prop.showDate,prop.showTime)}</div>
+          <div class="prop-section-label">Дата показа</div>
+          <div class="prop-section-val">${fmtShowDate(prop.showDate,prop.showTime)}</div>
         </div>`:''}
         ${prop.url?`<div>
           <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть объявление</a>
