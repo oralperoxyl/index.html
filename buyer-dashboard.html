@@ -344,12 +344,15 @@ function debounceSave(){clearTimeout(saveTimer);saveTimer=setTimeout(ghSave,1200
 function slugify(s){return s.toLowerCase().replace(/[^а-яёa-z0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,40);}
 function shortId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,4);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function fmtShowDate(d){
+function fmtShowDate(d,t){
   if(!d)return '';
   try{
-    const dt=new Date(d);
-    if(isNaN(dt))return d;
-    return dt.toLocaleString('ru-RU',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+    const parts=d.split('-');
+    const months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    const day=parseInt(parts[2]);
+    const mon=months[parseInt(parts[1])-1]||'';
+    const dateStr=day+' '+mon;
+    return t?dateStr+', '+t:dateStr;
   }catch(e){return d;}
 }
 
@@ -468,7 +471,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
       <div>
         <div class="prop-status-row">
           <span class="prop-status ${statusCls}">${statusLabel}</span>
-          ${(prop.showDate&&(prop.status==='planned'||prop.status==='pending'))?`<span style="font-size:12px;color:var(--muted);font-weight:300">${fmtShowDate(prop.showDate)}</span>`:''}
+          ${(prop.showDate&&(prop.status==='planned'||prop.status==='pending'))?`<span style="font-size:12px;color:var(--muted);font-weight:300">${fmtShowDate(prop.showDate,prop.showTime)}</span>`:''}
           ${rating?`<span style="font-size:12px;color:#F59E0B">${starsHtml(rating)}</span>`:''}
         </div>
         <div class="prop-addr">${esc(prop.address||'Без адреса')}</div>
@@ -727,7 +730,8 @@ function renderAgentView(buyerId){
             </select>
           </div>
           <div class="af"><label>Вложения в ремонт</label><input class="ai" id="np-renovation" placeholder="~500 000 ₽"></div>
-          <div class="af"><label>Дата и время показа</label><input class="ai" id="np-showDate" type="datetime-local"></div>
+          <div class="af"><label>Дата показа</label><input class="ai" id="np-showDate" type="date"></div>
+          <div class="af"><label>Время показа</label><input class="ai" id="np-showTime" type="time" placeholder="14:00"></div>
           <div class="af"><label>Статус</label>
             <select class="ai" id="np-status">
               <option value="planned">Запланирован</option>
@@ -782,7 +786,7 @@ function addProp(buyerId){
   const prop={
     address,price:get('np-price'),area:get('np-area'),rooms:get('np-rooms'),floor:get('np-floor'),
     condition:get('np-condition'),renovation:get('np-renovation'),
-    showDate:get('np-showDate'),status:get('np-status')||'planned',
+    showDate:get('np-showDate'),showTime:get('np-showTime'),status:get('np-status')||'planned',
     url:get('np-url'),agentComment:get('np-comment'),
     clientRating:0,clientComment:'',addedAt:new Date().toISOString().slice(0,10)
   };
@@ -847,7 +851,7 @@ function saveModalProp(){
   const get=id=>document.getElementById(id)?.value?.trim()||'';
   prop.address=get('ep-address');prop.price=get('ep-price');prop.area=get('ep-area');prop.rooms=get('ep-rooms');
   prop.floor=get('ep-floor');prop.condition=get('ep-condition');prop.renovation=get('ep-renovation');
-  prop.showDate=get('ep-showDate');prop.status=get('ep-status');
+  prop.showDate=get('ep-showDate');prop.showTime=get('ep-showTime');prop.status=get('ep-status');
   prop.url=get('ep-url');prop.agentComment=get('ep-comment');
   const _bid=currentBuyerId;if(allData.buyers[_bid]?.props[editingPropIdx])allData.buyers[_bid].props[editingPropIdx].updatedAt=new Date().toISOString().slice(0,10);closeModal();debounceSave();renderAgentView(_bid);
 }
