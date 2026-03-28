@@ -495,6 +495,10 @@ function renderPropCard(buyerId,prop,idx,isAgent){
           <div class="prop-body-label">Комментарий агента</div>
           <div class="prop-body-val">${esc(prop.agentComment)}</div>
         </div>`:''}
+        ${prop.showDate?`<div>
+          <div class="prop-body-label">Дата показа</div>
+          <div class="prop-body-val">${fmtShowDate(prop.showDate,prop.showTime)}</div>
+        </div>`:''}
         ${prop.url?`<div>
           <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть объявление</a>
         </div>`:''}
