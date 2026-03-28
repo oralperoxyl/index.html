@@ -94,13 +94,14 @@
           "condition": "Требует ремонта",
           "renovation": "",
           "showDate": "",
-          "status": "planned",
+          "status": "pending",
           "url": "https://spb.cian.ru/sale/flat/327671035/",
-          "agentComment": "",
+          "agentComment": "Ждем подтверждения на воскресенье в 18:00",
           "clientRating": 0,
           "clientComment": "",
           "addedAt": "2026-03-27",
-          "rooms": "3"
+          "rooms": "3",
+          "updatedAt": "2026-03-28"
         },
         {
           "address": "наб. Новосмоленская, д. 8",
