@@ -59,6 +59,17 @@ button,a{-webkit-tap-highlight-color:transparent}
 .step-row-text{font-size:15px;color:var(--text);font-weight:400;line-height:1.6}
 
 /* HINT BLOCK — как оценивать */
+.updates-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.updates-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.updates-list{display:grid;gap:2px}
+.update-item{background:#fff;border-radius:2px;padding:14px 20px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.update-dot{width:6px;height:6px;border-radius:50%;background:var(--dark);margin-top:5px;flex-shrink:0}
+.update-dot.new{background:var(--accent)}
+.update-body{}
+.update-addr{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.update-text{font-size:12px;color:var(--muted);font-weight:300;line-height:1.6}
+.update-date{font-size:11px;color:var(--muted);opacity:0.5;margin-top:3px}
+
 .logic-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
 .logic-block-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
 .logic-block-text{font-size:14px;line-height:1.8;color:var(--muted);font-weight:300;max-width:640px}
@@ -138,15 +149,15 @@ button,a{-webkit-tap-highlight-color:transparent}
 .compare-stars{color:#F59E0B}
 
 /* AGENT PANEL */
-.agent-section{background:var(--dark);border-radius:2px;padding:32px;margin-bottom:32px}
-.agent-section-title{font-family:var(--serif);font-size:20px;font-weight:400;color:#E5E5E5;margin-bottom:24px}
+.agent-section{background:var(--dark);border-radius:16px;padding:32px;margin-bottom:32px}
+.agent-section-title{font-family:var(--serif);font-size:20px;font-weight:400;color:#F5F5F5;margin-bottom:24px}
 .agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .af{display:flex;flex-direction:column;gap:6px}
 .af.full{grid-column:1/-1}
-.af label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.4)}
-.ai{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:2px;padding:10px 12px;font-family:var(--sans);font-size:14px;color:#E5E5E5;outline:none;transition:border-color 0.2s;width:100%}
-.ai:focus{border-color:rgba(255,255,255,0.3)}
-.ai::placeholder{color:rgba(255,255,255,0.2)}
+.af label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.55)}
+.ai{background:rgba(255,255,255,0.09);border:none;border-radius:10px;padding:11px 14px;font-family:var(--sans);font-size:14px;color:#E5E5E5;outline:none;transition:background 0.2s;width:100%}
+.ai:focus{background:rgba(255,255,255,0.14)}
+.ai::placeholder{color:rgba(255,255,255,0.25)}
 .ai option{background:var(--dark)}
 .abtn{padding:10px 24px;border:none;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;transition:opacity 0.2s;letter-spacing:0.02em;font-family:var(--sans)}
 .abtn.white{background:#fff;color:var(--dark)}
@@ -192,7 +203,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 /* EDIT MODAL */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
 .overlay.open{display:flex}
-.modal{background:var(--dark);border-radius:4px;padding:32px;width:100%;max-width:560px;position:relative;margin:auto}
+.modal{background:#2C2C2E;border-radius:16px;padding:32px;width:100%;max-width:560px;position:relative;margin:auto}
 .modal h3{font-family:var(--serif);font-size:20px;font-weight:400;color:#E5E5E5;margin-bottom:24px}
 .modal-x{position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(229,229,229,0.4);font-size:20px;cursor:pointer;line-height:1;padding:4px}
 .modal-x:hover{color:rgba(229,229,229,0.8)}
@@ -537,6 +548,50 @@ function sortProps(props){
   });
 }
 
+
+// ── UPDATES BLOCK ────────────────────────────────────────────
+function renderUpdates(props){
+  if(!props||!props.length)return '';
+  const now=new Date();
+  const recent=props.filter(function(p){
+    const d=new Date(p.updatedAt||p.addedAt||'2000-01-01');
+    return (now-d)/(1000*60*60*24)<=7;
+  }).slice(0,5);
+  if(!recent.length)return '';
+
+  function relDate(ds){
+    if(!ds)return '';
+    const d=new Date(ds);
+    const diff=Math.floor((now-d)/(1000*60*60*24));
+    if(diff===0)return 'сегодня';
+    if(diff===1)return 'вчера';
+    return diff+' дн. назад';
+  }
+  function updateText(p){
+    if(p.updatedAt&&p.updatedAt!==p.addedAt)return p.agentComment?'Обновлён комментарий агента':'Обновлены данные объекта';
+    return 'Добавлен новый объект';
+  }
+  function isNew(p){return !p.updatedAt||p.updatedAt===p.addedAt;}
+
+  const items=recent.map(function(p){
+    const dotClass='update-dot'+(isNew(p)?' new':'');
+    return '<div class="update-item">'+
+      '<div class="'+dotClass+'"></div>'+
+      '<div class="update-body">'+
+        '<div class="update-addr">'+esc(p.address||'Объект')+'</div>'+
+        '<div class="update-text">'+updateText(p)+'</div>'+
+        '<div class="update-date">'+relDate(p.updatedAt||p.addedAt)+'</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+
+  return '<div class="updates-block">'+
+    '<div class="updates-title">Обновления</div>'+
+    '<div class="updates-list">'+items+'</div>'+
+  '</div>';
+}
+
+
 // ── CLIENT VIEW ──────────────────────────────────────────────
 function renderClientView(buyerId){
   const buyer=allData.buyers[buyerId];
@@ -566,6 +621,7 @@ function renderClientView(buyerId){
     <div class="content">
       ${(buyer.situation||buyer.nextStep)?`<div class="steps-block">${buyer.situation?`<div class="step-row situation"><span class="step-row-label">Сейчас</span><span class="step-row-text">${esc(buyer.situation)}</span></div>`:''} ${buyer.nextStep?`<div class="step-row next"><span class="step-row-label">Следующий шаг</span><span class="step-row-text">${esc(buyer.nextStep)}</span></div>`:''}</div>`:''}
 
+      \${renderUpdates(props)}
       <div class="logic-block">
         <div class="logic-block-title">Как мы отбираем объекты</div>
         <div class="logic-block-text">
@@ -632,12 +688,12 @@ function renderAgentView(buyerId){
     <div class="content">
       <div style="margin-bottom:32px;display:grid;gap:16px">
           <div>
-            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:8px">Текущая ситуация</div>
-            <textarea id="situationInput" placeholder="Например: задаток подписан, ждём одобрения ипотеки" rows="2" style="width:100%;border:none;border-bottom:1px solid rgba(255,255,255,0.1);background:none;font-size:15px;padding:8px 0;outline:none;color:#E5E5E5;font-family:var(--sans);resize:none;line-height:1.6" oninput="saveSituation('${buyerId}')">${esc(buyer.situation||'')}</textarea>
+            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.55);margin-bottom:8px">Текущая ситуация</div>
+            <textarea id="situationInput" placeholder="Например: задаток подписан, ждём одобрения ипотеки" rows="2" style="width:100%;border:none;border-bottom:1px solid rgba(255,255,255,0.1);background:none;font-size:15px;padding:8px 0;outline:none;color:#F5F5F5;font-family:var(--sans);resize:none;line-height:1.6;border-radius:10px;padding:10px 14px;background:rgba(255,255,255,0.09)" oninput="saveSituation('${buyerId}')">${esc(buyer.situation||'')}</textarea>
           </div>
           <div>
-            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:8px">Следующий шаг</div>
-            <textarea id="nextStepInput" placeholder="Например: встреча с банком во вторник, 14:00" rows="2" style="width:100%;border:none;border-bottom:1px solid rgba(255,255,255,0.1);background:none;font-size:15px;padding:8px 0;outline:none;color:#E5E5E5;font-family:var(--sans);resize:none;line-height:1.6" oninput="saveNextStep('${buyerId}')">${esc(buyer.nextStep||'')}</textarea>
+            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.55);margin-bottom:8px">Следующий шаг</div>
+            <textarea id="nextStepInput" placeholder="Например: встреча с банком во вторник, 14:00" rows="2" style="width:100%;border:none;border-bottom:1px solid rgba(255,255,255,0.1);background:none;font-size:15px;padding:8px 0;outline:none;color:#F5F5F5;font-family:var(--sans);resize:none;line-height:1.6;border-radius:10px;padding:10px 14px;background:rgba(255,255,255,0.09)" oninput="saveNextStep('${buyerId}')">${esc(buyer.nextStep||'')}</textarea>
           </div>
         </div>
 
@@ -782,14 +838,14 @@ function saveModalProp(){
   prop.floor=get('ep-floor');prop.condition=get('ep-condition');prop.renovation=get('ep-renovation');
   prop.showDate=get('ep-showDate');prop.status=get('ep-status');
   prop.url=get('ep-url');prop.agentComment=get('ep-comment');
-  const _bid=currentBuyerId;closeModal();debounceSave();renderAgentView(_bid);
+  const _bid=currentBuyerId;if(allData.buyers[_bid]?.props[editingPropIdx])allData.buyers[_bid].props[editingPropIdx].updatedAt=new Date().toISOString().slice(0,10);closeModal();debounceSave();renderAgentView(_bid);
 }
 
 function deleteModalProp(){
   if(currentBuyerId===null||editingPropIdx===null)return;
   if(!confirm('Удалить этот объект?'))return;
   allData.buyers[currentBuyerId].props.splice(editingPropIdx,1);
-  const _bid=currentBuyerId;closeModal();debounceSave();renderAgentView(_bid);
+  const _bid=currentBuyerId;if(allData.buyers[_bid]?.props[editingPropIdx])allData.buyers[_bid].props[editingPropIdx].updatedAt=new Date().toISOString().slice(0,10);closeModal();debounceSave();renderAgentView(_bid);
 }
 
 // ── PPM HINT ────────────────────────────────────────────────
