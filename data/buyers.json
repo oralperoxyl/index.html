@@ -60,13 +60,14 @@
           "condition": "Косметический ремонт",
           "renovation": "2000000",
           "showDate": "",
-          "status": "planned",
+          "status": "pending",
           "url": "https://spb.cian.ru/sale/flat/328100534/",
-          "agentComment": "Ждем подтверждения.",
+          "agentComment": "Ждем подтверждения на воскресенье в 17:00",
           "clientRating": 0,
           "clientComment": "",
           "addedAt": "2026-03-27",
-          "rooms": "3"
+          "rooms": "3",
+          "updatedAt": "2026-03-28"
         },
         {
           "address": "ул. Кораблестроителей, д. 35б",
