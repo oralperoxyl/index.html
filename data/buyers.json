@@ -145,14 +145,16 @@
           "rooms": "3",
           "floor": "6/9",
           "condition": "С ремонтом",
-          "renovation": "",
-          "showDate": "",
+          "renovation": "0",
+          "showDate": "2026-03-29",
           "status": "planned",
           "url": "https://spb.cian.ru/sale/flat/323581430/",
           "agentComment": "Хоть квадратный метр выглядит дороговато, но включил в список, чтобы понять для себя сценарий, когда ремонт полностью готов и вложения не требуются.",
           "clientRating": 0,
           "clientComment": "",
-          "addedAt": "2026-03-27"
+          "addedAt": "2026-03-27",
+          "showTime": "19:00",
+          "updatedAt": "2026-03-28"
         },
         {
           "address": "наб. Новосмоленская, д. 1г",
