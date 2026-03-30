@@ -384,12 +384,12 @@ const STATUS_CLASS={planned:'planned',viewed:'viewed',considering:'considering',
 function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
 
 // ── RENDER RATING BLOCK (client) ────────────────────────────
-function renderRating(buyerId,propIdx,prop){
+function renderRating(buyerId,propIdx,prop,forceClient){
   const rating=prop.clientRating||0;
   const comment=prop.clientComment||'';
   const key=`rating-${buyerId}-${propIdx}`;
 
-  if(!getToken()&&!rating){
+  if((forceClient||!getToken())&&!rating){
     // client can rate
     return `<div class="rating-wrap">
       <div class="rating-label">Ваша оценка</div>
@@ -507,7 +507,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
           <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть объявление</a>
         </div>`:''}
       </div>
-      ${renderRating(buyerId,prop._origIdx!==undefined?prop._origIdx:idx,prop)}
+      ${renderRating(buyerId,prop._origIdx!==undefined?prop._origIdx:idx,prop,!isAgent)}
       ${isAgent?`<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
         <button class="pbtn" onclick="openEditProp('${buyerId}',${prop._origIdx!==undefined?prop._origIdx:idx});event.stopPropagation()">Редактировать</button>
       </div>`:''}
@@ -776,18 +776,22 @@ function saveSituation(buyerId){
   clearTimeout(situationTimer);
   situationTimer=setTimeout(()=>{
     const val=document.getElementById('situationInput')?.value||'';
-    if(allData.buyers[buyerId])allData.buyers[buyerId].situation=val;
-    debounceSave();
-  },800);
+    if(allData.buyers[buyerId]){
+      allData.buyers[buyerId].situation=val;
+      ghSave();
+    }
+  },1000);
 }
 
 function saveNextStep(buyerId){
   clearTimeout(nextStepTimer);
   nextStepTimer=setTimeout(()=>{
     const val=document.getElementById('nextStepInput')?.value||'';
-    if(allData.buyers[buyerId])allData.buyers[buyerId].nextStep=val;
-    debounceSave();
-  },800);
+    if(allData.buyers[buyerId]){
+      allData.buyers[buyerId].nextStep=val;
+      ghSave();
+    }
+  },1000);
 }
 
 // ── ADD PROPERTY ─────────────────────────────────────────────
