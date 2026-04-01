@@ -216,38 +216,35 @@ button,a{-webkit-tap-highlight-color:transparent}
 
 /* LOCATIONS */
 .loc-section{margin-bottom:56px}
-.loc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:2px}
-.loc-card{background:#fff;padding:28px 24px}
-.loc-card:first-child{border-radius:8px 0 0 0}
-.loc-card:last-child{border-radius:0 8px 0 0}
-.loc-num{font-family:var(--serif);font-size:11px;color:rgba(0,0,0,0.2);margin-bottom:8px}
-.loc-name{font-size:16px;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.3}
-.loc-score{display:flex;gap:3px;margin:8px 0 20px}
-.loc-dot{width:8px;height:8px;border-radius:50%;background:var(--dark)}
+.loc-table{width:100%;border-collapse:collapse;margin-bottom:2px;background:#fff;border-radius:8px 8px 0 0;overflow:hidden}
+.loc-table th{padding:16px 20px;text-align:left;border-bottom:2px solid var(--border);vertical-align:bottom}
+.loc-table th:first-child{width:130px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.loc-th-name{font-size:15px;font-weight:500;color:var(--text);display:block;margin-bottom:6px}
+.loc-th-num{font-family:var(--serif);font-size:11px;color:rgba(0,0,0,0.2);display:block;margin-bottom:4px}
+.loc-score{display:flex;gap:3px;margin-top:6px}
+.loc-dot{width:7px;height:7px;border-radius:50%;background:var(--dark)}
 .loc-dot.empty{background:rgba(0,0,0,0.1)}
-.loc-rows{display:grid;gap:14px}
-.loc-row-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;gap:8px}
-.loc-row-title{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:400;flex-shrink:0}
-.loc-row-verdict{font-size:11px;font-weight:500;text-align:right}
-.loc-row-verdict.plus{color:var(--green)}
-.loc-row-verdict.minus{color:var(--red)}
-.loc-row-verdict.neutral{color:var(--muted)}
-.loc-items{list-style:none;padding:0;display:grid;gap:3px;margin:0}
-.loc-items li{font-size:13px;color:var(--muted);font-weight:300;line-height:1.55;padding-left:12px;position:relative}
+.loc-table td{padding:12px 20px;border-bottom:1px solid var(--border);vertical-align:top;font-size:13px;font-weight:300;color:var(--muted);line-height:1.6}
+.loc-table td:first-child{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:400;white-space:nowrap;padding-top:14px}
+.loc-table tr:last-child td{border-bottom:none}
+.loc-verdict{display:inline-block;font-size:11px;font-weight:500;white-space:nowrap;margin-bottom:4px}
+.loc-verdict.plus{color:var(--green)}
+.loc-verdict.minus{color:var(--red)}
+.loc-verdict.neutral{color:var(--muted)}
+.loc-items{list-style:none;padding:0;margin:0;display:grid;gap:2px}
+.loc-items li{padding-left:10px;position:relative}
 .loc-items li::before{content:'-';position:absolute;left:0;color:rgba(0,0,0,0.2)}
-.loc-summary{background:var(--dark);border-radius:0 0 8px 8px;padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.loc-summary{background:var(--dark);border-radius:0 0 8px 8px;padding:20px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
 .loc-summary-item{padding:0 20px}
 .loc-summary-item:first-child{padding-left:0}
 .loc-summary-item:last-child{padding-right:0}
 .loc-summary-item+.loc-summary-item{border-left:1px solid rgba(255,255,255,0.07)}
-.loc-summary-name{font-size:10px;color:rgba(229,229,229,0.4);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px}
-.loc-summary-text{font-size:13px;color:rgba(229,229,229,0.65);font-weight:300;line-height:1.65}
+.loc-summary-name{font-size:10px;color:rgba(229,229,229,0.4);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px}
+.loc-summary-text{font-size:12px;color:rgba(229,229,229,0.65);font-weight:300;line-height:1.65}
 @media(max-width:640px){
-  .loc-grid{grid-template-columns:1fr}
-  .loc-card:first-child{border-radius:8px 8px 0 0}
-  .loc-card:last-child{border-radius:0}
+  .loc-table{display:block;overflow-x:auto}
   .loc-summary{grid-template-columns:1fr}
-  .loc-summary-item{padding:12px 0 0}
+  .loc-summary-item{padding:10px 0 0}
   .loc-summary-item:first-child{padding-top:0}
   .loc-summary-item+.loc-summary-item{border-left:none;border-top:1px solid rgba(255,255,255,0.07)}
 }
@@ -730,86 +727,53 @@ function renderClientView(buyerId){
           <h2 class="section-title">Сравнение локаций</h2>
           <span class="section-count">среда и жизнь</span>
         </div>
-        <div class="loc-grid">
-
-          <div class="loc-card">
-            <div class="loc-num">01</div>
-            <div class="loc-name">Приморская / Остров Декабристов</div>
-            <div class="loc-score">
-              <div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div>
-            </div>
-            <div class="loc-rows">
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Метро и доступность</span><span class="loc-row-verdict plus">Сильная сторона</span></div>
-                <ul class="loc-items"><li>Метро Приморская в пешей доступности</li><li>До центра быстрее чем из Приморского района</li><li>До Шкиперского — очень удобно</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Пробки и выезды</span><span class="loc-row-verdict minus">Главный минус</span></div>
-                <ul class="loc-items"><li>Выезд ограничен мостами</li><li>В часы пик возможны заторы</li><li>Внутри района — спокойно</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Зелень и вода</span><span class="loc-row-verdict plus">Очень хорошо</span></div>
-                <ul class="loc-items"><li>Смоленка, залив, набережная</li><li>Много зелени во дворах</li><li>Ощущение воздуха и пространства</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Инфраструктура</span><span class="loc-row-verdict neutral">Достаточно</span></div>
-                <ul class="loc-items"><li>Всё необходимое есть</li><li>Район житейский, без избытка</li></ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="loc-card">
-            <div class="loc-num">02</div>
-            <div class="loc-name">Беговая<br>До переезда</div>
-            <div class="loc-score">
-              <div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div>
-            </div>
-            <div class="loc-rows">
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Метро и доступность</span><span class="loc-row-verdict neutral">Хорошо</span></div>
-                <ul class="loc-items"><li>Метро Беговая рядом</li><li>Хорошая связка с центром</li><li>До Шкиперского дольше чем с Васьки</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Пробки и выезды</span><span class="loc-row-verdict plus">Гибче острова</span></div>
-                <ul class="loc-items"><li>Савушкина загружена</li><li>Выездов больше чем с Васьки</li><li>Нет бутылочного горлышка</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Зелень и вода</span><span class="loc-row-verdict neutral">Хорошо</span></div>
-                <ul class="loc-items"><li>Парк 300-летия рядом</li><li>Залив доступен</li><li>Меньше зелени во дворах чем на Ваське</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Инфраструктура</span><span class="loc-row-verdict plus">Развитая</span></div>
-                <ul class="loc-items"><li>Много магазинов, ТЦ, сервисов</li><li>Более городская жизнь</li></ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="loc-card">
-            <div class="loc-num">03</div>
-            <div class="loc-name">Оптиков / Богатырский</div>
-            <div class="loc-score">
-              <div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div><div class="loc-dot empty"></div>
-            </div>
-            <div class="loc-rows">
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Метро</span><span class="loc-row-verdict minus">Сейчас далеко</span></div>
-                <ul class="loc-items"><li>20-30 минут пешком до метро</li><li>В будущем — новая станция рядом</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Пробки и выезды</span><span class="loc-row-verdict plus">Лучше острова</span></div>
-                <ul class="loc-items"><li>Широкие дороги, меньше узких мест</li><li>Удобнее на машине</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Зелень и вода</span><span class="loc-row-verdict neutral">Средне</span></div>
-                <ul class="loc-items"><li>Больше пространства между домами</li><li>До залива дойти можно</li><li>Нет ощущения у воды как на Ваське</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Инфраструктура</span><span class="loc-row-verdict neutral">Развивается</span></div>
-                <ul class="loc-items"><li>Много нового строится</li><li>Пока местами не хватает сформированности</li></ul>
-              </div>
-            </div>
-          </div>
-
+        <div style="overflow-x:auto;border-radius:8px 8px 0 0">
+        <table class="loc-table">
+          <thead><tr>
+            <th></th>
+            <th>
+              <span class="loc-th-num">01</span>
+              <span class="loc-th-name">Приморская / Остров Декабристов</span>
+              <div class="loc-score"><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div></div>
+            </th>
+            <th>
+              <span class="loc-th-num">02</span>
+              <span class="loc-th-name">Беговая / До переезда</span>
+              <div class="loc-score"><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div></div>
+            </th>
+            <th>
+              <span class="loc-th-num">03</span>
+              <span class="loc-th-name">Оптиков / Богатырский</span>
+              <div class="loc-score"><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div><div class="loc-dot empty"></div></div>
+            </th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td>Метро</td>
+              <td><span class="loc-verdict plus">Сильная сторона</span><ul class="loc-items"><li>В пешей доступности</li><li>До центра быстро</li><li>До Шкиперского — рядом</li></ul></td>
+              <td><span class="loc-verdict neutral">Хорошо</span><ul class="loc-items"><li>Метро Беговая рядом</li><li>Хорошая связка с центром</li><li>До Шкиперского дольше</li></ul></td>
+              <td><span class="loc-verdict minus">Сейчас далеко</span><ul class="loc-items"><li>20–30 минут пешком</li><li>В будущем новая станция</li></ul></td>
+            </tr>
+            <tr>
+              <td>Пробки</td>
+              <td><span class="loc-verdict minus">Главный минус</span><ul class="loc-items"><li>Выезд ограничен мостами</li><li>Заторы в часы пик</li></ul></td>
+              <td><span class="loc-verdict plus">Гибче острова</span><ul class="loc-items"><li>Савушкина загружена</li><li>Выездов больше</li><li>Нет бутылочного горлышка</li></ul></td>
+              <td><span class="loc-verdict plus">Лучше острова</span><ul class="loc-items"><li>Широкие дороги</li><li>Удобнее на машине</li></ul></td>
+            </tr>
+            <tr>
+              <td>Зелень и вода</td>
+              <td><span class="loc-verdict plus">Очень хорошо</span><ul class="loc-items"><li>Смоленка, залив, набережная</li><li>Много зелени во дворах</li></ul></td>
+              <td><span class="loc-verdict neutral">Хорошо</span><ul class="loc-items"><li>Парк 300-летия рядом</li><li>Меньше зелени во дворах</li></ul></td>
+              <td><span class="loc-verdict neutral">Средне</span><ul class="loc-items"><li>Больше пространства между домами</li><li>До залива дойти можно</li></ul></td>
+            </tr>
+            <tr>
+              <td>Инфраструктура</td>
+              <td><span class="loc-verdict neutral">Достаточно</span><ul class="loc-items"><li>Всё необходимое есть</li><li>Без избытка</li></ul></td>
+              <td><span class="loc-verdict plus">Развитая</span><ul class="loc-items"><li>Много магазинов и сервисов</li><li>Городская жизнь</li></ul></td>
+              <td><span class="loc-verdict neutral">Развивается</span><ul class="loc-items"><li>Много нового строится</li><li>Пока не до конца сложилась</li></ul></td>
+            </tr>
+          </tbody>
+        </table>
         </div>
         <div class="loc-summary">
           <div class="loc-summary-item">
