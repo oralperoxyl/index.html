@@ -226,6 +226,9 @@ button,a{-webkit-tap-highlight-color:transparent}
 .loc-dot.empty{background:rgba(0,0,0,0.1)}
 .loc-table td{padding:12px 20px;border-bottom:1px solid var(--border);vertical-align:top;font-size:13px;font-weight:300;color:var(--muted);line-height:1.6}
 .loc-table td:first-child{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:400;white-space:nowrap;padding-top:14px}
+.agent-section .loc-table th{border-bottom-color:rgba(255,255,255,0.1);color:rgba(229,229,229,0.6)}
+.agent-section .loc-table td{border-bottom-color:rgba(255,255,255,0.07);color:rgba(229,229,229,0.7)}
+.agent-section .loc-table td:first-child{color:rgba(229,229,229,0.45)}
 .loc-table tr:last-child td{border-bottom:none}
 .loc-verdict{display:inline-block;font-size:11px;font-weight:500;white-space:nowrap;margin-bottom:4px}
 .loc-verdict.plus{color:var(--green)}
@@ -234,6 +237,10 @@ button,a{-webkit-tap-highlight-color:transparent}
 .loc-items{list-style:none;padding:0;margin:0;display:grid;gap:2px}
 .loc-items li{padding-left:10px;position:relative}
 .loc-items li::before{content:'-';position:absolute;left:0;color:rgba(0,0,0,0.2)}
+.loc-table-agent{color:#E5E5E5!important}
+.loc-table-agent th{color:rgba(229,229,229,0.6)!important;border-bottom-color:rgba(255,255,255,0.1)!important}
+.loc-table-agent td{color:#E5E5E5!important;border-bottom-color:rgba(255,255,255,0.07)!important}
+.loc-table-agent td:first-child{color:rgba(229,229,229,0.5)!important}
 .loc-summary{background:var(--dark);border-radius:0 0 8px 8px;padding:20px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
 .loc-summary-item{padding:0 20px}
 .loc-summary-item:first-child{padding-left:0}
@@ -713,16 +720,16 @@ function renderLocations(buyer,buyerId,isAgent){
         return '<option value="'+v+'"'+(v===row.verdict?' selected':'')+'>'+verdictLabel(v)+'</option>';
       }).join('');
       var itemsText=(row.items||[]).join('\n');
-      return '<td><div style="display:flex;gap:3px;margin-bottom:4px"><select class="ai" style="font-size:11px;padding:2px 4px" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'verdict\',this.value)">'+opts+'</select><input class="ai" value="'+esc(row.verdictText)+'" style="font-size:11px;padding:2px 4px;flex:1;min-width:0" placeholder="\u0412\u0435\u0440\u0434\u0438\u043a\u0442" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'verdictText\',this.value)"></div><textarea class="ai" rows="3" style="font-size:12px;padding:4px;width:100%;resize:vertical" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'itemsRaw\',this.value)">'+esc(itemsText)+'</textarea></td>';
+      return '<td style="color:#E5E5E5"><div style="display:flex;gap:3px;margin-bottom:4px"><select class="ai" style="font-size:11px;padding:2px 4px" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'verdict\',this.value)">'+opts+'</select><input class="ai" value="'+esc(row.verdictText)+'" style="font-size:11px;padding:2px 4px;flex:1;min-width:0" placeholder="\u0412\u0435\u0440\u0434\u0438\u043a\u0442" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'verdictText\',this.value)"></div><textarea class="ai" rows="3" style="font-size:12px;padding:4px;width:100%;resize:vertical" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'itemsRaw\',this.value)">'+esc(itemsText)+'</textarea></td>';
     }).join('');
-    return '<tr><td><input class="ai" value="'+esc(label)+'" style="font-size:11px;padding:2px 4px;width:90%" onchange="updateLocLabel(\''+buyerId+'\','+ri+',this.value)"></td>'+cells+'</tr>';
+    return '<tr><td style="color:rgba(229,229,229,0.7)"><input class="ai" value="'+esc(label)+'" style="font-size:11px;padding:2px 4px;width:90%;color:#E5E5E5" onchange="updateLocLabel(\''+buyerId+'\','+ri+',this.value)"></td>'+cells+'</tr>';
   }).join('');
 
   var sums2=locs.map(function(l,i){
     return '<div class="loc-summary-item"><div class="loc-summary-name">'+esc(l.name)+'</div><textarea class="ai" rows="2" style="font-size:12px;padding:4px;width:100%;resize:none;margin-top:4px" placeholder="\u0418\u0442\u043e\u0433" onchange="updateLoc(\''+buyerId+'\','+i+',\'summary\',this.value)">'+esc(l.summary||'')+'</textarea></div>';
   }).join('');
 
-  return '<div class="loc-section"><div class="section-head" style="margin-bottom:12px"><h2 class="section-title" style="color:#E5E5E5">\u0421\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u0435 \u043b\u043e\u043a\u0430\u0446\u0438\u0439</h2><div style="display:flex;gap:8px"><button class="pbtn" style="font-size:11px;padding:4px 12px" onclick="addLocRow(\''+buyerId+'\')">+ \u0421\u0442\u0440\u043e\u043a\u0430</button><button class="pbtn" style="font-size:11px;padding:4px 12px" onclick="addLocCol(\''+buyerId+'\')">+ \u0420\u0430\u0439\u043e\u043d</button></div></div><div style="overflow-x:auto;border-radius:8px 8px 0 0;background:rgba(255,255,255,0.05)"><table class="loc-table" style="background:transparent"><thead><tr><th style="color:rgba(229,229,229,0.4);min-width:90px">\u041a\u0440\u0438\u0442\u0435\u0440\u0438\u0439</th>'+ths2+'</tr></thead><tbody>'+trs2+'</tbody></table></div><div class="loc-summary">'+sums2+'</div></div>';
+  return '<div class="agent-section" style="border-radius:16px;padding:32px;margin-bottom:32px"><div class="section-head" style="margin-bottom:12px"><h2 class="agent-section-title" style="margin-bottom:0">\u0421\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u0435 \u043b\u043e\u043a\u0430\u0446\u0438\u0439</h2><div style="display:flex;gap:8px"><button class="pbtn" style="font-size:11px;padding:4px 12px" onclick="addLocRow(\''+buyerId+'\')">+ \u0421\u0442\u0440\u043e\u043a\u0430</button><button class="pbtn" style="font-size:11px;padding:4px 12px" onclick="addLocCol(\''+buyerId+'\')">+ \u0420\u0430\u0439\u043e\u043d</button></div></div><div style="overflow-x:auto;border-radius:8px 8px 0 0;background:rgba(255,255,255,0.05)"><table class="loc-table" style="background:transparent"><thead><tr><th style="color:rgba(229,229,229,0.4);min-width:90px">\u041a\u0440\u0438\u0442\u0435\u0440\u0438\u0439</th>'+ths2+'</tr></thead><tbody>'+trs2+'</tbody></table></div><div class="loc-summary">'+sums2+'</div></div>';
 }
 
 function updateLoc(buyerId,locIdx,field,val){
