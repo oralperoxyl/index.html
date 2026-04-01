@@ -850,8 +850,6 @@ function renderClientView(buyerId){
       <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,false)).join('')}</div>
 
       ${renderLocations(buyer,buyerId,false)}
-      ${renderLocations(buyer,buyerId,true)}
-      ${renderLocations(buyer,buyerId,true)}
       ${renderCompare(props)}
     </div>
     ${renderFooter()}`;
@@ -932,7 +930,6 @@ function renderAgentView(buyerId){
       <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
       <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,true)).join('')}</div>
 
-      ${renderLocations(buyer,buyerId,false)}
       ${renderLocations(buyer,buyerId,true)}
       ${renderCompare(props)}
     </div>
