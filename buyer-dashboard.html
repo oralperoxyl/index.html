@@ -653,6 +653,126 @@ function renderUpdates(props){
 }
 
 
+
+
+// ── LOCATIONS ────────────────────────────────────────────────
+var DEFAULT_LOCS=[{"name": "Приморская / Остров Декабристов", "score": 4, "summary": "Лучшая по ощущению жизни и пешей логистике. Но без развития района и с ограничениями по выездам на машине.", "rows": [{"label": "Метро", "verdict": "plus", "verdictText": "Сильная сторона", "items": ["В пешей доступности", "До центра быстро", "До Шкиперского — рядом"]}, {"label": "Пробки", "verdict": "minus", "verdictText": "Главный минус", "items": ["Выезд ограничен мостами", "Заторы в часы пик"]}, {"label": "Зелень и вода", "verdict": "plus", "verdictText": "Очень хорошо", "items": ["Смоленка, залив, набережная", "Много зелени во дворах"]}, {"label": "Инфраструктура", "verdict": "neutral", "verdictText": "Достаточно", "items": ["Всё необходимое есть", "Без избытка"]}]}, {"name": "Беговая / До переезда", "score": 4, "summary": "Баланс логистики и инфраструктуры. Без ощущения уютного камерного района.", "rows": [{"label": "Метро", "verdict": "neutral", "verdictText": "Хорошо", "items": ["Метро Беговая рядом", "Хорошая связка с центром", "До Шкиперского дольше"]}, {"label": "Пробки", "verdict": "plus", "verdictText": "Гибче острова", "items": ["Савушкина загружена", "Выездов больше", "Нет бутылочного горлышка"]}, {"label": "Зелень и вода", "verdict": "neutral", "verdictText": "Хорошо", "items": ["Парк 300-летия рядом", "Меньше зелени во дворах"]}, {"label": "Инфраструктура", "verdict": "plus", "verdictText": "Развитая", "items": ["Много магазинов и сервисов", "Городская жизнь"]}]}, {"name": "Оптиков / Богатырский", "score": 3, "summary": "Лучше жильё и удобнее на машине. Но пока слабее пешая доступность и ощущение сложившегося района.", "rows": [{"label": "Метро", "verdict": "minus", "verdictText": "Сейчас далеко", "items": ["20–30 минут пешком", "В будущем новая станция"]}, {"label": "Пробки", "verdict": "plus", "verdictText": "Лучше острова", "items": ["Широкие дороги", "Удобнее на машине"]}, {"label": "Зелень и вода", "verdict": "neutral", "verdictText": "Средне", "items": ["Больше пространства между домами", "До залива дойти можно"]}, {"label": "Инфраструктура", "verdict": "neutral", "verdictText": "Развивается", "items": ["Много нового строится", "Пока не до конца сложилась"]}]}];
+
+function getLocations(buyer){
+  return buyer.locations||JSON.parse(JSON.stringify(DEFAULT_LOCS));
+}
+
+function scoreDots(n,max){
+  var d='';
+  for(var i=0;i<max;i++) d+='<div class="loc-dot'+(i<n?'':' empty')+'"></div>';
+  return d;
+}
+
+function renderLocations(buyer,buyerId,isAgent){
+  var locs=getLocations(buyer);
+  if(!locs||!locs.length) return '';
+  var allLabels=[];
+  locs.forEach(function(l){l.rows.forEach(function(r){if(allLabels.indexOf(r.label)<0)allLabels.push(r.label);});});
+
+  function getRow(l,label){return l.rows.find(function(r){return r.label===label;})||{verdict:'neutral',verdictText:'',items:[]};}
+  function verdictLabel(v){return v==='plus'?'Плюс':v==='minus'?'Минус':'Нейтр.';}
+
+  if(!isAgent){
+    var ths=locs.map(function(l,i){
+      return '<th><span class="loc-th-num">0'+(i+1)+'</span><span class="loc-th-name">'+esc(l.name)+'</span><div class="loc-score">'+scoreDots(l.score,5)+'</div></th>';
+    }).join('');
+    var trs=allLabels.map(function(label){
+      var cells=locs.map(function(l){
+        var row=getRow(l,label);
+        var items=row.items.map(function(it){return '<li>'+esc(it)+'</li>';}).join('');
+        return '<td><span class="loc-verdict '+row.verdict+'">'+esc(row.verdictText)+'</span><ul class="loc-items">'+items+'</ul></td>';
+      }).join('');
+      return '<tr><td>'+esc(label)+'</td>'+cells+'</tr>';
+    }).join('');
+    var sums=locs.map(function(l){
+      return '<div class="loc-summary-item"><div class="loc-summary-name">'+esc(l.name)+'</div><div class="loc-summary-text">'+esc(l.summary||'')+'</div></div>';
+    }).join('');
+    return '<div class="loc-section"><div class="section-head" style="margin-bottom:20px"><h2 class="section-title">\u0421\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u0435 \u043b\u043e\u043a\u0430\u0446\u0438\u0439</h2><span class="section-count">\u0441\u0440\u0435\u0434\u0430 \u0438 \u0436\u0438\u0437\u043d\u044c</span></div><div style="overflow-x:auto;border-radius:8px 8px 0 0"><table class="loc-table"><thead><tr><th></th>'+ths+'</tr></thead><tbody>'+trs+'</tbody></table></div><div class="loc-summary">'+sums+'</div></div>';
+  }
+
+  // Agent editable
+  var ths2=locs.map(function(l,i){
+    var dots=[1,2,3,4,5].map(function(n){
+      var bg=n<=l.score?'#fff':'rgba(255,255,255,0.2)';
+      return '<button onclick="updateLoc(\''+buyerId+'\','+i+',\'score\','+n+')" style="width:12px;height:12px;border-radius:50%;border:none;cursor:pointer;background:'+bg+'"></button>';
+    }).join('');
+    return '<th><input class="ai" value="'+esc(l.name)+'" style="display:block;width:100%;font-size:13px;font-weight:500;margin:4px 0" onchange="updateLoc(\''+buyerId+'\','+i+',\'name\',this.value)"><div style="display:flex;gap:3px;align-items:center;flex-wrap:wrap;margin-top:2px">'+dots+'<button onclick="removeLoc(\''+buyerId+'\','+i+')" style="background:rgba(192,57,43,0.4);border:none;color:#fff;border-radius:4px;font-size:10px;padding:1px 6px;cursor:pointer;margin-left:4px">x</button></div></th>';
+  }).join('');
+
+  var trs2=allLabels.map(function(label,ri){
+    var cells=locs.map(function(l,li){
+      var ri2=l.rows.findIndex(function(r){return r.label===label;});
+      var row=ri2>=0?l.rows[ri2]:{verdict:'neutral',verdictText:'',items:[]};
+      var realRi=ri2>=0?ri2:ri;
+      var opts=['plus','neutral','minus'].map(function(v){
+        return '<option value="'+v+'"'+(v===row.verdict?' selected':'')+'>'+verdictLabel(v)+'</option>';
+      }).join('');
+      var itemsText=(row.items||[]).join('\n');
+      return '<td><div style="display:flex;gap:3px;margin-bottom:4px"><select class="ai" style="font-size:11px;padding:2px 4px" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'verdict\',this.value)">'+opts+'</select><input class="ai" value="'+esc(row.verdictText)+'" style="font-size:11px;padding:2px 4px;flex:1;min-width:0" placeholder="\u0412\u0435\u0440\u0434\u0438\u043a\u0442" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'verdictText\',this.value)"></div><textarea class="ai" rows="3" style="font-size:12px;padding:4px;width:100%;resize:vertical" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'itemsRaw\',this.value)">'+esc(itemsText)+'</textarea></td>';
+    }).join('');
+    return '<tr><td><input class="ai" value="'+esc(label)+'" style="font-size:11px;padding:2px 4px;width:90%" onchange="updateLocLabel(\''+buyerId+'\','+ri+',this.value)"></td>'+cells+'</tr>';
+  }).join('');
+
+  var sums2=locs.map(function(l,i){
+    return '<div class="loc-summary-item"><div class="loc-summary-name">'+esc(l.name)+'</div><textarea class="ai" rows="2" style="font-size:12px;padding:4px;width:100%;resize:none;margin-top:4px" placeholder="\u0418\u0442\u043e\u0433" onchange="updateLoc(\''+buyerId+'\','+i+',\'summary\',this.value)">'+esc(l.summary||'')+'</textarea></div>';
+  }).join('');
+
+  return '<div class="loc-section"><div class="section-head" style="margin-bottom:12px"><h2 class="section-title" style="color:#E5E5E5">\u0421\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u0435 \u043b\u043e\u043a\u0430\u0446\u0438\u0439</h2><div style="display:flex;gap:8px"><button class="pbtn" style="font-size:11px;padding:4px 12px" onclick="addLocRow(\''+buyerId+'\')">+ \u0421\u0442\u0440\u043e\u043a\u0430</button><button class="pbtn" style="font-size:11px;padding:4px 12px" onclick="addLocCol(\''+buyerId+'\')">+ \u0420\u0430\u0439\u043e\u043d</button></div></div><div style="overflow-x:auto;border-radius:8px 8px 0 0;background:rgba(255,255,255,0.05)"><table class="loc-table" style="background:transparent"><thead><tr><th style="color:rgba(229,229,229,0.4);min-width:90px">\u041a\u0440\u0438\u0442\u0435\u0440\u0438\u0439</th>'+ths2+'</tr></thead><tbody>'+trs2+'</tbody></table></div><div class="loc-summary">'+sums2+'</div></div>';
+}
+
+function updateLoc(buyerId,locIdx,field,val){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  if(locs[locIdx])locs[locIdx][field]=(field==='score'?Number(val):val);
+  buyer.locations=locs;debounceSave();
+}
+
+function updateLocRow(buyerId,locIdx,rowIdx,field,val){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);if(!locs[locIdx])return;
+  if(!locs[locIdx].rows[rowIdx])locs[locIdx].rows[rowIdx]={label:'',verdict:'neutral',verdictText:'',items:[]};
+  if(field==='itemsRaw') locs[locIdx].rows[rowIdx].items=val.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+  else locs[locIdx].rows[rowIdx][field]=val;
+  buyer.locations=locs;debounceSave();
+}
+
+function updateLocLabel(buyerId,rowIdx,val){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  locs.forEach(function(l){if(l.rows[rowIdx])l.rows[rowIdx].label=val;});
+  buyer.locations=locs;debounceSave();
+}
+
+function addLocCol(buyerId){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  var allLabels=[];
+  locs.forEach(function(l){l.rows.forEach(function(r){if(allLabels.indexOf(r.label)<0)allLabels.push(r.label);});});
+  locs.push({name:'\u041d\u043e\u0432\u044b\u0439 \u0440\u0430\u0439\u043e\u043d',score:3,summary:'',rows:allLabels.map(function(label){return {label:label,verdict:'neutral',verdictText:'',items:[]};})});
+  buyer.locations=locs;debounceSave();renderAgentView(buyerId);
+}
+
+function addLocRow(buyerId){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  var label='\u041d\u043e\u0432\u044b\u0439 \u043a\u0440\u0438\u0442\u0435\u0440\u0438\u0439';
+  locs.forEach(function(l){l.rows.push({label:label,verdict:'neutral',verdictText:'',items:[]});});
+  buyer.locations=locs;debounceSave();renderAgentView(buyerId);
+}
+
+function removeLoc(buyerId,locIdx){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  locs.splice(locIdx,1);
+  buyer.locations=locs;debounceSave();renderAgentView(buyerId);
+}
+
+
 // ── CLIENT VIEW ──────────────────────────────────────────────
 function renderClientView(buyerId){
   const buyer=allData.buyers[buyerId];
@@ -722,75 +842,9 @@ function renderClientView(buyerId){
       <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
       <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,false)).join('')}</div>
 
-      <div class="loc-section">
-        <div class="section-head" style="margin-bottom:20px">
-          <h2 class="section-title">Сравнение локаций</h2>
-          <span class="section-count">среда и жизнь</span>
-        </div>
-        <div style="overflow-x:auto;border-radius:8px 8px 0 0">
-        <table class="loc-table">
-          <thead><tr>
-            <th></th>
-            <th>
-              <span class="loc-th-num">01</span>
-              <span class="loc-th-name">Приморская / Остров Декабристов</span>
-              <div class="loc-score"><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div></div>
-            </th>
-            <th>
-              <span class="loc-th-num">02</span>
-              <span class="loc-th-name">Беговая / До переезда</span>
-              <div class="loc-score"><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div></div>
-            </th>
-            <th>
-              <span class="loc-th-num">03</span>
-              <span class="loc-th-name">Оптиков / Богатырский</span>
-              <div class="loc-score"><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div><div class="loc-dot empty"></div></div>
-            </th>
-          </tr></thead>
-          <tbody>
-            <tr>
-              <td>Метро</td>
-              <td><span class="loc-verdict plus">Сильная сторона</span><ul class="loc-items"><li>В пешей доступности</li><li>До центра быстро</li><li>До Шкиперского — рядом</li></ul></td>
-              <td><span class="loc-verdict neutral">Хорошо</span><ul class="loc-items"><li>Метро Беговая рядом</li><li>Хорошая связка с центром</li><li>До Шкиперского дольше</li></ul></td>
-              <td><span class="loc-verdict minus">Сейчас далеко</span><ul class="loc-items"><li>20–30 минут пешком</li><li>В будущем новая станция</li></ul></td>
-            </tr>
-            <tr>
-              <td>Пробки</td>
-              <td><span class="loc-verdict minus">Главный минус</span><ul class="loc-items"><li>Выезд ограничен мостами</li><li>Заторы в часы пик</li></ul></td>
-              <td><span class="loc-verdict plus">Гибче острова</span><ul class="loc-items"><li>Савушкина загружена</li><li>Выездов больше</li><li>Нет бутылочного горлышка</li></ul></td>
-              <td><span class="loc-verdict plus">Лучше острова</span><ul class="loc-items"><li>Широкие дороги</li><li>Удобнее на машине</li></ul></td>
-            </tr>
-            <tr>
-              <td>Зелень и вода</td>
-              <td><span class="loc-verdict plus">Очень хорошо</span><ul class="loc-items"><li>Смоленка, залив, набережная</li><li>Много зелени во дворах</li></ul></td>
-              <td><span class="loc-verdict neutral">Хорошо</span><ul class="loc-items"><li>Парк 300-летия рядом</li><li>Меньше зелени во дворах</li></ul></td>
-              <td><span class="loc-verdict neutral">Средне</span><ul class="loc-items"><li>Больше пространства между домами</li><li>До залива дойти можно</li></ul></td>
-            </tr>
-            <tr>
-              <td>Инфраструктура</td>
-              <td><span class="loc-verdict neutral">Достаточно</span><ul class="loc-items"><li>Всё необходимое есть</li><li>Без избытка</li></ul></td>
-              <td><span class="loc-verdict plus">Развитая</span><ul class="loc-items"><li>Много магазинов и сервисов</li><li>Городская жизнь</li></ul></td>
-              <td><span class="loc-verdict neutral">Развивается</span><ul class="loc-items"><li>Много нового строится</li><li>Пока не до конца сложилась</li></ul></td>
-            </tr>
-          </tbody>
-        </table>
-        </div>
-        <div class="loc-summary">
-          <div class="loc-summary-item">
-            <div class="loc-summary-name">Приморская</div>
-            <div class="loc-summary-text">Лучшая по ощущению жизни и пешей логистике. Но без развития района и с ограничениями по выездам на машине.</div>
-          </div>
-          <div class="loc-summary-item">
-            <div class="loc-summary-name">Беговая</div>
-            <div class="loc-summary-text">Баланс логистики и инфраструктуры. Без ощущения уютного камерного района.</div>
-          </div>
-          <div class="loc-summary-item">
-            <div class="loc-summary-name">Оптиков / Богатырский</div>
-            <div class="loc-summary-text">Лучше жильё и удобнее на машине. Но пока слабее пешая доступность и ощущение сложившегося района.</div>
-          </div>
-        </div>
-      </div>
-
+      ${renderLocations(buyer,buyerId,false)}
+      ${renderLocations(buyer,buyerId,true)}
+      ${renderLocations(buyer,buyerId,true)}
       ${renderCompare(props)}
     </div>
     ${renderFooter()}`;
@@ -871,108 +925,8 @@ function renderAgentView(buyerId){
       <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
       <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,true)).join('')}</div>
 
-      <div class="loc-section">
-        <div class="section-head" style="margin-bottom:20px">
-          <h2 class="section-title">Сравнение локаций</h2>
-          <span class="section-count">среда и жизнь</span>
-        </div>
-        <div class="loc-grid">
-
-          <div class="loc-card">
-            <div class="loc-num">01</div>
-            <div class="loc-name">Приморская / Остров Декабристов</div>
-            <div class="loc-score">
-              <div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div>
-            </div>
-            <div class="loc-rows">
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Метро и доступность</span><span class="loc-row-verdict plus">Сильная сторона</span></div>
-                <ul class="loc-items"><li>Метро Приморская в пешей доступности</li><li>До центра быстрее чем из Приморского района</li><li>До Шкиперского — очень удобно</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Пробки и выезды</span><span class="loc-row-verdict minus">Главный минус</span></div>
-                <ul class="loc-items"><li>Выезд ограничен мостами</li><li>В часы пик возможны заторы</li><li>Внутри района — спокойно</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Зелень и вода</span><span class="loc-row-verdict plus">Очень хорошо</span></div>
-                <ul class="loc-items"><li>Смоленка, залив, набережная</li><li>Много зелени во дворах</li><li>Ощущение воздуха и пространства</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Инфраструктура</span><span class="loc-row-verdict neutral">Достаточно</span></div>
-                <ul class="loc-items"><li>Всё необходимое есть</li><li>Район житейский, без избытка</li></ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="loc-card">
-            <div class="loc-num">02</div>
-            <div class="loc-name">Беговая<br>До переезда</div>
-            <div class="loc-score">
-              <div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div>
-            </div>
-            <div class="loc-rows">
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Метро и доступность</span><span class="loc-row-verdict neutral">Хорошо</span></div>
-                <ul class="loc-items"><li>Метро Беговая рядом</li><li>Хорошая связка с центром</li><li>До Шкиперского дольше чем с Васьки</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Пробки и выезды</span><span class="loc-row-verdict plus">Гибче острова</span></div>
-                <ul class="loc-items"><li>Савушкина загружена</li><li>Выездов больше чем с Васьки</li><li>Нет бутылочного горлышка</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Зелень и вода</span><span class="loc-row-verdict neutral">Хорошо</span></div>
-                <ul class="loc-items"><li>Парк 300-летия рядом</li><li>Залив доступен</li><li>Меньше зелени во дворах чем на Ваське</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Инфраструктура</span><span class="loc-row-verdict plus">Развитая</span></div>
-                <ul class="loc-items"><li>Много магазинов, ТЦ, сервисов</li><li>Более городская жизнь</li></ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="loc-card">
-            <div class="loc-num">03</div>
-            <div class="loc-name">Оптиков / Богатырский</div>
-            <div class="loc-score">
-              <div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot"></div><div class="loc-dot empty"></div><div class="loc-dot empty"></div>
-            </div>
-            <div class="loc-rows">
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Метро</span><span class="loc-row-verdict minus">Сейчас далеко</span></div>
-                <ul class="loc-items"><li>20-30 минут пешком до метро</li><li>В будущем — новая станция рядом</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Пробки и выезды</span><span class="loc-row-verdict plus">Лучше острова</span></div>
-                <ul class="loc-items"><li>Широкие дороги, меньше узких мест</li><li>Удобнее на машине</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Зелень и вода</span><span class="loc-row-verdict neutral">Средне</span></div>
-                <ul class="loc-items"><li>Больше пространства между домами</li><li>До залива дойти можно</li><li>Нет ощущения у воды как на Ваське</li></ul>
-              </div>
-              <div class="loc-row">
-                <div class="loc-row-head"><span class="loc-row-title">Инфраструктура</span><span class="loc-row-verdict neutral">Развивается</span></div>
-                <ul class="loc-items"><li>Много нового строится</li><li>Пока местами не хватает сформированности</li></ul>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div class="loc-summary">
-          <div class="loc-summary-item">
-            <div class="loc-summary-name">Приморская</div>
-            <div class="loc-summary-text">Лучшая по ощущению жизни и пешей логистике. Но без развития района и с ограничениями по выездам на машине.</div>
-          </div>
-          <div class="loc-summary-item">
-            <div class="loc-summary-name">Беговая</div>
-            <div class="loc-summary-text">Баланс логистики и инфраструктуры. Без ощущения уютного камерного района.</div>
-          </div>
-          <div class="loc-summary-item">
-            <div class="loc-summary-name">Оптиков / Богатырский</div>
-            <div class="loc-summary-text">Лучше жильё и удобнее на машине. Но пока слабее пешая доступность и ощущение сложившегося района.</div>
-          </div>
-        </div>
-      </div>
-
+      ${renderLocations(buyer,buyerId,false)}
+      ${renderLocations(buyer,buyerId,true)}
       ${renderCompare(props)}
     </div>
     ${renderFooter()}`;
