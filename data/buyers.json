@@ -236,12 +236,13 @@
           "renovation": "",
           "showDate": "2026-04-02",
           "showTime": "19:30",
-          "status": "planned",
+          "status": "viewed",
           "url": "https://spb.cian.ru/sale/flat/324231796/",
-          "agentComment": "",
+          "agentComment": "Нет балкона, ремонт в целом не требуется.",
           "clientRating": 0,
           "clientComment": "",
-          "addedAt": "2026-04-01"
+          "addedAt": "2026-04-01",
+          "updatedAt": "2026-04-03"
         },
         {
           "address": "ул. Беговая, д.5к1",
