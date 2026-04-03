@@ -67,12 +67,15 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 /* INCOME TABLE */
 .income-block{background:#fff;border-radius:8px;overflow:hidden;margin-bottom:40px}
 .income-table{width:100%;border-collapse:collapse}
-.income-table th{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:12px 16px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;background:rgba(0,0,0,0.02)}
-.income-table td{padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.income-table th{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:12px 14px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;background:rgba(0,0,0,0.02);min-width:100px}
+.income-table th:first-child{min-width:80px}
+.income-table th:nth-child(6),.income-table th:nth-child(9),.income-table th:nth-child(10){min-width:110px;text-align:right}
+.income-table td{padding:8px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
 .income-table tr:last-child td{border-bottom:none}
 .income-table tr.total-row td{font-weight:500;background:rgba(0,0,0,0.02);font-size:13px}
-.income-table input{border:none;background:rgba(0,0,0,0.03);border-radius:6px;padding:4px 8px;font-family:var(--sans);font-size:13px;color:var(--text);width:100%;outline:none;transition:background 0.15s}
-.income-table input:focus{background:rgba(0,102,255,0.06)}
+.income-table input{border:1px solid var(--border);background:#fff;border-radius:6px;padding:7px 10px;font-family:var(--sans);font-size:13px;color:var(--text);width:100%;min-width:90px;outline:none;transition:all 0.15s;display:block}
+.income-table input:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(0,102,255,0.08)}
+.income-table input::placeholder{color:var(--muted)}
 .month-label{font-weight:500;white-space:nowrap;color:var(--text)}
 .td-num{text-align:right;font-weight:300;color:var(--muted);font-variant-numeric:tabular-nums}
 .td-num.pos{color:var(--green);font-weight:500}
@@ -88,8 +91,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .schedule-table td:first-child{text-align:left;font-weight:500;color:var(--text)}
 .schedule-table tr:last-child td{border-bottom:none}
 .schedule-table tr.paid td{color:rgba(0,0,0,0.3)}
-.early-input{border:none;background:rgba(0,0,0,0.04);border-radius:4px;padding:3px 6px;font-family:var(--sans);font-size:12px;color:var(--text);width:100px;text-align:right;outline:none}
-.early-input:focus{background:rgba(0,102,255,0.08)}
+.early-input{border:1px solid var(--border);background:#fff;border-radius:6px;padding:6px 8px;font-family:var(--sans);font-size:12px;color:var(--text);width:100px;text-align:right;outline:none;transition:all 0.15s}
+.early-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,102,255,0.08)}
 
 /* CHART */
 .chart-wrap{background:#fff;border-radius:8px;padding:24px;margin-bottom:40px}
@@ -155,16 +158,31 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
     <div class="params-title">Параметры кредита</div>
     <div class="params-grid">
       <div class="param-field">
+        <label class="param-label">Стоимость недвижимости ₽</label>
+        <input class="param-input" id="p-price" type="number" value="15000000" oninput="updateAmount()">
+      </div>
+      <div class="param-field">
+        <label class="param-label">Первоначальный взнос ₽</label>
+        <input class="param-input" id="p-down" type="number" value="1500000" oninput="updateAmount()">
+        <span class="param-hint" id="p-down-pct">10% от стоимости</span>
+      </div>
+      <div class="param-field">
         <label class="param-label">Сумма кредита ₽</label>
         <input class="param-input" id="p-amount" type="number" value="13500000" oninput="recalc()">
+        <span class="param-hint">Рассчитывается автоматически</span>
       </div>
       <div class="param-field">
         <label class="param-label">Ставка % годовых</label>
         <input class="param-input" id="p-rate" type="number" step="0.1" value="20.5" oninput="recalc()">
       </div>
       <div class="param-field">
-        <label class="param-label">Срок (месяцев)</label>
-        <input class="param-input" id="p-term" type="number" value="242" oninput="recalc()">
+        <label class="param-label">Срок в годах</label>
+        <input class="param-input" id="p-years" type="number" value="20" min="1" max="30" oninput="updateTerm()">
+      </div>
+      <div class="param-field">
+        <label class="param-label">Срок в месяцах</label>
+        <input class="param-input" id="p-term" type="number" value="242" oninput="syncYears()">
+        <span class="param-hint" id="p-term-hint">≈ 20 лет 2 мес.</span>
       </div>
       <div class="param-field">
         <label class="param-label">Начало (мм.гггг)</label>
@@ -503,6 +521,39 @@ function showTab(name,btn){
   if(name==='chart'){const d=calcSchedule();renderChart(d);}
 }
 
+// ── PARAM SYNC ───────────────────────────────────────────────
+function updateAmount(){
+  const price=parseFloat(document.getElementById('p-price').value)||0;
+  const down=parseFloat(document.getElementById('p-down').value)||0;
+  const amount=Math.max(0,price-down);
+  document.getElementById('p-amount').value=amount;
+  const pct=price>0?Math.round(down/price*100):0;
+  document.getElementById('p-down-pct').textContent=pct+'% от стоимости';
+  recalc();
+}
+
+function updateTerm(){
+  const years=parseInt(document.getElementById('p-years').value)||0;
+  const months=years*12;
+  document.getElementById('p-term').value=months;
+  updateTermHint(months);
+  recalc();
+}
+
+function syncYears(){
+  const months=parseInt(document.getElementById('p-term').value)||0;
+  document.getElementById('p-years').value=Math.floor(months/12);
+  updateTermHint(months);
+  recalc();
+}
+
+function updateTermHint(months){
+  const y=Math.floor(months/12);
+  const m=months%12;
+  const s=(y>0?y+' лет ':'')+( m>0?m+' мес.':'');
+  document.getElementById('p-term-hint').textContent='≈ '+s;
+}
+
 // ── MAIN RECALC ──────────────────────────────────────────────
 function recalc(){
   const data=calcSchedule();
@@ -511,6 +562,19 @@ function recalc(){
   if(active||true)renderSchedule(data);
   if(document.getElementById('tab-tracker').style.display!=='none')renderTracker(data);
   if(document.getElementById('tab-chart').style.display!=='none')renderChart(data);
+}
+
+// ── INIT SYNC ────────────────────────────────────────────────
+function initSync(){
+  const term=parseInt(document.getElementById('p-term').value)||242;
+  document.getElementById('p-years').value=Math.floor(term/12);
+  updateTermHint(term);
+  const price=parseFloat(document.getElementById('p-price').value)||0;
+  const down=parseFloat(document.getElementById('p-down').value)||0;
+  if(price>0){
+    const pct=Math.round(down/price*100);
+    document.getElementById('p-down-pct').textContent=pct+'% от стоимости';
+  }
 }
 
 // ── INIT ─────────────────────────────────────────────────────
@@ -533,6 +597,7 @@ const presetEarly={
 Object.entries(presetTracker).forEach(([k,v])=>{if(!trackerData[k])trackerData[k]=v;});
 Object.entries(presetEarly).forEach(([k,v])=>{if(earlyOverrides[k]===undefined)earlyOverrides[k]=v;});
 
+initSync();
 recalc();
 </script>
 </body>
