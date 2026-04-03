@@ -518,7 +518,10 @@ function showTab(name,btn){
   });
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(name==='chart'){const d=calcSchedule();renderChart(d);}
+  const d=calcSchedule();
+  if(name==='tracker')renderTracker(d);
+  if(name==='chart')renderChart(d);
+  if(name==='schedule')renderSchedule(d);
 }
 
 // ── PARAM SYNC ───────────────────────────────────────────────
@@ -558,8 +561,7 @@ function updateTermHint(months){
 function recalc(){
   const data=calcSchedule();
   renderSummary(data);
-  const active=document.querySelector('#tab-schedule').style.display!=='none';
-  if(active||true)renderSchedule(data);
+  renderSchedule(data);
   if(document.getElementById('tab-tracker').style.display!=='none')renderTracker(data);
   if(document.getElementById('tab-chart').style.display!=='none')renderChart(data);
 }
