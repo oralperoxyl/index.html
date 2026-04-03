@@ -273,10 +273,11 @@
           "showTime": "18:40",
           "status": "pending",
           "url": "https://spb.cian.ru/sale/flat/328420507/",
-          "agentComment": "",
+          "agentComment": "Ремонт не требуется/ либо минимальная косметика.",
           "clientRating": 0,
           "clientComment": "",
-          "addedAt": "2026-04-01"
+          "addedAt": "2026-04-01",
+          "updatedAt": "2026-04-03"
         },
         {
           "address": "ул. Яхтенная, д.12к1",
