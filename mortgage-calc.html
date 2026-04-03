@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Ипотечный калькулятор — Семён Гончаров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+::selection{background:#0066FF;color:#fff}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --serif:'Playfair Display',serif;
+  --sans:'Inter',sans-serif;
+  --bg:#FAFAF8;--dark:#1C1C1E;
+  --text:#1A1A1A;--muted:#888;--border:rgba(0,0,0,0.07);
+  --accent:#0066FF;--green:#2D8A4E;--red:#C0392B;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* HEADER */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}
+.header-right{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+
+/* HERO */
+.hero{background:var(--dark);padding:64px 40px 56px}
+.hero-inner{max-width:900px;margin:0 auto}
+.hero-label{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:16px}
+.hero-title{font-family:var(--serif);font-size:clamp(28px,4vw,48px);font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:12px}
+.hero-title em{font-style:italic;color:rgba(229,229,229,0.4)}
+.hero-sub{font-size:14px;color:rgba(229,229,229,0.4);font-weight:300;max-width:480px}
+
+/* CONTENT */
+.content{max-width:900px;margin:0 auto;padding:48px 40px 80px}
+
+/* PARAMS BLOCK */
+.params-block{background:var(--dark);border-radius:16px;padding:32px;margin-bottom:40px}
+.params-title{font-family:var(--serif);font-size:18px;font-weight:400;color:#E5E5E5;margin-bottom:24px}
+.params-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.param-field{display:flex;flex-direction:column;gap:6px}
+.param-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.5)}
+.param-input{background:rgba(255,255,255,0.09);border:none;border-radius:10px;padding:11px 14px;font-family:var(--sans);font-size:15px;color:#fff;outline:none;transition:background 0.2s;width:100%}
+.param-input:focus{background:rgba(255,255,255,0.14)}
+.param-input::placeholder{color:rgba(255,255,255,0.25)}
+.param-hint{font-size:11px;color:rgba(229,229,229,0.3);font-weight:300}
+
+/* SUMMARY CARDS */
+.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:40px}
+.summary-card{background:#fff;padding:20px 22px}
+.summary-card:first-child{border-radius:8px 0 0 8px}
+.summary-card:last-child{border-radius:0 8px 8px 0}
+.summary-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.summary-val{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--text);line-height:1.2}
+.summary-val.red{color:var(--red)}
+.summary-val.green{color:var(--green)}
+.summary-sub{font-size:12px;color:var(--muted);margin-top:4px;font-weight:300}
+
+/* SECTION */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px}
+.section-title{font-family:var(--serif);font-size:clamp(20px,2.5vw,28px);font-weight:400;letter-spacing:-0.01em}
+.section-sub{font-size:12px;color:var(--muted);font-weight:300}
+
+/* INCOME TABLE */
+.income-block{background:#fff;border-radius:8px;overflow:hidden;margin-bottom:40px}
+.income-table{width:100%;border-collapse:collapse}
+.income-table th{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:12px 16px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap;background:rgba(0,0,0,0.02)}
+.income-table td{padding:10px 16px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+.income-table tr:last-child td{border-bottom:none}
+.income-table tr.total-row td{font-weight:500;background:rgba(0,0,0,0.02);font-size:13px}
+.income-table input{border:none;background:rgba(0,0,0,0.03);border-radius:6px;padding:4px 8px;font-family:var(--sans);font-size:13px;color:var(--text);width:100%;outline:none;transition:background 0.15s}
+.income-table input:focus{background:rgba(0,102,255,0.06)}
+.month-label{font-weight:500;white-space:nowrap;color:var(--text)}
+.td-num{text-align:right;font-weight:300;color:var(--muted);font-variant-numeric:tabular-nums}
+.td-num.pos{color:var(--green);font-weight:500}
+.td-num.neg{color:var(--red);font-weight:500}
+.td-num.neutral{color:var(--text)}
+
+/* SCHEDULE TABLE */
+.schedule-wrap{overflow-x:auto;border-radius:8px;margin-bottom:40px}
+.schedule-table{width:100%;border-collapse:collapse;background:#fff;min-width:600px}
+.schedule-table th{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:10px 14px;text-align:right;border-bottom:2px solid var(--border);white-space:nowrap;background:rgba(0,0,0,0.02)}
+.schedule-table th:first-child{text-align:left}
+.schedule-table td{padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px;font-weight:300;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+.schedule-table td:first-child{text-align:left;font-weight:500;color:var(--text)}
+.schedule-table tr:last-child td{border-bottom:none}
+.schedule-table tr.paid td{color:rgba(0,0,0,0.3)}
+.early-input{border:none;background:rgba(0,0,0,0.04);border-radius:4px;padding:3px 6px;font-family:var(--sans);font-size:12px;color:var(--text);width:100px;text-align:right;outline:none}
+.early-input:focus{background:rgba(0,102,255,0.08)}
+
+/* CHART */
+.chart-wrap{background:#fff;border-radius:8px;padding:24px;margin-bottom:40px}
+.chart-canvas{width:100%;height:200px;position:relative;overflow:hidden}
+.chart-bar-wrap{display:flex;align-items:flex-end;gap:2px;height:180px;margin-top:8px}
+.chart-bar{flex:1;border-radius:2px 2px 0 0;transition:opacity 0.2s;min-width:2px;cursor:default}
+.chart-bar:hover{opacity:0.8}
+.chart-bar.pos{background:var(--green)}
+.chart-bar.neg{background:var(--red)}
+.chart-zero{border-top:1px dashed rgba(0,0,0,0.15);margin-top:-1px}
+.chart-labels{display:flex;gap:2px;margin-top:4px}
+.chart-label{flex:1;font-size:9px;color:var(--muted);text-align:center;overflow:hidden;text-overflow:clip;white-space:nowrap}
+
+/* TABS */
+.tabs{display:flex;gap:2px;margin-bottom:24px}
+.tab{padding:8px 18px;border-radius:999px;font-size:12px;font-weight:400;cursor:pointer;border:1px solid var(--border);background:none;color:var(--muted);transition:all 0.15s;font-family:var(--sans)}
+.tab.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+
+/* FOOTER */
+.cta-footer{background:var(--dark);padding:64px 40px;text-align:center}
+.cta-footer-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:20px}
+.cta-footer-title{font-family:var(--serif);font-size:clamp(22px,3.5vw,36px);font-weight:400;color:#E5E5E5;line-height:1.2;margin-bottom:12px}
+.cta-footer-title em{font-style:italic;color:rgba(229,229,229,0.45)}
+.cta-footer-sub{font-size:14px;color:rgba(229,229,229,0.4);font-weight:300;margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.65}
+.tg-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid #0088cc;border-radius:999px;text-decoration:none;background:transparent;color:#E5E5E5;font-family:var(--sans);font-size:14px;transition:background 0.2s,border-color 0.2s}
+.tg-btn:hover{background:#0088cc;border-color:#0088cc}
+.footer-copy{margin-top:40px;font-size:12px;color:rgba(229,229,229,0.2)}
+.footer-copy a{color:rgba(229,229,229,0.3);text-decoration:none}
+
+@media(max-width:640px){
+  .site-header{padding:0 20px}
+  .hero{padding:48px 20px 40px}
+  .content{padding:32px 20px 60px}
+  .params-grid{grid-template-columns:1fr 1fr}
+  .summary-grid{grid-template-columns:1fr 1fr}
+  .summary-card:first-child{border-radius:8px 8px 0 0}
+  .summary-card:nth-child(2){border-radius:0 8px 0 0}
+  .summary-card:nth-child(3){border-radius:0 0 0 8px}
+  .summary-card:last-child{border-radius:0 0 8px 0}
+  .cta-footer{padding:48px 20px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+  <span class="header-right">Ипотечный калькулятор</span>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Финансовое планирование</p>
+    <h1 class="hero-title">Ипотека.<br><em>Цифры которые важны.</em></h1>
+    <p class="hero-sub">Калькулятор платежей, досрочное погашение и трекер доходов и расходов по месяцам.</p>
+  </div>
+</section>
+
+<div class="content">
+
+  <!-- PARAMS -->
+  <div class="params-block">
+    <div class="params-title">Параметры кредита</div>
+    <div class="params-grid">
+      <div class="param-field">
+        <label class="param-label">Сумма кредита ₽</label>
+        <input class="param-input" id="p-amount" type="number" value="13500000" oninput="recalc()">
+      </div>
+      <div class="param-field">
+        <label class="param-label">Ставка % годовых</label>
+        <input class="param-input" id="p-rate" type="number" step="0.1" value="20.5" oninput="recalc()">
+      </div>
+      <div class="param-field">
+        <label class="param-label">Срок (месяцев)</label>
+        <input class="param-input" id="p-term" type="number" value="242" oninput="recalc()">
+      </div>
+      <div class="param-field">
+        <label class="param-label">Начало (мм.гггг)</label>
+        <input class="param-input" id="p-start" type="text" value="11.2024" placeholder="11.2024" oninput="recalc()">
+        <span class="param-hint">Месяц и год первого платежа</span>
+      </div>
+      <div class="param-field">
+        <label class="param-label">Досрочное (ежемесячно ₽)</label>
+        <input class="param-input" id="p-early" type="number" value="50000" oninput="recalc()">
+        <span class="param-hint">Базовое доп. погашение каждый месяц</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-grid" id="summaryGrid"></div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('schedule',this)">График платежей</button>
+    <button class="tab" onclick="showTab('tracker',this)">Доходы и расходы</button>
+    <button class="tab" onclick="showTab('chart',this)">Сальдо по месяцам</button>
+  </div>
+
+  <!-- SCHEDULE TAB -->
+  <div id="tab-schedule">
+    <div class="section-head">
+      <h2 class="section-title">График платежей</h2>
+      <span class="section-sub">Можно изменить досрочное погашение в любом месяце</span>
+    </div>
+    <div class="schedule-wrap">
+      <table class="schedule-table" id="scheduleTable"></table>
+    </div>
+  </div>
+
+  <!-- TRACKER TAB -->
+  <div id="tab-tracker" style="display:none">
+    <div class="section-head">
+      <h2 class="section-title">Доходы и расходы</h2>
+      <span class="section-sub">Редактируйте прямо в таблице — сохраняется автоматически</span>
+    </div>
+    <div class="income-block">
+      <table class="income-table" id="trackerTable"></table>
+    </div>
+  </div>
+
+  <!-- CHART TAB -->
+  <div id="tab-chart" style="display:none">
+    <div class="section-head">
+      <h2 class="section-title">Сальдо по месяцам</h2>
+      <span class="section-sub">Доходы минус расходы минус платёж по ипотеке</span>
+    </div>
+    <div class="chart-wrap" id="chartWrap"></div>
+  </div>
+
+</div>
+
+<footer class="cta-footer">
+  <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости</p>
+  <h2 class="cta-footer-title">Есть вопросы —<br><em>свяжитесь со мной.</em></h2>
+  <p class="cta-footer-sub">Обратная связь важна — говорите что думаете.</p>
+  <a class="tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z" fill="currentColor"/></svg>
+    Написать в Telegram
+  </a>
+  <p style="margin-top:20px;font-size:13px;color:rgba(229,229,229,0.35);">или позвонить: <a href="tel:+79118461965" style="color:rgba(229,229,229,0.55);text-decoration:none;">+7 911 846-19-65</a></p>
+  <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
+</footer>
+
+<script>
+// ── UTILS ─────────────────────────────────────────────────────
+function fmt(n){
+  if(!n&&n!==0)return '—';
+  return Math.round(n).toLocaleString('ru-RU')+' ₽';
+}
+function fmtM(n){
+  if(!n&&n!==0)return '—';
+  const m=Math.round(n/1000);
+  return m.toLocaleString('ru-RU')+' тыс.';
+}
+
+function parseStart(s){
+  const p=s.split('.');
+  if(p.length!==2)return{m:11,y:2024};
+  return{m:parseInt(p[0]),y:parseInt(p[1])};
+}
+function addMonths(m,y,n){
+  let mm=m+n;let yy=y;
+  while(mm>12){mm-=12;yy++;}
+  while(mm<1){mm+=12;yy--;}
+  return{m:mm,y:yy};
+}
+function monthLabel(m,y){
+  const names=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+  return names[m-1]+' '+y;
+}
+
+// ── STORAGE ──────────────────────────────────────────────────
+function saveData(key,val){try{localStorage.setItem('calc_'+key,JSON.stringify(val));}catch(e){}}
+function loadData(key,def){try{const v=localStorage.getItem('calc_'+key);return v?JSON.parse(v):def;}catch(e){return def;}}
+
+// Per-month early payments override
+let earlyOverrides=loadData('early',{});
+// Per-month income/expense data
+let trackerData=loadData('tracker',{});
+
+// Default tracker row
+function defaultTracker(){
+  return{zp1:200000,bonus:0,zp2:200000,extra:0,expenses:100000,unexpected:0};
+}
+
+// ── CALCULATE SCHEDULE ───────────────────────────────────────
+function calcSchedule(){
+  const amount=parseFloat(document.getElementById('p-amount').value)||0;
+  const rate=parseFloat(document.getElementById('p-rate').value)||0;
+  const term=parseInt(document.getElementById('p-term').value)||0;
+  const baseEarly=parseFloat(document.getElementById('p-early').value)||0;
+  const start=parseStart(document.getElementById('p-start').value);
+
+  const monthRate=rate/100/12;
+  let annuity=0;
+  if(monthRate>0&&term>0){
+    annuity=amount*monthRate*Math.pow(1+monthRate,term)/(Math.pow(1+monthRate,term)-1);
+  }
+
+  const rows=[];
+  let balance=amount;
+  let totalInterest=0;
+  let totalEarly=0;
+  let actualTerm=0;
+
+  for(let i=0;i<term;i++){
+    if(balance<=0)break;
+    actualTerm++;
+    const d=addMonths(start.m,start.y,i);
+    const key=d.y+'-'+d.m;
+    const earlyThis=(earlyOverrides[key]!==undefined?earlyOverrides[key]:baseEarly);
+
+    const interest=balance*monthRate;
+    const principal=Math.min(annuity-interest,balance);
+    const earlyActual=Math.min(earlyThis,balance-principal);
+    const payment=annuity+earlyActual;
+    balance=Math.max(0,balance-principal-earlyActual);
+
+    totalInterest+=interest;
+    totalEarly+=earlyActual;
+
+    rows.push({
+      idx:i+1,m:d.m,y:d.y,key,
+      balance:balance+principal+earlyActual,
+      interest,principal,payment,early:earlyActual,
+      balanceAfter:balance
+    });
+  }
+
+  return{rows,annuity,totalInterest,totalEarly,actualTerm,amount};
+}
+
+// ── RENDER SUMMARY ───────────────────────────────────────────
+function renderSummary(data){
+  const{rows,annuity,totalInterest,actualTerm,amount}=data;
+  const totalPaid=amount+totalInterest;
+  const y=Math.floor(actualTerm/12);
+  const m=actualTerm%12;
+  const termStr=(y>0?y+' лет ':'')+( m>0?m+' мес.':'');
+
+  document.getElementById('summaryGrid').innerHTML=`
+    <div class="summary-card">
+      <div class="summary-label">Ежемесячный платёж</div>
+      <div class="summary-val">${fmt(annuity)}</div>
+      <div class="summary-sub">базовый аннуитет</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Переплата по процентам</div>
+      <div class="summary-val red">${fmt(totalInterest)}</div>
+      <div class="summary-sub">${Math.round(totalInterest/amount*100)}% от суммы</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Реальный срок</div>
+      <div class="summary-val green">${termStr}</div>
+      <div class="summary-sub">с досрочным погашением</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-label">Итого выплат</div>
+      <div class="summary-val">${fmt(totalPaid)}</div>
+      <div class="summary-sub">основной долг + проценты</div>
+    </div>`;
+}
+
+// ── RENDER SCHEDULE ──────────────────────────────────────────
+function renderSchedule(data){
+  const{rows}=data;
+  const today=new Date();
+  const todayKey=today.getFullYear()+'-'+(today.getMonth()+1);
+
+  let html=`<thead><tr>
+    <th>Месяц</th>
+    <th style="text-align:right">Остаток</th>
+    <th style="text-align:right">Проценты</th>
+    <th style="text-align:right">Основной долг</th>
+    <th style="text-align:right">Досрочно</th>
+    <th style="text-align:right">Платёж итого</th>
+  </tr></thead><tbody>`;
+
+  const nowY=today.getFullYear(),nowM=today.getMonth()+1;
+
+  rows.forEach(r=>{
+    const isPast=(r.y<nowY||(r.y===nowY&&r.m<nowM));
+    const isCurrent=(r.y===nowY&&r.m===nowM);
+    html+=`<tr class="${isPast?'paid':''}${isCurrent?' style="background:rgba(0,102,255,0.04)"':''}">
+      <td style="${isCurrent?'font-weight:600':''}">${monthLabel(r.m,r.y)}</td>
+      <td class="td-num" style="color:var(--muted)">${fmtM(r.balanceAfter)}</td>
+      <td class="td-num" style="color:var(--red)">${fmtM(r.interest)}</td>
+      <td class="td-num">${fmtM(r.principal)}</td>
+      <td><input class="early-input" type="number" value="${Math.round(r.early)}" data-key="${r.key}" onchange="setEarly(this)" placeholder="0"></td>
+      <td class="td-num" style="font-weight:500;color:var(--text)">${fmtM(r.payment)}</td>
+    </tr>`;
+  });
+
+  html+='</tbody>';
+  document.getElementById('scheduleTable').innerHTML=html;
+}
+
+// ── RENDER TRACKER ───────────────────────────────────────────
+function renderTracker(schedData){
+  const{rows,annuity}=schedData;
+  const active=rows.slice(0,36); // show 36 months
+
+  let html=`<thead><tr>
+    <th>Месяц</th>
+    <th>ЗП 1</th>
+    <th>Премия</th>
+    <th>ЗП 2</th>
+    <th>Подработка</th>
+    <th style="text-align:right">Доходы</th>
+    <th>Траты на жизнь</th>
+    <th>Внеплановые</th>
+    <th>Ипотека</th>
+    <th style="text-align:right">Сальдо</th>
+  </tr></thead><tbody>`;
+
+  active.forEach(r=>{
+    const d=trackerData[r.key]||defaultTracker();
+    const income=(d.zp1||0)+(d.bonus||0)+(d.zp2||0)+(d.extra||0);
+    const spend=(d.expenses||0)+(d.unexpected||0);
+    const saldo=income-spend-r.payment;
+    const saldoCls=saldo>=0?'pos':'neg';
+
+    html+=`<tr>
+      <td class="month-label">${monthLabel(r.m,r.y)}</td>
+      <td><input type="number" value="${d.zp1||''}" data-key="${r.key}" data-field="zp1" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d.bonus||''}" data-key="${r.key}" data-field="bonus" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d.zp2||''}" data-key="${r.key}" data-field="zp2" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d.extra||''}" data-key="${r.key}" data-field="extra" onchange="saveTracker(this)" placeholder="0"></td>
+      <td class="td-num neutral">${fmt(income)}</td>
+      <td><input type="number" value="${d.expenses||''}" data-key="${r.key}" data-field="expenses" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d.unexpected||''}" data-key="${r.key}" data-field="unexpected" onchange="saveTracker(this)" placeholder="0"></td>
+      <td class="td-num" style="color:var(--red)">${fmt(r.payment)}</td>
+      <td class="td-num ${saldoCls}">${fmt(saldo)}</td>
+    </tr>`;
+  });
+
+  html+='</tbody>';
+  document.getElementById('trackerTable').innerHTML=html;
+}
+
+// ── RENDER CHART ─────────────────────────────────────────────
+function renderChart(schedData){
+  const{rows}=schedData;
+  const active=rows.slice(0,36);
+
+  const saldos=active.map(r=>{
+    const d=trackerData[r.key]||defaultTracker();
+    const income=(d.zp1||0)+(d.bonus||0)+(d.zp2||0)+(d.extra||0);
+    const spend=(d.expenses||0)+(d.unexpected||0);
+    return{key:r.key,m:r.m,y:r.y,val:income-spend-r.payment};
+  });
+
+  const maxAbs=Math.max(...saldos.map(s=>Math.abs(s.val)),1);
+  const chartH=180;
+
+  const bars=saldos.map(s=>{
+    const h=Math.max(2,Math.abs(s.val)/maxAbs*chartH*0.9);
+    const cls=s.val>=0?'pos':'neg';
+    const title=monthLabel(s.m,s.y)+': '+fmt(s.val);
+    return`<div class="chart-bar ${cls}" style="height:${h}px" title="${title}"></div>`;
+  }).join('');
+
+  const labels=saldos.filter((_,i)=>i%3===0).map(s=>`<div class="chart-label" style="flex:3">${s.m}.${String(s.y).slice(2)}</div>`).join('');
+
+  const posCount=saldos.filter(s=>s.val>0).length;
+  const negCount=saldos.length-posCount;
+
+  document.getElementById('chartWrap').innerHTML=`
+    <div class="section-head" style="margin-bottom:8px">
+      <div>
+        <span style="font-size:12px;color:var(--green);font-weight:500;margin-right:16px">▲ ${posCount} мес. в плюсе</span>
+        <span style="font-size:12px;color:var(--red);font-weight:500">▼ ${negCount} мес. в минусе</span>
+      </div>
+      <span class="section-sub">первые 36 месяцев</span>
+    </div>
+    <div class="chart-bar-wrap">${bars}</div>
+    <div class="chart-zero"></div>
+    <div class="chart-labels">${labels}</div>`;
+}
+
+// ── INTERACTIONS ─────────────────────────────────────────────
+function setEarly(input){
+  earlyOverrides[input.dataset.key]=parseFloat(input.value)||0;
+  saveData('early',earlyOverrides);
+  recalc();
+}
+
+function saveTracker(input){
+  const key=input.dataset.key;
+  if(!trackerData[key])trackerData[key]=defaultTracker();
+  trackerData[key][input.dataset.field]=parseFloat(input.value)||0;
+  saveData('tracker',trackerData);
+  recalcTracker();
+}
+
+function recalcTracker(){
+  const data=calcSchedule();
+  const activeTab=document.querySelector('.tab.active').textContent.trim();
+  if(activeTab.includes('расход')||activeTab.includes('Доход'))renderTracker(data);
+  if(activeTab.includes('альдо')||activeTab.includes('месяц'))renderChart(data);
+}
+
+// ── TABS ─────────────────────────────────────────────────────
+function showTab(name,btn){
+  ['schedule','tracker','chart'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===name?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(name==='chart'){const d=calcSchedule();renderChart(d);}
+}
+
+// ── MAIN RECALC ──────────────────────────────────────────────
+function recalc(){
+  const data=calcSchedule();
+  renderSummary(data);
+  const active=document.querySelector('#tab-schedule').style.display!=='none';
+  if(active||true)renderSchedule(data);
+  if(document.getElementById('tab-tracker').style.display!=='none')renderTracker(data);
+  if(document.getElementById('tab-chart').style.display!=='none')renderChart(data);
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+// Pre-populate with real data from spreadsheet
+const presetTracker={
+  '2024-11':{zp1:200000,bonus:100000,zp2:200000,extra:50000,expenses:100000,unexpected:10000},
+  '2024-12':{zp1:200000,bonus:0,zp2:200000,extra:0,expenses:100000,unexpected:0},
+  '2025-1':{zp1:7200000,bonus:0,zp2:200000,extra:0,expenses:150000,unexpected:0},
+  '2025-2':{zp1:200000,bonus:100000,zp2:200000,extra:300000,expenses:100000,unexpected:0},
+  '2025-3':{zp1:200000,bonus:0,zp2:200000,extra:0,expenses:100000,unexpected:0},
+  '2025-4':{zp1:200000,bonus:0,zp2:200000,extra:0,expenses:100000,unexpected:300000},
+};
+const presetEarly={
+  '2024-11':100000,'2024-12':100000,'2025-1':7000000,'2025-2':200000,'2025-3':200000,
+  '2025-4':200000,'2025-5':100000,'2025-6':100000,'2025-7':200000,'2025-8':200000,
+  '2025-9':50000,'2025-10':50000,'2025-11':50000,'2025-12':50000,
+};
+
+// Merge presets with saved data (saved takes priority)
+Object.entries(presetTracker).forEach(([k,v])=>{if(!trackerData[k])trackerData[k]=v;});
+Object.entries(presetEarly).forEach(([k,v])=>{if(earlyOverrides[k]===undefined)earlyOverrides[k]=v;});
+
+recalc();
+</script>
+</body>
+</html>
