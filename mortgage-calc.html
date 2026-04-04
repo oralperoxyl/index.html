@@ -20,7 +20,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .hero-title em{font-style:italic;color:rgba(229,229,229,0.4)}
 .hero-sub{font-size:14px;color:rgba(229,229,229,0.4);font-weight:300;max-width:480px}
 .how-it-works{background:#fff;border-bottom:1px solid var(--border);padding:28px 40px}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px}
+@media(max-width:640px){.rules-grid{grid-template-columns:1fr!important}}
 .how-grid{max-width:860px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px}
+@media(max-width:640px){.how-grid{grid-template-columns:1fr;gap:20px}.how-it-works{padding:20px}}
 .how-num{display:inline-flex;width:20px;height:20px;background:var(--dark);border-radius:50%;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:500;margin-bottom:8px}
 .how-ttl{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .how-txt{font-size:13px;color:var(--muted);font-weight:300;line-height:1.65}
@@ -35,6 +38,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .pf input::placeholder{color:rgba(255,255,255,0.3)}
 .pf small{font-size:11px;color:rgba(229,229,229,0.3)}
 .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:32px}
+@media(max-width:640px){.summary{grid-template-columns:1fr 1fr}}
 .sc{background:#fff;padding:18px 20px}
 .sc:first-child{border-radius:8px 0 0 8px}
 .sc:last-child{border-radius:0 8px 8px 0}
@@ -145,12 +149,10 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
       <div class="how-txt">Вводите цифры по каждому месяцу прямо в ячейки. Сальдо считается автоматически: доходы минус расходы минус платёж. Данные сохраняются в браузере.</div>
     </div>
   
-  <div style="background:rgba(0,102,255,0.04);border-left:3px solid var(--accent);padding:14px 20px;margin-top:20px;border-radius:0 8px 8px 0">
-    <div style="font-size:13px;color:var(--text);font-weight:400;margin-bottom:4px">Покупаете квартиру вместе с агентом?</div>
-    <div style="font-size:12px;color:var(--muted);font-weight:300">Семён ведёт персональный дашборд по каждому покупателю — объекты, показы, сравнение. <a href="https://fastbroker21.ru" style="color:var(--accent);text-decoration:none">Узнать подробнее →</a></div>
+  <div style="max-width:860px;margin:16px auto 0;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+    <span style="font-size:12px;color:var(--muted);font-weight:300">Инструмент создан Семёном Гончаровым для клиентов в работе</span>
+    <a href="https://fastbroker21.ru" style="font-size:12px;color:var(--accent);text-decoration:none;font-weight:400">fastbroker21.ru →</a>
   </div>
-
-</div>
 </div>
 <div class="wrap">
   <div class="params-block">
@@ -167,7 +169,7 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
   <!-- RULES BLOCK -->
   <div style="background:#fff;border-radius:14px;padding:28px 32px;margin-bottom:32px">
     <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:20px">Ориентиры здорового платежа</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px" class="rules-grid">
 
       <div style="border-top:2px solid #1A1A1A;padding-top:16px">
         <div style="font-family:var(--serif);font-size:28px;font-weight:400;color:#1A1A1A;line-height:1;margin-bottom:8px">до 30%</div>
@@ -187,6 +189,7 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
         <div style="font-size:12px;color:var(--muted);font-weight:300;line-height:1.65">Нет финансовой подушки. Любой сбой в доходах — риск просрочки. В такой ситуации особенно важен резервный фонд на 3–6 платежей.</div>
       </div>
 
+    </div>
     </div>
     <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);font-weight:300;line-height:1.7">
       <strong style="font-weight:500;color:#1A1A1A">Правило 50/30/20:</strong> 50% дохода — обязательные расходы включая ипотеку, 30% — на жизнь и желания, 20% — в резерв и накопления. Популяризировано американским финансистом Элизабет Уоррен, в России применяется как ориентир с учётом структуры расходов.
