@@ -54,10 +54,10 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 table.dtbl{width:100%;border-collapse:collapse;background:#fff;min-width:560px}
 table.dtbl th{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text);font-weight:500;padding:10px 14px;text-align:right;border-bottom:2px solid var(--border);background:rgba(0,0,0,0.03);white-space:nowrap}
 table.dtbl th:first-child{text-align:left}
-table.dtbl td{padding:8px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:400;text-align:right;color:var(--text);font-variant-numeric:tabular-nums;vertical-align:middle}
+table.dtbl td{padding:8px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:400;text-align:right;color:#1A1A1A!important;font-variant-numeric:tabular-nums;vertical-align:middle}
 table.dtbl td:first-child{text-align:left;font-weight:500;color:var(--text);white-space:nowrap}
 table.dtbl tr:last-child td{border-bottom:none}
-table.dtbl tr.past td{opacity:.4}
+table.dtbl tr.past td{opacity:.5;color:#666!important}
 table.dtbl input.cell-in{border:1px solid var(--border);background:#fff;border-radius:6px;padding:4px 6px;font-family:var(--sans);font-size:12px;color:var(--text);width:90px;outline:none;text-align:right;transition:all .15s;display:block}
 table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,102,255,.08)}
 .num-pos{color:var(--green);font-weight:500}.num-neg{color:var(--red);font-weight:500}.num-dk{color:var(--text);font-weight:500}
@@ -98,9 +98,10 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
 .tr-totals-val{font-size:13px;font-weight:500}
 
 @media(max-width:720px){
-  .tbl-wrap{display:none}
+  #pnl-t .tbl-wrap{display:none}
   .tracker-cards{display:block}
   .params-grid{grid-template-columns:1fr 1fr}
+  .tabs{flex-wrap:wrap}
 }
 
 @media(max-width:640px){
@@ -166,7 +167,7 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
     <div class="tbl-wrap"><table class="dtbl" id="ts"></table></div>
   </div>
   <div class="tab-panel" id="pnl-t">
-    <div class="section-head"><h2 class="section-title">Доходы и расходы</h2><span class="section-hint">Редактируйте прямо в таблице — сохраняется автоматически</span></div>
+    <div class="section-head"><h2 class="section-title">Доходы и расходы</h2><span class="section-hint">Нажмите на строку чтобы раскрыть детали</span></div>
     <div class="tbl-wrap"><table class="dtbl" id="tt"></table></div>
     <div class="tracker-cards" id="tracker-cards"></div>
   </div>
@@ -180,7 +181,7 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
   <h2 class="footer-title">Есть вопросы —<br><em>свяжитесь со мной.</em></h2>
   <p class="footer-sub">Обратная связь важна — говорите что думаете.</p>
   <a class="tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">Написать в Telegram</a>
-  <p style="margin-top:14px;font-size:12px;color:rgba(229,229,229,.35)">+7 911 846-19-65</p>
+  <p style="margin-top:14px;font-size:13px;color:rgba(229,229,229,0.6)"><a href="tel:+79118461965" style="color:rgba(229,229,229,0.7);text-decoration:none">+7 911 846-19-65</a></p>
   <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
 </footer>
 <script>
@@ -260,25 +261,30 @@ function rSchedule(d){
 function rTracker(d){
   var rows=d.rows.slice(0,36);
   // Desktop table
-  var h='<thead><tr><th>Месяц</th><th>ЗП 1</th><th>Премия</th><th>ЗП 2</th><th>Доп.</th><th>Доходы</th><th>Траты</th><th>Внеплан.</th><th>Ипотека</th><th>Сальдо</th></tr></thead><tbody>';
+  var h='<thead><tr><th>Месяц</th><th>Доходы всего</th><th>Траты</th><th>Ипотека</th><th>Сальдо</th></tr></thead><tbody>';
   rows.forEach(function(r){
     var t=TR[r.k]||defT();
     var inc=(+t.z1||0)+(+t.bo||0)+(+t.z2||0)+(+t.ex||0);
     var sp=(+t.sp||0)+(+t.un||0);
     var sal=inc-sp-r.pay;
     var sc=sal>=0?'num-pos':'num-neg';
-    h+='<tr>';
+    h+='<tr style="cursor:pointer" onclick="toggleCard('+JSON.stringify(r.k)+')">';
     h+='<td style="font-weight:500">'+ml(r.m,r.y)+'</td>';
-    h+='<td><input class="cell-in" type="number" value="'+(t.z1||'')+'" data-k="'+r.k+'" data-f="z1" onchange="saveTr(this)"></td>';
-    h+='<td><input class="cell-in" type="number" value="'+(t.bo||'')+'" data-k="'+r.k+'" data-f="bo" onchange="saveTr(this)"></td>';
-    h+='<td><input class="cell-in" type="number" value="'+(t.z2||'')+'" data-k="'+r.k+'" data-f="z2" onchange="saveTr(this)"></td>';
-    h+='<td><input class="cell-in" type="number" value="'+(t.ex||'')+'" data-k="'+r.k+'" data-f="ex" onchange="saveTr(this)"></td>';
     h+='<td class="num-dk">'+fmt(inc)+'</td>';
-    h+='<td><input class="cell-in" type="number" value="'+(t.sp||'')+'" data-k="'+r.k+'" data-f="sp" onchange="saveTr(this)"></td>';
-    h+='<td><input class="cell-in" type="number" value="'+(t.un||'')+'" data-k="'+r.k+'" data-f="un" onchange="saveTr(this)"></td>';
+    h+='<td style="color:var(--red)">'+fmt(sp)+'</td>';
     h+='<td style="color:var(--red)">'+fmt(r.pay)+'</td>';
     h+='<td class="'+sc+'">'+fmt(sal)+'</td>';
     h+='</tr>';
+    // expandable detail row
+    h+='<tr id="det-'+r.k+'" style="display:none"><td colspan="5" style="padding:0">';
+    h+='<div style="padding:12px 14px;background:rgba(0,0,0,0.02);display:grid;grid-template-columns:repeat(3,1fr);gap:10px">';
+    h+='<label style="display:flex;flex-direction:column;gap:4px"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">ЗП 1</span><input class="cell-in" type="number" value="'+(t.z1||'')+'" data-k="'+r.k+'" data-f="z1" onchange="saveTr(this)"></label>';
+    h+='<label style="display:flex;flex-direction:column;gap:4px"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Премия</span><input class="cell-in" type="number" value="'+(t.bo||'')+'" data-k="'+r.k+'" data-f="bo" onchange="saveTr(this)"></label>';
+    h+='<label style="display:flex;flex-direction:column;gap:4px"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">ЗП 2</span><input class="cell-in" type="number" value="'+(t.z2||'')+'" data-k="'+r.k+'" data-f="z2" onchange="saveTr(this)"></label>';
+    h+='<label style="display:flex;flex-direction:column;gap:4px"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Подработка</span><input class="cell-in" type="number" value="'+(t.ex||'')+'" data-k="'+r.k+'" data-f="ex" onchange="saveTr(this)"></label>';
+    h+='<label style="display:flex;flex-direction:column;gap:4px"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Траты</span><input class="cell-in" type="number" value="'+(t.sp||'')+'" data-k="'+r.k+'" data-f="sp" onchange="saveTr(this)"></label>';
+    h+='<label style="display:flex;flex-direction:column;gap:4px"><span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">Внеплановые</span><input class="cell-in" type="number" value="'+(t.un||'')+'" data-k="'+r.k+'" data-f="un" onchange="saveTr(this)"></label>';
+    h+='</div></td></tr>';
   });
   h+='</tbody>';
   document.getElementById('tt').innerHTML=h;
@@ -314,8 +320,12 @@ function rTracker(d){
 }
 
 function toggleCard(k){
-  var el=document.getElementById('trc-'+k);
-  if(el)el.classList.toggle('open');
+  // mobile card
+  var card=document.getElementById('trc-'+k);
+  if(card)card.classList.toggle('open');
+  // desktop detail row
+  var det=document.getElementById('det-'+k);
+  if(det)det.style.display=det.style.display==='none'?'table-row':'none';
 }
 
 
