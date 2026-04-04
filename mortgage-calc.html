@@ -52,13 +52,13 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .section-hint{font-size:12px;color:var(--muted);font-weight:300}
 .tbl-wrap{overflow-x:auto;border-radius:8px;margin-bottom:8px}
 table.dtbl{width:100%;border-collapse:collapse;background:#fff;min-width:560px}
-table.dtbl th{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:10px 14px;text-align:right;border-bottom:2px solid var(--border);background:rgba(0,0,0,0.015);white-space:nowrap}
+table.dtbl th{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text);font-weight:500;padding:10px 14px;text-align:right;border-bottom:2px solid var(--border);background:rgba(0,0,0,0.03);white-space:nowrap}
 table.dtbl th:first-child{text-align:left}
-table.dtbl td{padding:8px 14px;border-bottom:1px solid var(--border);font-size:12px;font-weight:300;text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;vertical-align:middle}
+table.dtbl td{padding:8px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:400;text-align:right;color:var(--text);font-variant-numeric:tabular-nums;vertical-align:middle}
 table.dtbl td:first-child{text-align:left;font-weight:500;color:var(--text);white-space:nowrap}
 table.dtbl tr:last-child td{border-bottom:none}
 table.dtbl tr.past td{opacity:.4}
-table.dtbl input.cell-in{border:1px solid var(--border);background:#fff;border-radius:6px;padding:5px 8px;font-family:var(--sans);font-size:12px;color:var(--text);width:100%;min-width:80px;outline:none;text-align:right;transition:all .15s;display:block}
+table.dtbl input.cell-in{border:1px solid var(--border);background:#fff;border-radius:6px;padding:4px 6px;font-family:var(--sans);font-size:12px;color:var(--text);width:90px;outline:none;text-align:right;transition:all .15s;display:block}
 table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,102,255,.08)}
 .num-pos{color:var(--green);font-weight:500}.num-neg{color:var(--red);font-weight:500}.num-dk{color:var(--text);font-weight:500}
 .chart-box{background:#fff;border-radius:8px;padding:24px;margin-bottom:8px}
@@ -77,6 +77,32 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
 .tg-btn:hover,.tg-btn:active{background:#0088cc}
 .footer-copy{margin-top:32px;font-size:11px;color:rgba(229,229,229,.2)}
 .footer-copy a{color:rgba(229,229,229,.3);text-decoration:none}
+
+/* Mobile tracker cards */
+.tracker-cards{display:none}
+.tr-card{background:#fff;border-radius:8px;margin-bottom:8px;overflow:hidden}
+.tr-card-head{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.tr-card-month{font-weight:500;font-size:14px;color:var(--text)}
+.tr-card-saldo{font-size:14px;font-weight:500}
+.tr-card-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+.tr-card.open .tr-card-body{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding-top:12px}
+.tr-field{display:flex;flex-direction:column;gap:4px}
+.tr-field label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+.tr-field input{border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-family:var(--sans);font-size:13px;color:var(--text);outline:none;width:100%;transition:border-color .15s}
+.tr-field input:focus{border-color:var(--accent)}
+.tr-card-chevron{font-size:16px;color:var(--muted);transition:transform .2s}
+.tr-card.open .tr-card-chevron{transform:rotate(180deg)}
+.tr-totals{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-top:10px}
+.tr-totals-item{background:rgba(0,0,0,0.03);border-radius:4px;padding:8px 10px}
+.tr-totals-label{font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.tr-totals-val{font-size:13px;font-weight:500}
+
+@media(max-width:720px){
+  .tbl-wrap{display:none}
+  .tracker-cards{display:block}
+  .params-grid{grid-template-columns:1fr 1fr}
+}
+
 @media(max-width:640px){
   .site-header,.hero,.how-it-works,.footer{padding-left:20px;padding-right:20px}
   .wrap{padding:28px 20px 60px}
@@ -142,6 +168,7 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
   <div class="tab-panel" id="pnl-t">
     <div class="section-head"><h2 class="section-title">Доходы и расходы</h2><span class="section-hint">Редактируйте прямо в таблице — сохраняется автоматически</span></div>
     <div class="tbl-wrap"><table class="dtbl" id="tt"></table></div>
+    <div class="tracker-cards" id="tracker-cards"></div>
   </div>
   <div class="tab-panel" id="pnl-c">
     <div class="section-head"><h2 class="section-title">Сальдо по месяцам</h2><span class="section-hint">Первые 36 месяцев</span></div>
@@ -232,7 +259,8 @@ function rSchedule(d){
 
 function rTracker(d){
   var rows=d.rows.slice(0,36);
-  var h='<thead><tr><th>Месяц</th><th>ЗП 1</th><th>Премия</th><th>ЗП 2</th><th>Подработка</th><th>Доходы</th><th>Траты</th><th>Внеплан.</th><th>Ипотека</th><th>Сальдо</th></tr></thead><tbody>';
+  // Desktop table
+  var h='<thead><tr><th>Месяц</th><th>ЗП 1</th><th>Премия</th><th>ЗП 2</th><th>Доп.</th><th>Доходы</th><th>Траты</th><th>Внеплан.</th><th>Ипотека</th><th>Сальдо</th></tr></thead><tbody>';
   rows.forEach(function(r){
     var t=TR[r.k]||defT();
     var inc=(+t.z1||0)+(+t.bo||0)+(+t.z2||0)+(+t.ex||0);
@@ -254,7 +282,42 @@ function rTracker(d){
   });
   h+='</tbody>';
   document.getElementById('tt').innerHTML=h;
+
+  // Mobile cards
+  var cards='';
+  rows.forEach(function(r){
+    var t=TR[r.k]||defT();
+    var inc=(+t.z1||0)+(+t.bo||0)+(+t.z2||0)+(+t.ex||0);
+    var sp=(+t.sp||0)+(+t.un||0);
+    var sal=inc-sp-r.pay;
+    var sc=sal>=0?'color:var(--green)':'color:var(--red)';
+    cards+='<div class="tr-card" id="trc-'+r.k+'">';
+        cards+='<div class="tr-card-head" onclick="toggleCard('+JSON.stringify(r.k)+')">';
+    cards+='<span class="tr-card-month">'+ml(r.m,r.y)+'</span>';
+    cards+='<div style="display:flex;align-items:center;gap:10px"><span class="tr-card-saldo" style="'+sc+'">'+fmt(sal)+'</span><span class="tr-card-chevron">&#8964;</span></div>';
+    cards+='</div>';
+    cards+='<div class="tr-card-body">';
+    cards+='<div class="tr-field"><label>ЗП 1</label><input type="number" value="'+(t.z1||'')+'" data-k="'+r.k+'" data-f="z1" onchange="saveTr(this)" placeholder="0"></div>';
+    cards+='<div class="tr-field"><label>Премия</label><input type="number" value="'+(t.bo||'')+'" data-k="'+r.k+'" data-f="bo" onchange="saveTr(this)" placeholder="0"></div>';
+    cards+='<div class="tr-field"><label>ЗП 2</label><input type="number" value="'+(t.z2||'')+'" data-k="'+r.k+'" data-f="z2" onchange="saveTr(this)" placeholder="0"></div>';
+    cards+='<div class="tr-field"><label>Подработка</label><input type="number" value="'+(t.ex||'')+'" data-k="'+r.k+'" data-f="ex" onchange="saveTr(this)" placeholder="0"></div>';
+    cards+='<div class="tr-field"><label>Траты</label><input type="number" value="'+(t.sp||'')+'" data-k="'+r.k+'" data-f="sp" onchange="saveTr(this)" placeholder="0"></div>';
+    cards+='<div class="tr-field"><label>Внеплановые</label><input type="number" value="'+(t.un||'')+'" data-k="'+r.k+'" data-f="un" onchange="saveTr(this)" placeholder="0"></div>';
+    cards+='<div class="tr-totals" style="grid-column:1/-1">';
+    cards+='<div class="tr-totals-item"><div class="tr-totals-label">Доходы</div><div class="tr-totals-val num-dk">'+fmt(inc)+'</div></div>';
+    cards+='<div class="tr-totals-item"><div class="tr-totals-label">Ипотека</div><div class="tr-totals-val" style="color:var(--red)">'+fmt(r.pay)+'</div></div>';
+    cards+='<div class="tr-totals-item"><div class="tr-totals-label">Сальдо</div><div class="tr-totals-val" style="'+sc+'">'+fmt(sal)+'</div></div>';
+    cards+='</div></div></div>';
+  });
+  var el=document.getElementById('tracker-cards');
+  if(el)el.innerHTML=cards;
 }
+
+function toggleCard(k){
+  var el=document.getElementById('trc-'+k);
+  if(el)el.classList.toggle('open');
+}
+
 
 function rChart(d){
   var rows=d.rows.slice(0,36);
