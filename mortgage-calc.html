@@ -57,7 +57,7 @@ table.dtbl th:first-child{text-align:left}
 table.dtbl td{padding:8px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:400;text-align:right;color:#1A1A1A!important;font-variant-numeric:tabular-nums;vertical-align:middle}
 table.dtbl td:first-child{text-align:left;font-weight:500;color:var(--text);white-space:nowrap}
 table.dtbl tr:last-child td{border-bottom:none}
-table.dtbl tr.past td{opacity:.5;color:#666!important}
+table.dtbl tr.past td{opacity:.6}
 table.dtbl input.cell-in{border:1px solid var(--border);background:#fff;border-radius:6px;padding:4px 6px;font-family:var(--sans);font-size:12px;color:var(--text);width:90px;outline:none;text-align:right;transition:all .15s;display:block}
 table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,102,255,.08)}
 .num-pos{color:var(--green);font-weight:500}.num-neg{color:var(--red);font-weight:500}.num-dk{color:var(--text);font-weight:500}
@@ -247,11 +247,11 @@ function rSchedule(d){
   d.rows.forEach(function(r){
     h+='<tr'+(r.past?' class="past"':'')+(r.cur?' style="background:rgba(0,102,255,.05)"':'')+'>';
     h+='<td style="'+(r.cur?'font-weight:600':'')+'">'+ml(r.m,r.y)+'</td>';
-    h+='<td>'+fmtK(r.bA)+'</td>';
+    h+='<td style="color:#555">'+fmtK(r.bA)+'</td>';
     h+='<td style="color:var(--red)">'+fmtK(r.int)+'</td>';
-    h+='<td>'+fmtK(r.pri)+'</td>';
+    h+='<td style="color:#333">'+fmtK(r.pri)+'</td>';
     h+='<td><input class="cell-in" type="number" value="'+Math.round(r.ea)+'" data-k="'+r.k+'" onchange="setE(this)"></td>';
-    h+='<td class="num-dk">'+fmtK(r.pay)+'</td>';
+    h+='<td style="color:#1A1A1A;font-weight:500">'+fmtK(r.pay)+'</td>';
     h+='</tr>';
   });
   h+='</tbody>';
@@ -268,7 +268,7 @@ function rTracker(d){
     var sp=(+t.sp||0)+(+t.un||0);
     var sal=inc-sp-r.pay;
     var sc=sal>=0?'num-pos':'num-neg';
-    h+='<tr style="cursor:pointer" onclick="toggleCard('+JSON.stringify(r.k)+')">';
+    h+='<tr style="cursor:pointer" data-sum="'+r.k+'" onclick="toggleCard('+JSON.stringify(r.k)+')">';
     h+='<td style="font-weight:500">'+ml(r.m,r.y)+'</td>';
     h+='<td class="num-dk">'+fmt(inc)+'</td>';
     h+='<td style="color:var(--red)">'+fmt(sp)+'</td>';
@@ -320,12 +320,13 @@ function rTracker(d){
 }
 
 function toggleCard(k){
-  // mobile card
   var card=document.getElementById('trc-'+k);
   if(card)card.classList.toggle('open');
-  // desktop detail row
   var det=document.getElementById('det-'+k);
-  if(det)det.style.display=det.style.display==='none'?'table-row':'none';
+  if(det){
+    var isOpen=det.style.display==='table-row';
+    det.style.display=isOpen?'none':'table-row';
+  }
 }
 
 
@@ -355,7 +356,36 @@ function rChart(d){
 }
 
 function setE(inp){EO[inp.dataset.k]=+inp.value||0;sv('eo',EO);go();}
-function saveTr(inp){var k=inp.dataset.k;if(!TR[k])TR[k]=defT();TR[k][inp.dataset.f]=+inp.value||0;sv('tr',TR);var d=calcRows();rTracker(d);if(document.getElementById('pnl-c').classList.contains('on'))rChart(d);}
+function saveTr(inp){
+  var k=inp.dataset.k;
+  if(!TR[k])TR[k]=defT();
+  TR[k][inp.dataset.f]=+inp.value||0;
+  sv('tr',TR);
+  // Update summary row in place without full rerender
+  var d=calcRows();
+  var row=d.rows.find(function(r){return r.k===k;});
+  if(row){
+    var t=TR[k];
+    var inc=(+t.z1||0)+(+t.bo||0)+(+t.z2||0)+(+t.ex||0);
+    var sp2=(+t.sp||0)+(+t.un||0);
+    var sal=inc-sp2-row.pay;
+    // Update desktop summary row
+    var tr=document.querySelector('tr[data-sum="'+k+'"]');
+    if(tr){
+      var tds=tr.querySelectorAll('td');
+      if(tds[1])tds[1].textContent=fmt(inc);
+      if(tds[2])tds[2].textContent=fmt(sp2);
+      if(tds[4]){tds[4].textContent=fmt(sal);tds[4].className=sal>=0?'num-pos':'num-neg';}
+    }
+    // Update mobile card saldo
+    var card=document.getElementById('trc-'+k);
+    if(card){
+      var sEl=card.querySelector('.tr-card-saldo');
+      if(sEl){sEl.textContent=fmt(sal);sEl.style.color=sal>=0?'var(--green)':'var(--red)';}
+    }
+  }
+  if(document.getElementById('pnl-c').classList.contains('on'))rChart(d);
+}
 
 function sw(n){
   ['s','t','c'].forEach(function(x){
