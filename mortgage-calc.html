@@ -346,6 +346,36 @@ function saveTr(inp){
   if(document.getElementById('pnl-c').classList.contains('on'))rChart(d);
 }
 
+function rChart(d){
+  var rows=d.rows.slice(0,36);
+  var sals=rows.map(function(r){
+    var t=TR[r.k]||defT();
+    var inc=+t.inc||0;
+    var sp2=+t.sp2||0;
+    return{m:r.m,y:r.y,v:inc-sp2-r.pay};
+  });
+  var mx=Math.max.apply(null,sals.map(function(s){return Math.abs(s.v);}));
+  if(!mx)mx=1;
+  var H=140;
+  var bars=sals.map(function(s){
+    var h=Math.max(3,Math.abs(s.v)/mx*H);
+    return '<div class="chart-bar '+(s.v>=0?'pos':'neg')+'" style="height:'+h+'px" title="'+ml(s.m,s.y)+': '+fmt(s.v)+'"></div>';
+  }).join('');
+  var labels=sals.filter(function(_,i){return i%4===0;}).map(function(s){
+    return '<span style="flex:4">'+s.m+'.'+(s.y+'').slice(2)+'</span>';
+  }).join('');
+  var pos=sals.filter(function(s){return s.v>0;}).length;
+  document.getElementById('ch').innerHTML=
+    '<div style="display:flex;justify-content:space-between;margin-bottom:8px">'+
+    '<div><span style="font-size:12px;color:var(--green);font-weight:500;margin-right:12px">+ '+pos+' мес. в плюсе</span>'+
+    '<span style="font-size:12px;color:var(--red);font-weight:500">- '+(sals.length-pos)+' мес. в минусе</span></div>'+
+    '<span style="font-size:11px;color:var(--muted)">первые 36 мес.</span></div>'+
+    '<div class="chart-bars">'+bars+'</div>'+
+    '<div class="chart-zero"></div>'+
+    '<div class="chart-xl">'+labels+'</div>';
+}
+
+
 function sw(n){
   ['s','t','c'].forEach(function(x){
     document.getElementById('pnl-'+x).classList.toggle('on',x===n);
