@@ -146,7 +146,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 <section class="hero">
   <div class="hero-inner">
     <p class="hero-label">Финансовое планирование</p>
-    <h1 class="hero-title">Ипотека.<br><em>Цифры, которые важны.</em></h1>
+    <h1 class="hero-title">Ипотека.<br><em>Цифры которые важны.</em></h1>
     <p class="hero-sub">Калькулятор платежей, досрочное погашение и трекер доходов и расходов по месяцам.</p>
   </div>
 </section>
@@ -310,7 +310,7 @@ let trackerData=loadData('tracker',{});
 
 // Default tracker row
 function defaultTracker(){
-  return{zp1:200000,bonus:0,zp2:200000,extra:0,expenses:100000,unexpected:0};
+  return{zp1:0,bonus:0,zp2:0,extra:0,expenses:0,unexpected:0};
 }
 
 // ── CALCULATE SCHEDULE ───────────────────────────────────────
@@ -444,23 +444,25 @@ function renderTracker(schedData){
   </tr></thead><tbody>`;
 
   active.forEach(r=>{
-    const d=trackerData[r.key]||defaultTracker();
-    const income=(d.zp1||0)+(d.bonus||0)+(d.zp2||0)+(d.extra||0);
+    const d2=trackerData[r.key]||{};
+    const d=trackerData[r.key]||{};
+    const income=(d2.zp1||0)+(d2.bonus||0)+(d2.zp2||0)+(d2.extra||0);
     const spend=(d.expenses||0)+(d.unexpected||0);
-    const saldo=income-spend-r.payment;
-    const saldoCls=saldo>=0?'pos':'neg';
+    const hasAnyData=income>0||spend>0;
+    const saldo=hasAnyData?income-spend-r.payment:null;
+    const saldoCls=saldo===null?'neutral':saldo>=0?'pos':'neg';
 
     html+=`<tr>
       <td class="month-label">${monthLabel(r.m,r.y)}</td>
-      <td><input type="number" value="${d.zp1||''}" data-key="${r.key}" data-field="zp1" onchange="saveTracker(this)" placeholder="0"></td>
-      <td><input type="number" value="${d.bonus||''}" data-key="${r.key}" data-field="bonus" onchange="saveTracker(this)" placeholder="0"></td>
-      <td><input type="number" value="${d.zp2||''}" data-key="${r.key}" data-field="zp2" onchange="saveTracker(this)" placeholder="0"></td>
-      <td><input type="number" value="${d.extra||''}" data-key="${r.key}" data-field="extra" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d2.zp1||''}" data-key="${r.key}" data-field="zp1" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d2.bonus||''}" data-key="${r.key}" data-field="bonus" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d2.zp2||''}" data-key="${r.key}" data-field="zp2" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d2.extra||''}" data-key="${r.key}" data-field="extra" onchange="saveTracker(this)" placeholder="0"></td>
       <td class="td-num neutral">${fmt(income)}</td>
-      <td><input type="number" value="${d.expenses||''}" data-key="${r.key}" data-field="expenses" onchange="saveTracker(this)" placeholder="0"></td>
-      <td><input type="number" value="${d.unexpected||''}" data-key="${r.key}" data-field="unexpected" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d2.expenses||''}" data-key="${r.key}" data-field="expenses" onchange="saveTracker(this)" placeholder="0"></td>
+      <td><input type="number" value="${d2.unexpected||''}" data-key="${r.key}" data-field="unexpected" onchange="saveTracker(this)" placeholder="0"></td>
       <td class="td-num" style="color:var(--red)">${fmt(r.payment)}</td>
-      <td class="td-num ${saldoCls}">${fmt(saldo)}</td>
+      <td class="td-num ${saldoCls}">${saldo===null?'—':fmt(saldo)}</td>
     </tr>`;
   });
 
@@ -471,42 +473,91 @@ function renderTracker(schedData){
 // ── RENDER CHART ─────────────────────────────────────────────
 function renderChart(schedData){
   const{rows}=schedData;
-  const active=rows.slice(0,36);
+  const active=rows.slice(0,Math.min(rows.length,36));
 
   const saldos=active.map(r=>{
-    const d=trackerData[r.key]||defaultTracker();
-    const income=(d.zp1||0)+(d.bonus||0)+(d.zp2||0)+(d.extra||0);
+    const d=trackerData[r.key];
+    if(!d)return{key:r.key,m:r.m,y:r.y,val:null,hasData:false};
+    const income=(d2.zp1||0)+(d2.bonus||0)+(d2.zp2||0)+(d2.extra||0);
     const spend=(d.expenses||0)+(d.unexpected||0);
-    return{key:r.key,m:r.m,y:r.y,val:income-spend-r.payment};
+    return{key:r.key,m:r.m,y:r.y,val:income-spend-r.payment,hasData:true};
   });
 
-  const maxAbs=Math.max(...saldos.map(s=>Math.abs(s.val)),1);
-  const chartH=180;
+  const withData=saldos.filter(s=>s.hasData);
+  const posCount=withData.filter(s=>s.val>=0).length;
+  const negCount=withData.filter(s=>s.val<0).length;
 
+  const maxPos=Math.max(...saldos.map(s=>s.val>0?s.val:0),1);
+  const maxNeg=Math.max(...saldos.map(s=>s.val<0?Math.abs(s.val):0),1);
+  const chartH=140; // half height for each side
+
+  // Build bars with zero-baseline
   const bars=saldos.map(s=>{
-    const h=Math.max(2,Math.abs(s.val)/maxAbs*chartH*0.9);
-    const cls=s.val>=0?'pos':'neg';
-    const title=monthLabel(s.m,s.y)+': '+fmt(s.val);
-    return`<div class="chart-bar ${cls}" style="height:${h}px" title="${title}"></div>`;
+    if(!s.hasData){
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0"><div style="flex:1"></div><div style="height:2px;width:100%;background:rgba(0,0,0,0.06);border-radius:1px"></div><div style="flex:1"></div></div>';
+    }
+    const v=s.val;
+    const title=monthLabel(s.m,s.y)+': '+(v>=0?'+':'')+fmt(v);
+    if(v>=0){
+      const h=Math.max(3,v/maxPos*chartH);
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center" title="'+title+'">'+
+        '<div style="flex:1;display:flex;align-items:flex-end;width:100%">'+
+          '<div style="width:100%;height:'+h+'px;background:var(--green);border-radius:2px 2px 0 0;transition:opacity 0.2s;cursor:default" onmouseenter="showTip(this,''+title+'')" onmouseleave="hideTip()"></div>'+
+        '</div>'+
+        '<div style="height:1px;width:100%;background:rgba(0,0,0,0.12)"></div>'+
+        '<div style="flex:1"></div>'+
+      '</div>';
+    } else {
+      const h=Math.max(3,Math.abs(v)/maxNeg*chartH);
+      return '<div style="flex:1;display:flex;flex-direction:column;align-items:center" title="'+title+'">'+
+        '<div style="flex:1"></div>'+
+        '<div style="height:1px;width:100%;background:rgba(0,0,0,0.12)"></div>'+
+        '<div style="flex:1;display:flex;align-items:flex-start;width:100%">'+
+          '<div style="width:100%;height:'+h+'px;background:var(--red);border-radius:0 0 2px 2px;transition:opacity 0.2s;cursor:default" onmouseenter="showTip(this,''+title+'')" onmouseleave="hideTip()"></div>'+
+        '</div>'+
+      '</div>';
+    }
   }).join('');
 
-  const labels=saldos.filter((_,i)=>i%3===0).map(s=>`<div class="chart-label" style="flex:3">${s.m}.${String(s.y).slice(2)}</div>`).join('');
+  // Labels every 3 months
+  const labelItems=saldos.map((s,i)=>{
+    if(i%3!==0)return '<div style="flex:1"></div>';
+    return '<div style="flex:1;font-size:9px;color:var(--muted);text-align:center">'+s.m+'.'+String(s.y).slice(2)+'</div>';
+  }).join('');
 
-  const posCount=saldos.filter(s=>s.val>0).length;
-  const negCount=saldos.length-posCount;
+  const noDataNote=withData.length===0?'<p style="text-align:center;color:var(--muted);font-size:13px;font-weight:300;padding:40px 0">Заполните данные во вкладке «Доходы и расходы» — график появится автоматически</p>':'';
 
-  document.getElementById('chartWrap').innerHTML=`
-    <div class="section-head" style="margin-bottom:8px">
-      <div>
-        <span style="font-size:12px;color:var(--green);font-weight:500;margin-right:16px">▲ ${posCount} мес. в плюсе</span>
-        <span style="font-size:12px;color:var(--red);font-weight:500">▼ ${negCount} мес. в минусе</span>
-      </div>
-      <span class="section-sub">первые 36 месяцев</span>
-    </div>
-    <div class="chart-bar-wrap">${bars}</div>
-    <div class="chart-zero"></div>
-    <div class="chart-labels">${labels}</div>`;
+  document.getElementById('chartWrap').innerHTML=
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">'+
+      '<div>'+
+        '<span style="font-size:12px;color:var(--green);font-weight:500;margin-right:16px">▲ '+posCount+' мес. в плюсе</span>'+
+        '<span style="font-size:12px;color:var(--red);font-weight:500">▼ '+negCount+' мес. в минусе</span>'+
+      '</div>'+
+      '<span style="font-size:12px;color:var(--muted);font-weight:300">первые '+active.length+' месяцев</span>'+
+    '</div>'+
+    noDataNote+
+    (withData.length>0?
+      '<div style="position:relative">'+
+        '<div style="display:flex;gap:2px;height:'+( chartH*2+1)+'px;align-items:stretch">'+bars+'</div>'+
+        '<div style="display:flex;gap:2px;margin-top:6px">'+labelItems+'</div>'+
+        '<div id="tooltip" style="display:none;position:fixed;background:var(--dark);color:#fff;padding:6px 10px;border-radius:6px;font-size:12px;pointer-events:none;z-index:999;white-space:nowrap"></div>'+
+      '</div>'
+    :'');
 }
+
+function showTip(el,text){
+  const tip=document.getElementById('tooltip');
+  if(!tip)return;
+  tip.textContent=text;tip.style.display='block';
+  const r=el.getBoundingClientRect();
+  tip.style.left=(r.left+r.width/2-tip.offsetWidth/2)+'px';
+  tip.style.top=(r.top-32)+'px';
+}
+function hideTip(){
+  const tip=document.getElementById('tooltip');
+  if(tip)tip.style.display='none';
+}
+
 
 // ── INTERACTIONS ─────────────────────────────────────────────
 function setEarly(input){
