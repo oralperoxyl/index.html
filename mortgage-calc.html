@@ -636,18 +636,6 @@ function recalc(){
   if(document.getElementById('tab-chart').style.display!=='none')renderChart(data);
 }
 
-// ── INIT SYNC ────────────────────────────────────────────────
-function initSync(){
-  const term=parseInt(document.getElementById('p-term').value)||242;
-  document.getElementById('p-years').value=Math.floor(term/12);
-  updateTermHint(term);
-  const price=parseFloat(document.getElementById('p-price').value)||0;
-  const down=parseFloat(document.getElementById('p-down').value)||0;
-  if(price>0){
-    const pct=Math.round(down/price*100);
-    document.getElementById('p-down-pct').textContent=pct+'% от стоимости';
-  }
-}
 
 // ── INIT ─────────────────────────────────────────────────────
 // Pre-populate with real data from spreadsheet
@@ -669,7 +657,6 @@ const presetEarly={
 Object.entries(presetTracker).forEach(([k,v])=>{if(!trackerData[k])trackerData[k]=v;});
 Object.entries(presetEarly).forEach(([k,v])=>{if(earlyOverrides[k]===undefined)earlyOverrides[k]=v;});
 
-initSync();
 recalc();
 </script>
 </body>
