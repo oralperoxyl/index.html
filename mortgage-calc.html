@@ -195,10 +195,10 @@ function sv(k,v){try{localStorage.setItem('mc2_'+k,JSON.stringify(v));}catch(e){
 function lv(k,d){try{var r=localStorage.getItem('mc2_'+k);return r?JSON.parse(r):d;}catch(e){return d;}}
 var EO=lv('eo',{});
 var TR=lv('tr',{});
-function defT(){return{z1:200000,bo:0,z2:200000,ex:0,sp:100000,un:0};}
+function defT(){return{inc:400000,sp2:100000};}
 // presets
 var PE={'2024-11':100000,'2024-12':100000,'2025-1':7000000,'2025-2':200000,'2025-3':200000,'2025-4':200000,'2025-5':100000,'2025-6':100000,'2025-7':200000,'2025-8':200000,'2025-9':50000,'2025-10':50000,'2025-11':50000,'2025-12':50000};
-var PT={'2024-11':{z1:200000,bo:100000,z2:200000,ex:50000,sp:100000,un:10000},'2024-12':{z1:200000,bo:0,z2:200000,ex:0,sp:100000,un:0},'2025-1':{z1:7200000,bo:0,z2:200000,ex:0,sp:150000,un:0},'2025-2':{z1:200000,bo:100000,z2:200000,ex:300000,sp:100000,un:0},'2025-3':{z1:200000,bo:0,z2:200000,ex:0,sp:100000,un:0},'2025-4':{z1:200000,bo:0,z2:200000,ex:0,sp:100000,un:300000}};
+var PT={'2024-11':{inc:550000,sp2:110000},'2024-12':{inc:400000,sp2:100000},'2025-1':{inc:7600000,sp2:150000},'2025-2':{inc:800000,sp2:100000},'2025-3':{inc:400000,sp2:100000},'2025-4':{inc:400000,sp2:400000}};
 Object.keys(PE).forEach(function(k){if(EO[k]===undefined)EO[k]=PE[k];});
 Object.keys(PT).forEach(function(k){if(!TR[k])TR[k]=PT[k];});
 
@@ -259,35 +259,31 @@ function rSchedule(d){
   document.getElementById('ts').innerHTML=h;
 }
 
+function toggleMobileCard(el){el.closest('.tr-card').classList.toggle('open');}
+
 function rTracker(d){
   var rows=d.rows.slice(0,36);
-  // Desktop table - 5 summary cols + expand button
-  var h='<thead><tr><th></th><th>Месяц</th><th>Доходы</th><th>Траты</th><th>Ипотека</th><th>Сальдо</th></tr></thead><tbody>';
+
+  // Desktop - 4 simple columns
+  var h='<thead><tr>';
+  h+='<th style="text-align:left">Месяц</th>';
+  h+='<th>Доходы</th><th>Расходы</th><th>Ипотека</th><th>Сальдо</th>';
+  h+='</tr></thead><tbody>';
+
   rows.forEach(function(r){
     var t=TR[r.k]||defT();
     var inc=(+t.z1||0)+(+t.bo||0)+(+t.z2||0)+(+t.ex||0);
     var sp2=(+t.sp||0)+(+t.un||0);
     var sal=inc-sp2-r.pay;
-    var sc=sal>=0?'num-pos':'num-neg';
-    h+='<tr data-sum="'+r.k+'">';
-    h+='<td style="padding:6px 8px;width:32px"><button onclick="toggleDet('+JSON.stringify(r.k)+')" style="width:24px;height:24px;border-radius:50%;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:14px;color:var(--muted);display:flex;align-items:center;justify-content:center" id="btn-'+r.k+'">+</button></td>';
-    h+='<td style="color:#1A1A1A;font-weight:500;text-align:left">'+ml(r.m,r.y)+'</td>';
-    h+='<td style="color:#1A1A1A;font-weight:500">'+fmt(inc)+'</td>';
-    h+='<td style="color:#C0392B">'+fmt(sp2)+'</td>';
-    h+='<td style="color:#C0392B">'+fmt(r.pay)+'</td>';
-    h+='<td class="'+sc+'">'+fmt(sal)+'</td>';
+    var sc=sal>=0?'#2D8A4E':'#C0392B';
+    var k=r.k;
+    h+='<tr data-sum="'+k+'">';
+    h+='<td style="color:#1A1A1A;font-weight:500;text-align:left;white-space:nowrap">'+ml(r.m,r.y)+'</td>';
+    h+='<td style="padding:6px 10px"><input type="number" class="cell-in" value="'+inc+'" data-k="'+k+'" data-f="inc" onchange="saveTr(this)" placeholder="0"></td>';
+    h+='<td style="padding:6px 10px"><input type="number" class="cell-in" value="'+sp2+'" data-k="'+k+'" data-f="sp2" onchange="saveTr(this)" placeholder="0"></td>';
+    h+='<td style="color:#C0392B;font-weight:400">'+fmt(r.pay)+'</td>';
+    h+='<td style="font-weight:600;color:'+sc+'">'+fmt(sal)+'</td>';
     h+='</tr>';
-    // Detail row - hidden by default
-    h+='<tr id="det-'+r.k+'" style="display:none"><td colspan="6" style="padding:0">';
-    h+='<div style="padding:14px 16px;background:rgba(0,102,255,0.03);border-left:3px solid var(--accent);display:grid;grid-template-columns:repeat(3,1fr);gap:12px">';
-    var fields=[['z1','ЗП 1'],['bo','Премия'],['z2','ЗП 2'],['ex','Подработка'],['sp','Траты на жизнь'],['un','Внеплановые']];
-    fields.forEach(function(f){
-      h+='<div style="display:flex;flex-direction:column;gap:5px">';
-      h+='<span style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)">'+f[1]+'</span>';
-      h+='<input type="number" value="'+(t[f[0]]||'')+'" data-k="'+r.k+'" data-f="'+f[0]+'" onchange="saveTr(this)" onclick="event.stopPropagation()" style="border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-family:var(--sans);font-size:13px;color:#1A1A1A;outline:none;width:100%;transition:border-color .15s" onfocus="this.style.borderColor=\'var(--accent)\'" onblur="this.style.borderColor=\'var(--border)\'" placeholder="0">';
-      h+='</div>';
-    });
-    h+='</div></td></tr>';
   });
   h+='</tbody>';
   document.getElementById('tt').innerHTML=h;
@@ -300,75 +296,26 @@ function rTracker(d){
     var sp2=(+t.sp||0)+(+t.un||0);
     var sal=inc-sp2-r.pay;
     var scol=sal>=0?'var(--green)':'var(--red)';
-    cards+='<div class="tr-card" id="trc-'+r.k+'">';
-    cards+='<div class="tr-card-head" onclick="toggleCard('+JSON.stringify(r.k)+')">';
+    var k=r.k;
+    cards+='<div class="tr-card" id="trc-'+k+'">';
+    cards+='<div class="tr-card-head" onclick="toggleMobileCard(this)">';
     cards+='<span class="tr-card-month">'+ml(r.m,r.y)+'</span>';
-    cards+='<div style="display:flex;align-items:center;gap:10px"><span style="font-size:14px;font-weight:500;color:'+scol+'">'+fmt(sal)+'</span><span class="tr-card-chevron">&#8964;</span></div>';
+    cards+='<div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;font-weight:600;color:'+scol+'">'+fmt(sal)+'</span><span class="tr-card-chevron">&#8964;</span></div>';
     cards+='</div>';
     cards+='<div class="tr-card-body">';
-    var mfields=[['z1','ЗП 1'],['bo','Премия'],['z2','ЗП 2'],['ex','Подработка'],['sp','Траты'],['un','Внеплановые']];
-    mfields.forEach(function(f){
-      cards+='<div class="tr-field"><label>'+f[1]+'</label>';
-      cards+='<input type="number" value="'+(t[f[0]]||'')+'" data-k="'+r.k+'" data-f="'+f[0]+'" onchange="saveTr(this)" onclick="event.stopPropagation()" placeholder="0">';
-      cards+='</div>';
-    });
-    cards+='<div class="tr-totals" style="grid-column:1/-1">';
-    cards+='<div class="tr-totals-item"><div class="tr-totals-label">Доходы</div><div class="tr-totals-val" style="color:#1A1A1A">'+fmt(inc)+'</div></div>';
-    cards+='<div class="tr-totals-item"><div class="tr-totals-label">Ипотека</div><div class="tr-totals-val" style="color:var(--red)">'+fmt(r.pay)+'</div></div>';
-    cards+='<div class="tr-totals-item"><div class="tr-totals-label">Сальдо</div><div class="tr-totals-val" style="color:'+scol+'">'+fmt(sal)+'</div></div>';
-    cards+='</div></div></div>';
+    cards+='<div class="tr-field"><label>Доходы</label><input type="number" value="'+inc+'" data-k="'+k+'" data-f="inc" onchange="saveTr(this)" placeholder="0"></div>';
+    cards+='<div class="tr-field"><label>Расходы</label><input type="number" value="'+sp2+'" data-k="'+k+'" data-f="sp2" onchange="saveTr(this)" placeholder="0"></div>';
+    cards+='<div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">';
+    cards+='<div style="background:rgba(0,0,0,0.04);border-radius:6px;padding:8px 10px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:3px">Ипотека</div><div style="font-size:13px;font-weight:600;color:#C0392B">'+fmt(r.pay)+'</div></div>';
+    cards+='<div style="background:rgba(0,0,0,0.04);border-radius:6px;padding:8px 10px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:3px">Сальдо</div><div style="font-size:13px;font-weight:600;color:'+scol+'">'+fmt(sal)+'</div></div>';
+    cards+='</div>';
+    cards+='</div></div>';
   });
   var el=document.getElementById('tracker-cards');
   if(el)el.innerHTML=cards;
 }
 
-function toggleDet(k){
-  var det=document.getElementById('det-'+k);
-  var btn=document.getElementById('btn-'+k);
-  if(!det)return;
-  var open=det.style.display==='table-row';
-  det.style.display=open?'none':'table-row';
-  if(btn)btn.textContent=open?'+':'−';
-}
 
-
-function toggleCard(k){
-  var card=document.getElementById('trc-'+k);
-  if(card)card.classList.toggle('open');
-  var det=document.getElementById('det-'+k);
-  if(det){
-    var isOpen=det.style.display==='table-row';
-    det.style.display=isOpen?'none':'table-row';
-  }
-}
-
-
-function rChart(d){
-  var rows=d.rows.slice(0,36);
-  var sals=rows.map(function(r){
-    var t=TR[r.k]||defT();
-    var inc=(+t.z1||0)+(+t.bo||0)+(+t.z2||0)+(+t.ex||0);
-    var sp=(+t.sp||0)+(+t.un||0);
-    return{m:r.m,y:r.y,v:inc-sp-r.pay};
-  });
-  var mx=Math.max.apply(null,sals.map(function(s){return Math.abs(s.v);}));
-  if(!mx)mx=1;
-  var H=140;
-  var bars=sals.map(function(s){
-    var h=Math.max(3,Math.abs(s.v)/mx*H);
-    return '<div class="chart-bar '+(s.v>=0?'pos':'neg')+'" style="height:'+h+'px" title="'+ml(s.m,s.y)+': '+fmt(s.v)+'"></div>';
-  }).join('');
-  var labels=sals.filter(function(_,i){return i%4===0;}).map(function(s){
-    return '<span style="flex:4">'+s.m+'.'+(s.y+'').slice(2)+'</span>';
-  }).join('');
-  var pos=sals.filter(function(s){return s.v>0;}).length;
-  document.getElementById('ch').innerHTML=
-    '<div style="display:flex;justify-content:space-between;margin-bottom:4px">'+
-    '<div><span style="font-size:12px;color:var(--green);font-weight:500;margin-right:12px">+ '+pos+' мес. в плюсе</span><span style="font-size:12px;color:var(--red);font-weight:500">- '+(sals.length-pos)+' мес. в минусе</span></div>'+
-    '</div><div class="chart-bars">'+bars+'</div><div class="chart-zero"></div><div class="chart-xl">'+labels+'</div>';
-}
-
-function setE(inp){EO[inp.dataset.k]=+inp.value||0;sv('eo',EO);go();}
 function saveTr(inp){
   var k=inp.dataset.k;
   if(!TR[k])TR[k]=defT();
@@ -378,27 +325,22 @@ function saveTr(inp){
   var row=d.rows.find(function(r){return r.k===k;});
   if(row){
     var t=TR[k];
-    var inc=(+t.z1||0)+(+t.bo||0)+(+t.z2||0)+(+t.ex||0);
-    var sp2=(+t.sp||0)+(+t.un||0);
+    var inc=+t.inc||0;
+    var sp2=+t.sp2||0;
     var sal=inc-sp2-row.pay;
-    // Update desktop summary row
+    var sc=sal>=0?'#2D8A4E':'#C0392B';
     var tr=document.querySelector('tr[data-sum="'+k+'"]');
     if(tr){
       var tds=tr.querySelectorAll('td');
-      if(tds[2])tds[2].textContent=fmt(inc);
-      if(tds[3])tds[3].textContent=fmt(sp2);
-      if(tds[5]){tds[5].textContent=fmt(sal);tds[5].className=sal>=0?'num-pos':'num-neg';}
+      var n=tds.length;
+      if(tds[n-1]){tds[n-1].textContent=fmt(sal);tds[n-1].style.color=sc;}
     }
-    // Update mobile card
     var card=document.getElementById('trc-'+k);
     if(card){
-      var sEl=card.querySelector('.tr-card-saldo');
-      if(!sEl){sEl=card.querySelector('[style*="font-weight:500"]');}
-      if(sEl){sEl.textContent=fmt(sal);sEl.style.color=sal>=0?'var(--green)':'var(--red)';}
-      // update totals
-      var totals=card.querySelectorAll('.tr-totals-val');
-      if(totals[0])totals[0].textContent=fmt(inc);
-      if(totals[2]){totals[2].textContent=fmt(sal);totals[2].style.color=sal>=0?'var(--green)':'var(--red)';}
+      var hSal=card.querySelector('.tr-card-head [style*="font-weight:600"]');
+      if(hSal){hSal.textContent=fmt(sal);hSal.style.color=sal>=0?'var(--green)':'var(--red)';}
+      var tots=card.querySelectorAll('[style*="border-radius:6px"] [style*="font-weight:600"]');
+      if(tots[1]){tots[1].textContent=fmt(sal);tots[1].style.color=sal>=0?'var(--green)':'var(--red)';}
     }
   }
   if(document.getElementById('pnl-c').classList.contains('on'))rChart(d);
