@@ -272,8 +272,8 @@ function rTracker(d){
 
   rows.forEach(function(r){
     var t=TR[r.k]||defT();
-    var inc=(+t.z1||0)+(+t.bo||0)+(+t.z2||0)+(+t.ex||0);
-    var sp2=(+t.sp||0)+(+t.un||0);
+    var inc=+t.inc||0;
+    var sp2=+t.sp2||0;
     var sal=inc-sp2-r.pay;
     var sc=sal>=0?'#2D8A4E':'#C0392B';
     var k=r.k;
@@ -292,8 +292,8 @@ function rTracker(d){
   var cards='';
   rows.forEach(function(r){
     var t=TR[r.k]||defT();
-    var inc=(+t.z1||0)+(+t.bo||0)+(+t.z2||0)+(+t.ex||0);
-    var sp2=(+t.sp||0)+(+t.un||0);
+    var inc=+t.inc||0;
+    var sp2=+t.sp2||0;
     var sal=inc-sp2-r.pay;
     var scol=sal>=0?'var(--green)':'var(--red)';
     var k=r.k;
