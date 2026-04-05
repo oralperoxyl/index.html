@@ -780,11 +780,81 @@ function removeLoc(buyerId,locIdx){
 }
 
 
+
+// ── VISIBILITY ────────────────────────────────────────────────
+var VIS_BLOCKS=[
+  {k:'locations',label:'Сравнение локаций'},
+  {k:'compare',label:'Таблица сравнения'},
+  {k:'logic',label:'Как мы отбираем объекты'},
+  {k:'hint',label:'На что обратить внимание'},
+  {k:'calc',label:'Ссылка на калькулятор'},
+];
+
+function getVis(buyer){
+  if(!buyer.vis)buyer.vis={};
+  return buyer.vis;
+}
+
+function renderVisControls(buyerId){
+  var buyer=allData.buyers[buyerId];
+  if(!buyer)return;
+  var vis=getVis(buyer);
+  var el=document.getElementById('vis-controls');
+  if(!el)return;
+  el.innerHTML=VIS_BLOCKS.map(function(b){
+    var on=vis[b.k]!==false;
+    return '<label style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);border-radius:8px;padding:10px 14px;cursor:pointer">'+
+      '<input type="checkbox" '+(on?'checked':'')+' data-bid="'+buyerId+'" data-vis="'+b.k+'" style="width:16px;height:16px;cursor:pointer;accent-color:#fff">'+
+      '<span style="font-size:13px;color:#E5E5E5;font-weight:300">'+b.label+'</span>'+
+    '</label>';
+  }).join('');
+  // Attach listeners
+  el.querySelectorAll('input[data-vis]').forEach(function(inp){
+    inp.addEventListener('change',function(){
+      toggleVis(inp.dataset.bid,inp.dataset.vis,inp.checked);
+    });
+  });
+}
+
+function toggleVis(buyerId,key,val){
+  var buyer=allData.buyers[buyerId];
+  if(!buyer)return;
+  if(!buyer.vis)buyer.vis={};
+  buyer.vis[key]=val;
+  debounceSave();
+}
+
+
+function applyVisibility(buyer){
+  var checks={
+    locations:'.loc-section',
+    compare:'.compare-scroll',
+    logic:'.logic-block',
+    hint:'.hint-block',
+    calc:'[data-calc-link]'
+  };
+  Object.keys(checks).forEach(function(k){
+    var el=document.querySelector(checks[k]);
+    if(el)el.style.display=isVisible(buyer,k)?'':'none';
+  });
+}
+
+function isVisible(buyer,key){
+  if(!buyer||!buyer.vis)return true;
+  return buyer.vis[key]!==false;
+}
+
+
 // ── CLIENT VIEW ──────────────────────────────────────────────
 function renderClientView(buyerId){
   const buyer=allData.buyers[buyerId];
   if(!buyer){
-    document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Покупатель не найден. Проверьте ссылку.</div>${renderFooter()}`;
+    var showLoc=isVisible(buyer,'locations');
+  var showCmp=isVisible(buyer,'compare');
+  var showLogic=isVisible(buyer,'logic');
+  var showHint=isVisible(buyer,'hint');
+  var showCalc=isVisible(buyer,'calc');
+  document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Покупатель не найден. Проверьте ссылку.</div>${renderFooter()}`;
     return;
   }
   loadLocalRatings(buyerId,buyer.props||[]);
@@ -792,6 +862,11 @@ function renderClientView(buyerId){
   const planned=props.filter(p=>p.status==='planned').length;
   const viewed=props.filter(p=>p.status!=='planned').length;
 
+  var showLoc=isVisible(buyer,'locations');
+  var showCmp=isVisible(buyer,'compare');
+  var showLogic=isVisible(buyer,'logic');
+  var showHint=isVisible(buyer,'hint');
+  var showCalc=isVisible(buyer,'calc');
   document.getElementById('appRoot').innerHTML=`
     <section class="hero">
       <div class="hero-inner">
@@ -810,7 +885,7 @@ function renderClientView(buyerId){
       ${(buyer.situation||buyer.nextStep)?`<div class="steps-block">${buyer.situation?`<div class="step-row situation"><span class="step-row-label">Сейчас</span><span class="step-row-text">${esc(buyer.situation)}</span></div>`:''} ${buyer.nextStep?`<div class="step-row next"><span class="step-row-label">Следующий шаг</span><span class="step-row-text">${esc(buyer.nextStep)}</span></div>`:''}</div>`:''}
 
       ${renderUpdates(props)}
-      <div class="logic-block">
+      <div class="logic-block" >
         <div class="logic-block-title">Как мы отбираем объекты</div>
         <div class="logic-block-text">
           <p>Здесь только те квартиры, которые прошли первичный отбор — по соотношению цены и площади в конкретной локации. <strong>Это не весь рынок, а лучшее из того что реально стоит смотреть прямо сейчас — исходя из актуальных объявлений по вашим параметрам.</strong></p>
@@ -818,8 +893,6 @@ function renderClientView(buyerId){
           <p>Если какой-то объект кажется завышенным по цене — это не ошибка. Значит мы <strong>проверяем сценарий</strong>: иногда нужно посмотреть на верхнюю границу рынка, чтобы лучше понять ценность остальных вариантов.</p>
         </div>
       </div>
-
-      <div class="hint-block">
         <div class="hint-title">На что обратить внимание при оценке</div>
         <div class="hint-items">
           <div class="hint-item">
@@ -844,16 +917,15 @@ function renderClientView(buyerId){
             </div>
           </div>
         </div>
-      </div>
-
-      <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
+      </div><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
       <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,false)).join('')}</div>
 
       ${renderLocations(buyer,buyerId,false)}
       ${renderCompare(props)}
-      <div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px;font-weight:400">Калькулятор платежей и доходов/расходов →</a></div>
+      ${showCalc?`<div data-calc-link style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px;font-weight:400">Калькулятор платежей и доходов/расходов →</a></div>`:""}
     </div>
     ${renderFooter()}`;
+  renderVisControls(buyerId);
 }
 
 // ── AGENT VIEW ───────────────────────────────────────────────
@@ -888,6 +960,12 @@ function renderAgentView(buyerId){
           </div>
         </div></div>
 
+
+      <!-- VISIBILITY CONTROLS -->
+      <div class="agent-section" style="margin-bottom:24px">
+        <div class="agent-section-title" style="font-size:15px;margin-bottom:16px">Блоки для клиента</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="vis-controls"></div>
+      </div>
       <!-- Add property -->
       <div class="agent-section" style="margin-bottom:32px">
         <div class="agent-section-title">Добавить объект</div>
@@ -932,10 +1010,11 @@ function renderAgentView(buyerId){
       <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,true)).join('')}</div>
 
       ${renderLocations(buyer,buyerId,true)}
-      ${renderCompare(props)}
-      <div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px;font-weight:400">Калькулятор платежей и доходов/расходов →</a></div>
+      ${isVisible(buyer,"compare")?renderCompare(props):""}
+      <div data-calc-link style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px;font-weight:400">Калькулятор платежей и доходов/расходов →</a></div>
     </div>
     ${renderFooter()}`;
+  renderVisControls(buyerId);
 }
 
 // ── NEXT STEP ────────────────────────────────────────────────
@@ -1024,6 +1103,7 @@ function openEditProp(buyerId,idx){
 
   setTimeout(function(){updatePpmHint('ep');},50);
 }
+
 
 function closeModal(){
   document.getElementById('editModal').classList.remove('open');
