@@ -480,7 +480,9 @@
       "props": [],
       "nextStep": "",
       "createdAt": "2026-04-05",
-      "vis": {}
+      "vis": {
+        "locations": false
+      }
     }
   }
 }
