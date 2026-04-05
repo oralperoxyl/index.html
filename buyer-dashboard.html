@@ -111,6 +111,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .prop-status.viewed{background:rgba(0,0,0,0.06);color:var(--muted)}
 .prop-status.considering{background:rgba(45,138,78,0.1);color:var(--green)}
 .prop-status.declined{background:rgba(192,57,43,0.08);color:var(--red)}
+.prop-status.reference{background:rgba(0,0,0,0.04);color:#999}
 .prop-status.pending{background:rgba(180,100,0,0.08);color:rgba(160,90,0,0.8)}
 .prop-addr{font-size:16px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:8px}
 .prop-meta{display:flex;gap:16px;flex-wrap:wrap}
@@ -428,8 +429,8 @@ function fmtPpm(price,area){
 function fmtPrice(p){if(!p)return '—';const n=Number(String(p).replace(/\D/g,''));if(!n)return p;return(n/1000000).toFixed(2).replace(/\.?0+$/,'')+' млн ₽';}
 
 // ── STATUS ──────────────────────────────────────────────────
-const STATUS_LABELS={planned:'Запланирован',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл',pending:'Ждём показа'};
-const STATUS_CLASS={planned:'planned',viewed:'viewed',considering:'considering',declined:'declined',pending:'pending'};
+const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл',pending:'Ждём показа'};
+const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',declined:'declined',pending:'pending'};
 
 // ── STAR RATING ─────────────────────────────────────────────
 function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
@@ -612,7 +613,7 @@ function renderCompare(props){
 
 // ── SORT PROPS ───────────────────────────────────────────────
 function sortProps(props){
-  const order={viewed:0,considering:1,declined:2,pending:3,planned:4};
+  const order={viewed:0,considering:1,declined:2,pending:3,planned:4,scout:5};
   return props.map(function(p,i){return Object.assign({},p,{_origIdx:i});}).sort(function(a,b){
     const sa=order[a.status]??2;
     const sb=order[b.status]??2;
@@ -884,7 +885,7 @@ function renderClientView(buyerId){
       <div class="hero-inner">
         <p class="hero-label">Семён Гончаров · Подбор квартиры</p>
         <h1 class="hero-title">${esc(buyer.name||'Ваш подбор')},<br><em>вот квартиры которые мы рассматриваем.</em></h1>
-        <p class="hero-sub">Здесь всё актуальное — объекты, даты показов, мои комментарии. После каждого просмотра поставьте оценку и оставьте впечатление.</p>
+        <p class="hero-sub">${escNl(buyer.heroSub||'Здесь всё актуальное — объекты, даты показов, мои комментарии. После каждого просмотра поставьте оценку и оставьте впечатление.')}</p>
         <div class="hero-chips">
           <span class="hero-chip"><strong>${props.length}</strong> объект${props.length===1?'':'ов'}</span>
           ${planned?`<span class="hero-chip"><strong>${planned}</strong> запланировано</span>`:''}
@@ -942,6 +943,13 @@ function renderAgentView(buyerId){
         <p class="hero-label">Агент · Подбор</p>
         <h1 class="hero-title">${esc(buyer.name||'Без имени')}</h1>
         ${buyer.budget?`<p class="hero-sub">Бюджет: ${fmtPrice(buyer.budget)}</p>`:''}
+        <div style="margin-top:16px;display:grid;gap:8px">
+          <div>
+            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:6px">Подзаголовок для клиента</div>
+            <textarea id="heroSubInput" rows="2" style="width:100%;background:rgba(255,255,255,0.09);border:none;border-radius:8px;padding:10px 12px;font-family:var(--sans);font-size:13px;color:#fff;resize:none;outline:none;line-height:1.6" oninput="saveHeroSub('${buyerId}')">${esc(buyer.heroSub||'')}</textarea>
+            <div style="font-size:11px;color:rgba(229,229,229,0.25);margin-top:4px">По умолчанию: «Здесь всё актуальное — объекты, даты показов, мои комментарии...»</div>
+          </div>
+        </div>
         <div class="hero-meta">
           <span class="hero-chip"><strong>${props.length}</strong> объект${props.length===1?'':'ов'}</span>
           <button onclick="copyUrl('${dashUrl}',this)" style="background:rgba(255,255,255,0.1);border:none;color:rgba(229,229,229,0.7);font-size:12px;padding:4px 12px;border-radius:999px;cursor:pointer">Скопировать ссылку клиенту</button>
@@ -992,6 +1000,7 @@ function renderAgentView(buyerId){
             <select class="ai" id="np-status">
               <option value="planned">Запланирован</option>
               <option value="pending">Ждём показа</option>
+              <option value="reference">Для сравнения</option>
               <option value="viewed">Просмотрен</option>
               <option value="considering">Рассматриваем</option>
               <option value="declined">Не подошёл</option>
@@ -1020,6 +1029,17 @@ function renderAgentView(buyerId){
 // ── NEXT STEP ────────────────────────────────────────────────
 let nextStepTimer=null;
 let situationTimer=null;
+
+var heroSubTimer=null;
+function saveHeroSub(buyerId){
+  clearTimeout(heroSubTimer);
+  heroSubTimer=setTimeout(function(){
+    var val=document.getElementById('heroSubInput')&&document.getElementById('heroSubInput').value||'';
+    if(allData.buyers[buyerId])allData.buyers[buyerId].heroSub=val;
+    ghSave();
+  },1000);
+}
+
 function saveSituation(buyerId){
   clearTimeout(situationTimer);
   situationTimer=setTimeout(()=>{
