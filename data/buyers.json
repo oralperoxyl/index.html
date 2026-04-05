@@ -473,6 +473,14 @@
       "vis": {
         "locations": false
       }
+    },
+    "диана-mnlnfrxk0sfe": {
+      "name": "Диана",
+      "budget": "",
+      "props": [],
+      "nextStep": "",
+      "createdAt": "2026-04-05",
+      "vis": {}
     }
   }
 }
