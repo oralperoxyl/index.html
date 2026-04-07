@@ -421,6 +421,14 @@ function rChart(d){
 }
 
 
+function setE(inp){
+  EO[inp.dataset.k]=+inp.value||0;
+  sv('eo',EO);
+  var d=calcRows();
+  rSum(d);
+  rSchedule(d);
+}
+
 function sw(n){
   ['s','t','c'].forEach(function(x){
     document.getElementById('pnl-'+x).classList.toggle('on',x===n);
