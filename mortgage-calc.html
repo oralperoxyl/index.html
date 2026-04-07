@@ -57,7 +57,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .tbl-wrap{overflow-x:auto;border-radius:8px;margin-bottom:8px;position:relative}
 .tbl-wrap::after{content:'';position:absolute;right:0;top:0;bottom:0;width:32px;background:linear-gradient(to right,transparent,rgba(250,250,248,0.9));pointer-events:none;border-radius:0 8px 8px 0}
 @media(max-width:640px){table.dtbl th{font-size:9px;padding:8px 5px;letter-spacing:0}table.dtbl td{font-size:11px;padding:6px 5px}table.dtbl input.cell-in{width:56px;font-size:11px;padding:3px 4px}.tbl-wrap::after{display:none}}
-table.dtbl{width:100%;border-collapse:collapse;background:#fff}
+table.dtbl{width:100%;border-collapse:collapse;background:#fff;table-layout:fixed}
 @media(max-width:640px){table.dtbl{min-width:0;width:100%}}
 table.dtbl th{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text);font-weight:500;padding:10px 14px;text-align:right;border-bottom:2px solid var(--border);background:rgba(0,0,0,0.03);white-space:nowrap}
 table.dtbl th:first-child{text-align:left}
@@ -196,6 +196,11 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
     </div>
   </div>
 
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+    <button onclick="runCalc()" id="calc-btn" style="padding:11px 28px;background:var(--dark);border:none;border-radius:999px;font-family:var(--sans);font-size:14px;font-weight:500;color:#fff;cursor:pointer;transition:all .2s">Рассчитать</button>
+    <span id="calc-status" style="font-size:12px;color:var(--muted);font-weight:300"></span>
+  </div>
+
   <div class="summary" id="sum"></div>
   <div class="tabs">
     <button class="tab-btn on" id="btn-s" onclick="sw('s')">График платежей</button>
@@ -205,6 +210,10 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
   <div class="tab-panel on" id="pnl-s">
     <div class="section-head"><h2 class="section-title">График платежей</h2><span class="section-hint">Досрочное погашение редактируется в любом месяце</span></div>
     <div class="tbl-wrap"><table class="dtbl" id="ts"></table></div>
+  <div id="sched-more" style="display:none;padding:16px 0;text-align:center">
+    <span style="font-size:12px;color:var(--muted);margin-right:16px"></span>
+    <button onclick="schedLoadMore()" style="padding:9px 22px;border:1px solid var(--border);border-radius:999px;background:#fff;font-family:var(--sans);font-size:13px;color:var(--text);cursor:pointer">Показать ещё 12 месяцев</button>
+  </div>
   </div>
   <div class="tab-panel" id="pnl-t">
     <div class="section-head"><h2 class="section-title">Доходы и расходы</h2><span class="section-hint">Нажмите на строку чтобы раскрыть детали</span></div>
@@ -283,28 +292,61 @@ function rSum(d){
     '<div class="sc"><div class="sc-label">Итого выплат</div><div class="sc-val">'+fmt(d.amt+d.totI)+'</div><div class="sc-sub">долг + проценты</div></div>';
 }
 
+var schedPage=1;
+var schedPageSize=12;
+
 function rSchedule(d){
+  schedPage=1;
+  renderSchedulePage(d);
+}
+
+function renderSchedulePage(d){
+  var rows=d.rows;
+  var visible=rows.slice(0,schedPage*schedPageSize);
+  var hasMore=rows.length>visible.length;
   var h='<thead><tr>';
   h+='<th style="text-align:left">Месяц</th>';
-  h+='<th>Остаток</th>';
+  h+='<th class="col-hide">Остаток</th>';
   h+='<th>Проценты</th>';
-  h+='<th>Осн. долг</th>';
+  h+='<th class="col-hide">Осн. долг</th>';
   h+='<th>Досрочно</th>';
   h+='<th>Итого</th>';
   h+='</tr></thead><tbody>';
-  d.rows.forEach(function(r){
+  visible.forEach(function(r){
     var past=r.isPast,cur=r.isCur;
     h+='<tr'+(past?' class="past"':'')+(cur?' style="background:rgba(0,102,255,.05)"':'')+'>';
     h+='<td style="color:#1A1A1A;font-weight:'+(cur?'600':'500')+';text-align:left;white-space:nowrap">'+ml(r.m,r.y)+'</td>';
-    h+='<td style="color:#555">'+fmtK(r.bA)+'</td>';
+    h+='<td class="col-hide" style="color:#555">'+fmtK(r.bA)+'</td>';
     h+='<td style="color:#C0392B">'+fmtK(r.int)+'</td>';
-    h+='<td style="color:#555">'+fmtK(r.pri)+'</td>';
-    h+='<td style="padding:6px 8px"><input type="number" class="cell-in" value="'+Math.round(r.ea)+'" data-k="'+r.k+'" onchange="setE(this)" style="width:80px"></td>';
+    h+='<td class="col-hide" style="color:#555">'+fmtK(r.pri)+'</td>';
+    h+='<td style="padding:5px 8px"><input type="number" class="cell-in" value="'+Math.round(r.ea)+'" data-k="'+r.k+'" onchange="setE(this)" style="width:76px"></td>';
     h+='<td style="color:#1A1A1A;font-weight:500">'+fmtK(r.pay)+'</td>';
     h+='</tr>';
   });
   h+='</tbody>';
   document.getElementById('ts').innerHTML=h;
+  // Show more button
+  var wrap=document.getElementById('sched-more');
+  if(wrap){
+    if(hasMore){
+      wrap.style.display='block';
+      wrap.querySelector('span').textContent='Показано '+visible.length+' из '+rows.length+' месяцев';
+    } else {
+      wrap.style.display='none';
+    }
+  }
+}
+
+function schedLoadMore(){
+  schedPage++;
+  var d=calcRows();
+  renderSchedulePage(d);
+}
+
+
+function toggleMobileCard(el){
+  var card=el.closest('.tr-card');
+  if(card)card.classList.toggle('open');
 }
 
 function rTracker(d){
@@ -312,8 +354,8 @@ function rTracker(d){
 
   // Desktop - 4 simple columns
   var h='<thead><tr>';
-  h+='<th style="text-align:left">Месяц</th>';
-  h+='<th>Доходы</th><th>Расходы</th><th>Ипотека</th><th>Сальдо</th>';
+  h+='<th style="text-align:left;width:80px">Месяц</th>';
+  h+='<th style="width:25%">Доходы</th><th style="width:25%">Расходы</th><th style="width:20%">Ипотека</th><th style="width:20%">Сальдо</th>';
   h+='</tr></thead><tbody>';
 
   rows.forEach(function(r){
@@ -325,8 +367,8 @@ function rTracker(d){
     var k=r.k;
     h+='<tr data-sum="'+k+'">';
     h+='<td style="color:#1A1A1A;font-weight:500;text-align:left;white-space:nowrap">'+ml(r.m,r.y)+'</td>';
-    h+='<td style="padding:6px 10px"><input type="number" class="cell-in" value="'+inc+'" data-k="'+k+'" data-f="inc" onchange="saveTr(this)" placeholder="0"></td>';
-    h+='<td style="padding:6px 10px"><input type="number" class="cell-in" value="'+sp2+'" data-k="'+k+'" data-f="sp2" onchange="saveTr(this)" placeholder="0"></td>';
+    h+='<td style="padding:5px 10px"><input type="number" class="cell-in" value="'+inc+'" data-k="'+k+'" data-f="inc" onchange="saveTr(this)" placeholder="0" style="width:100%;box-sizing:border-box"></td>';
+    h+='<td style="padding:5px 10px"><input type="number" class="cell-in" value="'+sp2+'" data-k="'+k+'" data-f="sp2" onchange="saveTr(this)" placeholder="0" style="width:100%;box-sizing:border-box"></td>';
     h+='<td style="color:#C0392B;font-weight:400">'+fmt(r.pay)+'</td>';
     h+='<td style="font-weight:600;color:'+sc+'">'+fmt(sal)+'</td>';
     h+='</tr>';
@@ -427,7 +469,7 @@ function setE(inp){
   sv('eo',EO);
   var d=calcRows();
   rSum(d);
-  rSchedule(d);
+  renderSchedulePage(d);
 }
 
 function sw(n){
@@ -444,7 +486,8 @@ function sw(n){
 function runCalc(){
   var d=calcRows();
   rSum(d);
-  rSchedule(d);
+  schedPage=1;
+  renderSchedulePage(d);
   if(document.getElementById('tab-tracker').classList.contains('on'))rTracker(d);
   if(document.getElementById('tab-chart').classList.contains('on'))rChart(d);
   var btn=document.getElementById('calc-btn');
@@ -460,7 +503,8 @@ function runCalc(){
 function go(){
   var d=calcRows();
   rSum(d);
-  rSchedule(d);
+  schedPage=1;
+  renderSchedulePage(d);
 }
 
 document.querySelectorAll('.params-block input').forEach(function(i){i.addEventListener('input',function(){var d=calcRows();rSum(d);});});
