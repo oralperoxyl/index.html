@@ -162,7 +162,7 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
       <div class="pf"><label>Ставка % год.</label><input id="pr" type="number" step="0.1" value="20.5"></div>
       <div class="pf"><label>Срок (месяцев)</label><input id="pt" type="number" value="242"></div>
       <div class="pf"><label>Начало (мм.гггг)</label><input id="ps" type="text" value="11.2024" placeholder="11.2024"><small>Месяц первого платежа</small></div>
-      <div class="pf"><label>Досрочное ₽/мес.</label><input id="pe" type="number" value="50000"><small>Базовое доп. погашение</small></div>
+      <div class="pf"><label>Досрочное ₽/мес.</label><input id="pe" type="number" value="0"><small>Базовое доп. погашение</small></div>
     </div>
   </div>
 
@@ -232,11 +232,11 @@ function addM(m,y,n){var mm=m+n,yy=y;while(mm>12){mm-=12;yy++;}while(mm<1){mm+=1
 function ml(m,y){return MON[m-1]+' '+y;}
 function sv(k,v){try{localStorage.setItem('mc2_'+k,JSON.stringify(v));}catch(e){}}
 function lv(k,d){try{var r=localStorage.getItem('mc2_'+k);return r?JSON.parse(r):d;}catch(e){return d;}}
-var EO=lv('eo',{});
+var EO={};
 var TR=lv('tr',{});
 function defT(){return{inc:400000,sp2:100000};}
 // presets
-var PE={'2024-11':100000,'2024-12':100000,'2025-1':7000000,'2025-2':200000,'2025-3':200000,'2025-4':200000,'2025-5':100000,'2025-6':100000,'2025-7':200000,'2025-8':200000,'2025-9':50000,'2025-10':50000,'2025-11':50000,'2025-12':50000};
+var PE={};
 var PT={'2024-11':{inc:550000,sp2:110000},'2024-12':{inc:400000,sp2:100000},'2025-1':{inc:7600000,sp2:150000},'2025-2':{inc:800000,sp2:100000},'2025-3':{inc:400000,sp2:100000},'2025-4':{inc:400000,sp2:400000}};
 Object.keys(PE).forEach(function(k){if(EO[k]===undefined)EO[k]=PE[k];});
 Object.keys(PT).forEach(function(k){if(!TR[k])TR[k]=PT[k];});
@@ -273,8 +273,9 @@ function calcRows(){
 }
 
 function rSum(d){
-  var at=d.rows.length,y=Math.floor(at/12),m=at%12;
-  var ts=(y?y+' лет ':'')+(m?m+' мес.':'');
+  var at=d.rows.length,y=Math.floor(at/12),mo=at%12;
+  var ts=(y?y+' лет ':'')+(mo?mo+' мес.':'');
+  var tsLong=at+' мес. / '+(y?y+' лет '+(mo?mo+' мес.':''):'');
   document.getElementById('sum').innerHTML=
     '<div class="sc"><div class="sc-label">Ежемесячный платёж</div><div class="sc-val">'+fmt(d.ann)+'</div><div class="sc-sub">базовый аннуитет</div></div>'+
     '<div class="sc"><div class="sc-label">Переплата</div><div class="sc-val red">'+fmt(d.totI)+'</div><div class="sc-sub">'+Math.round(d.totI/d.amt*100)+'% от суммы</div></div>'+
@@ -440,13 +441,29 @@ function sw(n){
   if(n==='c')rChart(d);
 }
 
+function runCalc(){
+  var d=calcRows();
+  rSum(d);
+  rSchedule(d);
+  if(document.getElementById('tab-tracker').classList.contains('on'))rTracker(d);
+  if(document.getElementById('tab-chart').classList.contains('on'))rChart(d);
+  var btn=document.getElementById('calc-btn');
+  var st=document.getElementById('calc-status');
+  if(btn){btn.style.background='#2D8A4E';btn.style.color='#fff';btn.textContent='Готово';}
+  if(st)st.textContent='Пересчитано';
+  setTimeout(function(){
+    if(btn){btn.style.background='#fff';btn.style.color='var(--dark)';btn.textContent='Рассчитать';}
+    if(st)st.textContent='';
+  },2000);
+}
+
 function go(){
   var d=calcRows();
   rSum(d);
   rSchedule(d);
 }
 
-document.querySelectorAll('.params-block input').forEach(function(i){i.addEventListener('input',go);});
+document.querySelectorAll('.params-block input').forEach(function(i){i.addEventListener('input',function(){var d=calcRows();rSum(d);});});
 go();
 </script>
 </body>
