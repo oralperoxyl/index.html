@@ -308,12 +308,13 @@
           "renovation": "",
           "showDate": "2026-04-02",
           "showTime": "",
-          "status": "viewed",
+          "status": "declined",
           "url": "https://spb.cian.ru/sale/flat/327671461/",
           "agentComment": "Ремонт не требуется, дом и подъезд в хорошем состоянии. 1999 год постройки.",
           "clientRating": 0,
           "clientComment": "",
-          "addedAt": "2026-04-03"
+          "addedAt": "2026-04-03",
+          "updatedAt": "2026-04-08"
         },
         {
           "address": "ул. Кораблестроителей, д. 39к1",
