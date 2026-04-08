@@ -31,6 +31,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .params-block{background:var(--dark);border-radius:14px;padding:28px;margin-bottom:32px}
 .params-title{font-family:var(--serif);font-size:17px;color:#E5E5E5;margin-bottom:20px}
 .params-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:640px){.params-grid{grid-template-columns:1fr 1fr}}
 .pf{display:flex;flex-direction:column;gap:5px}
 .pf label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.5)}
 .pf input{background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:10px 12px;font-family:var(--sans);font-size:14px;color:#fff;outline:none;width:100%;transition:background .2s}
@@ -158,7 +159,11 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
   <div class="params-block">
     <div class="params-title">Параметры кредита</div>
     <div class="params-grid">
-      <div class="pf"><label>Сумма кредита</label><input id="pa" type="number" value="13500000"></div>
+      <div class="pf"><label>Цена недвижимости ₽</label><input id="pprice" type="number" placeholder="15 000 000" oninput="calcLoan()"></div>
+      <div class="pf"><label>Первоначальный взнос ₽</label><input id="pdown" type="number" placeholder="1 500 000" oninput="calcLoan()">
+        <small id="down-pct" style="color:rgba(229,229,229,0.4)"></small>
+      </div>
+      <div class="pf"><label>Сумма кредита ₽</label><input id="pa" type="number" value="13500000" oninput="go()"><small style="color:rgba(229,229,229,0.3)">Заполняется автоматически</small></div>
       <div class="pf"><label>Ставка % год.</label><input id="pr" type="number" step="0.1" value="20.5"></div>
       <div class="pf"><label>Срок (месяцев)</label><input id="pt" type="number" value="242"></div>
       <div class="pf"><label>Начало (мм.гггг)</label><input id="ps" type="text" value="11.2024" placeholder="11.2024"><small>Месяц первого платежа</small></div>
@@ -500,6 +505,19 @@ function runCalc(){
   },2000);
 }
 
+function calcLoan(){
+  var price=+document.getElementById('pprice').value||0;
+  var down=+document.getElementById('pdown').value||0;
+  if(price>0&&down>=0){
+    var loan=Math.max(0,price-down);
+    document.getElementById('pa').value=loan;
+    var pct=price>0?Math.round(down/price*100):0;
+    var pctEl=document.getElementById('down-pct');
+    if(pctEl)pctEl.textContent=pct+'% от стоимости'+(pct<10?' — обычно банки требуют от 10–20%':pct<20?' — минимально допустимый взнос':'');
+    go();
+  }
+}
+
 function go(){
   var d=calcRows();
   rSum(d);
@@ -507,7 +525,7 @@ function go(){
   renderSchedulePage(d);
 }
 
-document.querySelectorAll('.params-block input').forEach(function(i){i.addEventListener('input',function(){var d=calcRows();rSum(d);});});
+document.querySelectorAll('.params-block input').forEach(function(i){if(i.id!=='pprice'&&i.id!=='pdown'){i.addEventListener('input',function(){var d=calcRows();rSum(d);});}});
 go();
 </script>
 </body>
