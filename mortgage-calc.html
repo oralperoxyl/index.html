@@ -32,6 +32,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15
 .params-title{font-family:var(--serif);font-size:17px;color:#E5E5E5;margin-bottom:20px}
 .params-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:640px){.params-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:380px){.params-grid{grid-template-columns:1fr}}
 .pf{display:flex;flex-direction:column;gap:5px}
 .pf label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.5)}
 .pf input{background:rgba(255,255,255,0.1);border:none;border-radius:8px;padding:10px 12px;font-family:var(--sans);font-size:14px;color:#fff;outline:none;width:100%;transition:background .2s}
@@ -131,8 +132,8 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
 <section class="hero">
   <div class="hero-inner">
     <p class="hero-label">Финансовое планирование</p>
-    <h1 class="hero-title">Ипотека.<br><em>Цифры которые важны.</em></h1>
-    <p class="hero-sub">Калькулятор платежей, досрочное погашение и трекер доходов и расходов по месяцам.</p>
+    <h1 class="hero-title">Ипотека.<br><em>Цифры, которые важны.</em></h1>
+    <p class="hero-sub">Калькулятор платежей, досрочное погашение, трекер доходов и расходов по месяцам.</p>
   </div>
 </section>
 <div class="how-it-works">
@@ -159,15 +160,19 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
   <div class="params-block">
     <div class="params-title">Параметры кредита</div>
     <div class="params-grid">
-      <div class="pf"><label>Цена недвижимости ₽</label><input id="pprice" type="number" placeholder="15 000 000" oninput="calcLoan()"></div>
-      <div class="pf"><label>Первоначальный взнос ₽</label><input id="pdown" type="number" placeholder="1 500 000" oninput="calcLoan()">
+      <div class="pf"><label>Цена недвижимости ₽</label><input id="pprice" type="text" inputmode="numeric" placeholder="15 000 000" oninput="calcLoan()"></div>
+      <div class="pf"><label>Первоначальный взнос ₽</label><input id="pdown" type="text" inputmode="numeric" placeholder="1 500 000" oninput="calcLoan()">
         <small id="down-pct" style="color:rgba(229,229,229,0.4)"></small>
       </div>
-      <div class="pf"><label>Сумма кредита ₽</label><input id="pa" type="number" value="13500000" oninput="go()"><small style="color:rgba(229,229,229,0.3)">Заполняется автоматически</small></div>
-      <div class="pf"><label>Ставка % год.</label><input id="pr" type="number" step="0.1" value="20.5"></div>
-      <div class="pf"><label>Срок (месяцев)</label><input id="pt" type="number" value="242"></div>
+      <div class="pf"><label>Сумма кредита ₽</label><input id="pa" type="text" inputmode="numeric" value="13500000" oninput="go()"><small style="color:rgba(229,229,229,0.3)">Заполняется автоматически</small></div>
+      <div class="pf"><label>Ставка % год.</label><input id="pr" type="text" inputmode="decimal" step="0.1" value="20.5"></div>
+      <div class="pf"><label>Срок</label><div style="display:flex;gap:8px;align-items:center"><input id="pt" type="text" inputmode="numeric" value="242" style="width:80px" oninput="updateTermYears()"><span id="pt-years" style="font-size:11px;color:rgba(229,229,229,0.5);white-space:nowrap;flex-shrink:0">20 лет 2 мес.</span></div></div>
       <div class="pf"><label>Начало (мм.гггг)</label><input id="ps" type="text" value="11.2024" placeholder="11.2024"><small>Месяц первого платежа</small></div>
-      <div class="pf"><label>Досрочное ₽/мес.</label><input id="pe" type="number" value="0"><small>Базовое доп. погашение</small></div>
+      <div class="pf"><label>Досрочное ₽/мес.</label><input id="pe" type="text" inputmode="numeric" value="0"><small>Базовое доп. погашение</small></div>
+    </div>
+    <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:14px">
+      <button onclick="runCalc()" id="calc-btn" style="padding:11px 28px;background:#fff;border:none;border-radius:999px;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--dark);cursor:pointer;transition:all .2s">Рассчитать</button>
+      <span id="calc-status" style="font-size:12px;color:rgba(229,229,229,0.4);font-weight:300"></span>
     </div>
   </div>
 
@@ -199,11 +204,6 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
     <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);font-weight:300;line-height:1.7">
       <strong style="font-weight:500;color:#1A1A1A">Правило 50/30/20:</strong> 50% дохода — обязательные расходы включая ипотеку, 30% — на жизнь и желания, 20% — в резерв и накопления. Популяризировано американским финансистом Элизабет Уоррен, в России применяется как ориентир с учётом структуры расходов.
     </div>
-  </div>
-
-  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
-    <button onclick="runCalc()" id="calc-btn" style="padding:11px 28px;background:var(--dark);border:none;border-radius:999px;font-family:var(--sans);font-size:14px;font-weight:500;color:#fff;cursor:pointer;transition:all .2s">Рассчитать</button>
-    <span id="calc-status" style="font-size:12px;color:var(--muted);font-weight:300"></span>
   </div>
 
   <div class="summary" id="sum"></div>
@@ -258,10 +258,10 @@ Object.keys(PT).forEach(function(k){if(!TR[k])TR[k]=PT[k];});
 function pStart(){var p=document.getElementById('ps').value.split('.');return p.length===2?{m:+p[0],y:+p[1]}:{m:11,y:2024};}
 
 function calcRows(){
-  var amt=+document.getElementById('pa').value||0;
-  var rate=+document.getElementById('pr').value||0;
-  var term=+document.getElementById('pt').value||0;
-  var bE=+document.getElementById('pe').value||0;
+  var amt=getRaw('pa');
+  var rate=parseFloat((document.getElementById('pr').value||'0').replace(/[^0-9.,]/g,'').replace(',','.'))||0;
+  var term=getRaw('pt');
+  var bE=getRaw('pe');
   var st=pStart();
   var mr=rate/100/12;
   var ann=mr>0&&term>0?amt*mr*Math.pow(1+mr,term)/(Math.pow(1+mr,term)-1):0;
@@ -506,16 +506,51 @@ function runCalc(){
 }
 
 function calcLoan(){
-  var price=+document.getElementById('pprice').value||0;
-  var down=+document.getElementById('pdown').value||0;
+  var price=getRaw('pprice');
+  var down=getRaw('pdown');
   if(price>0&&down>=0){
     var loan=Math.max(0,price-down);
-    document.getElementById('pa').value=loan;
+    document.getElementById('pa').value=loan?loan.toLocaleString('ru-RU'):'';
     var pct=price>0?Math.round(down/price*100):0;
     var pctEl=document.getElementById('down-pct');
     if(pctEl)pctEl.textContent=pct+'% от стоимости'+(pct<10?' — обычно банки требуют от 10–20%':pct<20?' — минимально допустимый взнос':'');
     go();
   }
+}
+
+
+// ── NUMBER FORMATTING ────────────────────────────────────────
+function fmtInput(val){
+  var n=val.replace(/[^0-9]/g,'');
+  if(!n)return '';
+  return parseInt(n,10).toLocaleString('ru-RU');
+}
+
+function getRaw(id){
+  var el=document.getElementById(id);
+  if(!el)return 0;
+  return parseInt((el.value||'0').replace(/[^0-9]/g,''),10)||0;
+}
+
+function attachFmt(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.addEventListener('input',function(){
+    var pos=el.selectionStart;
+    var raw=el.value.replace(/[^0-9]/g,'');
+    var formatted=raw?parseInt(raw,10).toLocaleString('ru-RU'):'';
+    var diff=formatted.length-el.value.length;
+    el.value=formatted;
+    try{el.setSelectionRange(pos+diff,pos+diff);}catch(e){}
+  });
+}
+
+function updateTermYears(){
+  var m=parseInt((document.getElementById('pt').value||'0').replace(/[^0-9]/g,''),10)||0;
+  var y=Math.floor(m/12),mo=m%12;
+  var s=(y?y+' лет ':'')+( mo?mo+' мес.':'');
+  var el=document.getElementById('pt-years');
+  if(el)el.textContent=s||'';
 }
 
 function go(){
@@ -525,7 +560,18 @@ function go(){
   renderSchedulePage(d);
 }
 
-document.querySelectorAll('.params-block input').forEach(function(i){if(i.id!=='pprice'&&i.id!=='pdown'){i.addEventListener('input',function(){var d=calcRows();rSum(d);});}});
+['pprice','pdown','pa','pe'].forEach(attachFmt);
+document.querySelectorAll('.params-block input').forEach(function(i){
+  if(i.id!=='pprice'&&i.id!=='pdown'&&i.id!=='pa'&&i.id!=='pe'){
+    i.addEventListener('input',function(){var d=calcRows();rSum(d);});
+  }
+});
+// Format existing values on load
+['pa','pe'].forEach(function(id){
+  var el=document.getElementById(id);
+  if(el&&el.value){var n=parseInt(el.value)||0;if(n)el.value=n.toLocaleString('ru-RU');}
+});
+updateTermYears();
 go();
 </script>
 </body>
