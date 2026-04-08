@@ -166,8 +166,8 @@ table.dtbl input.cell-in:focus{border-color:var(--accent);box-shadow:0 0 0 3px r
       </div>
       <div class="pf"><label>Сумма кредита ₽</label><input id="pa" type="text" inputmode="numeric" value="13500000" oninput="go()"><small style="color:rgba(229,229,229,0.3)">Заполняется автоматически</small></div>
       <div class="pf"><label>Ставка % год.</label><input id="pr" type="text" inputmode="decimal" step="0.1" value="20.5"></div>
-      <div class="pf"><label>Срок</label><div style="display:flex;gap:8px;align-items:center"><input id="pt" type="text" inputmode="numeric" value="242" style="width:80px" oninput="updateTermYears()"><span id="pt-years" style="font-size:11px;color:rgba(229,229,229,0.5);white-space:nowrap;flex-shrink:0">20 лет 2 мес.</span></div></div>
-      <div class="pf"><label>Начало (мм.гггг)</label><input id="ps" type="text" value="11.2024" placeholder="11.2024"><small>Месяц первого платежа</small></div>
+      <div class="pf"><label>Срок</label><div style="display:flex;gap:8px;align-items:center"><input id="pt" type="text" inputmode="numeric" value="240" style="width:80px" oninput="updateTermYears()"><span id="pt-years" style="font-size:11px;color:rgba(229,229,229,0.5);white-space:nowrap;flex-shrink:0">20 лет</span></div></div>
+      <div class="pf"><label>Начало (мм.гггг)</label><input id="ps" type="text" id="ps" placeholder="мм.гггг"><small>Месяц первого платежа</small></div>
       <div class="pf"><label>Досрочное ₽/мес.</label><input id="pe" type="text" inputmode="numeric" value="0"><small>Базовое доп. погашение</small></div>
     </div>
     <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:14px">
@@ -470,7 +470,9 @@ function rChart(d){
 
 
 function setE(inp){
-  EO[inp.dataset.k]=+inp.value||0;
+  var raw=parseInt((inp.value||'0').replace(/[^0-9]/g,''),10)||0;
+  EO[inp.dataset.k]=raw;
+  inp.value=raw?raw.toLocaleString('ru-RU'):'';
   sv('eo',EO);
   var d=calcRows();
   rSum(d);
@@ -572,6 +574,14 @@ document.querySelectorAll('.params-block input').forEach(function(i){
   if(el&&el.value){var n=parseInt(el.value)||0;if(n)el.value=n.toLocaleString('ru-RU');}
 });
 updateTermYears();
+// Set current month/year as default start date
+(function(){
+  var now=new Date();
+  var mo=now.getMonth()+1;
+  var yr=now.getFullYear();
+  var el=document.getElementById('ps');
+  if(el&&!el.value)el.value=mo+'.'+yr;
+})();
 go();
 </script>
 </body>
