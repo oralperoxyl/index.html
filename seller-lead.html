@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Почему квартира не продаётся — Семён Гончаров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --serif:'Playfair Display',serif;
+  --sans:'Inter',sans-serif;
+  --bg:#FAFAF8;--dark:#1C1C1E;
+  --text:#1A1A1A;--muted:#888;--border:rgba(0,0,0,0.08);
+  --red:#C0392B;--green:#2D8A4E;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6}
+
+/* HEADER */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}
+.header-right{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+
+/* HERO */
+.hero{background:var(--dark);padding:80px 40px 64px}
+.hero-inner{max-width:860px;margin:0 auto}
+.hero-label{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:16px}
+.hero-title{font-family:var(--serif);font-size:clamp(32px,5vw,58px);font-weight:400;line-height:1.05;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:16px}
+.hero-title em{font-style:italic;color:rgba(229,229,229,0.4)}
+.hero-sub{font-size:15px;color:rgba(229,229,229,0.45);font-weight:300;max-width:500px;line-height:1.75}
+
+/* CONTENT */
+.content{max-width:860px;margin:0 auto;padding:56px 40px 80px}
+
+/* SECTION HEAD */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px}
+.section-title{font-family:var(--serif);font-size:clamp(20px,2.5vw,28px);font-weight:400;letter-spacing:-0.01em}
+.section-tag{font-size:12px;color:var(--muted);font-weight:300}
+
+/* INTRO */
+.intro-block{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
+.intro-block p{font-size:16px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:14px}
+.intro-block p strong{color:var(--text);font-weight:500}
+
+/* FACT NOTE */
+.fact-note{background:#fff;border-radius:8px;padding:20px 24px;margin-bottom:48px;border-left:3px solid var(--dark)}
+.fact-note-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.fact-note-text{font-size:14px;font-weight:300;color:var(--text);line-height:1.75}
+
+/* SITUATIONS */
+.sit-list{display:grid;gap:2px;margin-bottom:48px}
+.sit{background:#fff;padding:22px 28px;display:grid;grid-template-columns:32px 1fr;gap:16px;align-items:start}
+.sit:first-child{border-radius:8px 8px 0 0}
+.sit:last-child{border-radius:0 0 8px 8px}
+.sit-num{font-family:var(--serif);font-size:12px;color:rgba(0,0,0,0.2);padding-top:2px}
+.sit-head{font-size:14px;font-weight:500;color:var(--text);margin-bottom:6px}
+.sit-text{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7}
+.sit-tag{display:inline-block;margin-top:10px;font-size:11px;padding:3px 10px;border-radius:999px;background:rgba(0,0,0,0.05);color:var(--muted);letter-spacing:0.02em}
+
+/* CONCLUSION */
+.concl-block{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
+.concl-block p{font-size:15px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:14px}
+.concl-block p strong{color:var(--text);font-weight:500}
+.concl-bridge{font-size:14px;color:var(--muted);font-weight:300;margin-top:20px}
+
+/* QUIZ */
+.quiz-block{}
+.quiz-intro{margin-bottom:32px}
+.quiz-intro p{font-size:14px;color:var(--muted);font-weight:300;margin-top:8px}
+
+.q-item{background:#fff;border-radius:8px;padding:22px 24px;margin-bottom:10px;opacity:0;transform:translateY(10px);transition:opacity .3s ease,transform .3s ease;pointer-events:none;height:0;overflow:hidden;margin-bottom:0;padding:0}
+.q-item.visible{opacity:1;transform:translateY(0);pointer-events:all;height:auto;overflow:visible;padding:22px 24px;margin-bottom:10px}
+.q-num{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.q-text{font-size:15px;font-weight:400;color:var(--text);line-height:1.55;margin-bottom:16px}
+.q-options{display:grid;gap:6px}
+.q-btn{display:flex;align-items:center;gap:12px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;cursor:pointer;background:#fff;text-align:left;font-family:var(--sans);width:100%;transition:border-color .15s,background .15s}
+.q-btn:hover:not(.sel){border-color:rgba(0,0,0,0.2);background:rgba(0,0,0,0.01)}
+.q-btn.sel{border-color:var(--dark);background:var(--dark)}
+.q-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s}
+.q-dot-inner{width:6px;height:6px;border-radius:50%;background:transparent;transition:background .15s}
+.q-btn.sel .q-dot{border-color:#fff}
+.q-btn.sel .q-dot-inner{background:#fff}
+.q-btn-text{font-size:14px;font-weight:300;color:var(--text);line-height:1.5;transition:color .15s}
+.q-btn.sel .q-btn-text{color:#fff}
+
+/* RESULT */
+.result-block{display:none;margin-top:32px}
+.result-block.show{display:block}
+.result-card{background:var(--dark);border-radius:12px;padding:36px;margin-bottom:16px}
+.result-eyebrow{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:14px}
+.result-title{font-family:var(--serif);font-size:clamp(20px,3vw,30px);font-weight:400;color:#E5E5E5;line-height:1.2;margin-bottom:14px}
+.result-title em{font-style:italic;color:rgba(229,229,229,0.4)}
+.result-body{font-size:14px;color:rgba(229,229,229,0.55);font-weight:300;line-height:1.75;margin-bottom:20px}
+
+.result-action{background:rgba(255,255,255,0.07);border-radius:8px;padding:16px 18px;margin-bottom:10px}
+.result-diff{background:rgba(255,255,255,0.04);border-radius:8px;padding:16px 18px;margin-bottom:24px}
+.result-block-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:8px}
+.result-action-text{font-size:14px;color:rgba(229,229,229,0.8);font-weight:300;line-height:1.7}
+.result-diff-text{font-size:13px;color:rgba(229,229,229,0.5);font-weight:300;line-height:1.7}
+
+.tg-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 28px;border:1px solid #0088cc;border-radius:999px;text-decoration:none;background:transparent;color:#E5E5E5;font-family:var(--sans);font-size:14px;transition:background .2s}
+.tg-btn:hover,.tg-btn:active{background:#0088cc}
+.result-ps{font-size:14px;color:rgba(229,229,229,0.85);font-weight:300;line-height:1.75;padding-top:16px;border-top:1px solid rgba(255,255,255,0.12);margin-top:4px}
+
+/* FOOTER */
+.cta-footer{background:var(--dark);padding:64px 40px;text-align:center}
+.cta-footer-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:20px}
+.cta-footer-title{font-family:var(--serif);font-size:clamp(22px,3.5vw,36px);font-weight:400;color:#E5E5E5;line-height:1.2;margin-bottom:12px}
+.cta-footer-title em{font-style:italic;color:rgba(229,229,229,0.45)}
+.cta-footer-sub{font-size:14px;color:rgba(229,229,229,0.4);font-weight:300;margin-bottom:32px;max-width:420px;margin-left:auto;margin-right:auto;line-height:1.65}
+.footer-tg-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid #0088cc;border-radius:999px;text-decoration:none;background:transparent;color:#E5E5E5;font-family:var(--sans);font-size:14px;transition:background .2s}
+.footer-tg-btn:hover{background:#0088cc}
+.footer-copy{margin-top:40px;font-size:11px;color:rgba(229,229,229,0.2)}
+.footer-copy a{color:rgba(229,229,229,0.3);text-decoration:none}
+
+@media(max-width:640px){.bridge-grid{grid-template-columns:1fr!important;gap:28px!important}
+
+  .site-header{padding:0 20px}
+  .hero{padding:56px 20px 48px}
+  .content{padding:40px 20px 60px}
+  .result-card{padding:24px 20px}
+  .cta-footer{padding:48px 20px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+  <span class="header-right">Для продавцов</span>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Разбор ситуации</p>
+    <h1 class="hero-title">Это уже<br><em>не про рынок.</em></h1>
+    <p class="hero-sub">Квартира на рынке, есть показы — но нет предложений. Разберём что на самом деле мешает продать.</p>
+  </div>
+</section>
+
+<div class="content">
+
+  <!-- INTRO -->
+  <div class="intro-block">
+    <p>Квартиры в правильном состоянии и по адекватной цене продаются в любое время. Если ваша не продаётся — скорее всего вы узнаете свою ситуацию ниже.</p>
+  </div>
+
+  <!-- FACT NOTE -->
+  <div class="fact-note">
+    <div class="fact-note-label">Из практики</div>
+    <div class="fact-note-text">Квартира которая висит больше 60 дней теряет в цене не потому что рынок упал — а потому что покупатели начинают торговаться агрессивнее. Длительный срок экспозиции работает против продавца автоматически: каждая неделя без сделки усиливает ощущение что с объектом что-то не так.</div>
+  </div>
+
+  <!-- SITUATIONS -->
+  <div class="section-head">
+    <h2 class="section-title">Пять ситуаций</h2>
+    <span class="section-tag">узнайте свою</span>
+  </div>
+  <div class="sit-list">
+    <div class="sit"><div class="sit-num">01</div><div><div class="sit-head">Нет звонков вообще</div><div class="sit-text">Объявление висит, просмотры есть — но телефон молчит. Или звонят только агенты — не покупатели. Это значит что объявление не цепляет живого человека: либо цена не привлекает на фоне конкурентов, либо фотографии не дают повода позвонить.</div><span class="sit-tag">Проблема на входе</span></div></div>
+    <div class="sit"><div class="sit-num">02</div><div><div class="sit-head">Звонки есть, но никто не приходит</div><div class="sit-text">Человек звонит, слушает — и пропадает. Или приходит, смотрит, говорит «мы подумаем» — и больше не выходит на связь. Чаще всего это не цена. Это то как о квартире рассказывают при звонке и показе — интонация, детали, акценты.</div><span class="sit-tag">Проблема в презентации</span></div></div>
+    <div class="sit"><div class="sit-num">03</div><div><div class="sit-head">Показы есть, но все торгуются сильно</div><div class="sit-text">Приходят, смотрят внимательно, потом предлагают на 15–20% ниже. Покупатель видит квартиру дешевле чем она стоит. Каждый торг — это обратная связь которую стоит услышать.</div><span class="sit-tag">Проблема в соотношении цена / вид</span></div></div>
+    <div class="sit"><div class="sit-num">04</div><div><div class="sit-head">«Вроде всё нормально, просто ждём»</div><div class="sit-text">Объявление висит неделями без изменений. Нет активных действий, нет анализа. Квартира незаметно выгорает на площадках — покупатели видят дату публикации и думают: раз никто не купил, значит что-то не так. Даже если всё нормально.</div><span class="sit-tag">Проблема в стратегии</span></div></div>
+    <div class="sit"><div class="sit-num">05</div><div><div class="sit-head">«Рынок поднимется — продадим дороже»</div><div class="sit-text">Допустимая стратегия, если есть время и реальное понимание куда движется рынок. Но пока ждёте — коммуналка, налоги, обслуживание, упущенные сделки. Полная стоимость ожидания редко считается заранее — а она бывает выше чем потеря от снижения цены сейчас.</div><span class="sit-tag">Проблема в расчётах</span></div></div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="concl-block">
+    <p class="concl-bridge">Ниже пять вопросов — они помогут понять где конкретно застряло.</p>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="quiz-block">
+    <div class="section-head">
+      <h2 class="section-title">Разберём вашу ситуацию</h2>
+      <span class="section-tag">5 вопросов</span>
+    </div>
+
+    <div class="q-item visible" id="q1">
+      <div class="q-num">Вопрос 1 из 5</div>
+      <div class="q-text">Сколько времени квартира уже на рынке?</div>
+      <div class="q-options">
+        <button class="q-btn" onclick="pick(this,1,0)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">До 2 недель</span></button>
+        <button class="q-btn" onclick="pick(this,1,1)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">2–6 недель</span></button>
+        <button class="q-btn" onclick="pick(this,1,2)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Больше 2 месяцев</span></button>
+      </div>
+    </div>
+
+    <div class="q-item" id="q2">
+      <div class="q-num">Вопрос 2 из 5</div>
+      <div class="q-text">Сколько показов было за последний месяц?</div>
+      <div class="q-options">
+        <button class="q-btn" onclick="pick(this,2,0)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Ни одного</span></button>
+        <button class="q-btn" onclick="pick(this,2,1)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">1–3 показа</span></button>
+        <button class="q-btn" onclick="pick(this,2,2)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Больше 3</span></button>
+      </div>
+    </div>
+
+    <div class="q-item" id="q3">
+      <div class="q-num">Вопрос 3 из 5</div>
+      <div class="q-text">Как вы определили цену квартиры?</div>
+      <div class="q-options">
+        <button class="q-btn" onclick="pick(this,3,0)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Посмотрел похожие объявления и поставил как у всех</span></button>
+        <button class="q-btn" onclick="pick(this,3,1)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Оценил агент или независимый оценщик</span></button>
+        <button class="q-btn" onclick="pick(this,3,2)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Знаю сколько хочу получить — от этого и исхожу</span></button>
+      </div>
+    </div>
+
+    <div class="q-item" id="q4">
+      <div class="q-num">Вопрос 4 из 5</div>
+      <div class="q-text">Как реагируют после показов?</div>
+      <div class="q-options">
+        <button class="q-btn" onclick="pick(this,4,0)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Пропадают без обратной связи</span></button>
+        <button class="q-btn" onclick="pick(this,4,1)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Торгуются, но сильно ниже цены</span></button>
+        <button class="q-btn" onclick="pick(this,4,2)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Говорят что подумают — и пропадают</span></button>
+      </div>
+    </div>
+
+    <div class="q-item" id="q5">
+      <div class="q-num">Вопрос 5 из 5</div>
+      <div class="q-text">Как вы себя чувствуете с этой продажей прямо сейчас?</div>
+      <div class="q-options">
+        <button class="q-btn" onclick="pick(this,5,0)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Устал — уже просто хочу закрыть этот вопрос</span></button>
+        <button class="q-btn" onclick="pick(this,5,1)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Тревожно — чувствую что что-то не так, но не понимаю что</span></button>
+        <button class="q-btn" onclick="pick(this,5,2)"><span class="q-dot"><span class="q-dot-inner"></span></span><span class="q-btn-text">Спокойно — готов ждать столько сколько нужно</span></button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-block" id="result">
+      <div class="result-card">
+        <div class="result-eyebrow" id="r-eyebrow"></div>
+        <h2 class="result-title" id="r-title"></h2>
+        <p class="result-body" id="r-body"></p>
+        <div class="result-action" id="r-action">
+          <div class="result-block-label">Что сделать прямо сейчас</div>
+          <div class="result-action-text" id="r-action-text"></div>
+        </div>
+        <div class="result-diff" id="r-diff">
+          <div class="result-block-label">Как я это делаю иначе</div>
+          <div class="result-diff-text" id="r-diff-text"></div>
+        </div>
+        <a href="https://t.me/semengme" target="_blank" rel="noopener" class="tg-btn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z"/></svg>
+          Написать Семёну в Telegram
+        </a>
+      </div>
+      <p class="result-ps" id="r-ps"></p>
+    </div>
+
+  </div>
+
+</div>
+
+<div style="background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:48px 40px;margin-top:0">
+  <div style="max-width:860px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start" class="bridge-grid">
+    <div>
+      <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Как я работаю</div>
+      <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:12px">Не веду сто клиентов одновременно. Беру немного объектов — чтобы каждому уделять время и внимание.</p>
+      <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.8">Работаю только на вторичном рынке Санкт-Петербурга. Знаю районы, знаю покупателей, знаю где обычно теряют деньги.</p>
+    </div>
+    <div>
+      <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px">Первый разговор</div>
+      <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.8;margin-bottom:12px">Это просто разговор — не презентация и не коммерческое предложение. Смотрю на ситуацию, говорю что думаю.</p>
+      <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.8">Если понятно что могу помочь — обсудим как. Если нет — скажу честно.</p>
+    </div>
+  </div>
+</div>
+
+<footer class="cta-footer">
+  <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости · Санкт-Петербург</p>
+  <h2 class="cta-footer-title">Разберём вашу<br><em>ситуацию вместе.</em></h2>
+  <p class="cta-footer-sub">Напишите в Telegram — скажу честно что думаю про ваш объект и что бы сделал на вашем месте. Без оценок и без давления.</p>
+  <a class="footer-tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z"/></svg>
+    Написать в Telegram
+  </a>
+  <p style="margin-top:16px;font-size:13px;color:rgba(229,229,229,0.35)">или <a href="tel:+79118461965" style="color:rgba(229,229,229,0.5);text-decoration:none">+7 911 846-19-65</a></p>
+  <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
+</footer>
+
+<script>
+var answers={};
+
+var R=[
+  {
+    eyebrow:'Процесс движется',
+    title:'Почти — но<br><em>что-то держит</em>',
+    body:'Показы есть, интерес есть. Но до предложения не доходит. Это значит что квартира нравится — но что-то мешает принять решение. Обычно это одна деталь, не десять.',
+    action:'Позвоните следующему покупателю сами — через день после показа. Спросите прямо: что смутило? Большинство скажут правду если вопрос задан без давления. Один такой разговор даёт больше чем месяц ожидания.',
+    diff:'Я всегда собираю обратную связь после каждого показа — и корректирую подачу на ходу. Обычно за 1–2 недели это меняет динамику.',
+    cta:'Можете прислать квартиру — скажу честно, есть ли шанс продать быстро или проблема уже есть.'
+  },
+  {
+    eyebrow:'Есть конкретный затык',
+    title:'Квартира входит в список —<br><em>но не выигрывает</em>',
+    body:'Люди приходят, смотрят, уходят. Это не значит что квартира плохая. Это значит что рядом есть что-то что выглядит лучше за те же деньги. Покупатель всегда сравнивает.',
+    action:'Откройте три соседних объявления по похожей цене. Посмотрите их глазами покупателя — фото, описание, планировка. Где вы проигрываете? Это и есть проблема. Не цена.',
+    diff:'Я делаю конкурентный разбор до выхода на рынок — и после каждого месяца без результата. Часто достаточно поменять три фотографии и переписать заголовок.',
+    cta:'Можете прислать квартиру — скажу честно, в чём проигрываете конкурентам и что с этим делать.'
+  },
+  {
+    eyebrow:'Продажа застряла',
+    title:'Рынок уже считает<br><em>что с квартирой что-то не так</em>',
+    body:'Долгий срок на рынке работает против вас автоматически. Покупатель видит дату и думает: раз никто не купил — значит есть причина. Даже если её нет. Это не несправедливо — это просто так устроено.',
+    action:'Снимите объявление на 10–14 дней. Обновите фото — хотя бы другой свет и переставьте мебель. Выйдите заново с новым текстом. Это сбрасывает счётчик дней и убирает инерцию. Без снижения цены.',
+    diff:'Именно так я перезапускаю застрявшие объекты. В большинстве случаев показы возобновляются в первую неделю после перезапуска.',
+    cta:'Можете прислать квартиру — скажу честно, стоит ли перезапускать или нужно что-то менять серьёзнее.'
+  }
+];
+
+
+
+function pick(btn,qid,val){
+  var block=document.getElementById('q'+qid);
+  block.querySelectorAll('.q-btn').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel');
+  answers[qid]=val;
+  var next=document.getElementById('q'+(qid+1));
+  if(next){
+    setTimeout(function(){
+      next.classList.add('visible');
+      setTimeout(function(){next.scrollIntoView({behavior:'smooth',block:'nearest'});},40);
+    },260);
+  }
+  if(qid===5){setTimeout(showResult,380);}
+}
+
+function showResult(){
+  var s=0;
+  s+=(answers[1]||0)*2;
+  var q2=answers[2]||0; if(q2===0)s+=3; else if(q2===1)s+=1;
+  var q3=answers[3]||0; if(q3===2)s+=3; else if(q3===0)s+=1;
+  s+=(answers[4]||0);
+  // q5: emotional state (tired=0, anxious=1, calm=2)
+  var q5=answers[5]||0; if(q5===0)s+=2; else if(q5===1)s+=1;
+  var r=R[s<=4?0:s<=9?1:2];
+  document.getElementById('r-eyebrow').textContent=r.eyebrow;
+  document.getElementById('r-title').innerHTML=r.title;
+  document.getElementById('r-body').textContent=r.body;
+  document.getElementById('r-action-text').textContent=r.action;
+  document.getElementById('r-diff-text').textContent=r.diff;
+  document.getElementById('r-ps').textContent=r.cta;
+  var el=document.getElementById('result');
+  el.classList.add('show');
+  setTimeout(function(){el.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+</script>
+</body>
+</html>
