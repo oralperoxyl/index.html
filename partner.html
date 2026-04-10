@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Партнёрам — Семён Гончаров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --serif:'Playfair Display',serif;
+  --sans:'Inter',sans-serif;
+  --bg:#FAFAF8;--dark:#1C1C1E;
+  --text:#1A1A1A;--muted:#888;--border:rgba(0,0,0,0.08);
+  --green:#2D8A4E;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.6}
+
+.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}
+.header-right{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+
+.hero{background:var(--dark);padding:80px 40px 64px}
+.hero-inner{max-width:860px;margin:0 auto}
+.hero-label{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:16px}
+.hero-title{font-family:var(--serif);font-size:clamp(32px,5vw,58px);font-weight:400;line-height:1.05;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:16px}
+.hero-title em{font-style:italic;color:rgba(229,229,229,0.4)}
+.hero-sub{font-size:15px;color:rgba(229,229,229,0.45);font-weight:300;max-width:520px;line-height:1.75}
+
+.content{max-width:860px;margin:0 auto;padding:56px 40px 80px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px}
+.section-title{font-family:var(--serif);font-size:clamp(20px,2.5vw,28px);font-weight:400;letter-spacing:-0.01em}
+
+/* REWARD */
+.reward-block{background:#fff;border-radius:8px;padding:32px;margin-bottom:48px;display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.reward-item{padding:24px 28px}
+.reward-item:first-child{border-radius:8px 0 0 8px;background:#fff}
+.reward-item:last-child{border-radius:0 8px 8px 0;background:rgba(0,0,0,0.02)}
+.reward-amount{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:400;color:var(--text);line-height:1;margin-bottom:8px}
+.reward-label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.reward-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.65}
+
+/* STEPS */
+.steps-block{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
+.steps-list{display:grid;gap:2px}
+.step{background:#fff;padding:22px 28px;display:grid;grid-template-columns:32px 1fr;gap:16px;align-items:start}
+.step:first-child{border-radius:8px 8px 0 0}
+.step:last-child{border-radius:0 0 8px 8px}
+.step-num{font-family:var(--serif);font-size:12px;color:rgba(0,0,0,0.2);padding-top:2px}
+.step-head{font-size:14px;font-weight:500;color:var(--text);margin-bottom:5px}
+.step-text{font-size:13px;font-weight:300;color:var(--muted);line-height:1.7}
+
+/* WHO */
+.who-block{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
+.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.who-item{background:#fff;padding:18px 20px}
+.who-item:first-child{border-radius:8px 0 0 8px}
+.who-item:last-child{border-radius:0 8px 8px 0}
+.who-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.who-desc{font-size:12px;font-weight:300;color:var(--muted);line-height:1.6}
+
+/* TRUST */
+.trust-block{background:#fff;border-radius:8px;padding:28px 32px;margin-bottom:48px;border-left:3px solid var(--dark)}
+.trust-title{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.trust-items{display:grid;gap:10px}
+.trust-item{display:flex;gap:12px;align-items:start}
+.trust-dash{color:rgba(0,0,0,0.2);flex-shrink:0;padding-top:1px}
+.trust-text{font-size:14px;font-weight:300;color:var(--text);line-height:1.65}
+
+/* CTA BLOCK */
+.cta-block{text-align:center;padding:48px 32px;background:#fff;border-radius:12px;margin-bottom:0}
+.cta-block-title{font-family:var(--serif);font-size:clamp(20px,3vw,28px);font-weight:400;margin-bottom:10px;letter-spacing:-0.01em}
+.cta-block-sub{font-size:14px;color:var(--muted);font-weight:300;margin-bottom:28px;line-height:1.65;max-width:420px;margin-left:auto;margin-right:auto}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 28px;background:var(--dark);border:none;border-radius:999px;text-decoration:none;color:#fff;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.cta-btn:active{opacity:.85}
+.cta-secondary a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border)}
+
+/* FOOTER */
+.cta-footer{background:var(--dark);padding:64px 40px;text-align:center;margin-top:80px}
+.cta-footer-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:20px}
+.cta-footer-title{font-family:var(--serif);font-size:clamp(22px,3.5vw,36px);font-weight:400;color:#E5E5E5;line-height:1.2;margin-bottom:12px}
+.cta-footer-title em{font-style:italic;color:rgba(229,229,229,0.45)}
+.cta-footer-sub{font-size:14px;color:rgba(229,229,229,0.4);font-weight:300;margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.65}
+.tg-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid #0088cc;border-radius:999px;text-decoration:none;background:transparent;color:#E5E5E5;font-family:var(--sans);font-size:14px;-webkit-tap-highlight-color:transparent}
+.tg-btn:active{background:#0088cc}
+.footer-copy{margin-top:40px;font-size:11px;color:rgba(229,229,229,0.2)}
+.footer-copy a{color:rgba(229,229,229,0.3);text-decoration:none}
+
+
+/* FAQ — main site style */
+.pfaq{border-top:1px solid var(--border)}
+.pfaq-item{border-bottom:1px solid var(--border)}
+.pfaq-q{background:transparent;border:none;font-family:var(--sans);font-size:16px;font-weight:500;line-height:1.5;padding:20px 0;text-align:left;width:100%;cursor:pointer;display:flex;justify-content:space-between;align-items:start;gap:32px;color:var(--text)}
+.pfaq-q::after{content:'—';font-size:18px;color:var(--muted);flex-shrink:0;transition:transform .3s ease;transform-origin:center;line-height:1;margin-top:3px;opacity:.4}
+.pfaq-item.open .pfaq-q::after{transform:rotate(90deg);opacity:.7}
+.pfaq-a{max-height:0;overflow:hidden;opacity:0;transition:max-height .35s ease,opacity .25s ease,padding .25s ease;font-size:14px;font-weight:300;color:var(--muted);line-height:1.75;padding:0}
+.pfaq-item.open .pfaq-a{max-height:300px;opacity:1;padding-bottom:20px}
+
+@media(max-width:640px){.reward-inner-grid{grid-template-columns:1fr!important}
+
+  .site-header{padding:0 20px}
+  .hero{padding:56px 20px 48px}
+  .content{padding:40px 20px 60px}
+  .reward-block{grid-template-columns:1fr}
+  .reward-item:first-child{border-radius:8px 8px 0 0}
+  .reward-item:last-child{border-radius:0 0 8px 8px}
+  .who-grid{grid-template-columns:1fr}
+  .who-item:first-child{border-radius:8px 8px 0 0}
+  .who-item:last-child{border-radius:0 0 8px 8px}
+  .who-item{border-radius:0}
+  .trust-block{padding:20px 20px 20px 18px}
+  .cta-block{padding:32px 20px}
+  .cta-footer{padding:48px 20px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+  <span class="header-right">Партнёрам</span>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Для партнёров</p>
+    <h1 class="hero-title">Знаете кого-то, кто продаёт<br><em>или покупает недвижимость?</em></h1>
+    <p class="hero-sub">Порекомендуйте меня — я проведу сделку, вы получите вознаграждение. Работаю и с продавцами, и с покупателями.</p>
+  </div>
+</section>
+
+<div class="content">
+
+  <!-- REWARD -->
+  <div class="section-head">
+    <h2 class="section-title">Вознаграждение</h2>
+  </div>
+  <div style="background:#fff;border-radius:8px;padding:28px 32px;margin-bottom:48px">
+    <div style="font-family:var(--serif);font-size:clamp(32px,5vw,52px);font-weight:400;color:var(--text);line-height:1;margin-bottom:16px">50 000 — 100 000 ₽</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+      <div style="padding:14px 16px;background:rgba(0,0,0,0.03);border-radius:6px">
+        <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">50 000 ₽</div>
+        <div style="font-size:13px;font-weight:300;color:var(--text);line-height:1.6">Стандартная продажа — в среднем 55 дней</div>
+      </div>
+      <div style="padding:14px 16px;background:rgba(0,0,0,0.03);border-radius:6px">
+        <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">100 000 ₽</div>
+        <div style="font-size:13px;font-weight:300;color:var(--text);line-height:1.6">Аукционная продажа — 21 день, максимальная цена</div>
+      </div>
+    </div>
+    <p style="font-size:13px;font-weight:300;color:var(--muted);line-height:1.7">Какой формат подойдёт клиенту — разберёмся вместе. Вам об этом думать не нужно. Выплата после закрытия сделки.</p>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps-block">
+    <div class="section-head">
+      <h2 class="section-title">Как это работает</h2>
+    </div>
+    <div class="steps-list">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-head">Вы фиксируете клиента</div>
+          <div class="step-text">Заполняете форму — имя и телефон клиента. Этого достаточно. Фиксация сохраняется на 6 месяцев.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-head">Я связываюсь и веду сделку</div>
+          <div class="step-text">Дальше всё на мне — продажа, покупка, переговоры. Вам не нужно ничего объяснять клиенту про процесс и комиссии. Я разберусь сам.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-head">Сделка закрыта — вы получаете деньги</div>
+          <div class="step-text">Вознаграждение выплачивается после фактического закрытия сделки. Наличными или переводом — как удобнее.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHO -->
+  <div class="who-block">
+    <div class="section-head">
+      <h2 class="section-title">Кто уже приводит клиентов</h2>
+    </div>
+    <div class="who-grid">
+      <div class="who-item">
+        <div class="who-title">Ипотечные брокеры</div>
+        <div class="who-desc">Клиент одобрил ипотеку — нужна квартира. Логичное продолжение.</div>
+      </div>
+      <div class="who-item">
+        <div class="who-title">Юристы и нотариусы</div>
+        <div class="who-desc">Наследство, развод, раздел имущества — часто заканчивается продажей.</div>
+      </div>
+      <div class="who-item">
+        <div class="who-title">Ремонтники</div>
+        <div class="who-desc">Делают ремонт — слышат про планы переехать или продать.</div>
+      </div>
+      <div class="who-item">
+        <div class="who-title">Агенты из других городов</div>
+        <div class="who-desc">Клиент переезжает в Петербург — нужен надёжный человек на месте.</div>
+      </div>
+      <div class="who-item">
+        <div class="who-title">Фотографы и дизайнеры</div>
+        <div class="who-desc">Работают с людьми, которые обустраиваются или готовят квартиру к продаже.</div>
+      </div>
+      <div class="who-item">
+        <div class="who-title">Просто знакомые</div>
+        <div class="who-desc">Услышали что кто-то думает о покупке или продаже — этого достаточно.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRUST -->
+  <div class="trust-block">
+    <div class="trust-title">Важно</div>
+    <div class="trust-items">
+      <div class="trust-item">
+        <span class="trust-dash">—</span>
+        <span class="trust-text">Я не буду давить на вашего клиента и не буду делать ничего, что может испортить ваши отношения с ним. Репутация важнее одной сделки.</span>
+      </div>
+      <div class="trust-item">
+        <span class="trust-dash">—</span>
+        <span class="trust-text">Если клиент уже в работе или обращался ранее — скажу об этом честно. Рекомендация в таком случае не засчитывается.</span>
+      </div>
+      <div class="trust-item">
+        <span class="trust-dash">—</span>
+        <span class="trust-text">Вы можете в любой момент спросить, как идут дела с вашим клиентом — отвечу честно.</span>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- PERSONAL NOTE -->
+  <div style="padding:24px 0;margin-bottom:48px;border-bottom:1px solid var(--border)">
+    <p style="font-size:15px;font-weight:300;color:var(--text);line-height:1.8">Я сам заинтересован в том, чтобы вы приводили клиентов снова — поэтому отношусь к этому серьёзно. Работаю так, чтобы ваш знакомый или клиент остался доволен, а вы не пожалели о рекомендации. Если что-то пойдёт не так — скажу об этом прямо, а не буду делать вид, что всё нормально.</p>
+  </div>
+
+  <!-- FAQ -->
+  <div style="margin-bottom:48px">
+    <div class="section-head">
+      <h2 class="section-title">Частые вопросы</h2>
+    </div>
+    <div class="pfaq">
+
+      <div class="pfaq-item">
+        <button class="pfaq-q" onclick="togglePfaq(this)">Нужно ли говорить клиенту, что я получу вознаграждение?</button>
+        <div class="pfaq-a">Нет, не обязательно. Можете просто сказать, что рекомендуете знакомого агента. Моя комиссия платится в рамках стандартного договора со стороны клиента — это обычная практика.</div>
+      </div>
+
+      <div class="pfaq-item">
+        <button class="pfaq-q" onclick="togglePfaq(this)">Что если клиент передумает или сделка не состоится?</button>
+        <div class="pfaq-a">Вознаграждение выплачивается только после закрытия сделки. Если сделка не состоялась — выплаты нет. Это честно для обеих сторон.</div>
+      </div>
+
+      <div class="pfaq-item">
+        <button class="pfaq-q" onclick="togglePfaq(this)">Как долго действует фиксация клиента?</button>
+        <div class="pfaq-a">6 месяцев с момента фиксации. Если за это время клиент выйдет на сделку — вознаграждение ваше.</div>
+      </div>
+
+      <div class="pfaq-item">
+        <button class="pfaq-q" onclick="togglePfaq(this)">Я не из недвижимости — это нормально?</button>
+        <div class="pfaq-a">Абсолютно. Большинство рекомендаций приходит от людей, которые просто услышали, что знакомый думает о покупке или продаже. Специальных знаний не нужно.</div>
+      </div>
+
+      <div class="pfaq-item">
+        <button class="pfaq-q" onclick="togglePfaq(this)">Как получить деньги?</button>
+        <div class="pfaq-a">Как удобнее — обсудим. Переводом или наличными. Главное, чтобы всё было понятно заранее.</div>
+      </div>
+
+      <div class="pfaq-item">
+        <button class="pfaq-q" onclick="togglePfaq(this)">Что если вы не договоритесь с моим клиентом?</button>
+        <div class="pfaq-a">Бывает — я работаю не со всеми, и это нормально. Если не сойдёмся по условиям или форматам работы — скажу честно и без неловкости. Ваша рекомендация при этом не теряется: я это запомню, и в следующий раз сделаю для вас бонус поверх обычных условий.</div>
+      </div>
+
+    </div>
+  </div>
+
+    <!-- CTA -->
+  <div class="cta-block">
+    <h2 class="cta-block-title">Есть кто-то на примете?</h2>
+    <p class="cta-block-sub">Заполните форму — займёт две минуты. Или напишите в Telegram, если есть вопросы.</p>
+    <a href="https://fastbroker21.ru/referral.html" class="cta-btn">
+      Зафиксировать клиента
+    </a>
+  </div>
+
+</div>
+
+<footer class="cta-footer">
+  <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости · Санкт-Петербург</p>
+  <h2 class="cta-footer-title">Работаем<br><em>вместе.</em></h2>
+  <p class="cta-footer-sub">Вторичный рынок Санкт-Петербурга. Если есть клиент — напишите, разберёмся.</p>
+  <a class="tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z"/></svg>
+    Написать в Telegram
+  </a>
+  <p style="margin-top:16px;font-size:13px;color:rgba(229,229,229,0.35)">или <a href="tel:+79118461965" style="color:rgba(229,229,229,0.5);text-decoration:none">+7 911 846-19-65</a></p>
+  <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
+</footer>
+
+
+<script>
+function togglePfaq(btn){
+  var item=btn.parentElement;
+  var open=item.classList.contains('open');
+  document.querySelectorAll('.pfaq-item.open').forEach(function(el){el.classList.remove('open');});
+  if(!open)item.classList.add('open');
+}
+</script>
+</body>
+</html>
