@@ -26,6 +26,55 @@
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/108495825" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+
+<!-- CRM Bot Tracker -->
+<script>
+(function() {
+  var BOT_URL = "https://crm-bot-production-7458.up.railway.app/track";
+
+  function getRef() {
+    try { return new URLSearchParams(window.location.search).get("ref") || ""; } catch(e) { return ""; }
+  }
+  function send(event, extra) {
+    var data = {
+      event: event,
+      page: window.location.pathname,
+      ref: getRef(),
+      referrer: document.referrer ? new URL(document.referrer).hostname : "direct",
+      ua: navigator.userAgent.substring(0, 80)
+    };
+    if (extra) Object.assign(data, extra);
+    try {
+      fetch(BOT_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data), keepalive:true });
+    } catch(e) {}
+  }
+
+  // 1. Посещение — только уникальные за сессию
+  if (!sessionStorage.getItem("_crm_visited")) {
+    sessionStorage.setItem("_crm_visited", "1");
+    send("visit");
+  }
+
+  // 2. Клик на Telegram / WhatsApp / телефон
+  document.addEventListener("click", function(e) {
+    var a = e.target.closest("a[href]");
+    if (!a) return;
+    var href = a.href || "";
+    if (/t\.me|telegram/i.test(href))   send("click_telegram", { href: href });
+    if (/wa\.me|whatsapp/i.test(href))  send("click_whatsapp", { href: href });
+    if (/^tel:/i.test(href))            send("click_phone",    { href: href });
+  });
+
+  // 3. Отправка формы
+  document.addEventListener("submit", function(e) {
+    var form = e.target;
+    var phone = (form.querySelector("[name=phone]") || {}).value || "";
+    var name  = (form.querySelector("[name=name]")  || {}).value || "";
+    var msg   = (form.querySelector("[name=message]") || {}).value || "";
+    send("form_submit", { phone: phone, name: name, message: msg.substring(0, 100) });
+  });
+})();
+</script>
 </head>
 <body>
   <header class="site-header bg-main">
