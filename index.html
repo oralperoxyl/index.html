@@ -58,6 +58,21 @@
     send("visit");
   }
 
+  // 2. Время на странице — при уходе
+  var startTime = Date.now();
+  function sendTimeOnPage() {
+    var sec = Math.round((Date.now() - startTime) / 1000);
+    if (sec < 10) return;
+    var min = Math.floor(sec / 60);
+    var s   = sec % 60;
+    var label = min > 0 ? (min + " мин " + s + " сек") : (s + " сек");
+    send("time_on_page", { duration: label, duration_sec: sec });
+  }
+  window.addEventListener("beforeunload", sendTimeOnPage);
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "hidden") sendTimeOnPage();
+  });
+
   // 2. Клик на Telegram / WhatsApp / телефон
   document.addEventListener("click", function(e) {
     var a = e.target.closest("a[href]");

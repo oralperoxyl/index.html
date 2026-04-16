@@ -128,6 +128,63 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 </script>
 <noscript><div><img src="https://mc.yandex.ru/watch/108495825" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 <!-- /Yandex.Metrika counter -->
+<!-- CRM Bot Tracker -->
+<script>
+(function() {
+  var BOT_URL = "https://crm-bot-production-7458.up.railway.app/track";
+  var startTime = Date.now();
+
+  function getRef() {
+    try { return new URLSearchParams(window.location.search).get("ref") || ""; } catch(e) { return ""; }
+  }
+  function send(event, extra) {
+    var data = {
+      event: event,
+      page: window.location.pathname,
+      ref: getRef(),
+      referrer: document.referrer ? new URL(document.referrer).hostname : "direct",
+      ua: navigator.userAgent.substring(0, 80)
+    };
+    if (extra) Object.assign(data, extra);
+    fetch(BOT_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(data),
+      keepalive:true
+    }).catch(function(e){ console.warn("[CRM tracker]", e.message); });
+  }
+
+  // 1. Посещение — один раз за сессию
+  if (!sessionStorage.getItem("_crm_visited_" + window.location.pathname)) {
+    sessionStorage.setItem("_crm_visited_" + window.location.pathname, "1");
+    send("visit");
+  }
+
+  // 2. Время на странице — при уходе
+  function sendTimeOnPage() {
+    var sec = Math.round((Date.now() - startTime) / 1000);
+    if (sec < 3) return; // игнорируем случайные заходы
+    var min = Math.floor(sec / 60);
+    var s   = sec % 60;
+    var label = min > 0 ? (min + " мин " + s + " сек") : (s + " сек");
+    send("time_on_page", { duration: label, duration_sec: sec });
+  }
+  window.addEventListener("beforeunload", sendTimeOnPage);
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "hidden") sendTimeOnPage();
+  });
+
+  // 3. Клики на контакты
+  document.addEventListener("click", function(e) {
+    var a = e.target.closest("a[href]");
+    if (!a) return;
+    var href = a.href || "";
+    if (/t\.me|telegram/i.test(href))  send("click_telegram", { href: href });
+    if (/wa\.me|whatsapp/i.test(href)) send("click_whatsapp", { href: href });
+    if (/^tel:/i.test(href))            send("click_phone",    { href: href });
+  });
+})();
+</script>
 </head>
 <body>
 
