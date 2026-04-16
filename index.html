@@ -44,9 +44,12 @@
       ua: navigator.userAgent.substring(0, 80)
     };
     if (extra) Object.assign(data, extra);
-    try {
-      fetch(BOT_URL, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(data), keepalive:true });
-    } catch(e) {}
+    fetch(BOT_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(data),
+      keepalive:true
+    }).catch(function(e){ console.warn("[CRM tracker] error:", e.message); });
   }
 
   // 1. Посещение — только уникальные за сессию
