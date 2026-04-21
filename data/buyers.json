@@ -566,7 +566,8 @@
       "nextStep": "",
       "createdAt": "2026-04-21",
       "vis": {
-        "locations": false
+        "locations": false,
+        "calc": false
       }
     }
   }
