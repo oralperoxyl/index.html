@@ -565,7 +565,9 @@
       "props": [],
       "nextStep": "",
       "createdAt": "2026-04-21",
-      "vis": {}
+      "vis": {
+        "locations": false
+      }
     }
   }
 }
