@@ -562,7 +562,25 @@
     "валя-mo94miw6vcyq": {
       "name": "Валя",
       "budget": "",
-      "props": [],
+      "props": [
+        {
+          "address": "Ул. Рубинштейна, д.13",
+          "price": "17900000",
+          "area": "83",
+          "rooms": "2",
+          "floor": "4/5",
+          "condition": "Косметический ремонт",
+          "renovation": "",
+          "showDate": "",
+          "showTime": "",
+          "status": "planned",
+          "url": "https://www.cian.ru/sale/flat/329007613/",
+          "agentComment": "",
+          "clientRating": 0,
+          "clientComment": "",
+          "addedAt": "2026-04-23"
+        }
+      ],
       "nextStep": "",
       "createdAt": "2026-04-21",
       "vis": {
