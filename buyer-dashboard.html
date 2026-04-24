@@ -1550,6 +1550,7 @@ function renderInlineForm(buyer) {
   const buyerId = Object.keys(allData.buyers).find(k => allData.buyers[k] === buyer) || '';
   inlineStep = 0;
   inlinePriorities = [];
+  ifAnswers = {}; // сброс при старте новой формы
   return `<div id="inlineFormWrap">
     <div style="margin-bottom:48px">
       <div style="font-family:var(--serif);font-size:clamp(22px,3vw,32px);font-weight:400;line-height:1.2;margin-bottom:12px">Расскажите,<br><em style="font-style:italic;color:var(--muted)">что вы ищете.</em></div>
@@ -1874,10 +1875,30 @@ function ifInitChips() {
   });
 }
 
+// Хранилище ответов — заполняется по мере прохождения шагов
+let ifAnswers = {};
+
+function ifSaveCurrentStep() {
+  // Чипы
+  document.querySelectorAll('[data-ig]').forEach(group => {
+    const g = group.dataset.ig;
+    const selected = [...group.querySelectorAll('.if-chip.on')].map(b => b.dataset.val || b.textContent.trim()).join(', ');
+    if (selected) ifAnswers[g] = selected;
+  });
+  // Текстовые поля
+  document.querySelectorAll('.if-textarea, .if-input').forEach(el => {
+    if (el.id && el.value.trim()) ifAnswers[el.id] = el.value.trim();
+  });
+  // Приоритеты
+  if (inlinePriorities.length) {
+    ifAnswers['_priorities'] = inlinePriorities.slice();
+  }
+}
+
 function ifNextStep(buyerId) {
-  // Сохраняем текущий шаг и переходим к следующему
   const wrap = document.getElementById('inlineFormWrap');
   if (!wrap) return;
+  ifSaveCurrentStep(); // сохраняем до перерисовки
   inlineStep++;
   if (inlineStep >= INLINE_STEPS.length) {
     ifSubmit(buyerId);
@@ -1897,6 +1918,7 @@ function ifNextStep(buyerId) {
 function ifPrevStep(buyerId) {
   const wrap = document.getElementById('inlineFormWrap');
   if (!wrap || inlineStep <= 0) return;
+  ifSaveCurrentStep(); // сохраняем до перерисовки
   inlineStep--;
   wrap.innerHTML = `
     <div style="margin-bottom:48px">
@@ -1923,35 +1945,42 @@ function renderInlineNav(buyerId) {
 }
 
 function ifCollect() {
+  // Сохраняем последний открытый шаг перед сборкой
+  ifSaveCurrentStep();
+
+  const a = ifAnswers;
+  const v = (key) => a[key] || '—';
+  const prio = (a['_priorities'] || inlinePriorities);
+
   return {
-    purpose: ifChips('purpose'),
-    residents: ifChips('residents'),
-    horizon: ifChips('horizon'),
-    dislike: ifVal('if-dislike'),
-    housingType: ifChips('housing-type'),
-    housingExclude: ifChips('housing-exclude'),
-    whyOld: ifVal('if-why-old'),
-    mainGoal: ifChips('main-goal'),
-    districts: ifChips('districts'),
-    favStreets: ifVal('if-fav-streets'),
-    noDistricts: ifVal('if-no-districts'),
-    locPrio: ifChips('loc-prio'),
-    areaFrom: ifVal('if-area-from'),
-    areaTo: ifVal('if-area-to'),
-    rooms: ifChips('rooms'),
-    floor: ifChips('floor'),
-    condition: ifChips('condition'),
-    extras: ifChips('extras'),
-    priorities: inlinePriorities.map((p,i) => `${i+1}. ${p}`).join('\n') || '—',
-    tradeoff: ifVal('if-tradeoff'),
-    budgetOk: ifVal('if-budget-ok'),
-    budgetMax: ifVal('if-budget-max'),
-    payment: ifChips('payment'),
-    sign1: ifVal('if-sign-1'),
-    sign2: ifVal('if-sign-2'),
-    sign3: ifVal('if-sign-3'),
-    urgency: ifVal('if-urgency'),
-    readiness: ifChips('readiness'),
+    purpose:      v('purpose'),
+    residents:    v('residents'),
+    horizon:      v('horizon'),
+    dislike:      v('if-dislike'),
+    housingType:  v('housing-type'),
+    housingExclude: v('housing-exclude'),
+    whyOld:       v('if-why-old'),
+    mainGoal:     v('main-goal'),
+    districts:    v('districts'),
+    favStreets:   v('if-fav-streets'),
+    noDistricts:  v('if-no-districts'),
+    locPrio:      v('loc-prio'),
+    areaFrom:     v('if-area-from'),
+    areaTo:       v('if-area-to'),
+    rooms:        v('rooms'),
+    floor:        v('floor'),
+    condition:    v('condition'),
+    extras:       v('extras'),
+    priorities:   prio.length ? prio.map((p,i) => `${i+1}. ${p}`).join('\n') : '—',
+    tradeoff:     v('if-tradeoff'),
+    budgetOk:     v('if-budget-ok'),
+    budgetMax:    v('if-budget-max'),
+    payment:      v('payment'),
+    sign1:        v('if-sign-1'),
+    sign2:        v('if-sign-2'),
+    sign3:        v('if-sign-3'),
+    urgency:      v('if-urgency'),
+    readiness:    v('readiness'),
   };
 }
 
