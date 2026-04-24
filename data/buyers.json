@@ -598,7 +598,41 @@
         "summary": "",
         "criteria": [],
         "priorities": [],
-        "signs": []
+        "signs": [
+          "Ремонт",
+          "Метраж",
+          "Улица"
+        ],
+        "formData": {
+          "purpose": "—",
+          "residents": "—",
+          "horizon": "—",
+          "dislike": "—",
+          "housingType": "—",
+          "housingExclude": "—",
+          "whyOld": "—",
+          "mainGoal": "—",
+          "districts": "—",
+          "favStreets": "—",
+          "noDistricts": "—",
+          "locPrio": "—",
+          "areaFrom": "—",
+          "areaTo": "—",
+          "rooms": "—",
+          "floor": "—",
+          "condition": "—",
+          "extras": "—",
+          "priorities": "1. Локация / район\n2. Бюджет\n3. Метраж\n4. Тишина\n5. Вид из окон",
+          "tradeoff": "—",
+          "budgetOk": "12 000 000",
+          "budgetMax": "15 000 000",
+          "payment": "Ипотека",
+          "sign1": "Ремонт",
+          "sign2": "Метраж",
+          "sign3": "Улица",
+          "urgency": "не срочно",
+          "readiness": "Нужно подумать"
+        }
       },
       "vis": {}
     }
