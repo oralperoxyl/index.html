@@ -1015,17 +1015,6 @@ function renderAgentView(buyerId){
   const props=sortProps(buyer.props||[]);
   const dashUrl=window.location.origin+window.location.pathname+'?id='+buyerId;
 
-  // Баннер незаписанного брифа
-  const pendingBrief = checkPendingBrief(buyerId);
-  const pendingBanner = pendingBrief ? `
-    <div style="background:rgba(45,138,78,0.12);border:1px solid rgba(45,138,78,0.25);border-radius:10px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
-      <div>
-        <div style="font-size:13px;font-weight:500;color:var(--green);margin-bottom:2px">Бриф заполнен на устройстве клиента</div>
-        <div style="font-size:12px;color:var(--muted);font-weight:300">Данные сохранены локально — нажмите чтобы перенести в карточку</div>
-      </div>
-      <button onclick="applyPendingBrief('${buyerId}')" style="padding:8px 20px;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;font-family:var(--sans);white-space:nowrap">Перенести в карточку →</button>
-    </div>` : '';
-
   document.getElementById('appRoot').innerHTML=`
     <section class="hero">
       <div class="hero-inner">
@@ -1046,7 +1035,6 @@ function renderAgentView(buyerId){
       </div>
     </section>
     <div class="content">
-      ${pendingBanner}
       <nav class="tab-nav">
         <button class="tab-btn active" onclick="switchTab('objects',this)">Объекты</button>
         <button class="tab-btn" onclick="switchTab('brief',this)">Подбор</button>
@@ -2037,102 +2025,94 @@ function ifShowForm(buyerId) {
   panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-const BRIEF_LS_KEY = id => `pending-brief-${id}`;
-
 async function ifSubmit(buyerId) {
   const navBtns = document.querySelectorAll('#inlineFormWrap button');
   navBtns.forEach(b => b.disabled = true);
   const lastBtn = navBtns[navBtns.length - 1];
-  if (lastBtn) lastBtn.textContent = 'Сохраняем…';
+  if (lastBtn) lastBtn.textContent = 'Отправляем…';
 
   const d = ifCollect();
   const buyer = allData.buyers[buyerId];
   if (!buyer) return;
 
-  // Всегда пишем в brief.formData в памяти
-  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
-  buyer.brief.formData = d;
-  buyer.brief.signs = [d.sign1, d.sign2, d.sign3].filter(s => s && s !== '—');
+  // Формируем текст письма
+  const body = `
+Бриф на подбор квартиры
+Клиент: ${buyer.name || buyerId}
 
-  if (getToken()) {
-    // Есть токен — пишем сразу в GitHub напрямую
-    await ghSave();
-  }
-  // В любом случае отправляем на бот — он запишет в GitHub и пришлёт в Telegram
+ЦЕЛЬ И КОНТЕКСТ
+Цель: ${d.purpose}
+Проживание: ${d.residents}
+Срок: ${d.horizon}
+Что не устраивает: ${d.dislike}
 
-  // Отправляем на бот — он запишет в GitHub и пришлёт в Telegram
+ТИП ЖИЛЬЯ
+Рассматривает: ${d.housingType}
+Исключает: ${d.housingExclude}
+Почему старый фонд: ${d.whyOld}
+Главное в квартире: ${d.mainGoal}
+
+ЛОКАЦИЯ
+Районы: ${d.districts}
+Любимые места: ${d.favStreets}
+Исключения: ${d.noDistricts}
+Критично: ${d.locPrio}
+
+ПАРАМЕТРЫ
+Метраж: ${d.areaFrom} — ${d.areaTo} м²
+Комнаты: ${d.rooms} / Этаж: ${d.floor}
+Состояние: ${d.condition}
+Дополнительно: ${d.extras}
+
+ПРИОРИТЕТЫ
+${d.priorities}
+
+Готов отказаться: ${d.tradeoff}
+
+ФИНАНСЫ
+Комфортный бюджет: ${d.budgetOk} ₽
+Максимальный: ${d.budgetMax} ₽
+Способ покупки: ${d.payment}
+
+СРОКИ
+Срочность: ${d.urgency}
+Готовность к авансу: ${d.readiness}
+
+КАК ПОЙМЁТ, ЧТО ЭТО ЕГО?
+1. ${d.sign1}
+2. ${d.sign2}
+3. ${d.sign3}
+  `.trim();
+
   try {
-    fetch('https://crm-bot-production-7458.up.railway.app/brief', {
+    await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        message: ifFormatTelegram(buyerId, buyer.name, d),
-        data: d,
-        buyerId: buyerId
-      }),
-      keepalive: true
+        access_key: '15cc9dfa-af27-418a-aae7-5a195d354206',
+        subject: `Бриф на подбор: ${buyer.name || buyerId}`,
+        message: body,
+        from_name: buyer.name || 'Клиент'
+      })
     });
   } catch(e) {}
+
+  // Показываем благодарность прямо в панели
+  const panel = document.getElementById('tab-brief');
+  if (panel) {
+    panel.innerHTML = `<div style="padding:60px 0;text-align:center;max-width:480px;margin:0 auto">
+      <div style="width:48px;height:48px;border:1px solid rgba(0,0,0,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 32px;color:#2D8A4E">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#2D8A4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-weight:400;line-height:1.2;margin-bottom:14px">Спасибо.<br><em style="font-style:italic;color:var(--muted)">Всё получил.</em></div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.75">Изучу ваши пожелания и свяжусь с вами — подберём действительно подходящие варианты, а не просто список квартир.</p>
+      <button onclick="ifShowForm('${buyerId}')" style="margin-top:32px;font-size:12px;color:rgba(0,0,0,0.3);background:none;border:none;cursor:pointer;font-family:var(--sans);text-decoration:underline;text-underline-offset:3px">Изменить ответы</button>
+    </div>`;
+  }
 
   inlineStep = 0;
   inlinePriorities = [];
   ifAnswers = {};
-
-  // Показываем результат прямо в панели без перезагрузки всей страницы
-  const panel = document.getElementById('tab-brief');
-  if (panel) {
-    panel.innerHTML = renderBriefClient(buyer, buyerId);
-  } else {
-    renderClientView(buyerId);
-    setTimeout(() => switchTab('brief', document.querySelectorAll('.tab-btn')[1]), 50);
-  }
-}
-
-// Проверяем есть ли незаписанный бриф в localStorage
-function checkPendingBrief(buyerId) {
-  try {
-    const raw = localStorage.getItem(BRIEF_LS_KEY(buyerId));
-    if (!raw) return null;
-    return JSON.parse(raw);
-  } catch(e) { return null; }
-}
-
-async function applyPendingBrief(buyerId) {
-  const d = checkPendingBrief(buyerId);
-  if (!d) return;
-  const buyer = allData.buyers[buyerId];
-  if (!buyer) return;
-  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
-  buyer.brief.formData = d;
-  buyer.brief.signs = [d.sign1, d.sign2, d.sign3].filter(s => s && s !== '—');
-  await ghSave();
-  try { localStorage.removeItem(BRIEF_LS_KEY(buyerId)); } catch(e) {}
-  renderAgentView(buyerId);
-  // Переключаемся на вкладку подбора
-  setTimeout(() => {
-    const briefBtn = document.querySelectorAll('.tab-btn')[1];
-    switchTab('brief', briefBtn);
-  }, 50);
-}
-
-function ifFormatTelegram(buyerId, name, d) {
-  return `🏠 *Бриф заполнен: ${name || buyerId}*
-
-*Цель:* ${d.purpose} · ${d.residents} · ${d.horizon}
-*Жильё:* ${d.housingType} (исключает: ${d.housingExclude})
-*Локация:* ${d.districts} · ${d.locPrio}
-*Метраж:* ${d.areaFrom}–${d.areaTo} м² · ${d.rooms} · ${d.floor}
-*Состояние:* ${d.condition}
-*Бюджет:* ${d.budgetOk} — ${d.budgetMax} ₽ · ${d.payment}
-*Приоритеты:*
-${d.priorities}
-*Готов отказаться:* ${d.tradeoff}
-*Готовность:* ${d.readiness}
-
-*Признаки своей квартиры:*
-1. ${d.sign1}
-2. ${d.sign2}
-3. ${d.sign3}`;
 }
 
 // ── BRIEF AGENT RENDER ───────────────────────────────────────
