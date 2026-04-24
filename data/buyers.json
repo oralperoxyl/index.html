@@ -594,6 +594,20 @@
         "priorities": [],
         "signs": []
       }
+    },
+    "марья-васильевна-modfe7ojm2r6": {
+      "name": "Марья Васильевна",
+      "budget": "",
+      "props": [],
+      "nextStep": "",
+      "createdAt": "2026-04-24",
+      "brief": {
+        "summary": "",
+        "criteria": [],
+        "priorities": [],
+        "signs": []
+      },
+      "vis": {}
     }
   }
 }
