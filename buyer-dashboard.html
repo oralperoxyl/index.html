@@ -264,6 +264,58 @@ button,a{-webkit-tap-highlight-color:transparent}
   .loc-summary-item+.loc-summary-item{border-left:none;border-top:1px solid rgba(255,255,255,0.07)}
 }
 
+/* TABS */
+.tab-nav{display:flex;border-bottom:1px solid var(--border);margin-bottom:40px;gap:0;background:var(--bg);position:sticky;top:64px;z-index:50}
+.tab-btn{font-family:var(--sans);font-size:13px;font-weight:400;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;padding:14px 20px;cursor:pointer;letter-spacing:0.02em;transition:color 0.15s,border-color 0.15s;white-space:nowrap;margin-bottom:-1px}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* BRIEF — AGENT EDIT */
+.brief-section{margin-bottom:40px}
+.brief-section-title{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(0,0,0,0.3);margin-bottom:16px;font-weight:400}
+.brief-criteria-list{display:grid;gap:2px}
+.brief-criterion{background:#fff;padding:18px 22px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+.brief-criterion-left{}
+.brief-criterion-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.28);margin-bottom:4px;font-weight:400}
+.brief-criterion-value{font-size:14px;font-weight:300;color:var(--text);line-height:1.6}
+.brief-criterion-comment{font-size:12px;color:var(--muted);font-weight:300;margin-top:6px;font-style:italic;line-height:1.55}
+.brief-criterion-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.brief-tag{font-size:10px;font-weight:500;letter-spacing:0.06em;padding:3px 10px;border-radius:2px;white-space:nowrap}
+.brief-tag.ok{background:rgba(45,138,78,0.08);color:var(--green)}
+.brief-tag.warn{background:rgba(180,100,0,0.08);color:rgba(140,80,0,0.9)}
+.brief-tag.hard{background:rgba(192,57,43,0.08);color:var(--red)}
+.brief-tag.none{background:rgba(0,0,0,0.04);color:var(--muted)}
+
+/* BRIEF — CLIENT VIEW */
+.brief-client-wrap{}
+.brief-summary-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.brief-summary-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(0,0,0,0.28);margin-bottom:14px}
+.brief-summary-text{font-size:15px;color:var(--text);font-weight:300;line-height:1.8;max-width:640px}
+.brief-summary-text strong{color:var(--text);font-weight:500}
+.brief-params-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:40px}
+.brief-param-cell{background:#fff;padding:18px 22px}
+.brief-param-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.28);margin-bottom:5px;font-weight:400}
+.brief-param-value{font-size:14px;font-weight:300;color:var(--text);line-height:1.6}
+.brief-priorities-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.brief-priority-row{display:grid;grid-template-columns:32px 1fr auto;gap:16px;padding:16px 0;border-top:1px solid var(--border);align-items:start}
+.brief-priority-row:last-child{border-bottom:1px solid var(--border)}
+.brief-priority-num{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.18);padding-top:2px}
+.brief-priority-name{font-size:14px;font-weight:400;color:var(--text);line-height:1.4}
+.brief-priority-comment{font-size:12px;color:var(--muted);font-weight:300;margin-top:4px;line-height:1.55;font-style:italic}
+.brief-signs-block{margin-bottom:40px}
+.brief-sign-item{background:#fff;padding:22px 26px;margin-bottom:2px}
+.brief-sign-num{font-family:var(--serif);font-size:11px;color:rgba(0,0,0,0.18);display:block;margin-bottom:6px}
+.brief-sign-text{font-size:15px;font-weight:300;color:var(--text);line-height:1.7}
+
+@media(max-width:640px){
+  .tab-btn{padding:12px 14px;font-size:12px}
+  .brief-params-grid{grid-template-columns:1fr}
+  .brief-priority-row{grid-template-columns:28px 1fr}
+  .brief-tag{display:none}
+}
+
 /* CTA FOOTER */
 .cta-footer{background:var(--dark);padding:72px 40px;text-align:center}
 .cta-footer-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:20px}
@@ -880,6 +932,8 @@ function renderClientView(buyerId){
   const vis=buyer.vis||{};
   const show=function(k){return vis[k]!==false;};
 
+  const hasBrief = !!(buyer.brief && (buyer.brief.summary || (buyer.brief.criteria && buyer.brief.criteria.length)));
+
   document.getElementById('appRoot').innerHTML=`
     <section class="hero">
       <div class="hero-inner">
@@ -895,36 +949,32 @@ function renderClientView(buyerId){
       </div>
     </section>
     <div class="content">
-      ${(buyer.situation||buyer.nextStep)?`<div class="steps-block">${buyer.situation?`<div class="step-row situation"><div class="step-label">Текущее состояние</div><div class="step-text">${escNl(buyer.situation)}</div></div>`:''} ${buyer.nextStep?`<div class="step-row next"><div class="step-label">Следующий шаг</div><div class="step-text">${escNl(buyer.nextStep)}</div></div>`:''}</div>`:''}
+      <nav class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('objects',this)">Объекты</button>
+        ${hasBrief?`<button class="tab-btn" onclick="switchTab('brief',this)">Подбор</button>`:''}
+        <button class="tab-btn" onclick="switchTab('locations',this)">Локации</button>
+      </nav>
 
-      ${renderHistory(buyer)}
-      ${renderUpdates(props)}
+      <!-- TAB: OBJECTS -->
+      <div class="tab-panel active" id="tab-objects">
+        ${(buyer.situation||buyer.nextStep)?`<div class="steps-block">${buyer.situation?`<div class="step-row situation"><div class="step-label">Текущее состояние</div><div class="step-text">${escNl(buyer.situation)}</div></div>`:''} ${buyer.nextStep?`<div class="step-row next"><div class="step-label">Следующий шаг</div><div class="step-text">${escNl(buyer.nextStep)}</div></div>`:''}</div>`:''}
+        ${renderHistory(buyer)}
+        ${renderUpdates(props)}
+        ${show('logic')?`<div class="logic-block"><div class="logic-block-title">Как мы отбираем объекты</div><div class="logic-block-text"><p>Здесь только те квартиры, которые прошли первичный отбор — по соотношению цены и площади в конкретной локации, состоянию, этажу и общей адекватности предложения.</p><p>Если какого-то объекта нет в списке — скорее всего он уступает по цене за метр, имеет скрытые сложности, или просто не подходит под ваши параметры.</p><p>Если какой-то объект кажется завышенным по цене — это не ошибка. Значит мы <strong>проверяем сценарий</strong> или держим его как точку отсчёта.</p></div></div>`:''}
+        ${show('hint')?`<div class="hint-block"><div class="hint-title">На что обратить внимание при оценке</div><div class="hint-items"><div class="hint-item"><div class="hint-num">01</div><div class="hint-item-body"><div class="hint-item-q">Как вы себя чувствовали внутри?</div><div class="hint-item-a">Представьте что живёте там — комфортно или что-то мешает. Тесно, шумно, тёмно — или наоборот.</div></div></div><div class="hint-item"><div class="hint-num">02</div><div class="hint-item-body"><div class="hint-item-q">Что запомнилось первым?</div><div class="hint-item-a">Обычно это и есть главное — в плюс или в минус. Вид из окна, запах, высота потолков, двор.</div></div></div><div class="hint-item"><div class="hint-num">03</div><div class="hint-item-body"><div class="hint-item-q">Захотелось вернуться?</div><div class="hint-item-a">Если нет — почему. Если да — что держит. Это помогает понять реальный приоритет.</div></div></div></div></div>`:''}
+        <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
+        <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,false)).join('')}</div>
+        ${show('compare')?renderCompare(props):''}
+        ${show('calc')?`<div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px">Калькулятор платежей и доходов/расходов →</a></div>`:''}
+      </div>
 
-      ${show('logic')?`<div class="logic-block">
-        <div class="logic-block-title">Как мы отбираем объекты</div>
-        <div class="logic-block-text">
-          <p>Здесь только те квартиры, которые прошли первичный отбор — по соотношению цены и площади в конкретной локации, состоянию, этажу и общей адекватности предложения.</p>
-          <p>Если какого-то объекта нет в списке — скорее всего он уступает по цене за метр, имеет скрытые сложности, или просто не подходит под ваши параметры.</p>
-          <p>Если какой-то объект кажется завышенным по цене — это не ошибка. Значит мы <strong>проверяем сценарий</strong> или держим его как точку отсчёта.</p>
-        </div>
-      </div>`:''}
+      <!-- TAB: BRIEF (client view) -->
+      ${hasBrief?`<div class="tab-panel" id="tab-brief">${renderBriefClient(buyer)}</div>`:''}
 
-      ${show('hint')?`<div class="hint-block">
-        <div class="hint-title">На что обратить внимание при оценке</div>
-        <div class="hint-items">
-          <div class="hint-item"><div class="hint-num">01</div><div class="hint-item-body"><div class="hint-item-q">Как вы себя чувствовали внутри?</div><div class="hint-item-a">Представьте что живёте там — комфортно или что-то мешает. Тесно, шумно, тёмно — или наоборот.</div></div></div>
-          <div class="hint-item"><div class="hint-num">02</div><div class="hint-item-body"><div class="hint-item-q">Что запомнилось первым?</div><div class="hint-item-a">Обычно это и есть главное — в плюс или в минус. Вид из окна, запах, высота потолков, двор.</div></div></div>
-          <div class="hint-item"><div class="hint-num">03</div><div class="hint-item-body"><div class="hint-item-q">Захотелось вернуться?</div><div class="hint-item-a">Если нет — почему. Если да — что держит. Это помогает понять реальный приоритет.</div></div></div>
-        </div>
-      </div>`:''}
-
-      <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
-      <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,false)).join('')}</div>
-
-      ${show('locations')?renderLocations(buyer,buyerId,false):''}
-      ${show('compare')?renderCompare(props):''}
-
-      ${show('calc')?`<div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px">Калькулятор платежей и доходов/расходов →</a></div>`:''}
+      <!-- TAB: LOCATIONS -->
+      <div class="tab-panel" id="tab-locations">
+        ${show('locations')?renderLocations(buyer,buyerId,false):'<p style="color:var(--muted);font-size:14px;padding:40px 0;">Сравнение локаций появится позже.</p>'}
+      </div>
     </div>
     ${renderFooter()}`;
 }
@@ -957,6 +1007,14 @@ function renderAgentView(buyerId){
       </div>
     </section>
     <div class="content">
+      <nav class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('objects',this)">Объекты</button>
+        <button class="tab-btn" onclick="switchTab('brief',this)">Подбор</button>
+        <button class="tab-btn" onclick="switchTab('locations',this)">Локации</button>
+      </nav>
+
+      <!-- TAB: OBJECTS (agent) -->
+      <div class="tab-panel active" id="tab-objects">
       <div class="agent-section" style="margin-bottom:32px"><div class="agent-section-title">Статус работы</div><div style="display:grid;gap:16px">
           <div>
             <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.55);margin-bottom:8px">Текущая ситуация</div>
@@ -1021,6 +1079,18 @@ function renderAgentView(buyerId){
       ${renderLocations(buyer,buyerId,true)}
       ${isVisible(buyer,"compare")?renderCompare(props):""}
       <div data-calc-link style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px;font-weight:400">Калькулятор платежей и доходов/расходов →</a></div>
+      </div><!-- /tab-objects -->
+
+      <!-- TAB: BRIEF (agent edit) -->
+      <div class="tab-panel" id="tab-brief">
+        ${renderBriefAgent(buyerId, buyer)}
+      </div>
+
+      <!-- TAB: LOCATIONS (agent) -->
+      <div class="tab-panel" id="tab-locations">
+        ${renderLocations(buyer,buyerId,true)}
+      </div>
+
     </div>
     ${renderFooter()}`;
   renderVisControls(buyerId);
@@ -1252,6 +1322,275 @@ function submitToken(){
   if(!t)return;
   setToken(t);
   location.reload();
+}
+
+// ── TABS ─────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('tab-' + id);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── BRIEF HELPERS ─────────────────────────────────────────────
+const TAG_LABELS = { ok: 'Реалистично', warn: 'С оговорками', hard: 'Сложно', none: '' };
+
+function getBrief(buyer) {
+  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
+  return buyer.brief;
+}
+
+// ── BRIEF CLIENT RENDER ──────────────────────────────────────
+function renderBriefClient(buyer) {
+  const b = buyer.brief || {};
+  const criteria = b.criteria || [];
+  const priorities = b.priorities || [];
+  const signs = b.signs || [];
+
+  let html = '';
+
+  // Резюме агента
+  if (b.summary) {
+    html += `<div class="brief-summary-block">
+      <div class="brief-summary-label">Резюме подбора</div>
+      <div class="brief-summary-text">${escNl(b.summary)}</div>
+    </div>`;
+  }
+
+  // Базовые параметры (2 колонки)
+  const paramFields = [
+    { key: 'housing', label: 'Тип жилья' },
+    { key: 'budget', label: 'Бюджет' },
+    { key: 'area', label: 'Метраж' },
+    { key: 'rooms', label: 'Комнат' },
+    { key: 'location', label: 'Локация' },
+    { key: 'condition', label: 'Состояние' },
+  ];
+  const paramCells = paramFields.filter(f => b[f.key]).map(f =>
+    `<div class="brief-param-cell">
+      <div class="brief-param-label">${f.label}</div>
+      <div class="brief-param-value">${esc(b[f.key])}</div>
+    </div>`
+  ).join('');
+  if (paramCells) {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label" style="margin-bottom:16px">Параметры</div>
+      <div class="brief-params-grid">${paramCells}</div>
+    </div>`;
+  }
+
+  // Приоритеты с комментариями
+  if (priorities.length) {
+    html += `<div class="brief-priorities-block">
+      <div class="brief-summary-label" style="margin-bottom:0">Приоритеты</div>
+      <div>
+        ${priorities.map((p, i) => `
+          <div class="brief-priority-row">
+            <div class="brief-priority-num">${String(i+1).padStart(2,'0')}</div>
+            <div>
+              <div class="brief-priority-name">${esc(p.name)}</div>
+              ${p.comment ? `<div class="brief-priority-comment">${esc(p.comment)}</div>` : ''}
+            </div>
+            ${p.tag && p.tag !== 'none' ? `<div class="brief-tag ${p.tag}">${TAG_LABELS[p.tag]||''}</div>` : '<div></div>'}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Критерии с тегами
+  if (criteria.length) {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label" style="margin-bottom:16px">Критерии</div>
+      <div class="brief-criteria-list">
+        ${criteria.map(c => `
+          <div class="brief-criterion">
+            <div class="brief-criterion-left">
+              <div class="brief-criterion-label">${esc(c.label)}</div>
+              <div class="brief-criterion-value">${esc(c.value)}</div>
+              ${c.comment ? `<div class="brief-criterion-comment">${esc(c.comment)}</div>` : ''}
+            </div>
+            ${c.tag && c.tag !== 'none' ? `<div class="brief-criterion-right"><span class="brief-tag ${c.tag}">${TAG_LABELS[c.tag]||''}</span></div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Три признака "своей" квартиры
+  const validSigns = signs.filter(s => s && s.trim());
+  if (validSigns.length) {
+    html += `<div class="brief-signs-block">
+      <div class="brief-summary-label" style="margin-bottom:16px">Как вы поймёте, что это ваша квартира</div>
+      ${validSigns.map((s, i) => `
+        <div class="brief-sign-item">
+          <span class="brief-sign-num">${String(i+1).padStart(2,'0')}</span>
+          <div class="brief-sign-text">${esc(s)}</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  if (!html) {
+    html = `<p style="color:var(--muted);font-size:14px;padding:48px 0;text-align:center">Раздел подбора появится после первой встречи.</p>`;
+  }
+
+  return `<div class="brief-client-wrap">${html}</div>`;
+}
+
+// ── BRIEF AGENT RENDER ───────────────────────────────────────
+function renderBriefAgent(buyerId, buyer) {
+  const b = getBrief(buyer);
+  const priorities = b.priorities || [];
+  const criteria = b.criteria || [];
+
+  const tagOpts = (cur) => ['ok','warn','hard','none'].map(t =>
+    `<option value="${t}" ${cur===t?'selected':''}>${TAG_LABELS[t]||'—'}</option>`
+  ).join('');
+
+  const paramFields = [
+    { key:'housing', label:'Тип жилья', ph:'Старый фонд / новостройка…' },
+    { key:'budget', label:'Бюджет', ph:'10–12 млн ₽' },
+    { key:'area', label:'Метраж', ph:'55–75 м²' },
+    { key:'rooms', label:'Комнат', ph:'2к или 3к' },
+    { key:'location', label:'Локация', ph:'Петроградский, Васильевский…' },
+    { key:'condition', label:'Состояние', ph:'Готовый ремонт или под отделку' },
+  ];
+
+  return `
+    <div class="agent-section" style="margin-bottom:24px">
+      <div class="agent-section-title">Резюме подбора <span style="font-size:11px;color:rgba(229,229,229,0.4);font-weight:300;font-family:var(--sans)">— видно клиенту</span></div>
+      <textarea class="ai" id="brief-summary" rows="4" placeholder="Свободный текст — ваше прочтение запроса клиента. Что ищет, в чём нюансы, на что ориентируемся…" style="width:100%;resize:vertical;line-height:1.7" oninput="saveBriefField('${buyerId}','summary',this.value)">${esc(b.summary||'')}</textarea>
+    </div>
+
+    <div class="agent-section" style="margin-bottom:24px">
+      <div class="agent-section-title">Базовые параметры</div>
+      <div class="agent-grid">
+        ${paramFields.map(f => `
+          <div class="af">
+            <label>${f.label}</label>
+            <input class="ai" placeholder="${f.ph}" value="${esc(b[f.key]||'')}" oninput="saveBriefField('${buyerId}','${f.key}',this.value)">
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="agent-section" style="margin-bottom:24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div class="agent-section-title" style="margin-bottom:0">Приоритеты</div>
+        <button class="abtn white" style="font-size:11px;padding:6px 14px" onclick="addBriefPriority('${buyerId}')">+ Добавить</button>
+      </div>
+      <div id="brief-priorities-list" style="display:grid;gap:10px">
+        ${priorities.map((p, i) => renderBriefPriorityRow(buyerId, p, i)).join('')}
+      </div>
+      <p style="font-size:11px;color:rgba(229,229,229,0.3);margin-top:12px;font-weight:300">Порядок = важность. Первый — самый критичный.</p>
+    </div>
+
+    <div class="agent-section" style="margin-bottom:24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div class="agent-section-title" style="margin-bottom:0">Критерии с оценкой</div>
+        <button class="abtn white" style="font-size:11px;padding:6px 14px" onclick="addBriefCriterion('${buyerId}')">+ Добавить</button>
+      </div>
+      <div id="brief-criteria-list" style="display:grid;gap:10px">
+        ${criteria.map((c, i) => renderBriefCriterionRow(buyerId, c, i)).join('')}
+      </div>
+    </div>
+
+    <div class="agent-section" style="margin-bottom:24px">
+      <div class="agent-section-title">Признаки «своей» квартиры <span style="font-size:11px;color:rgba(229,229,229,0.4);font-weight:300;font-family:var(--sans)">— из брифа клиента</span></div>
+      <div style="display:grid;gap:8px">
+        ${[0,1,2].map(i => `
+          <div style="display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start">
+            <span style="font-size:11px;color:rgba(229,229,229,0.3);padding-top:12px;font-family:var(--serif)">${String(i+1).padStart(2,'0')}</span>
+            <input class="ai" placeholder="Признак ${i+1}…" value="${esc((b.signs||[])[i]||'')}" oninput="saveBriefSign('${buyerId}',${i},this.value)">
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderBriefPriorityRow(buyerId, p, i) {
+  const tagOpts = ['ok','warn','hard','none'].map(t =>
+    `<option value="${t}" ${p.tag===t?'selected':''}>${TAG_LABELS[t]||'—'}</option>`
+  ).join('');
+  return `<div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;display:grid;gap:8px" id="bprow-${i}">
+    <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center">
+      <input class="ai" placeholder="Название приоритета" value="${esc(p.name||'')}" style="font-size:13px" oninput="saveBriefPriority('${buyerId}',${i},'name',this.value)">
+      <select class="ai" style="font-size:11px;padding:6px 8px;width:auto" onchange="saveBriefPriority('${buyerId}',${i},'tag',this.value)">${tagOpts}</select>
+      <button onclick="removeBriefPriority('${buyerId}',${i})" style="background:rgba(192,57,43,0.3);border:none;color:#fff;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px">✕</button>
+    </div>
+    <input class="ai" placeholder="Комментарий агента — видно клиенту" value="${esc(p.comment||'')}" style="font-size:12px;background:rgba(255,255,255,0.06)" oninput="saveBriefPriority('${buyerId}',${i},'comment',this.value)">
+  </div>`;
+}
+
+function renderBriefCriterionRow(buyerId, c, i) {
+  const tagOpts = ['ok','warn','hard','none'].map(t =>
+    `<option value="${t}" ${c.tag===t?'selected':''}>${TAG_LABELS[t]||'—'}</option>`
+  ).join('');
+  return `<div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;display:grid;gap:8px" id="bcrow-${i}">
+    <div style="display:grid;grid-template-columns:1fr 1fr auto auto;gap:8px;align-items:center">
+      <input class="ai" placeholder="Название критерия" value="${esc(c.label||'')}" style="font-size:12px" oninput="saveBriefCriterion('${buyerId}',${i},'label',this.value)">
+      <input class="ai" placeholder="Значение" value="${esc(c.value||'')}" style="font-size:12px" oninput="saveBriefCriterion('${buyerId}',${i},'value',this.value)">
+      <select class="ai" style="font-size:11px;padding:6px 8px;width:auto" onchange="saveBriefCriterion('${buyerId}',${i},'tag',this.value)">${tagOpts}</select>
+      <button onclick="removeBriefCriterion('${buyerId}',${i})" style="background:rgba(192,57,43,0.3);border:none;color:#fff;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px">✕</button>
+    </div>
+    <input class="ai" placeholder="Комментарий — видно клиенту" value="${esc(c.comment||'')}" style="font-size:12px;background:rgba(255,255,255,0.06)" oninput="saveBriefCriterion('${buyerId}',${i},'comment',this.value)">
+  </div>`;
+}
+
+// ── BRIEF SAVE HELPERS ───────────────────────────────────────
+function saveBriefField(buyerId, field, val) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer)[field] = val;
+  debounceSave();
+}
+
+function saveBriefSign(buyerId, idx, val) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  const b = getBrief(buyer);
+  if (!b.signs) b.signs = [];
+  b.signs[idx] = val;
+  debounceSave();
+}
+
+function saveBriefPriority(buyerId, idx, field, val) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  const b = getBrief(buyer);
+  if (!b.priorities[idx]) return;
+  b.priorities[idx][field] = val;
+  debounceSave();
+}
+
+function removeBriefPriority(buyerId, idx) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer).priorities.splice(idx, 1);
+  debounceSave(); renderAgentView(buyerId);
+  switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
+}
+
+function addBriefPriority(buyerId) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer).priorities.push({ name: '', comment: '', tag: 'none' });
+  debounceSave(); renderAgentView(buyerId);
+  switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
+}
+
+function saveBriefCriterion(buyerId, idx, field, val) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  const b = getBrief(buyer);
+  if (!b.criteria[idx]) return;
+  b.criteria[idx][field] = val;
+  debounceSave();
+}
+
+function removeBriefCriterion(buyerId, idx) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer).criteria.splice(idx, 1);
+  debounceSave(); renderAgentView(buyerId);
+  switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
+}
+
+function addBriefCriterion(buyerId) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer).criteria.push({ label: '', value: '', comment: '', tag: 'none' });
+  debounceSave(); renderAgentView(buyerId);
+  switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
 }
 
 // ── INIT ─────────────────────────────────────────────────────

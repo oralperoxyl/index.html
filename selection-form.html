@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Подбор квартиры — Семён Гончаров</title>
+<meta name="description" content="Персональный подбор квартиры в Санкт-Петербурге. Заполните бриф — и я подберу действительно сильные варианты.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+::selection{background:#0066FF;color:#fff}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --serif:'Playfair Display',serif;
+  --sans:'Inter',sans-serif;
+  --bg:#FAFAF8;
+  --dark:#1C1C1E;
+  --text:#1A1A1A;
+  --muted:#888;
+  --border:rgba(0,0,0,0.07);
+  --accent:#0066FF;
+  --green:#2D8A4E;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+button,a{-webkit-tap-highlight-color:transparent}
+
+.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}
+.header-right{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+
+.hero{background:var(--dark);padding:80px 40px 64px}
+.hero-inner{max-width:720px;margin:0 auto}
+.hero-label{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:24px}
+.hero-title{font-family:var(--serif);font-size:clamp(32px,4.5vw,54px);font-weight:400;line-height:1.08;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:20px}
+.hero-title em{font-style:italic;color:rgba(229,229,229,0.45)}
+.hero-sub{font-size:15px;color:rgba(229,229,229,0.45);font-weight:300;line-height:1.75;max-width:500px}
+
+.progress-bar-wrap{background:var(--dark);padding:0 40px 40px}
+.progress-bar-inner{max-width:720px;margin:0 auto}
+.progress-steps{display:flex;gap:4px}
+.progress-step{height:2px;flex:1;background:rgba(255,255,255,0.1);border-radius:2px;transition:background 0.4s}
+.progress-step.done{background:rgba(255,255,255,0.5)}
+.progress-step.active{background:#fff}
+.progress-label{margin-top:12px;font-size:11px;color:rgba(229,229,229,0.35);letter-spacing:0.08em}
+
+.form-wrap{max-width:720px;margin:0 auto;padding:64px 40px 100px;flex:1}
+
+.form-block{display:none}
+.form-block.visible{display:block;animation:fadeUp 0.35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.block-eyebrow{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(0,0,0,0.25);margin-bottom:8px}
+.block-title{font-family:var(--serif);font-size:clamp(24px,3.5vw,36px);font-weight:400;line-height:1.15;letter-spacing:-0.01em;margin-bottom:8px}
+.block-sub{font-size:14px;color:var(--muted);font-weight:300;line-height:1.75;margin-bottom:48px;max-width:500px}
+
+.field{margin-bottom:36px}
+.field-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-bottom:12px;display:block;font-weight:400}
+.field-hint{font-size:12px;color:rgba(0,0,0,0.28);font-weight:300;margin-top:8px;line-height:1.55;font-style:italic}
+.field-input{width:100%;border:none;border-bottom:1px solid rgba(0,0,0,0.12);background:none;font-family:var(--sans);font-size:16px;color:var(--text);padding:10px 0;outline:none;line-height:1.5;transition:border-color 0.2s}
+.field-input::placeholder{color:rgba(0,0,0,0.2)}
+.field-input:focus{border-color:var(--text)}
+.field-textarea{width:100%;border:none;border-bottom:1px solid rgba(0,0,0,0.12);background:none;font-family:var(--sans);font-size:15px;color:var(--text);padding:10px 0;outline:none;line-height:1.7;resize:none;min-height:72px;transition:border-color 0.2s}
+.field-textarea::placeholder{color:rgba(0,0,0,0.2)}
+.field-textarea:focus{border-color:var(--text)}
+
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip-btn{font-size:13px;font-weight:300;padding:8px 16px;border:1px solid rgba(0,0,0,0.12);border-radius:2px;cursor:pointer;background:none;color:var(--muted);font-family:var(--sans);transition:all 0.15s;line-height:1;user-select:none}
+.chip-btn:hover{border-color:rgba(0,0,0,0.3);color:var(--text)}
+.chip-btn.on{background:var(--dark);border-color:var(--dark);color:#fff}
+.chip-btn:disabled{opacity:0.4;cursor:default}
+.chip-btn:disabled:hover{border-color:rgba(0,0,0,0.12);color:var(--muted)}
+
+.range-row{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+
+.check-list{display:grid;gap:0}
+.check-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.check-item:first-child{border-top:1px solid var(--border)}
+.check-box{width:18px;height:18px;border:1px solid rgba(0,0,0,0.18);border-radius:2px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.check-box svg{display:none}
+.check-item.on .check-box{background:var(--dark);border-color:var(--dark)}
+.check-item.on .check-box svg{display:block}
+.check-label{font-size:14px;font-weight:300;color:var(--text);line-height:1.4}
+
+/* PRIORITY */
+.priority-pool{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.priority-list{display:grid;gap:2px}
+.priority-item{background:#fff;padding:14px 18px;display:flex;align-items:center;gap:14px;cursor:grab;touch-action:none}
+.priority-item.dragging{opacity:0.4;cursor:grabbing}
+.priority-item.drag-over{border-top:2px solid var(--accent)}
+.priority-rank{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.2);flex-shrink:0;width:22px}
+.priority-name{font-size:14px;font-weight:300;color:var(--text);flex:1}
+.priority-remove{background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.2);font-size:18px;line-height:1;padding:0 0 0 4px;transition:color 0.15s}
+.priority-remove:hover{color:rgba(0,0,0,0.5)}
+.priority-empty{font-size:13px;color:rgba(0,0,0,0.22);padding:16px 0;font-style:italic}
+
+/* TRIPLE */
+.triple-fields{display:grid;gap:2px}
+.triple-item{background:#fff;padding:24px 28px}
+.triple-num{font-family:var(--serif);font-size:11px;color:rgba(0,0,0,0.18);display:block;margin-bottom:8px}
+
+/* CONTACTS INSET */
+.contacts-inset{background:#fff;padding:28px 32px;margin-bottom:36px}
+.contacts-inset-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(0,0,0,0.25);margin-bottom:20px;display:block}
+
+/* NAV */
+.form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:56px;padding-top:32px;border-top:1px solid var(--border)}
+.nav-back{font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0;transition:color 0.15s}
+.nav-back:hover{color:var(--text)}
+.nav-next{padding:14px 32px;background:var(--dark);color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:500;letter-spacing:0.06em;cursor:pointer;font-family:var(--sans);transition:opacity 0.2s;display:inline-flex;align-items:center;gap:10px}
+.nav-next:hover{opacity:0.85}
+.nav-step{font-size:11px;color:rgba(0,0,0,0.25);letter-spacing:0.08em}
+
+.submit-btn{width:100%;padding:18px 32px;background:var(--dark);color:#fff;border:none;border-radius:2px;font-size:14px;font-weight:500;letter-spacing:0.08em;cursor:pointer;font-family:var(--sans);transition:opacity 0.2s;margin-top:8px}
+.submit-btn:hover{opacity:0.85}
+.submit-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+.success-wrap{max-width:580px;margin:0 auto;padding:100px 40px;text-align:center;display:none}
+.success-icon{width:48px;height:48px;border:1px solid rgba(0,0,0,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 40px;color:var(--green)}
+.success-title{font-family:var(--serif);font-size:clamp(26px,4vw,40px);font-weight:400;line-height:1.15;letter-spacing:-0.01em;margin-bottom:16px}
+.success-sub{font-size:15px;color:var(--muted);font-weight:300;line-height:1.75;max-width:420px;margin:0 auto}
+
+.site-footer{background:var(--dark);padding:48px 40px;text-align:center;margin-top:auto}
+.footer-name{font-family:var(--serif);font-size:15px;color:rgba(229,229,229,0.45);margin-bottom:8px}
+.footer-contact{font-size:12px;color:rgba(229,229,229,0.25)}
+.footer-contact a{color:rgba(229,229,229,0.35);text-decoration:none}
+.footer-contact a:hover{color:rgba(229,229,229,0.65)}
+
+@media(max-width:640px){
+  .site-header{padding:0 20px}
+  .hero{padding:56px 20px 48px}
+  .progress-bar-wrap{padding:0 20px 32px}
+  .form-wrap{padding:48px 20px 80px}
+  .range-row{grid-template-columns:1fr}
+  .form-nav{flex-direction:column-reverse;gap:20px;align-items:stretch;text-align:center}
+  .nav-back{order:2;text-align:center}
+  .nav-next{justify-content:center}
+  .site-footer{padding:40px 20px}
+  .success-wrap{padding:80px 20px}
+  .triple-item{padding:20px}
+  .contacts-inset{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+  <span class="header-right">Подбор квартиры</span>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-label">Персональный подбор · Семён Гончаров</div>
+    <h1 class="hero-title">Расскажите,<br>что вы ищете.<br><em>Я найду.</em></h1>
+    <p class="hero-sub">Это не анкета — это разговор. Чем точнее вы опишете задачу, тем меньше времени уйдёт на варианты, которые не подходят.</p>
+  </div>
+</div>
+
+<div class="progress-bar-wrap" id="progressWrap">
+  <div class="progress-bar-inner">
+    <div class="progress-steps" id="progressSteps"></div>
+    <div class="progress-label" id="progressLabel"></div>
+  </div>
+</div>
+
+<div class="form-wrap" id="formWrap">
+
+  <!-- 01 · ЗНАКОМСТВО -->
+  <div class="form-block" id="block-0">
+    <div class="block-eyebrow">01 / 07</div>
+    <h2 class="block-title">Давайте познакомимся</h2>
+    <p class="block-sub">Прежде чем перейти к квартире — пара слов о вас. Это помогает мне понять контекст ещё до первого звонка.</p>
+
+    <div class="contacts-inset">
+      <span class="contacts-inset-label">Ваши данные</span>
+      <div class="range-row" style="margin-bottom:0">
+        <div class="field" style="margin-bottom:0">
+          <label class="field-label">Имя</label>
+          <input class="field-input" id="f-name" type="text" placeholder="Александр" autocomplete="given-name">
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label class="field-label">Телефон или Telegram</label>
+          <input class="field-input" id="f-contact" type="text" placeholder="+7 911 …" autocomplete="tel">
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Цель покупки</label>
+      <div class="chips" data-group="purpose" data-multi="false">
+        <button class="chip-btn" data-val="living">Для проживания</button>
+        <button class="chip-btn" data-val="invest">Инвестиция</button>
+        <button class="chip-btn" data-val="capital">Сохранение капитала</button>
+        <button class="chip-btn" data-val="rent">Под аренду</button>
+        <button class="chip-btn" data-val="other">Другое</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Кто будет проживать</label>
+      <div class="chips" data-group="residents" data-multi="false">
+        <button class="chip-btn" data-val="alone">Один</button>
+        <button class="chip-btn" data-val="couple">С партнёром</button>
+        <button class="chip-btn" data-val="family">Семья</button>
+        <button class="chip-btn" data-val="children">С перспективой детей</button>
+        <button class="chip-btn" data-val="other">Другое</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">На какой срок</label>
+      <div class="chips" data-group="horizon" data-multi="false">
+        <button class="chip-btn" data-val="3-5">3–5 лет</button>
+        <button class="chip-btn" data-val="long">Надолго</button>
+        <button class="chip-btn" data-val="forever">Навсегда</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Что сейчас не устраивает в текущем жилье</label>
+      <textarea class="field-textarea" id="f-dislike" placeholder="Расскажите свободно — это важный контекст" rows="3" oninput="autoResize(this)"></textarea>
+    </div>
+
+    <div class="form-nav">
+      <span class="nav-step">Шаг 1 из 7</span>
+      <button class="nav-next" onclick="nextBlock()">Далее →</button>
+    </div>
+  </div>
+
+  <!-- 02 · ТИП ЖИЛЬЯ -->
+  <div class="form-block" id="block-1">
+    <div class="block-eyebrow">02 / 07</div>
+    <h2 class="block-title">Тип жилья</h2>
+    <p class="block-sub">Что рассматриваете — и что точно нет. Если есть интерес к старому фонду, расскажите почему — это помогает понять, насколько это принципиально.</p>
+
+    <div class="field">
+      <label class="field-label">Что рассматриваете</label>
+      <div class="chips" data-group="housing-type" data-multi="true">
+        <button class="chip-btn" data-val="old">Старый фонд</button>
+        <button class="chip-btn" data-val="new">Новостройка</button>
+        <button class="chip-btn" data-val="secondary">Вторичка (любая)</button>
+        <button class="chip-btn" data-val="any">Без разницы</button>
+      </div>
+    </div>
+
+    <div class="field" id="old-fund-block" style="display:none">
+      <label class="field-label">Почему именно старый фонд</label>
+      <textarea class="field-textarea" id="f-why-old" placeholder="Атмосфера, архитектура, локации, высота потолков — что именно важно?" rows="3" oninput="autoResize(this)"></textarea>
+      <p class="field-hint">Необязательно, но помогает понять, насколько это принципиально и где можно гибко.</p>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Что точно не рассматриваете</label>
+      <div class="chips" data-group="housing-exclude" data-multi="true">
+        <button class="chip-btn" data-val="no-old">Старый фонд</button>
+        <button class="chip-btn" data-val="no-new">Новостройки</button>
+        <button class="chip-btn" data-val="no-kommunalka">Бывшие коммуналки</button>
+        <button class="chip-btn" data-val="no-gas">Газовые плиты</button>
+        <button class="chip-btn" data-val="no-first">Первые этажи</button>
+        <button class="chip-btn" data-val="no-kolodec">Дворы-колодцы</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Главное, что ищете в квартире</label>
+      <div class="chips" data-group="main-goal" data-multi="true">
+        <button class="chip-btn" data-val="comfort">Комфорт</button>
+        <button class="chip-btn" data-val="status">Статус</button>
+        <button class="chip-btn" data-val="location">Локация</button>
+        <button class="chip-btn" data-val="quiet">Тишина</button>
+        <button class="chip-btn" data-val="prestige">Престиж</button>
+        <button class="chip-btn" data-val="liquid">Ликвидность</button>
+        <button class="chip-btn" data-val="space">Простор</button>
+        <button class="chip-btn" data-val="light">Свет</button>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="nav-back" onclick="prevBlock()">← Назад</button>
+      <span class="nav-step">Шаг 2 из 7</span>
+      <button class="nav-next" onclick="nextBlock()">Далее →</button>
+    </div>
+  </div>
+
+  <!-- 03 · ЛОКАЦИЯ -->
+  <div class="form-block" id="block-2">
+    <div class="block-eyebrow">03 / 07</div>
+    <h2 class="block-title">Локация</h2>
+    <p class="block-sub">Где хотите жить — и где точно нет. Чем конкретнее, тем меньше времени уйдёт на нерелевантные показы.</p>
+
+    <div class="field">
+      <label class="field-label">Допустимые районы</label>
+      <div class="chips" data-group="districts" data-multi="true">
+        <button class="chip-btn" data-val="center">Центральный</button>
+        <button class="chip-btn" data-val="petro">Петроградский</button>
+        <button class="chip-btn" data-val="vasiliev">Василеостровский</button>
+        <button class="chip-btn" data-val="admiral">Адмиралтейский</button>
+        <button class="chip-btn" data-val="moskovskiy">Московский</button>
+        <button class="chip-btn" data-val="other">Другие</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Любимые улицы, адреса, дома мечты</label>
+      <textarea class="field-textarea" id="f-fav-streets" placeholder="Каменноостровский, набережная Мойки, конкретный дом…" rows="2" oninput="autoResize(this)"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Районы, которые точно не рассматриваете</label>
+      <textarea class="field-textarea" id="f-no-districts" placeholder="Конкретные улицы или кварталы" rows="2" oninput="autoResize(this)"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Что критично по локации</label>
+      <div class="chips" data-group="location-priorities" data-multi="true">
+        <button class="chip-btn" data-val="work">Близко к работе</button>
+        <button class="chip-btn" data-val="metro">Метро пешком</button>
+        <button class="chip-btn" data-val="restaurants">Рестораны рядом</button>
+        <button class="chip-btn" data-val="waterfront">Набережная</button>
+        <button class="chip-btn" data-val="quiet-street">Тихая улица</button>
+        <button class="chip-btn" data-val="infra">Инфраструктура</button>
+        <button class="chip-btn" data-val="parks">Парки и скверы</button>
+        <button class="chip-btn" data-val="school">Школа рядом</button>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="nav-back" onclick="prevBlock()">← Назад</button>
+      <span class="nav-step">Шаг 3 из 7</span>
+      <button class="nav-next" onclick="nextBlock()">Далее →</button>
+    </div>
+  </div>
+
+  <!-- 04 · ПАРАМЕТРЫ -->
+  <div class="form-block" id="block-3">
+    <div class="block-eyebrow">04 / 07</div>
+    <h2 class="block-title">Параметры квартиры</h2>
+    <p class="block-sub">Отмечайте только то, что действительно важно. На следующем шаге расставим приоритеты — что из этого главнее всего.</p>
+
+    <div class="field">
+      <label class="field-label">Метраж</label>
+      <div class="range-row">
+        <div><input class="field-input" id="f-area-from" type="number" placeholder="От, м²" min="20" max="500"></div>
+        <div><input class="field-input" id="f-area-to" type="number" placeholder="До, м²" min="20" max="500"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Количество комнат</label>
+      <div class="chips" data-group="rooms" data-multi="true">
+        <button class="chip-btn" data-val="studio">Студия</button>
+        <button class="chip-btn" data-val="1">1к</button>
+        <button class="chip-btn" data-val="2">2к</button>
+        <button class="chip-btn" data-val="3">3к</button>
+        <button class="chip-btn" data-val="4+">4к+</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Планировка</label>
+      <div class="chips" data-group="layout" data-multi="false">
+        <button class="chip-btn" data-val="open">Кухня-гостиная</button>
+        <button class="chip-btn" data-val="classic">Классика</button>
+        <button class="chip-btn" data-val="any">Без разницы</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Этаж</label>
+      <div class="chips" data-group="floor" data-multi="true">
+        <button class="chip-btn" data-val="not-first">Не первый</button>
+        <button class="chip-btn" data-val="not-last">Не последний</button>
+        <button class="chip-btn" data-val="high">Высокий</button>
+        <button class="chip-btn" data-val="any">Без разницы</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Вид из окон</label>
+      <div class="chips" data-group="view" data-multi="false">
+        <button class="chip-btn" data-val="yard">Во двор</button>
+        <button class="chip-btn" data-val="street">На улицу</button>
+        <button class="chip-btn" data-val="panorama">Панорама / вода</button>
+        <button class="chip-btn" data-val="any">Без разницы</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Состояние</label>
+      <div class="chips" data-group="condition" data-multi="false">
+        <button class="chip-btn" data-val="ready">Только готовый ремонт</button>
+        <button class="chip-btn" data-val="cosmetic">Можно косметику</button>
+        <button class="chip-btn" data-val="capital">Готов под капитальный</button>
+        <button class="chip-btn" data-val="any">Без разницы</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Дополнительно важно</label>
+      <div class="check-list">
+        <label class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="check-label">Высокие потолки</span></label>
+        <label class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="check-label">Лифт обязателен</span></label>
+        <label class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="check-label">Балкон или терраса</span></label>
+        <label class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="check-label">Парковка</span></label>
+        <label class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="check-label">Закрытый двор / охрана</span></label>
+        <label class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="check-label">Тихий, малонаселённый дом</span></label>
+        <label class="check-item" onclick="toggleCheck(this)"><div class="check-box"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="check-label">Статусное окружение</span></label>
+      </div>
+    </div>
+
+    <div class="form-nav">
+      <button class="nav-back" onclick="prevBlock()">← Назад</button>
+      <span class="nav-step">Шаг 4 из 7</span>
+      <button class="nav-next" onclick="nextBlock()">Далее →</button>
+    </div>
+  </div>
+
+  <!-- 05 · ПРИОРИТЕТЫ -->
+  <div class="form-block" id="block-4">
+    <div class="block-eyebrow">05 / 07</div>
+    <h2 class="block-title">Что важнее всего?</h2>
+    <p class="block-sub">Идеальных квартир не бывает — всегда есть компромиссы. Выберите 3–5 пунктов, без которых точно нельзя, и перетащите их в нужный порядок.</p>
+
+    <div class="field">
+      <label class="field-label">Нажмите, чтобы добавить в список приоритетов</label>
+      <div class="priority-pool" id="priorityPool">
+        <button class="chip-btn" data-pval="Локация / район" onclick="addPriority(this)">Локация / район</button>
+        <button class="chip-btn" data-pval="Бюджет" onclick="addPriority(this)">Бюджет</button>
+        <button class="chip-btn" data-pval="Метраж" onclick="addPriority(this)">Метраж</button>
+        <button class="chip-btn" data-pval="Состояние / ремонт" onclick="addPriority(this)">Состояние / ремонт</button>
+        <button class="chip-btn" data-pval="Тишина" onclick="addPriority(this)">Тишина</button>
+        <button class="chip-btn" data-pval="Этаж" onclick="addPriority(this)">Этаж</button>
+        <button class="chip-btn" data-pval="Вид из окон" onclick="addPriority(this)">Вид из окон</button>
+        <button class="chip-btn" data-pval="Высокие потолки" onclick="addPriority(this)">Высокие потолки</button>
+        <button class="chip-btn" data-pval="Лифт" onclick="addPriority(this)">Лифт</button>
+        <button class="chip-btn" data-pval="Парковка" onclick="addPriority(this)">Парковка</button>
+        <button class="chip-btn" data-pval="Закрытый двор" onclick="addPriority(this)">Закрытый двор</button>
+        <button class="chip-btn" data-pval="Метро пешком" onclick="addPriority(this)">Метро пешком</button>
+        <button class="chip-btn" data-pval="Юридическая чистота" onclick="addPriority(this)">Юридическая чистота</button>
+        <button class="chip-btn" data-pval="Скорость сделки" onclick="addPriority(this)">Скорость сделки</button>
+        <button class="chip-btn" data-pval="Статус дома" onclick="addPriority(this)">Статус дома</button>
+      </div>
+
+      <div class="priority-list" id="priorityList">
+        <div class="priority-empty">Добавьте пункты выше — первый в списке самый важный</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">От чего готовы отказаться, если всё сразу невозможно</label>
+      <textarea class="field-textarea" id="f-tradeoff" placeholder="Например: готов взять этаж пониже, если хорошая локация и свет…" rows="3" oninput="autoResize(this)"></textarea>
+      <p class="field-hint">Один из самых полезных ответов для подбора — помогает не тратить время на варианты, которые вы всё равно не возьмёте.</p>
+    </div>
+
+    <div class="form-nav">
+      <button class="nav-back" onclick="prevBlock()">← Назад</button>
+      <span class="nav-step">Шаг 5 из 7</span>
+      <button class="nav-next" onclick="nextBlock()">Далее →</button>
+    </div>
+  </div>
+
+  <!-- 06 · ФИНАНСЫ -->
+  <div class="form-block" id="block-5">
+    <div class="block-eyebrow">06 / 07</div>
+    <h2 class="block-title">Финансы</h2>
+    <p class="block-sub">Реальный бюджет важнее желаемого. Чем честнее цифра — тем точнее подбор.</p>
+
+    <div class="range-row" style="margin-bottom:36px">
+      <div class="field" style="margin-bottom:0">
+        <label class="field-label">Комфортный бюджет, ₽</label>
+        <input class="field-input" id="f-budget-ok" type="text" placeholder="10 000 000" oninput="formatMoney(this)">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label class="field-label">Максимальный бюджет, ₽</label>
+        <input class="field-input" id="f-budget-max" type="text" placeholder="12 000 000" oninput="formatMoney(this)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Способ покупки</label>
+      <div class="chips" data-group="payment" data-multi="false">
+        <button class="chip-btn" data-val="cash">Наличные</button>
+        <button class="chip-btn" data-val="mortgage">Ипотека</button>
+        <button class="chip-btn" data-val="sell-first">Продажа своей</button>
+        <button class="chip-btn" data-val="combined">Комбинированно</button>
+      </div>
+    </div>
+
+    <div class="field" id="mortgage-field" style="display:none">
+      <label class="field-label">Статус ипотеки</label>
+      <div class="chips" data-group="mortgage-status" data-multi="false">
+        <button class="chip-btn" data-val="approved">Одобрена</button>
+        <button class="chip-btn" data-val="in-progress">В процессе</button>
+        <button class="chip-btn" data-val="none">Пока нет</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Отдельный бюджет на ремонт</label>
+      <div class="chips" data-group="reno" data-multi="false" style="margin-bottom:12px">
+        <button class="chip-btn" data-val="yes">Есть</button>
+        <button class="chip-btn" data-val="no">Нет</button>
+      </div>
+      <input class="field-input" id="f-reno-budget" type="text" placeholder="Сумма, ₽" style="display:none" oninput="formatMoney(this)">
+    </div>
+
+    <div class="form-nav">
+      <button class="nav-back" onclick="prevBlock()">← Назад</button>
+      <span class="nav-step">Шаг 6 из 7</span>
+      <button class="nav-next" onclick="nextBlock()">Далее →</button>
+    </div>
+  </div>
+
+  <!-- 07 · ФИНАЛ -->
+  <div class="form-block" id="block-6">
+    <div class="block-eyebrow">07 / 07</div>
+    <h2 class="block-title">Последнее —<br><em style="font-style:italic;color:var(--muted)">и самое важное.</em></h2>
+    <p class="block-sub">Как вы поймёте, что это именно ваша квартира? Три ответа. Часто это ощущение, а не список параметров — пишите свободно, как думаете.</p>
+
+    <div class="triple-fields" style="margin-bottom:40px">
+      <div class="triple-item">
+        <span class="triple-num">01</span>
+        <textarea class="field-textarea" id="f-sign-1" placeholder="Первый признак…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="triple-item">
+        <span class="triple-num">02</span>
+        <textarea class="field-textarea" id="f-sign-2" placeholder="Второй признак…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="triple-item">
+        <span class="triple-num">03</span>
+        <textarea class="field-textarea" id="f-sign-3" placeholder="Третий признак…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Насколько срочная покупка</label>
+      <textarea class="field-textarea" id="f-urgency" placeholder="Переезд через 3 месяца / смотрим без спешки / есть конкретная дата…" rows="2" oninput="autoResize(this)"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Если идеальный вариант появится завтра</label>
+      <div class="chips" data-group="readiness" data-multi="false">
+        <button class="chip-btn" data-val="ready">Готов выходить в аванс</button>
+        <button class="chip-btn" data-val="think">Нужно подумать</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Уже смотрели варианты</label>
+      <div class="chips" data-group="seen" data-multi="false" style="margin-bottom:16px">
+        <button class="chip-btn" data-val="yes">Да</button>
+        <button class="chip-btn" data-val="no">Нет, только начинаю</button>
+      </div>
+      <div id="seen-details" style="display:none">
+        <textarea class="field-textarea" id="f-liked" placeholder="Что понравилось — объекты, детали, ощущения…" rows="2" oninput="autoResize(this)" style="margin-bottom:16px"></textarea>
+        <textarea class="field-textarea" id="f-disliked" placeholder="Что категорически не подошло…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Отправить запрос на подбор</button>
+
+    <div class="form-nav" style="border-top:none;padding-top:0;margin-top:20px">
+      <button class="nav-back" onclick="prevBlock()">← Назад</button>
+      <span></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- SUCCESS -->
+<div id="successWrap" class="success-wrap">
+  <div class="success-icon">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M4 10l4 4 8-8" stroke="#2D8A4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h2 class="success-title">Спасибо.<br><em style="font-style:italic;color:var(--muted)">Запрос принят.</em></h2>
+  <p class="success-sub">Это поможет мне подобрать для вас действительно сильные варианты, а не просто список квартир.<br><br>Свяжусь с вами в течение дня.</p>
+</div>
+
+<footer class="site-footer">
+  <p class="footer-name">Семён Гончаров · Агент по недвижимости</p>
+  <p class="footer-contact">
+    <a href="tel:+79118461965">+7 911 846-19-65</a> ·
+    <a href="https://t.me/semengme">t.me/semengme</a> ·
+    <a href="https://fastbroker21.ru">fastbroker21.ru</a>
+  </p>
+</footer>
+
+<script>
+const TG_BOT_URL = 'https://crm-bot-production-7458.up.railway.app/brief';
+const TOTAL_BLOCKS = 7;
+const BLOCK_NAMES = ['Знакомство','Тип жилья','Локация','Параметры','Приоритеты','Финансы','Финал'];
+let currentBlock = 0;
+let priorities = [];
+
+// ── PRIORITIES ───────────────────────────────────
+function addPriority(btn) {
+  const val = btn.dataset.pval;
+  if (priorities.find(p => p.val === val) || priorities.length >= 7) return;
+  btn.classList.add('on');
+  btn.disabled = true;
+  priorities.push({val});
+  renderPriorityList();
+}
+
+function removePriority(val) {
+  priorities = priorities.filter(p => p.val !== val);
+  document.querySelectorAll('#priorityPool .chip-btn').forEach(b => {
+    if (b.dataset.pval === val) { b.classList.remove('on'); b.disabled = false; }
+  });
+  renderPriorityList();
+}
+
+function renderPriorityList() {
+  const list = document.getElementById('priorityList');
+  if (!priorities.length) {
+    list.innerHTML = '<div class="priority-empty">Добавьте пункты выше — первый в списке самый важный</div>';
+    return;
+  }
+  list.innerHTML = priorities.map((p, i) =>
+    `<div class="priority-item" draggable="true" data-idx="${i}">
+      <span class="priority-rank">${String(i+1).padStart(2,'0')}</span>
+      <span class="priority-name">${p.val}</span>
+      <button class="priority-remove" onclick="removePriority('${p.val.replace(/'/g,"\\'")}')" type="button">×</button>
+    </div>`
+  ).join('');
+  initDrag();
+}
+
+function initDrag() {
+  const items = [...document.querySelectorAll('.priority-item')];
+  let dragIdx = null;
+  items.forEach(item => {
+    item.addEventListener('dragstart', () => { dragIdx = +item.dataset.idx; item.classList.add('dragging'); });
+    item.addEventListener('dragend', () => { item.classList.remove('dragging'); dragIdx = null; });
+    item.addEventListener('dragover', e => e.preventDefault());
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      const to = +item.dataset.idx;
+      if (dragIdx === null || dragIdx === to) return;
+      const [moved] = priorities.splice(dragIdx, 1);
+      priorities.splice(to, 0, moved);
+      renderPriorityList();
+    });
+  });
+}
+
+// ── INIT ─────────────────────────────────────────
+function init() {
+  // Build progress
+  document.getElementById('progressSteps').innerHTML =
+    Array.from({length: TOTAL_BLOCKS}, (_, i) =>
+      `<div class="progress-step ${i===0?'active':''}" id="ps-${i}"></div>`
+    ).join('');
+  document.getElementById('progressLabel').textContent = BLOCK_NAMES[0];
+  showBlock(0);
+  initChips();
+}
+
+// ── PROGRESS ─────────────────────────────────────
+function updateProgress() {
+  for (let i = 0; i < TOTAL_BLOCKS; i++) {
+    const el = document.getElementById('ps-'+i);
+    if (el) el.className = 'progress-step' + (i < currentBlock ? ' done' : i === currentBlock ? ' active' : '');
+  }
+  document.getElementById('progressLabel').textContent = BLOCK_NAMES[currentBlock] || '';
+}
+
+// ── NAVIGATION ───────────────────────────────────
+function showBlock(idx) {
+  document.querySelectorAll('.form-block').forEach((b, i) => b.classList.toggle('visible', i === idx));
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+function nextBlock() { if (currentBlock < TOTAL_BLOCKS - 1) { currentBlock++; updateProgress(); showBlock(currentBlock); } }
+function prevBlock() { if (currentBlock > 0) { currentBlock--; updateProgress(); showBlock(currentBlock); } }
+
+// ── CHIPS ────────────────────────────────────────
+function initChips() {
+  document.querySelectorAll('[data-group]').forEach(group => {
+    const multi = group.dataset.multi === 'true';
+    group.querySelectorAll('.chip-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (multi) { btn.classList.toggle('on'); }
+        else { group.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('on')); btn.classList.add('on'); }
+        sideEffects(group.dataset.group);
+      });
+    });
+  });
+}
+
+function sideEffects(group) {
+  if (group === 'housing-type') {
+    const on = !!document.querySelector('[data-group="housing-type"] .chip-btn[data-val="old"].on');
+    document.getElementById('old-fund-block').style.display = on ? 'block' : 'none';
+  }
+  if (group === 'payment') {
+    const on = !!document.querySelector('[data-group="payment"] .chip-btn[data-val="mortgage"].on');
+    document.getElementById('mortgage-field').style.display = on ? 'block' : 'none';
+  }
+  if (group === 'reno') {
+    const on = !!document.querySelector('[data-group="reno"] .chip-btn[data-val="yes"].on');
+    document.getElementById('f-reno-budget').style.display = on ? 'block' : 'none';
+  }
+  if (group === 'seen') {
+    const on = !!document.querySelector('[data-group="seen"] .chip-btn[data-val="yes"].on');
+    document.getElementById('seen-details').style.display = on ? 'block' : 'none';
+  }
+}
+
+// ── HELPERS ──────────────────────────────────────
+function toggleCheck(el) { el.classList.toggle('on'); }
+function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+function formatMoney(el) {
+  const raw = el.value.replace(/\D/g,'');
+  el.value = raw ? new Intl.NumberFormat('ru-RU').format(raw) : '';
+}
+
+// ── COLLECT ──────────────────────────────────────
+function collect() {
+  const chips = g => [...document.querySelectorAll(`[data-group="${g}"] .chip-btn.on`)].map(b => b.textContent).join(', ') || '—';
+  const val = id => document.getElementById(id)?.value?.trim() || '—';
+  const checks = () => [...document.querySelectorAll('.check-item.on .check-label')].map(el => el.textContent).join(', ') || '—';
+  const prioStr = priorities.map((p,i) => `${i+1}. ${p.val}`).join('\n') || '—';
+  return {
+    name: val('f-name'), contact: val('f-contact'),
+    purpose: chips('purpose'), residents: chips('residents'), horizon: chips('horizon'), dislike: val('f-dislike'),
+    housingType: chips('housing-type'), housingExclude: chips('housing-exclude'), whyOld: val('f-why-old'), mainGoal: chips('main-goal'),
+    districts: chips('districts'), favStreets: val('f-fav-streets'), noDistricts: val('f-no-districts'), locationPrio: chips('location-priorities'),
+    areaFrom: val('f-area-from'), areaTo: val('f-area-to'), rooms: chips('rooms'), layout: chips('layout'),
+    floor: chips('floor'), view: chips('view'), condition: chips('condition'), extras: checks(),
+    priorities: prioStr, tradeoff: val('f-tradeoff'),
+    budgetOk: val('f-budget-ok'), budgetMax: val('f-budget-max'), payment: chips('payment'),
+    mortgageStatus: chips('mortgage-status'), renoBudget: val('f-reno-budget'),
+    sign1: val('f-sign-1'), sign2: val('f-sign-2'), sign3: val('f-sign-3'),
+    urgency: val('f-urgency'), readiness: chips('readiness'),
+    seen: chips('seen'), liked: val('f-liked'), disliked: val('f-disliked'),
+  };
+}
+
+function tgMsg(d) {
+  return `🏠 *Новая заявка на подбор*
+
+👤 *${d.name}* · ${d.contact}
+
+━━━━━━━━━━━━━━
+*ЦЕЛЬ И КОНТЕКСТ*
+Цель: ${d.purpose}
+Проживание: ${d.residents}
+Срок: ${d.horizon}
+Что не устраивает: ${d.dislike}
+
+━━━━━━━━━━━━━━
+*ТИП ЖИЛЬЯ*
+Рассматривает: ${d.housingType}
+Исключает: ${d.housingExclude}
+Почему старый фонд: ${d.whyOld}
+Главное в квартире: ${d.mainGoal}
+
+━━━━━━━━━━━━━━
+*ЛОКАЦИЯ*
+Районы: ${d.districts}
+Любимые места: ${d.favStreets}
+Исключения: ${d.noDistricts}
+Критично: ${d.locationPrio}
+
+━━━━━━━━━━━━━━
+*ПАРАМЕТРЫ*
+Метраж: ${d.areaFrom} — ${d.areaTo} м²
+Комнаты: ${d.rooms} / Планировка: ${d.layout}
+Этаж: ${d.floor} / Вид: ${d.view}
+Состояние: ${d.condition}
+Дополнительно: ${d.extras}
+
+━━━━━━━━━━━━━━
+*ПРИОРИТЕТЫ (по убыванию)*
+${d.priorities}
+
+Готов отказаться: ${d.tradeoff}
+
+━━━━━━━━━━━━━━
+*ФИНАНСЫ*
+Комфортный: ${d.budgetOk} ₽
+Максимальный: ${d.budgetMax} ₽
+Способ: ${d.payment} / Ипотека: ${d.mortgageStatus}
+Бюджет на ремонт: ${d.renoBudget}
+
+━━━━━━━━━━━━━━
+*СРОКИ*
+Срочность: ${d.urgency}
+Готовность к авансу: ${d.readiness}
+Смотрели: ${d.seen}
+Понравилось: ${d.liked}
+Не подошло: ${d.disliked}
+
+━━━━━━━━━━━━━━
+*КАК ПОЙМЁТ, ЧТО ЭТО ЕГО?*
+1. ${d.sign1}
+2. ${d.sign2}
+3. ${d.sign3}`;
+}
+
+// ── SUBMIT ────────────────────────────────────────
+async function submitForm() {
+  const d = collect();
+  if (d.name === '—' && d.contact === '—') { alert('Укажите имя или контакт для связи'); return; }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Отправка…';
+  try {
+    await fetch(TG_BOT_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({message: tgMsg(d), data: d}) });
+  } catch(e) { console.log('Brief:', d); }
+  showSuccess();
+}
+
+function showSuccess() {
+  document.getElementById('formWrap').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+  document.querySelector('.hero').style.display = 'none';
+  document.getElementById('successWrap').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ── TOUCH ─────────────────────────────────────────
+document.addEventListener('touchstart', e => {
+  const b = e.target.closest('.chip-btn,.nav-next,.nav-back,.submit-btn,.priority-remove');
+  if (b) b.style.transition = 'none';
+}, {passive:true});
+document.addEventListener('touchend', e => {
+  const b = e.target.closest('.chip-btn,.nav-next,.nav-back,.submit-btn,.priority-remove');
+  if (b) setTimeout(() => b.style.transition = '', 200);
+}, {passive:true});
+
+init();
+</script>
+</body>
+</html>
