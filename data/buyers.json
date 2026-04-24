@@ -585,7 +585,13 @@
       "createdAt": "2026-04-21",
       "vis": {
         "locations": false,
-        "calc": false
+        "calc": true
+      },
+      "brief": {
+        "summary": "",
+        "criteria": [],
+        "priorities": [],
+        "signs": []
       }
     },
     "марья-ивановна-mocvbef1avsl": {
