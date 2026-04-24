@@ -994,7 +994,7 @@ function renderClientView(buyerId){
       </div>
 
       <!-- TAB: BRIEF (client view) -->
-      <div class="tab-panel" id="tab-brief">${renderBriefClient(buyer)}</div>
+      <div class="tab-panel" id="tab-brief">${renderBriefClient(buyer, buyerId)}</div>
 
       <!-- TAB: LOCATIONS -->
       <div class="tab-panel" id="tab-locations">
@@ -1383,17 +1383,17 @@ function getBrief(buyer) {
 }
 
 // ── BRIEF CLIENT RENDER ──────────────────────────────────────
-function renderBriefClient(buyer) {
+function renderBriefClient(buyer, buyerId) {
   const b = buyer.brief || {};
-  const criteria = b.criteria || [];
-  const priorities = b.priorities || [];
-  const signs = b.signs || [];
-  const hasFilled = !!(b.summary || criteria.length || priorities.length || (b.formData && b.formData.purpose));
-  const buyerId = Object.keys(allData.buyers).find(k => allData.buyers[k] === buyer) || '';
 
-  // Если бриф не заполнен — показываем встроенную форму
-  if (!hasFilled) {
-    return renderInlineForm(buyer);
+  // Агент уже заполнил свою версию — показываем её, без кнопки «Изменить»
+  const agentFilled = !!(b.summary || (b.criteria && b.criteria.length) || (b.priorities && b.priorities.length));
+  // Клиент заполнял форму
+  const clientFilled = !!(b.formData && b.formData.purpose && b.formData.purpose !== '—');
+
+  // Нечего показывать — открываем форму
+  if (!agentFilled && !clientFilled) {
+    return renderInlineForm(buyer, buyerId);
   }
 
   let html = '';
@@ -1406,12 +1406,7 @@ function renderBriefClient(buyer) {
     </div>`;
   }
 
-  // Если есть данные формы но нет резюме агента — показываем данные формы
-  if (!b.summary && b.formData) {
-    html += renderFormDataClient(b.formData);
-  }
-
-  // Базовые параметры (2 колонки)
+  // Параметры от агента (если заполнил)
   const paramFields = [
     { key: 'housing', label: 'Тип жилья' },
     { key: 'budget', label: 'Бюджет' },
@@ -1433,12 +1428,12 @@ function renderBriefClient(buyer) {
     </div>`;
   }
 
-  // Приоритеты с комментариями
-  if (priorities.length) {
+  // Приоритеты от агента (с тегами)
+  if (b.priorities && b.priorities.length) {
     html += `<div class="brief-priorities-block">
       <div class="brief-summary-label" style="margin-bottom:0">Приоритеты</div>
       <div>
-        ${priorities.map((p, i) => `
+        ${b.priorities.map((p, i) => `
           <div class="brief-priority-row">
             <div class="brief-priority-num">${String(i+1).padStart(2,'0')}</div>
             <div>
@@ -1451,12 +1446,12 @@ function renderBriefClient(buyer) {
     </div>`;
   }
 
-  // Критерии с тегами
-  if (criteria.length) {
+  // Критерии от агента
+  if (b.criteria && b.criteria.length) {
     html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
       <div class="brief-summary-label" style="margin-bottom:16px">Критерии</div>
       <div class="brief-criteria-list">
-        ${criteria.map(c => `
+        ${b.criteria.map(c => `
           <div class="brief-criterion">
             <div class="brief-criterion-left">
               <div class="brief-criterion-label">${esc(c.label)}</div>
@@ -1469,12 +1464,12 @@ function renderBriefClient(buyer) {
     </div>`;
   }
 
-  // Три признака "своей" квартиры
-  const validSigns = signs.filter(s => s && s.trim());
-  if (validSigns.length) {
+  // Признаки — от агента или из формы клиента
+  const signs = (b.signs || []).filter(s => s && s.trim());
+  if (signs.length) {
     html += `<div class="brief-signs-block">
       <div class="brief-summary-label" style="margin-bottom:16px">Как вы поймёте, что это ваша квартира</div>
-      ${validSigns.map((s, i) => `
+      ${signs.map((s, i) => `
         <div class="brief-sign-item">
           <span class="brief-sign-num">${String(i+1).padStart(2,'0')}</span>
           <div class="brief-sign-text">${esc(s)}</div>
@@ -1482,11 +1477,16 @@ function renderBriefClient(buyer) {
     </div>`;
   }
 
-  // Кнопка изменить — всегда внизу у клиента
-  html += `<div style="margin-top:40px;padding-top:32px;border-top:1px solid var(--border)">
-    <button onclick="ifResetBrief('${buyerId}')" style="font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,0.2)">Изменить ответы</button>
-  </div>`;
+  // Данные из формы клиента — если агент ещё не заполнил своё
+  if (!agentFilled && clientFilled) {
+    html += renderFormDataClient(b.formData);
+    // Кнопка «Изменить» — только если агент ещё не обработал
+    html += `<div style="margin-top:40px;padding-top:32px;border-top:1px solid var(--border)">
+      <button onclick="ifShowForm('${buyerId}')" style="font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,0.2)">Изменить ответы</button>
+    </div>`;
+  }
 
+  if (!html) return renderInlineForm(buyer, buyerId);
   return `<div class="brief-client-wrap">${html}</div>`;
 }
 
@@ -1579,11 +1579,11 @@ function renderFormDataClient(d) {
 }
 
 // ── INLINE FORM ──────────────────────────────────────────────
-function renderInlineForm(buyer) {
-  const buyerId = Object.keys(allData.buyers).find(k => allData.buyers[k] === buyer) || '';
+function renderInlineForm(buyer, buyerId) {
+  if (!buyerId) buyerId = Object.keys(allData.buyers).find(k => allData.buyers[k] === buyer) || '';
   inlineStep = 0;
   inlinePriorities = [];
-  ifAnswers = {}; // сброс при старте новой формы
+  ifAnswers = {};
   return `<div id="inlineFormWrap">
     <div style="margin-bottom:48px">
       <div style="font-family:var(--serif);font-size:clamp(22px,3vw,32px);font-weight:400;line-height:1.2;margin-bottom:12px">Расскажите,<br><em style="font-style:italic;color:var(--muted)">что вы ищете.</em></div>
@@ -2017,13 +2017,18 @@ function ifCollect() {
   };
 }
 
-function ifResetBrief(buyerId) {
+function ifShowForm(buyerId) {
+  // Рендерим форму прямо в панель, без перезагрузки всей страницы
+  const panel = document.getElementById('tab-brief');
+  if (!panel) return;
   const buyer = allData.buyers[buyerId];
   if (!buyer) return;
-  // Очищаем только formData, не трогаем то что агент уже заполнил
-  if (buyer.brief) buyer.brief.formData = null;
-  renderClientView(buyerId);
-  setTimeout(() => switchTab('brief', document.querySelectorAll('.tab-btn')[1]), 50);
+  inlineStep = 0;
+  inlinePriorities = [];
+  ifAnswers = {};
+  panel.innerHTML = renderInlineForm(buyer, buyerId);
+  setTimeout(() => ifInitChips(), 0);
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 const BRIEF_LS_KEY = id => `pending-brief-${id}`;
@@ -2065,10 +2070,16 @@ async function ifSubmit(buyerId) {
 
   inlineStep = 0;
   inlinePriorities = [];
-  renderClientView(buyerId);
-  setTimeout(() => {
-    switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
-  }, 50);
+  ifAnswers = {};
+
+  // Показываем результат прямо в панели без перезагрузки всей страницы
+  const panel = document.getElementById('tab-brief');
+  if (panel) {
+    panel.innerHTML = renderBriefClient(buyer, buyerId);
+  } else {
+    renderClientView(buyerId);
+    setTimeout(() => switchTab('brief', document.querySelectorAll('.tab-btn')[1]), 50);
+  }
 }
 
 // Проверяем есть ли незаписанный бриф в localStorage
