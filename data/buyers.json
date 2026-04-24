@@ -594,61 +594,6 @@
         "priorities": [],
         "signs": []
       }
-    },
-    "марья-ивановна-mocvbef1avsl": {
-      "name": "Марья Ивановна",
-      "budget": "",
-      "props": [],
-      "nextStep": "",
-      "createdAt": "2026-04-24",
-      "brief": {
-        "summary": "",
-        "criteria": [
-          {
-            "label": "",
-            "value": "",
-            "comment": "",
-            "tag": "none"
-          }
-        ],
-        "priorities": [],
-        "signs": [
-          "локация",
-          "метраж",
-          "планировка"
-        ],
-        "formData": {
-          "purpose": "—",
-          "residents": "—",
-          "horizon": "—",
-          "dislike": "—",
-          "housingType": "—",
-          "housingExclude": "—",
-          "whyOld": "—",
-          "mainGoal": "—",
-          "districts": "—",
-          "favStreets": "—",
-          "noDistricts": "—",
-          "locPrio": "—",
-          "areaFrom": "—",
-          "areaTo": "—",
-          "rooms": "—",
-          "floor": "—",
-          "condition": "—",
-          "extras": "—",
-          "priorities": "1. Локация / район\n2. Метраж\n3. Состояние / ремонт",
-          "tradeoff": "—",
-          "budgetOk": "12 000 000",
-          "budgetMax": "15 000 000",
-          "payment": "Ипотека",
-          "sign1": "локация",
-          "sign2": "метраж",
-          "sign3": "планировка",
-          "urgency": "не срочно",
-          "readiness": "Нужно подумать"
-        }
-      },
-      "vis": {}
     }
   }
 }
