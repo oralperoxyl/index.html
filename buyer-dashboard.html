@@ -1819,6 +1819,7 @@ function ifChips(g) {
   return [...document.querySelectorAll(`[data-ig="${g}"] .if-chip.on`)].map(b => b.dataset.val || b.textContent).join(', ') || '—';
 }
 function ifVal(id) { return document.getElementById(id)?.value?.trim() || '—'; }
+function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 function ifFmtMoney(el) {
   const raw = el.value.replace(/\D/g,'');
   el.value = raw ? new Intl.NumberFormat('ru-RU').format(raw) : '';
@@ -1973,20 +1974,21 @@ async function ifSubmit(buyerId) {
   buyer.brief.signs = [d.sign1, d.sign2, d.sign3].filter(s => s && s !== '—');
 
   if (getToken()) {
-    // Есть токен — пишем сразу в GitHub, чистим localStorage
+    // Есть токен — пишем сразу в GitHub напрямую
     await ghSave();
-    try { localStorage.removeItem(BRIEF_LS_KEY(buyerId)); } catch(e) {}
-  } else {
-    // Нет токена — сохраняем в localStorage, покажем баннер агенту позже
-    try { localStorage.setItem(BRIEF_LS_KEY(buyerId), JSON.stringify(d)); } catch(e) {}
   }
+  // В любом случае отправляем на бот — он запишет в GitHub и пришлёт в Telegram
 
-  // Отправляем в Telegram (best-effort)
+  // Отправляем на бот — он запишет в GitHub и пришлёт в Telegram
   try {
     fetch('https://crm-bot-production-7458.up.railway.app/brief', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: ifFormatTelegram(buyerId, buyer.name, d), data: d }),
+      body: JSON.stringify({
+        message: ifFormatTelegram(buyerId, buyer.name, d),
+        data: d,
+        buyerId: buyerId
+      }),
       keepalive: true
     });
   } catch(e) {}
