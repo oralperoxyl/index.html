@@ -604,13 +604,7 @@
             "tag": "none"
           }
         ],
-        "priorities": [
-          {
-            "name": "",
-            "comment": "",
-            "tag": "none"
-          }
-        ],
+        "priorities": [],
         "signs": [
           "локация",
           "метраж",
