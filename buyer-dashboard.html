@@ -1003,8 +1003,8 @@ function renderClientView(buyerId){
     </div>
     ${renderFooter()}`;
 
-  // Инициализируем чипы inline-формы если она есть
-  if (document.getElementById('inlineFormWrap')) ifInitChips();
+  // Инициализируем чипы inline-формы через setTimeout чтобы DOM успел отрендериться
+  setTimeout(() => { if (document.getElementById('inlineFormWrap')) ifInitChips(); }, 50);
 }
 
 
@@ -1134,8 +1134,7 @@ function renderAgentView(buyerId){
     </div>
     ${renderFooter()}`;
   renderVisControls(buyerId);
-  // Инициализируем чипы inline-формы если она есть
-  if (document.getElementById('inlineFormWrap')) ifInitChips();
+  setTimeout(() => { if (document.getElementById('inlineFormWrap')) ifInitChips(); }, 50);
 }
 
 // ── NEXT STEP ────────────────────────────────────────────────
@@ -1891,7 +1890,7 @@ function ifNextStep(buyerId) {
     </div>
     ${renderInlineStep(inlineStep)}
     ${renderInlineNav(buyerId)}`;
-  ifInitChips();
+  setTimeout(() => ifInitChips(), 0);
   window.scrollTo({top: document.getElementById('tab-brief')?.offsetTop || 0, behavior: 'smooth'});
 }
 
@@ -1906,7 +1905,7 @@ function ifPrevStep(buyerId) {
     </div>
     ${renderInlineStep(inlineStep)}
     ${renderInlineNav(buyerId)}`;
-  ifInitChips();
+  setTimeout(() => ifInitChips(), 0);
 }
 
 function renderInlineNav(buyerId) {
