@@ -1388,7 +1388,8 @@ function renderBriefClient(buyer) {
   const criteria = b.criteria || [];
   const priorities = b.priorities || [];
   const signs = b.signs || [];
-  const hasFilled = !!(b.summary || criteria.length || priorities.length || (b.formData && b.formData.name));
+  const hasFilled = !!(b.summary || criteria.length || priorities.length || (b.formData && b.formData.purpose));
+  const buyerId = Object.keys(allData.buyers).find(k => allData.buyers[k] === buyer) || '';
 
   // Если бриф не заполнен — показываем встроенную форму
   if (!hasFilled) {
@@ -1481,6 +1482,11 @@ function renderBriefClient(buyer) {
     </div>`;
   }
 
+  // Кнопка изменить — всегда внизу у клиента
+  html += `<div style="margin-top:40px;padding-top:32px;border-top:1px solid var(--border)">
+    <button onclick="ifResetBrief('${buyerId}')" style="font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,0.2)">Изменить ответы</button>
+  </div>`;
+
   return `<div class="brief-client-wrap">${html}</div>`;
 }
 
@@ -1491,26 +1497,46 @@ function renderFormDataClient(d) {
     { label: 'Кто будет жить', val: d.residents },
     { label: 'Срок', val: d.horizon },
     { label: 'Тип жилья', val: d.housingType },
+    { label: 'Исключает', val: d.housingExclude },
+    { label: 'Главное в квартире', val: d.mainGoal },
     { label: 'Локация', val: d.districts },
-    { label: 'Метраж', val: d.areaFrom !== '—' && d.areaTo !== '—' ? d.areaFrom + ' — ' + d.areaTo + ' м²' : '' },
+    { label: 'Критично по локации', val: d.locPrio },
+    { label: 'Любимые места', val: d.favStreets },
+    { label: 'Метраж', val: d.areaFrom && d.areaFrom !== '—' && d.areaTo && d.areaTo !== '—' ? d.areaFrom + ' — ' + d.areaTo + ' м²' : (d.areaFrom !== '—' ? d.areaFrom + '+ м²' : '') },
     { label: 'Комнаты', val: d.rooms },
+    { label: 'Этаж', val: d.floor },
     { label: 'Состояние', val: d.condition },
-    { label: 'Бюджет', val: d.budgetOk !== '—' ? d.budgetOk + ' ₽' : '' },
+    { label: 'Дополнительно', val: d.extras },
+    { label: 'Бюджет комфортный', val: d.budgetOk !== '—' ? d.budgetOk + ' ₽' : '' },
+    { label: 'Бюджет максимальный', val: d.budgetMax !== '—' ? d.budgetMax + ' ₽' : '' },
     { label: 'Способ покупки', val: d.payment },
-  ].filter(r => r.val && r.val !== '—');
+    { label: 'Срочность', val: d.urgency },
+    { label: 'Готовность к авансу', val: d.readiness },
+  ].filter(r => r.val && r.val !== '—' && r.val.trim());
 
   const prio = d.priorities && d.priorities !== '—' ? d.priorities.split('\n').filter(Boolean) : [];
   const signs = [d.sign1, d.sign2, d.sign3].filter(s => s && s !== '—');
 
-  let html = `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
-    <div class="brief-summary-label" style="margin-bottom:16px">Ваши ответы</div>
-    <div class="brief-params-grid">
-      ${rows.map(r => `<div class="brief-param-cell">
-        <div class="brief-param-label">${r.label}</div>
-        <div class="brief-param-value">${esc(r.val)}</div>
-      </div>`).join('')}
-    </div>
-  </div>`;
+  let html = '';
+
+  if (rows.length) {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label" style="margin-bottom:16px">Ваши ответы</div>
+      <div class="brief-params-grid">
+        ${rows.map(r => `<div class="brief-param-cell">
+          <div class="brief-param-label">${r.label}</div>
+          <div class="brief-param-value">${esc(r.val)}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (d.dislike && d.dislike !== '—') {
+    html += `<div style="margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label">Что не устраивает сейчас</div>
+      <div class="brief-summary-text" style="margin-top:8px">${esc(d.dislike)}</div>
+    </div>`;
+  }
 
   if (prio.length) {
     html += `<div class="brief-priorities-block">
@@ -1528,7 +1554,14 @@ function renderFormDataClient(d) {
   if (d.tradeoff && d.tradeoff !== '—') {
     html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
       <div class="brief-summary-label">Готов отказаться</div>
-      <div class="brief-summary-text">${esc(d.tradeoff)}</div>
+      <div class="brief-summary-text" style="margin-top:8px">${esc(d.tradeoff)}</div>
+    </div>`;
+  }
+
+  if (d.whyOld && d.whyOld !== '—') {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label">Почему старый фонд</div>
+      <div class="brief-summary-text" style="margin-top:8px">${esc(d.whyOld)}</div>
     </div>`;
   }
 
@@ -1982,6 +2015,15 @@ function ifCollect() {
     urgency:      v('if-urgency'),
     readiness:    v('readiness'),
   };
+}
+
+function ifResetBrief(buyerId) {
+  const buyer = allData.buyers[buyerId];
+  if (!buyer) return;
+  // Очищаем только formData, не трогаем то что агент уже заполнил
+  if (buyer.brief) buyer.brief.formData = null;
+  renderClientView(buyerId);
+  setTimeout(() => switchTab('brief', document.querySelectorAll('.tab-btn')[1]), 50);
 }
 
 const BRIEF_LS_KEY = id => `pending-brief-${id}`;
