@@ -596,7 +596,14 @@
       "createdAt": "2026-04-24",
       "brief": {
         "summary": "",
-        "criteria": [],
+        "criteria": [
+          {
+            "label": "",
+            "value": "",
+            "comment": "",
+            "tag": "none"
+          }
+        ],
         "priorities": [
           {
             "name": "",
