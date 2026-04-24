@@ -316,6 +316,33 @@ button,a{-webkit-tap-highlight-color:transparent}
   .brief-tag{display:none}
 }
 
+/* INLINE FORM */
+.if-eyebrow{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(0,0,0,0.25);margin-bottom:8px}
+.if-title{font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-weight:400;line-height:1.15;letter-spacing:-0.01em;margin-bottom:32px}
+.if-field{margin-bottom:32px}
+.if-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-bottom:12px;display:block;font-weight:400}
+.if-input{width:100%;border:none;border-bottom:1px solid rgba(0,0,0,0.12);background:none;font-family:var(--sans);font-size:16px;color:var(--text);padding:10px 0;outline:none;transition:border-color 0.2s}
+.if-input::placeholder{color:rgba(0,0,0,0.2)}
+.if-input:focus{border-color:var(--text)}
+.if-textarea{width:100%;border:none;border-bottom:1px solid rgba(0,0,0,0.12);background:none;font-family:var(--sans);font-size:15px;color:var(--text);padding:10px 0;outline:none;line-height:1.7;resize:none;min-height:64px;transition:border-color 0.2s}
+.if-textarea::placeholder{color:rgba(0,0,0,0.2)}
+.if-textarea:focus{border-color:var(--text)}
+.if-chips{display:flex;gap:8px;flex-wrap:wrap}
+.if-chip{font-size:13px;font-weight:300;padding:8px 16px;border:1px solid rgba(0,0,0,0.12);border-radius:2px;cursor:pointer;background:none;color:var(--muted);font-family:var(--sans);transition:all 0.15s;line-height:1;user-select:none}
+.if-chip:hover{border-color:rgba(0,0,0,0.3);color:var(--text)}
+.if-chip.on{background:var(--dark);border-color:var(--dark);color:#fff}
+.if-chip:disabled{opacity:0.4;cursor:default}
+.if-priority-pool{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.if-prio-list{display:grid;gap:2px}
+.if-prio-item{background:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.if-prio-item button{background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.2);font-size:16px;line-height:1;margin-left:auto;padding:0;transition:color 0.15s}
+.if-prio-item button:hover{color:rgba(0,0,0,0.5)}
+.if-prio-num{font-family:var(--serif);font-size:12px;color:rgba(0,0,0,0.2);flex-shrink:0;width:20px}
+.if-prio-name{font-size:14px;font-weight:300;color:var(--text);flex:1}
+.if-prio-empty{font-size:13px;color:rgba(0,0,0,0.22);padding:14px 0;font-style:italic}
+.tab-panel.active{animation:fadeUp 0.25s ease}
+@media(max-width:640px){.if-chip{font-size:12px;padding:7px 12px}}
+
 /* CTA FOOTER */
 .cta-footer{background:var(--dark);padding:72px 40px;text-align:center}
 .cta-footer-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:20px}
@@ -932,8 +959,6 @@ function renderClientView(buyerId){
   const vis=buyer.vis||{};
   const show=function(k){return vis[k]!==false;};
 
-  const hasBrief = !!(buyer.brief && (buyer.brief.summary || (buyer.brief.criteria && buyer.brief.criteria.length)));
-
   document.getElementById('appRoot').innerHTML=`
     <section class="hero">
       <div class="hero-inner">
@@ -951,7 +976,7 @@ function renderClientView(buyerId){
     <div class="content">
       <nav class="tab-nav">
         <button class="tab-btn active" onclick="switchTab('objects',this)">Объекты</button>
-        ${hasBrief?`<button class="tab-btn" onclick="switchTab('brief',this)">Подбор</button>`:''}
+        <button class="tab-btn" onclick="switchTab('brief',this)">Подбор</button>
         <button class="tab-btn" onclick="switchTab('locations',this)">Локации</button>
       </nav>
 
@@ -969,7 +994,7 @@ function renderClientView(buyerId){
       </div>
 
       <!-- TAB: BRIEF (client view) -->
-      ${hasBrief?`<div class="tab-panel" id="tab-brief">${renderBriefClient(buyer)}</div>`:''}
+      <div class="tab-panel" id="tab-brief">${renderBriefClient(buyer)}</div>
 
       <!-- TAB: LOCATIONS -->
       <div class="tab-panel" id="tab-locations">
@@ -977,6 +1002,9 @@ function renderClientView(buyerId){
       </div>
     </div>
     ${renderFooter()}`;
+
+  // Инициализируем чипы inline-формы если она есть
+  if (document.getElementById('inlineFormWrap')) ifInitChips();
 }
 
 
@@ -986,6 +1014,17 @@ function renderAgentView(buyerId){
   loadLocalRatings(buyerId,buyer.props||[]);
   const props=sortProps(buyer.props||[]);
   const dashUrl=window.location.origin+window.location.pathname+'?id='+buyerId;
+
+  // Баннер незаписанного брифа
+  const pendingBrief = checkPendingBrief(buyerId);
+  const pendingBanner = pendingBrief ? `
+    <div style="background:rgba(45,138,78,0.12);border:1px solid rgba(45,138,78,0.25);border-radius:10px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--green);margin-bottom:2px">Бриф заполнен на устройстве клиента</div>
+        <div style="font-size:12px;color:var(--muted);font-weight:300">Данные сохранены локально — нажмите чтобы перенести в карточку</div>
+      </div>
+      <button onclick="applyPendingBrief('${buyerId}')" style="padding:8px 20px;background:var(--green);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:500;cursor:pointer;font-family:var(--sans);white-space:nowrap">Перенести в карточку →</button>
+    </div>` : '';
 
   document.getElementById('appRoot').innerHTML=`
     <section class="hero">
@@ -1007,6 +1046,7 @@ function renderAgentView(buyerId){
       </div>
     </section>
     <div class="content">
+      ${pendingBanner}
       <nav class="tab-nav">
         <button class="tab-btn active" onclick="switchTab('objects',this)">Объекты</button>
         <button class="tab-btn" onclick="switchTab('brief',this)">Подбор</button>
@@ -1094,6 +1134,8 @@ function renderAgentView(buyerId){
     </div>
     ${renderFooter()}`;
   renderVisControls(buyerId);
+  // Инициализируем чипы inline-формы если она есть
+  if (document.getElementById('inlineFormWrap')) ifInitChips();
 }
 
 // ── NEXT STEP ────────────────────────────────────────────────
@@ -1347,6 +1389,12 @@ function renderBriefClient(buyer) {
   const criteria = b.criteria || [];
   const priorities = b.priorities || [];
   const signs = b.signs || [];
+  const hasFilled = !!(b.summary || criteria.length || priorities.length || (b.formData && b.formData.name));
+
+  // Если бриф не заполнен — показываем встроенную форму
+  if (!hasFilled) {
+    return renderInlineForm(buyer);
+  }
 
   let html = '';
 
@@ -1356,6 +1404,11 @@ function renderBriefClient(buyer) {
       <div class="brief-summary-label">Резюме подбора</div>
       <div class="brief-summary-text">${escNl(b.summary)}</div>
     </div>`;
+  }
+
+  // Если есть данные формы но нет резюме агента — показываем данные формы
+  if (!b.summary && b.formData) {
+    html += renderFormDataClient(b.formData);
   }
 
   // Базовые параметры (2 колонки)
@@ -1429,11 +1482,568 @@ function renderBriefClient(buyer) {
     </div>`;
   }
 
-  if (!html) {
-    html = `<p style="color:var(--muted);font-size:14px;padding:48px 0;text-align:center">Раздел подбора появится после первой встречи.</p>`;
+  return `<div class="brief-client-wrap">${html}</div>`;
+}
+
+// Отображение сырых данных формы когда агент ещё не редактировал
+function renderFormDataClient(d) {
+  const rows = [
+    { label: 'Цель', val: d.purpose },
+    { label: 'Кто будет жить', val: d.residents },
+    { label: 'Срок', val: d.horizon },
+    { label: 'Тип жилья', val: d.housingType },
+    { label: 'Локация', val: d.districts },
+    { label: 'Метраж', val: d.areaFrom !== '—' && d.areaTo !== '—' ? d.areaFrom + ' — ' + d.areaTo + ' м²' : '' },
+    { label: 'Комнаты', val: d.rooms },
+    { label: 'Состояние', val: d.condition },
+    { label: 'Бюджет', val: d.budgetOk !== '—' ? d.budgetOk + ' ₽' : '' },
+    { label: 'Способ покупки', val: d.payment },
+  ].filter(r => r.val && r.val !== '—');
+
+  const prio = d.priorities && d.priorities !== '—' ? d.priorities.split('\n').filter(Boolean) : [];
+  const signs = [d.sign1, d.sign2, d.sign3].filter(s => s && s !== '—');
+
+  let html = `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+    <div class="brief-summary-label" style="margin-bottom:16px">Ваши ответы</div>
+    <div class="brief-params-grid">
+      ${rows.map(r => `<div class="brief-param-cell">
+        <div class="brief-param-label">${r.label}</div>
+        <div class="brief-param-value">${esc(r.val)}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+  if (prio.length) {
+    html += `<div class="brief-priorities-block">
+      <div class="brief-summary-label" style="margin-bottom:0">Приоритеты</div>
+      <div>${prio.map((p, i) => `
+        <div class="brief-priority-row">
+          <div class="brief-priority-num">${String(i+1).padStart(2,'0')}</div>
+          <div><div class="brief-priority-name">${esc(p.replace(/^\d+\.\s*/,''))}</div></div>
+          <div></div>
+        </div>`).join('')}
+      </div>
+    </div>`;
   }
 
-  return `<div class="brief-client-wrap">${html}</div>`;
+  if (d.tradeoff && d.tradeoff !== '—') {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label">Готов отказаться</div>
+      <div class="brief-summary-text">${esc(d.tradeoff)}</div>
+    </div>`;
+  }
+
+  if (signs.length) {
+    html += `<div class="brief-signs-block">
+      <div class="brief-summary-label" style="margin-bottom:16px">Как вы поймёте, что это ваша квартира</div>
+      ${signs.map((s, i) => `<div class="brief-sign-item">
+        <span class="brief-sign-num">${String(i+1).padStart(2,'0')}</span>
+        <div class="brief-sign-text">${esc(s)}</div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  return html;
+}
+
+// ── INLINE FORM ──────────────────────────────────────────────
+function renderInlineForm(buyer) {
+  const buyerId = Object.keys(allData.buyers).find(k => allData.buyers[k] === buyer) || '';
+  inlineStep = 0;
+  inlinePriorities = [];
+  return `<div id="inlineFormWrap">
+    <div style="margin-bottom:48px">
+      <div style="font-family:var(--serif);font-size:clamp(22px,3vw,32px);font-weight:400;line-height:1.2;margin-bottom:12px">Расскажите,<br><em style="font-style:italic;color:var(--muted)">что вы ищете.</em></div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;max-width:480px">Это поможет мне подобрать действительно подходящие варианты — а не просто список квартир.</p>
+    </div>
+    ${renderInlineStep(0)}
+    ${renderInlineNav(buyerId)}
+  </div>`;
+}
+
+const INLINE_STEPS = [
+  { id: 'step-goal', title: 'Цель и контекст', eyebrow: '01 / 06' },
+  { id: 'step-housing', title: 'Тип жилья', eyebrow: '02 / 06' },
+  { id: 'step-location', title: 'Локация', eyebrow: '03 / 06' },
+  { id: 'step-params', title: 'Параметры', eyebrow: '04 / 06' },
+  { id: 'step-priorities', title: 'Приоритеты', eyebrow: '05 / 06' },
+  { id: 'step-finance', title: 'Финансы и финал', eyebrow: '06 / 06' },
+];
+
+let inlineStep = 0;
+let inlinePriorities = [];
+
+function renderInlineStep(idx) {
+  const steps = [
+    // 0: Цель
+    `<div class="if-step" id="if-step-0">
+      <div class="if-eyebrow">01 / 06</div>
+      <div class="if-title">Цель и контекст</div>
+      <div class="if-field">
+        <div class="if-label">Цель покупки</div>
+        <div class="if-chips" data-ig="purpose" data-multi="false">
+          <button class="if-chip" data-val="Для проживания">Для проживания</button>
+          <button class="if-chip" data-val="Инвестиция">Инвестиция</button>
+          <button class="if-chip" data-val="Сохранение капитала">Сохранение капитала</button>
+          <button class="if-chip" data-val="Под аренду">Под аренду</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Кто будет проживать</div>
+        <div class="if-chips" data-ig="residents" data-multi="false">
+          <button class="if-chip" data-val="Один">Один</button>
+          <button class="if-chip" data-val="С партнёром">С партнёром</button>
+          <button class="if-chip" data-val="Семья">Семья</button>
+          <button class="if-chip" data-val="С перспективой детей">С перспективой детей</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">На какой срок</div>
+        <div class="if-chips" data-ig="horizon" data-multi="false">
+          <button class="if-chip" data-val="3–5 лет">3–5 лет</button>
+          <button class="if-chip" data-val="Надолго">Надолго</button>
+          <button class="if-chip" data-val="Навсегда">Навсегда</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Что сейчас не устраивает в жилье</div>
+        <textarea class="if-textarea" id="if-dislike" placeholder="Расскажите свободно…" rows="3" oninput="autoResize(this)"></textarea>
+      </div>
+    </div>`,
+
+    // 1: Тип жилья
+    `<div class="if-step" id="if-step-1">
+      <div class="if-eyebrow">02 / 06</div>
+      <div class="if-title">Тип жилья</div>
+      <div class="if-field">
+        <div class="if-label">Что рассматриваете</div>
+        <div class="if-chips" data-ig="housing-type" data-multi="true">
+          <button class="if-chip" data-val="Старый фонд">Старый фонд</button>
+          <button class="if-chip" data-val="Новостройка">Новостройка</button>
+          <button class="if-chip" data-val="Вторичка (любая)">Вторичка (любая)</button>
+          <button class="if-chip" data-val="Без разницы">Без разницы</button>
+        </div>
+      </div>
+      <div class="if-field" id="if-why-old-wrap" style="display:none">
+        <div class="if-label">Почему именно старый фонд</div>
+        <textarea class="if-textarea" id="if-why-old" placeholder="Атмосфера, потолки, локации…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Что точно не рассматриваете</div>
+        <div class="if-chips" data-ig="housing-exclude" data-multi="true">
+          <button class="if-chip" data-val="Старый фонд">Старый фонд</button>
+          <button class="if-chip" data-val="Новостройки">Новостройки</button>
+          <button class="if-chip" data-val="Бывшие коммуналки">Бывшие коммуналки</button>
+          <button class="if-chip" data-val="Газовые плиты">Газовые плиты</button>
+          <button class="if-chip" data-val="Первые этажи">Первые этажи</button>
+          <button class="if-chip" data-val="Дворы-колодцы">Дворы-колодцы</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Главное, что ищете</div>
+        <div class="if-chips" data-ig="main-goal" data-multi="true">
+          <button class="if-chip" data-val="Комфорт">Комфорт</button>
+          <button class="if-chip" data-val="Статус">Статус</button>
+          <button class="if-chip" data-val="Локация">Локация</button>
+          <button class="if-chip" data-val="Тишина">Тишина</button>
+          <button class="if-chip" data-val="Престиж">Престиж</button>
+          <button class="if-chip" data-val="Ликвидность">Ликвидность</button>
+          <button class="if-chip" data-val="Простор">Простор</button>
+          <button class="if-chip" data-val="Свет">Свет</button>
+        </div>
+      </div>
+    </div>`,
+
+    // 2: Локация
+    `<div class="if-step" id="if-step-2">
+      <div class="if-eyebrow">03 / 06</div>
+      <div class="if-title">Локация</div>
+      <div class="if-field">
+        <div class="if-label">Допустимые районы</div>
+        <div class="if-chips" data-ig="districts" data-multi="true">
+          <button class="if-chip" data-val="Центральный">Центральный</button>
+          <button class="if-chip" data-val="Петроградский">Петроградский</button>
+          <button class="if-chip" data-val="Василеостровский">Василеостровский</button>
+          <button class="if-chip" data-val="Адмиралтейский">Адмиралтейский</button>
+          <button class="if-chip" data-val="Московский">Московский</button>
+          <button class="if-chip" data-val="Другие">Другие</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Любимые улицы, адреса, дома мечты</div>
+        <textarea class="if-textarea" id="if-fav-streets" placeholder="Каменноостровский, набережная Мойки…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Районы, которые точно не рассматриваете</div>
+        <textarea class="if-textarea" id="if-no-districts" placeholder="Конкретные улицы или кварталы" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Что критично по локации</div>
+        <div class="if-chips" data-ig="loc-prio" data-multi="true">
+          <button class="if-chip" data-val="Метро пешком">Метро пешком</button>
+          <button class="if-chip" data-val="Набережная">Набережная</button>
+          <button class="if-chip" data-val="Тихая улица">Тихая улица</button>
+          <button class="if-chip" data-val="Рестораны рядом">Рестораны рядом</button>
+          <button class="if-chip" data-val="Парки и скверы">Парки и скверы</button>
+          <button class="if-chip" data-val="Школа рядом">Школа рядом</button>
+          <button class="if-chip" data-val="Близко к работе">Близко к работе</button>
+        </div>
+      </div>
+    </div>`,
+
+    // 3: Параметры
+    `<div class="if-step" id="if-step-3">
+      <div class="if-eyebrow">04 / 06</div>
+      <div class="if-title">Параметры квартиры</div>
+      <div class="if-field">
+        <div class="if-label">Метраж</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <input class="if-input" id="if-area-from" type="number" placeholder="От, м²">
+          <input class="if-input" id="if-area-to" type="number" placeholder="До, м²">
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Комнат</div>
+        <div class="if-chips" data-ig="rooms" data-multi="true">
+          <button class="if-chip" data-val="Студия">Студия</button>
+          <button class="if-chip" data-val="1к">1к</button>
+          <button class="if-chip" data-val="2к">2к</button>
+          <button class="if-chip" data-val="3к">3к</button>
+          <button class="if-chip" data-val="4к+">4к+</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Этаж</div>
+        <div class="if-chips" data-ig="floor" data-multi="true">
+          <button class="if-chip" data-val="Не первый">Не первый</button>
+          <button class="if-chip" data-val="Не последний">Не последний</button>
+          <button class="if-chip" data-val="Высокий">Высокий</button>
+          <button class="if-chip" data-val="Без разницы">Без разницы</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Состояние</div>
+        <div class="if-chips" data-ig="condition" data-multi="false">
+          <button class="if-chip" data-val="Готовый ремонт">Готовый ремонт</button>
+          <button class="if-chip" data-val="Можно косметику">Можно косметику</button>
+          <button class="if-chip" data-val="Под капитальный">Под капитальный</button>
+          <button class="if-chip" data-val="Без разницы">Без разницы</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Дополнительно важно</div>
+        <div class="if-chips" data-ig="extras" data-multi="true">
+          <button class="if-chip" data-val="Высокие потолки">Высокие потолки</button>
+          <button class="if-chip" data-val="Лифт">Лифт</button>
+          <button class="if-chip" data-val="Балкон">Балкон</button>
+          <button class="if-chip" data-val="Парковка">Парковка</button>
+          <button class="if-chip" data-val="Закрытый двор">Закрытый двор</button>
+          <button class="if-chip" data-val="Тихий дом">Тихий дом</button>
+        </div>
+      </div>
+    </div>`,
+
+    // 4: Приоритеты
+    `<div class="if-step" id="if-step-4">
+      <div class="if-eyebrow">05 / 06</div>
+      <div class="if-title">Что важнее всего?</div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:28px;max-width:440px">Выберите 3–5 пунктов, без которых точно нельзя. Нажмите — добавится в список.</p>
+      <div class="if-field">
+        <div class="if-priority-pool" id="if-prio-pool">
+          ${['Локация / район','Бюджет','Метраж','Состояние / ремонт','Тишина','Этаж','Вид из окон','Высокие потолки','Лифт','Парковка','Закрытый двор','Метро пешком','Скорость сделки','Статус дома'].map(v =>
+            `<button class="if-chip" data-pval="${v}" onclick="ifAddPriority(this)">${v}</button>`
+          ).join('')}
+        </div>
+        <div class="if-prio-list" id="if-prio-list">
+          <div class="if-prio-empty">Добавьте пункты выше — первый в списке самый важный</div>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">От чего готовы отказаться</div>
+        <textarea class="if-textarea" id="if-tradeoff" placeholder="Готов взять этаж пониже, если хорошая локация…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+    </div>`,
+
+    // 5: Финансы + финал
+    `<div class="if-step" id="if-step-5">
+      <div class="if-eyebrow">06 / 06</div>
+      <div class="if-title">Финансы и финал</div>
+      <div class="if-field">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <div class="if-label">Комфортный бюджет, ₽</div>
+            <input class="if-input" id="if-budget-ok" type="text" placeholder="10 000 000" oninput="ifFmtMoney(this)">
+          </div>
+          <div>
+            <div class="if-label">Максимальный бюджет, ₽</div>
+            <input class="if-input" id="if-budget-max" type="text" placeholder="12 000 000" oninput="ifFmtMoney(this)">
+          </div>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Способ покупки</div>
+        <div class="if-chips" data-ig="payment" data-multi="false">
+          <button class="if-chip" data-val="Наличные">Наличные</button>
+          <button class="if-chip" data-val="Ипотека">Ипотека</button>
+          <button class="if-chip" data-val="Продажа своей">Продажа своей</button>
+          <button class="if-chip" data-val="Комбинированно">Комбинированно</button>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:32px;margin-top:8px;margin-bottom:32px">
+        <div class="if-label" style="margin-bottom:20px">Как вы поймёте, что это ваша квартира?</div>
+        <div style="display:grid;gap:2px">
+          ${[1,2,3].map(i => `<div style="background:#fff;padding:20px 24px">
+            <span style="font-family:var(--serif);font-size:11px;color:rgba(0,0,0,0.18);display:block;margin-bottom:8px">${String(i).padStart(2,'0')}</span>
+            <textarea class="if-textarea" id="if-sign-${i}" placeholder="Признак ${i}…" rows="2" oninput="autoResize(this)" style="border-bottom-color:rgba(0,0,0,0.08)"></textarea>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Насколько срочная покупка</div>
+        <textarea class="if-textarea" id="if-urgency" placeholder="Переезд через 3 месяца / смотрим без спешки…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Если идеальный вариант появится завтра</div>
+        <div class="if-chips" data-ig="readiness" data-multi="false">
+          <button class="if-chip" data-val="Готов выходить в аванс">Готов выходить в аванс</button>
+          <button class="if-chip" data-val="Нужно подумать">Нужно подумать</button>
+        </div>
+      </div>
+    </div>`,
+  ];
+
+  return steps[idx] || '';
+}
+
+function ifChips(g) {
+  return [...document.querySelectorAll(`[data-ig="${g}"] .if-chip.on`)].map(b => b.dataset.val || b.textContent).join(', ') || '—';
+}
+function ifVal(id) { return document.getElementById(id)?.value?.trim() || '—'; }
+function ifFmtMoney(el) {
+  const raw = el.value.replace(/\D/g,'');
+  el.value = raw ? new Intl.NumberFormat('ru-RU').format(raw) : '';
+}
+
+function ifAddPriority(btn) {
+  const val = btn.dataset.pval;
+  if (inlinePriorities.find(p => p === val) || inlinePriorities.length >= 7) return;
+  btn.classList.add('on'); btn.disabled = true;
+  inlinePriorities.push(val);
+  ifRenderPrioList();
+}
+
+function ifRemovePriority(val) {
+  inlinePriorities = inlinePriorities.filter(p => p !== val);
+  document.querySelectorAll('#if-prio-pool .if-chip').forEach(b => {
+    if (b.dataset.pval === val) { b.classList.remove('on'); b.disabled = false; }
+  });
+  ifRenderPrioList();
+}
+
+function ifRenderPrioList() {
+  const list = document.getElementById('if-prio-list');
+  if (!list) return;
+  if (!inlinePriorities.length) {
+    list.innerHTML = '<div class="if-prio-empty">Добавьте пункты выше — первый в списке самый важный</div>';
+    return;
+  }
+  list.innerHTML = inlinePriorities.map((p, i) =>
+    `<div class="if-prio-item">
+      <span class="if-prio-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="if-prio-name">${p}</span>
+      <button onclick="ifRemovePriority('${p.replace(/'/g,"\\'")}')">×</button>
+    </div>`
+  ).join('');
+}
+
+function ifInitChips() {
+  document.querySelectorAll('[data-ig]').forEach(group => {
+    const multi = group.dataset.multi === 'true';
+    group.querySelectorAll('.if-chip:not([data-pval])').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (multi) { btn.classList.toggle('on'); }
+        else { group.querySelectorAll('.if-chip').forEach(b => b.classList.remove('on')); btn.classList.add('on'); }
+        // side effect: старый фонд
+        if (group.dataset.ig === 'housing-type') {
+          const oldOn = !!document.querySelector('[data-ig="housing-type"] .if-chip[data-val="Старый фонд"].on');
+          const wrap = document.getElementById('if-why-old-wrap');
+          if (wrap) wrap.style.display = oldOn ? 'block' : 'none';
+        }
+      });
+    });
+  });
+}
+
+function ifNextStep(buyerId) {
+  // Сохраняем текущий шаг и переходим к следующему
+  const wrap = document.getElementById('inlineFormWrap');
+  if (!wrap) return;
+  inlineStep++;
+  if (inlineStep >= INLINE_STEPS.length) {
+    ifSubmit(buyerId);
+    return;
+  }
+  wrap.innerHTML = `
+    <div style="margin-bottom:48px">
+      <div style="font-family:var(--serif);font-size:clamp(22px,3vw,32px);font-weight:400;line-height:1.2;margin-bottom:12px">Расскажите,<br><em style="font-style:italic;color:var(--muted)">что вы ищете.</em></div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;max-width:480px">Это поможет мне подобрать действительно подходящие варианты — а не просто список квартир.</p>
+    </div>
+    ${renderInlineStep(inlineStep)}
+    ${renderInlineNav(buyerId)}`;
+  ifInitChips();
+  window.scrollTo({top: document.getElementById('tab-brief')?.offsetTop || 0, behavior: 'smooth'});
+}
+
+function ifPrevStep(buyerId) {
+  const wrap = document.getElementById('inlineFormWrap');
+  if (!wrap || inlineStep <= 0) return;
+  inlineStep--;
+  wrap.innerHTML = `
+    <div style="margin-bottom:48px">
+      <div style="font-family:var(--serif);font-size:clamp(22px,3vw,32px);font-weight:400;line-height:1.2;margin-bottom:12px">Расскажите,<br><em style="font-style:italic;color:var(--muted)">что вы ищете.</em></div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;max-width:480px">Это поможет мне подобрать действительно подходящие варианты — а не просто список квартир.</p>
+    </div>
+    ${renderInlineStep(inlineStep)}
+    ${renderInlineNav(buyerId)}`;
+  ifInitChips();
+}
+
+function renderInlineNav(buyerId) {
+  const isLast = inlineStep >= INLINE_STEPS.length - 1;
+  const isFirst = inlineStep === 0;
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:28px;border-top:1px solid var(--border)">
+    ${!isFirst
+      ? `<button style="font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0" onclick="ifPrevStep('${buyerId}')">← Назад</button>`
+      : `<span></span>`}
+    <span style="font-size:11px;color:rgba(0,0,0,0.25)">${inlineStep+1} / ${INLINE_STEPS.length}</span>
+    <button style="padding:12px 28px;background:var(--dark);color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:500;letter-spacing:0.06em;cursor:pointer;font-family:var(--sans)" onclick="${isLast ? `ifSubmit('${buyerId}')` : `ifNextStep('${buyerId}')`}">
+      ${isLast ? 'Готово →' : 'Далее →'}
+    </button>
+  </div>`;
+}
+
+function ifCollect() {
+  return {
+    purpose: ifChips('purpose'),
+    residents: ifChips('residents'),
+    horizon: ifChips('horizon'),
+    dislike: ifVal('if-dislike'),
+    housingType: ifChips('housing-type'),
+    housingExclude: ifChips('housing-exclude'),
+    whyOld: ifVal('if-why-old'),
+    mainGoal: ifChips('main-goal'),
+    districts: ifChips('districts'),
+    favStreets: ifVal('if-fav-streets'),
+    noDistricts: ifVal('if-no-districts'),
+    locPrio: ifChips('loc-prio'),
+    areaFrom: ifVal('if-area-from'),
+    areaTo: ifVal('if-area-to'),
+    rooms: ifChips('rooms'),
+    floor: ifChips('floor'),
+    condition: ifChips('condition'),
+    extras: ifChips('extras'),
+    priorities: inlinePriorities.map((p,i) => `${i+1}. ${p}`).join('\n') || '—',
+    tradeoff: ifVal('if-tradeoff'),
+    budgetOk: ifVal('if-budget-ok'),
+    budgetMax: ifVal('if-budget-max'),
+    payment: ifChips('payment'),
+    sign1: ifVal('if-sign-1'),
+    sign2: ifVal('if-sign-2'),
+    sign3: ifVal('if-sign-3'),
+    urgency: ifVal('if-urgency'),
+    readiness: ifChips('readiness'),
+  };
+}
+
+const BRIEF_LS_KEY = id => `pending-brief-${id}`;
+
+async function ifSubmit(buyerId) {
+  const navBtns = document.querySelectorAll('#inlineFormWrap button');
+  navBtns.forEach(b => b.disabled = true);
+  const lastBtn = navBtns[navBtns.length - 1];
+  if (lastBtn) lastBtn.textContent = 'Сохраняем…';
+
+  const d = ifCollect();
+  const buyer = allData.buyers[buyerId];
+  if (!buyer) return;
+
+  // Всегда пишем в brief.formData в памяти
+  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
+  buyer.brief.formData = d;
+  buyer.brief.signs = [d.sign1, d.sign2, d.sign3].filter(s => s && s !== '—');
+
+  if (getToken()) {
+    // Есть токен — пишем сразу в GitHub, чистим localStorage
+    await ghSave();
+    try { localStorage.removeItem(BRIEF_LS_KEY(buyerId)); } catch(e) {}
+  } else {
+    // Нет токена — сохраняем в localStorage, покажем баннер агенту позже
+    try { localStorage.setItem(BRIEF_LS_KEY(buyerId), JSON.stringify(d)); } catch(e) {}
+  }
+
+  // Отправляем в Telegram (best-effort)
+  try {
+    fetch('https://crm-bot-production-7458.up.railway.app/brief', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: ifFormatTelegram(buyerId, buyer.name, d), data: d }),
+      keepalive: true
+    });
+  } catch(e) {}
+
+  inlineStep = 0;
+  inlinePriorities = [];
+  renderClientView(buyerId);
+  setTimeout(() => {
+    switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
+  }, 50);
+}
+
+// Проверяем есть ли незаписанный бриф в localStorage
+function checkPendingBrief(buyerId) {
+  try {
+    const raw = localStorage.getItem(BRIEF_LS_KEY(buyerId));
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch(e) { return null; }
+}
+
+async function applyPendingBrief(buyerId) {
+  const d = checkPendingBrief(buyerId);
+  if (!d) return;
+  const buyer = allData.buyers[buyerId];
+  if (!buyer) return;
+  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
+  buyer.brief.formData = d;
+  buyer.brief.signs = [d.sign1, d.sign2, d.sign3].filter(s => s && s !== '—');
+  await ghSave();
+  try { localStorage.removeItem(BRIEF_LS_KEY(buyerId)); } catch(e) {}
+  renderAgentView(buyerId);
+  // Переключаемся на вкладку подбора
+  setTimeout(() => {
+    const briefBtn = document.querySelectorAll('.tab-btn')[1];
+    switchTab('brief', briefBtn);
+  }, 50);
+}
+
+function ifFormatTelegram(buyerId, name, d) {
+  return `🏠 *Бриф заполнен: ${name || buyerId}*
+
+*Цель:* ${d.purpose} · ${d.residents} · ${d.horizon}
+*Жильё:* ${d.housingType} (исключает: ${d.housingExclude})
+*Локация:* ${d.districts} · ${d.locPrio}
+*Метраж:* ${d.areaFrom}–${d.areaTo} м² · ${d.rooms} · ${d.floor}
+*Состояние:* ${d.condition}
+*Бюджет:* ${d.budgetOk} — ${d.budgetMax} ₽ · ${d.payment}
+*Приоритеты:*
+${d.priorities}
+*Готов отказаться:* ${d.tradeoff}
+*Готовность:* ${d.readiness}
+
+*Признаки своей квартиры:*
+1. ${d.sign1}
+2. ${d.sign2}
+3. ${d.sign3}`;
 }
 
 // ── BRIEF AGENT RENDER ───────────────────────────────────────
