@@ -1386,12 +1386,16 @@ function getBrief(buyer) {
 function renderBriefClient(buyer, buyerId) {
   const b = buyer.brief || {};
 
-  // Агент уже заполнил свою версию — показываем её, без кнопки «Изменить»
-  const agentFilled = !!(b.summary || (b.criteria && b.criteria.length) || (b.priorities && b.priorities.length));
-  // Клиент заполнял форму
-  const clientFilled = !!(b.formData && b.formData.purpose && b.formData.purpose !== '—');
+  // Агент заполнил свою версию
+  const agentFilled = !!(
+    b.summary ||
+    (b.priorities && b.priorities.length > 0) ||
+    (b.criteria && b.criteria.length > 0)
+  );
+  // Клиент заполнял форму — есть formData
+  const clientFilled = !!(b.formData && Object.values(b.formData).some(v => v && v !== '—' && String(v).trim()));
 
-  // Нечего показывать — открываем форму
+  // Нет ни того ни другого — показываем форму
   if (!agentFilled && !clientFilled) {
     return renderInlineForm(buyer, buyerId);
   }
@@ -1464,9 +1468,9 @@ function renderBriefClient(buyer, buyerId) {
     </div>`;
   }
 
-  // Признаки — от агента или из формы клиента
+  // Признаки — только если агент заполнил или есть данные формы
   const signs = (b.signs || []).filter(s => s && s.trim());
-  if (signs.length) {
+  if (signs.length && (agentFilled || clientFilled)) {
     html += `<div class="brief-signs-block">
       <div class="brief-summary-label" style="margin-bottom:16px">Как вы поймёте, что это ваша квартира</div>
       ${signs.map((s, i) => `
@@ -1478,9 +1482,11 @@ function renderBriefClient(buyer, buyerId) {
   }
 
   // Данные из формы клиента — если агент ещё не заполнил своё
-  if (!agentFilled && clientFilled) {
-    html += renderFormDataClient(b.formData);
-    // Кнопка «Изменить» — только если агент ещё не обработал
+  if (!agentFilled) {
+    if (clientFilled) {
+      html += renderFormDataClient(b.formData);
+    }
+    // Кнопка «Изменить» — пока агент не обработал бриф
     html += `<div style="margin-top:40px;padding-top:32px;border-top:1px solid var(--border)">
       <button onclick="ifShowForm('${buyerId}')" style="font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,0.2)">Изменить ответы</button>
     </div>`;
