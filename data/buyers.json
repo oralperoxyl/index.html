@@ -587,6 +587,20 @@
         "locations": false,
         "calc": false
       }
+    },
+    "марья-ивановна-mocvbef1avsl": {
+      "name": "Марья Ивановна",
+      "budget": "",
+      "props": [],
+      "nextStep": "",
+      "createdAt": "2026-04-24",
+      "brief": {
+        "summary": "",
+        "criteria": [],
+        "priorities": [],
+        "signs": []
+      },
+      "vis": {}
     }
   }
 }
