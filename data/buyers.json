@@ -597,7 +597,13 @@
       "brief": {
         "summary": "",
         "criteria": [],
-        "priorities": [],
+        "priorities": [
+          {
+            "name": "",
+            "comment": "",
+            "tag": "none"
+          }
+        ],
         "signs": [
           "локация",
           "метраж",
