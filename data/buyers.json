@@ -574,12 +574,13 @@
           "renovation": "",
           "showDate": "",
           "showTime": "",
-          "status": "planned",
+          "status": "scout",
           "url": "https://www.cian.ru/sale/flat/329007613/",
           "agentComment": "",
           "clientRating": 0,
           "clientComment": "",
-          "addedAt": "2026-04-23"
+          "addedAt": "2026-04-23",
+          "updatedAt": "2026-04-27"
         },
         {
           "address": "Ул. Пионерская, 9/17",
