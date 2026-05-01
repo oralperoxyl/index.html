@@ -649,6 +649,23 @@
           "clientRating": 0,
           "clientComment": "",
           "addedAt": "2026-04-27"
+        },
+        {
+          "address": "пр-кт Невский, д. 147",
+          "price": "15550000",
+          "area": "88,7",
+          "rooms": "3",
+          "floor": "5/5",
+          "condition": "Без ремонта",
+          "renovation": "",
+          "showDate": "",
+          "showTime": "",
+          "status": "reference",
+          "url": "https://www.cian.ru/sale/flat/327996346/",
+          "agentComment": "Здесь планировка уже намного живее: можно сделать две отдельные спальни и нормальную кухню-гостиную без ощущения вагона. Плюс есть хороший потенциал по перепланировке, внутренние стены не несущие.",
+          "clientRating": 0,
+          "clientComment": "",
+          "addedAt": "2026-05-01"
         }
       ],
       "nextStep": "",
