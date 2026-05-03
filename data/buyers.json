@@ -60,14 +60,14 @@
           "condition": "Косметический ремонт",
           "renovation": "2000000",
           "showDate": "2026-03-29",
-          "status": "viewed",
+          "status": "sold",
           "url": "https://spb.cian.ru/sale/flat/328100534/",
           "agentComment": "Ремонт на 3-3,5 млн",
           "clientRating": 0,
           "clientComment": "",
           "addedAt": "2026-03-27",
           "rooms": "3",
-          "updatedAt": "2026-04-01",
+          "updatedAt": "2026-05-03",
           "showTime": "17:00"
         },
         {
@@ -474,7 +474,12 @@
       "vis": {
         "locations": false
       },
-      "brief": null
+      "brief": {
+        "summary": "",
+        "criteria": [],
+        "priorities": [],
+        "signs": []
+      }
     },
     "диана-mnlnfrxk0sfe": {
       "name": "Диана",
