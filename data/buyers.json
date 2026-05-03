@@ -326,12 +326,13 @@
           "renovation": "",
           "showDate": "",
           "showTime": "",
-          "status": "planned",
+          "status": "sold",
           "url": "https://spb.cian.ru/sale/flat/326577407/",
           "agentComment": "Цена за метр завышена, скорее всего инвесторская квартира от убитого состояния до ремонта под проажу. В цену заложена прибыль инвестора.",
           "clientRating": 0,
           "clientComment": "",
-          "addedAt": "2026-04-03"
+          "addedAt": "2026-04-03",
+          "updatedAt": "2026-05-03"
         }
       ],
       "nextStep": "",
