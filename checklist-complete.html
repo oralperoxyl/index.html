@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Чек-лист безопасности сделки — Семён Гончаров</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    ::selection { background: #0066FF; color: #ffffff; }
+    ::-moz-selection { background: #0066FF; color: #ffffff; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
+      --bg: #FAFAF8;
+      --bg-dark: #1C1C1E;
+      --text: #1A1A1A;
+      --muted: #666;
+      --border: rgba(0,0,0,0.08);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); background: var(--bg); color: var(--text); font-size: 16px; line-height: 1.6; }
+    
+    .site-header { position: sticky; top: 0; z-index: 100; background: rgba(250,250,248,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0 40px; height: 64px; display: flex; align-items: center; }
+    .header-brand { font-family: var(--font-serif); font-size: 16px; font-weight: 400; text-decoration: none; color: var(--text); }
+    
+    .hero { background: var(--bg-dark); color: #E5E5E5; padding: 100px 40px 80px; }
+    .hero-inner { max-width: 900px; margin: 0 auto; }
+    .hero-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(229,229,229,0.4); margin-bottom: 28px; }
+    .hero-title { font-family: var(--font-serif); font-size: clamp(36px, 6vw, 72px); font-weight: 400; line-height: 1.1; letter-spacing: -0.02em; color: #E5E5E5; margin-bottom: 24px; }
+    .hero-sub { font-size: 16px; line-height: 1.7; color: rgba(229,229,229,0.55); max-width: 560px; margin-bottom: 32px; }
+    .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .btn-download { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; border: none; border-radius: 999px; text-decoration: none; background: rgba(229,229,229,0.1); color: #E5E5E5; font-size: 14px; letter-spacing: 0.02em; transition: all 0.2s; cursor: pointer; font-family: var(--font-sans); }
+    .btn-download:hover { background: rgba(229,229,229,0.15); }
+    .hero-note { font-size: 12px; color: rgba(229,229,229,0.35); font-style: italic; }
+    
+    .doc-section { max-width: 900px; margin: 0 auto; padding: 80px 40px; border-bottom: 1px solid var(--border); }
+    .doc-section:last-child { border-bottom: none; }
+    .section-num { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; display: block; }
+    .section-title { font-family: var(--font-serif); font-size: clamp(28px, 4vw, 48px); font-weight: 400; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 16px; }
+    .section-intro { font-size: 16px; line-height: 1.7; color: var(--muted); max-width: 620px; margin-bottom: 52px; }
+    
+    .checklist { display: flex; flex-direction: column; }
+    .checklist-item { border-bottom: 1px solid var(--border); padding: 24px 0; }
+    .checklist-item:last-child { border-bottom: none; }
+    .item-header { cursor: pointer; user-select: none; }
+    .item-num { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; }
+    .item-title { font-size: 18px; font-weight: 500; line-height: 1.4; color: var(--text); margin-bottom: 8px; }
+    .item-preview { font-size: 14px; line-height: 1.6; color: var(--muted); }
+    .item-content { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.35s ease, opacity 0.35s ease, margin-top 0.35s ease; }
+    .checklist-item.open .item-content { max-height: 600px; opacity: 1; margin-top: 20px; }
+    .item-details { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 20px; }
+    .item-why { background: white; border-radius: 8px; padding: 20px 24px; }
+    .item-why-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; font-weight: 500; }
+    .item-why-text { font-size: 14px; line-height: 1.7; color: var(--muted); margin: 0; }
+    .item-toggle { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; color: var(--text); cursor: pointer; background: none; border: none; padding: 0; font-family: var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; transition: opacity 0.2s; }
+    .item-toggle:hover { opacity: 0.6; }
+    .item-toggle::after { content: ''; width: 8px; height: 8px; border-right: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text); transform: rotate(45deg); transition: transform 0.25s; margin-top: -2px; }
+    .checklist-item.open .item-toggle::after { transform: rotate(-135deg); margin-top: 2px; }
+    
+    .social-proof { background: rgba(0,0,0,0.02); border-radius: 8px; padding: 20px 24px; margin: 32px 0; font-size: 13px; line-height: 1.7; color: var(--muted); border-left: 2px solid var(--text); }
+    
+    .cta-mid { background: white; border-radius: 12px; padding: 40px; margin: 48px 0; text-align: center; }
+    .cta-mid-title { font-family: var(--font-serif); font-size: clamp(20px, 3vw, 28px); font-weight: 400; line-height: 1.3; margin-bottom: 12px; letter-spacing: -0.01em; }
+    .cta-mid-text { font-size: 15px; line-height: 1.7; color: var(--muted); margin-bottom: 24px; max-width: 520px; margin-left: auto; margin-right: auto; }
+    .cta-mid-price { font-size: 13px; color: var(--muted); margin-top: 12px; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; background: var(--text); border-radius: 999px; text-decoration: none; color: #fff; font-size: 14px; letter-spacing: 0.02em; transition: opacity 0.2s; font-family: var(--font-sans); }
+    .btn-primary:hover { opacity: 0.85; }
+    
+    .scoring-block { background: white; border-radius: 12px; padding: 40px; margin-bottom: 48px; }
+    .scoring-title { font-family: var(--font-serif); font-size: 24px; font-weight: 400; margin-bottom: 20px; letter-spacing: -0.01em; }
+    .scoring-text { font-size: 15px; line-height: 1.7; color: var(--muted); margin-bottom: 16px; }
+    .scoring-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 24px; }
+    .scoring-item { padding: 20px; background: rgba(0,0,0,0.02); border-radius: 8px; }
+    .scoring-number { font-family: var(--font-serif); font-size: 32px; font-weight: 400; line-height: 1; margin-bottom: 8px; }
+    .scoring-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 500; }
+    .scoring-desc { font-size: 13px; line-height: 1.6; color: var(--muted); margin-top: 8px; }
+    
+    .flags-section { background: var(--bg-dark); color: #E5E5E5; padding: 80px 40px; }
+    .flags-inner { max-width: 900px; margin: 0 auto; }
+    .flags-section .section-num { color: rgba(229,229,229,0.4); }
+    .flags-section .section-title { color: #E5E5E5; }
+    .flags-section .section-intro { color: rgba(229,229,229,0.55); }
+    .flags-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 48px; }
+    .flag-title { font-size: 16px; font-weight: 500; margin-bottom: 8px; color: #E5E5E5; line-height: 1.4; }
+    .flag-quote { font-style: italic; color: rgba(229,229,229,0.35); margin-bottom: 10px; font-size: 13px; line-height: 1.5; }
+    .flag-text { color: rgba(229,229,229,0.55); line-height: 1.7; font-size: 14px; margin: 0; }
+    
+    .cta-footer { background: var(--bg-dark); padding: 80px 40px; text-align: center; }
+    .cta-footer-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(229,229,229,0.4); margin-bottom: 24px; }
+    .cta-footer-title { font-family: var(--font-serif); font-size: clamp(24px, 4vw, 40px); font-weight: 400; color: #E5E5E5; line-height: 1.2; margin-bottom: 12px; }
+    .cta-footer-sub { font-size: 15px; color: rgba(229,229,229,0.45); margin-bottom: 40px; max-width: 520px; margin-left: auto; margin-right: auto; line-height: 1.6; }
+    .cta-tg-btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 28px; border: 1px solid #0088cc; border-radius: 999px; text-decoration: none; background: transparent; color: #E5E5E5; font-size: 14px; letter-spacing: 0.02em; transition: all 0.2s; font-family: var(--font-sans); }
+    .cta-tg-btn:hover { background: #0088cc; border-color: #0088cc; }
+    .cta-footer-copy { margin-top: 48px; font-size: 12px; color: rgba(229,229,229,0.2); }
+    .cta-footer-copy a { color: rgba(229,229,229,0.3); text-decoration: none; }
+    .cta-footer-copy a:hover { color: rgba(229,229,229,0.6); }
+    
+    @media (max-width: 768px) {
+      .site-header { padding: 0 20px; }
+      .hero { padding: 60px 20px 48px; }
+      .doc-section { padding: 56px 20px; }
+      .flags-section { padding: 56px 20px; }
+      .flags-grid, .scoring-grid { grid-template-columns: 1fr; }
+      .cta-footer { padding: 60px 20px; }
+      .cta-mid { padding: 32px 24px; }
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="index.html">Goncharov Semen</a>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Чек-лист безопасности сделки · Семён Гончаров</p>
+    <h1 class="hero-title">15 вопросов, которые отсекают 90% проблемных объектов</h1>
+    <p class="hero-sub">Эти вопросы помогают выявить скрытые риски до того, как вы внесёте деньги. Задавайте их продавцу — или доверьте проверку мне.</p>
+    <div class="hero-actions">
+      <button class="btn-download" onclick="window.print()">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        Скачать PDF
+      </button>
+      <span class="hero-note">Используют 200+ покупателей</span>
+    </div>
+  </div>
+</section>
+
+<section class="doc-section">
+  <span class="section-num">Блок 1 / 4</span>
+  <h2 class="section-title">Собственность и документы</h2>
+  <p class="section-intro">Юридическая чистота сделки начинается с понимания того, кто собственник и как объект попал в его владение.</p>
+
+  <div class="checklist">
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 1</span>
+        <h3 class="item-title">Кто собственник и кто будет на сделке?</h3>
+        <p class="item-preview">Единственный владелец или долевая собственность? Личное присутствие или доверенность?</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Вы единственный владелец или собственность долевая?<br><br>
+          Будете присутствовать лично или сделка идёт по доверенности?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Доверенность — самый частый инструмент мошенников. Если собственник не может выйти на связь или объясняет отсутствие общими фразами — это красный флаг.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 2</span>
+        <h3 class="item-title">Как недвижимость попала в собственность?</h3>
+        <p class="item-preview">Срок владения и основание получения: покупка, дарение, наследство, приватизация.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Сколько лет объект у текущего владельца?<br><br>
+          На каком основании получен: покупка, дарение, наследство, приватизация?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Короткий срок владения + наследство или дарение = риск появления «внезапных» наследников через год после сделки.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 3</span>
+        <h3 class="item-title">Материнский капитал и доли детям</h3>
+        <p class="item-preview">Использование маткапитала и выделение долей всем детям.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Использовался ли маткапитал при покупке?<br><br>
+          Если да — всем ли детям уже выделены доли в соответствии с законом?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Невыделенные доли — основание для оспаривания сделки через органы опеки. Решается долго, дорого, через суд.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 4</span>
+        <h3 class="item-title">История приватизации</h3>
+        <p class="item-preview">Кто был зарегистрирован на момент приватизации и кто отказался от участия.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Кто был зарегистрирован в квартире на момент приватизации?<br><br>
+          Есть ли отказавшиеся от участия (в том числе несовершеннолетние на тот момент)?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Отказавшиеся от приватизации сохраняют право пожизненного проживания. Даже после продажи могут вернуться и выписать их будет невозможно.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 5</span>
+        <h3 class="item-title">Обременения и ограничения</h3>
+        <p class="item-preview">Свежая выписка из ЕГРН без арестов, залогов и ограничений.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Можете ли вы прямо сейчас показать свежую выписку из ЕГРН (не старше 3 дней)?<br><br>
+          Есть ли аресты, залоги, ипотека, запреты на регистрационные действия?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Выписка, которую «пришлю завтра», часто так и не приходит. Если документ не готов показать сразу — это не случайность.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-section">
+  <span class="section-num">Блок 2 / 4</span>
+  <h2 class="section-title">Техническое состояние</h2>
+  <p class="section-intro">Свежий ремонт часто скрывает серьёзные проблемы. Эти вопросы помогают увидеть, что под обоями.</p>
+
+  <div class="checklist">
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 6</span>
+        <h3 class="item-title">Соответствие планировки</h3>
+        <p class="item-preview">Совпадение текущей планировки с планом БТИ.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Текущая планировка полностью совпадает с планом БТИ?<br><br>
+          Все стены, мокрые точки (санузлы, кухня) — на своих местах?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Незаконная перепланировка = штрафы + обязанность вернуть всё как было. Или невозможность продать дальше без дорогостоящего узаконивания.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 7</span>
+        <h3 class="item-title">Что скрывает свежий ремонт?</h3>
+        <p class="item-preview">Косметика или капитальная замена электрики, труб, стояков.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Ремонт — косметический или капитальный?<br><br>
+          Менялись ли электрика, стояки, трубы, или это только отделка поверх старого?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">«Свежие обои» часто маскируют плесень, гниль, старую проводку. Через полгода вскрываются протечки, которые «вдруг» появились.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 8</span>
+        <h3 class="item-title">История протечек и плесени</h3>
+        <p class="item-preview">Затопления от соседей и обработка стен от плесени.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Были ли серьёзные затопления от соседей?<br><br>
+          Обрабатывались ли стены от чёрной плесени или просто закрасили?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Плесень без профессиональной обработки возвращается. Затопления часто повторяются, если у соседей сверху не устранена причина.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 9</span>
+        <h3 class="item-title">Состояние дома и коммуникаций</h3>
+        <p class="item-preview">Капремонт, стояки, лифты, кровля.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Когда был последний капремонт дома?<br><br>
+          Менялись ли общедомовые стояки, лифты, кровля?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Старые коммуникации = регулярные аварии и внеплановые взносы на ремонт. Если дом в запущенном состоянии — готовьтесь платить.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 10</span>
+        <h3 class="item-title">Охранный статус здания</h3>
+        <p class="item-preview">Памятник архитектуры и охранные обязательства.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Дом — памятник архитектуры?<br><br>
+          Есть ли охранные обязательства, ограничивающие замену окон, фасадов, радиаторов?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">В охранных зонах даже минимальные изменения требуют согласования КГИОП. Нарушение = штрафы и требование вернуть «как было».</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="social-proof">
+    <strong>Из практики:</strong> Вопрос №7 спас клиента от квартиры со свежим ремонтом, под которым оказалась чёрная плесень на всех внешних стенах. Продавец признался только после прямого вопроса — до этого показывал «идеальную» квартиру.
+  </div>
+
+  <div class="cta-mid">
+    <h3 class="cta-mid-title">Не хотите разбираться самостоятельно?</h3>
+    <p class="cta-mid-text">Я проверю объект за вас: документы, планировку, техническое состояние, риски по дому. Выдам заключение — покупать или нет.</p>
+    <a href="https://t.me/semengme" class="btn-primary">Заказать проверку объекта</a>
+  </div>
+</section>
+
+<section class="doc-section">
+  <span class="section-num">Блок 3 / 4</span>
+  <h2 class="section-title">Дом и окружение</h2>
+  <p class="section-intro">Соседи и статус дома — это то, что повлияет на вашу жизнь каждый день.</p>
+
+  <div class="checklist">
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 11</span>
+        <h3 class="item-title">Статус дома</h3>
+        <p class="item-preview">Аварийность, расселение, реновация.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Дом признан аварийным?<br><br>
+          Попадает ли в программу расселения или реновации?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Если дом под снос — собственник получит компенсацию ниже рыночной. Новый владелец рискует остаться ни с чем.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 12</span>
+        <h3 class="item-title">Соседи</h3>
+        <p class="item-preview">Кто живёт рядом и были ли конфликты.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Кто живёт сбоку, сверху, снизу?<br><br>
+          Были ли конфликты: шум, затопления, асоциальное поведение?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Сосед-алкоголик или хроническая «музыка по ночам» — это не мелочь. Это ваша повседневная реальность на годы вперёд.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 13</span>
+        <h3 class="item-title">Долги по капремонту</h3>
+        <p class="item-preview">Задолженность по взносам на капитальный ремонт переходит к новому собственнику.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Есть ли задолженность по взносам на капитальный ремонт?<br><br>
+          Оплачены ли коммунальные платежи?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Долги по капремонту переходят к новому собственнику по закону — это обязательство привязано к квартире, а не к человеку. Продавец может умолчать о долге в несколько сотен тысяч — вы узнаете когда придёт требование об оплате.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="doc-section">
+  <span class="section-num">Блок 4 / 4</span>
+  <h2 class="section-title">Финансовые схемы</h2>
+  <p class="section-intro">Эти вопросы защищают ваши деньги от мошеннических схем.</p>
+
+  <div class="checklist">
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 14</span>
+        <h3 class="item-title">Реальная цена в договоре</h3>
+        <p class="item-preview">Полная стоимость или занижение для ухода от налогов.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          В договоре купли-продажи будет указана полная стоимость или планируется занижение «для экономии на налогах»?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Занижение цены = риск для покупателя. Если сделку оспорят — вы получите назад только ту сумму, что указана в договоре. Остальное доказать невозможно.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-item">
+      <div class="item-header">
+        <span class="item-num">Вопрос 15</span>
+        <h3 class="item-title">Требование предоплаты</h3>
+        <p class="item-preview">Аванс до проверки документов юристом.</p>
+        <button class="item-toggle">Развернуть</button>
+      </div>
+      <div class="item-content">
+        <div class="item-details">
+          Продавец требует аванс или задаток на карту до показа квартиры и проверки документов юристом?
+        </div>
+        <div class="item-why">
+          <span class="item-why-label">Почему важно</span>
+          <p class="item-why-text">Любая предоплата до юридической экспертизы — это схема мошенников. Реальный продавец согласен на задаток только после полной проверки.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scoring-block">
+    <h3 class="scoring-title">Как оценить результаты</h3>
+    <p class="scoring-text">Если продавец не может ответить на вопросы или даёт уклончивые ответы — это сигнал остановиться и проверить глубже.</p>
+    <div class="scoring-grid">
+      <div class="scoring-item">
+        <div class="scoring-number">0-2</div>
+        <div class="scoring-label">Нет ответов</div>
+        <div class="scoring-desc">Объект чистый, можно двигаться дальше</div>
+      </div>
+      <div class="scoring-item">
+        <div class="scoring-number">3-5</div>
+        <div class="scoring-label">Нет ответов</div>
+        <div class="scoring-desc">Нужна дополнительная проверка перед решением</div>
+      </div>
+      <div class="scoring-item">
+        <div class="scoring-number">6+</div>
+        <div class="scoring-label">Нет ответов</div>
+        <div class="scoring-desc">Высокий риск — лучше отказаться от объекта</div>
+      </div>
+    </div>
+    <p class="scoring-text" style="margin-top: 24px;">Если не уверены в ответах или хотите профессиональную проверку — я проведу полный аудит объекта за 2-3 дня.</p>
+  </div>
+</section>
+
+<section class="flags-section">
+  <div class="flags-inner">
+    <span class="section-num">Критично</span>
+    <h2 class="section-title">Красные флаги</h2>
+    <p class="section-intro">Когда нужно немедленно отказаться от сделки — без раздумий и сожалений.</p>
+
+    <div class="flags-grid">
+      <div class="flag-item">
+        <h3 class="flag-title">Давление на срочность</h3>
+        <p class="flag-quote">«Переводите сейчас, а то через час едут другие покупатели»</p>
+        <p class="flag-text">Создание искусственного дефицита времени — классический приём манипуляции. Нормальная сделка не требует мгновенных решений.</p>
+      </div>
+
+      <div class="flag-item">
+        <h3 class="flag-title">Сделка по доверенности</h3>
+        <p class="flag-quote">«Собственник за границей, не может выйти на видеосвязь»</p>
+        <p class="flag-text">Если продавец не готов подтвердить личность и полномочия — это не сделка, это авантюра.</p>
+      </div>
+
+      <div class="flag-item">
+        <h3 class="flag-title">Раздражение на вопросы</h3>
+        <p class="flag-quote">«Да всё чисто, чего вы докапываетесь?!»</p>
+        <p class="flag-text">Профессиональный продавец понимает, что вопросы — это норма. Агрессия на проверку — признак того, что скрывать есть что.</p>
+      </div>
+
+      <div class="flag-item">
+        <h3 class="flag-title">Отказ показать документы</h3>
+        <p class="flag-quote">«Выписку покажу после того, как внесёте аванс»</p>
+        <p class="flag-text">Документы должны быть доступны ДО любых финансовых обязательств. Иначе — это попытка загнать в угол.</p>
+      </div>
+
+      <div class="flag-item">
+        <h3 class="flag-title">Цена ниже рынка</h3>
+        <p class="flag-quote">«Срочный развод / переезд / нужны деньги»</p>
+        <p class="flag-text">Если цена на 15-20% ниже аналогов без объективных причин — ищите подвох. Его всегда найдёте.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-footer">
+  <p class="cta-footer-label">Проверка под ключ</p>
+  <h2 class="cta-footer-title">Полный аудит объекта за 2-3 дня</h2>
+  <p class="cta-footer-sub">История собственности · Планировка · Долги · Техническое состояние · Риски по дому и соседям · Безопасная схема расчётов</p>
+  <a href="https://t.me/semengme" class="cta-tg-btn" target="_blank">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.02-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.06-.01-.09s-.05-.03-.09-.02c-.05.02-1.4.89-3.95 2.62-.38.26-.72.39-1.02.39-.34 0-1.02-.18-1.52-.33-.61-.19-1.1-.29-1.06-.62.02-.17.27-.35.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+    </svg>
+    Написать в Telegram
+  </a>
+  <p class="cta-footer-copy">© Семён Гончаров · <a href="index.html">На главную</a></p>
+</section>
+
+<script>
+document.querySelectorAll('.item-toggle').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const item = this.closest('.checklist-item');
+    const isOpen = item.classList.contains('open');
+    const section = item.closest('.checklist');
+    section.querySelectorAll('.checklist-item').forEach(i => {
+      i.classList.remove('open');
+      const b = i.querySelector('.item-toggle');
+      if (b) b.textContent = 'Развернуть';
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      this.textContent = 'Свернуть';
+    }
+  });
+});
+
+document.querySelectorAll('.item-header').forEach(h => {
+  h.addEventListener('click', () => {
+    const btn = h.querySelector('.item-toggle');
+    if (btn) btn.click();
+  });
+});
+</script>
+</body>
+</html>
