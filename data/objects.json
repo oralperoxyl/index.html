@@ -279,38 +279,9 @@
               "views": 0,
               "calls": 0,
               "showings": 0,
-              "offers": 2
+              "offers": 0
             },
-            "feedback": [
-              {
-                "name": "Сергей",
-                "date": "7 марта",
-                "verdict": "thinking",
-                "verdictText": "Думают",
-                "text": "Все понравилось, ушел решать вопрос с деньгами. Продает бизнес "
-              },
-              {
-                "name": "Елена",
-                "date": "7 марта",
-                "verdict": "thinking",
-                "verdictText": "Думают",
-                "text": "Маловата площадь кухни, берет для дочки. Не хватает кэша"
-              },
-              {
-                "name": "Дмитрий и Марина",
-                "date": "7 марта",
-                "verdict": "interested",
-                "verdictText": "Думают",
-                "text": "Только вышли на рынок, смотрят варианты"
-              },
-              {
-                "name": "Олег",
-                "date": "8 марта",
-                "verdict": "declined",
-                "verdictText": "Думают",
-                "text": "Маленькая площадь"
-              }
-            ],
+            "feedback": [],
             "competitors": [
               {
                 "address": "ул. Дмитрия Ульянова, д.23к1",
