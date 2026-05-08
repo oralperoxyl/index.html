@@ -350,7 +350,7 @@
                 "price": "14 500 000 ₽",
                 "status": "active",
                 "statusText": "В продаже",
-                "note": "",
+                "note": "Агент говорит, что продали за 14 500 000",
                 "url": "https://www.cian.ru/sale/flat/325334472/",
                 "ours": false,
                 "isNew": false
