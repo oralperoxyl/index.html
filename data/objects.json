@@ -276,9 +276,9 @@
             "dayOnMarket": 7,
             "price": "16,5 млн",
             "stats": {
-              "views": 564,
-              "calls": 6,
-              "showings": 4,
+              "views": 0,
+              "calls": 0,
+              "showings": 0,
               "offers": 2
             },
             "feedback": [
