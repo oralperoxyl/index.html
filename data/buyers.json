@@ -742,6 +742,20 @@
         "signs": []
       },
       "vis": {}
+    },
+    "тестировал-mp5q2gtqbb74": {
+      "name": "Тестировал",
+      "budget": "63838383",
+      "props": [],
+      "nextStep": "",
+      "createdAt": "2026-05-14",
+      "brief": {
+        "summary": "",
+        "criteria": [],
+        "priorities": [],
+        "signs": []
+      },
+      "vis": {}
     }
   }
 }
