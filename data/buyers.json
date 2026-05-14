@@ -728,6 +728,20 @@
         "signs": []
       },
       "vis": {}
+    },
+    "анастасия-mp5pzf2zvv8x": {
+      "name": "Анастасия",
+      "budget": "18000000",
+      "props": [],
+      "nextStep": "",
+      "createdAt": "2026-05-14",
+      "brief": {
+        "summary": "",
+        "criteria": [],
+        "priorities": [],
+        "signs": []
+      },
+      "vis": {}
     }
   }
 }
