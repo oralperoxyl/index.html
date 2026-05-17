@@ -518,7 +518,12 @@
                 "isNew": true
               }
             ],
-            "recommendations": [],
+            "recommendations": [
+              {
+                "title": "",
+                "text": ""
+              }
+            ],
             "summary": "Начало работы. Вышли в рекламу. Прием входящих звонков и показы. "
           }
         ]
