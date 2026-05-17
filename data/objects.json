@@ -452,10 +452,10 @@
                 "price": "18250000",
                 "status": "active",
                 "statusText": "В продаже",
-                "note": "",
+                "note": "Снижают цену",
                 "url": "https://www.cian.ru/sale/flat/329336806/",
                 "ours": false,
-                "isNew": false
+                "isNew": true
               }
             ],
             "recommendations": [],
