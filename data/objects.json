@@ -456,6 +456,18 @@
                 "url": "https://www.cian.ru/sale/flat/329336806/",
                 "ours": false,
                 "isNew": true
+              },
+              {
+                "address": "",
+                "rooms": "",
+                "area": "",
+                "price": "",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "",
+                "ours": false,
+                "isNew": false
               }
             ],
             "recommendations": [],
