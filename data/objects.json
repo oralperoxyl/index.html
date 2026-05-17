@@ -480,6 +480,18 @@
                 "url": "https://www.cian.ru/sale/flat/327641254/",
                 "ours": false,
                 "isNew": true
+              },
+              {
+                "address": "",
+                "rooms": "",
+                "area": "",
+                "price": "",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "",
+                "ours": false,
+                "isNew": false
               }
             ],
             "recommendations": [],
