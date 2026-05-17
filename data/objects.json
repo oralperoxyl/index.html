@@ -281,7 +281,15 @@
               "showings": 10,
               "offers": 0
             },
-            "feedback": [],
+            "feedback": [
+              {
+                "name": "",
+                "date": "",
+                "verdict": "thinking",
+                "verdictText": "Думают",
+                "text": ""
+              }
+            ],
             "competitors": [
               {
                 "address": "ул. Дмитрия Ульянова, д.23к1",
