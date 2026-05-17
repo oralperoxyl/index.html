@@ -435,8 +435,8 @@
               },
               {
                 "address": "Нахимовский пр-кт 31к3 ",
-                "rooms": "",
-                "area": "",
+                "rooms": "1",
+                "area": "39",
                 "price": "",
                 "status": "active",
                 "statusText": "В продаже",
