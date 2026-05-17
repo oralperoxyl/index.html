@@ -476,10 +476,10 @@
                 "price": "19950000",
                 "status": "active",
                 "statusText": "В продаже",
-                "note": "",
+                "note": "В рекламе уже 2 месяца. Со слов агента сначала спрос был, теперь тишина. Цена завышена. ",
                 "url": "https://www.cian.ru/sale/flat/327641254/",
                 "ours": false,
-                "isNew": false
+                "isNew": true
               }
             ],
             "recommendations": [],
