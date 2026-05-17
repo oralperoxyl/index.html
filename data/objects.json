@@ -500,10 +500,22 @@
                 "price": "19100000",
                 "status": "active",
                 "statusText": "В продаже",
-                "note": "",
+                "note": "В рекламе второй месяц, медленно снижаются. Цена завышена. Агент сказала, что просмотров было 2 за все время. ",
                 "url": "https://www.cian.ru/sale/flat/328983209/",
                 "ours": false,
                 "isNew": true
+              },
+              {
+                "address": "",
+                "rooms": "",
+                "area": "",
+                "price": "",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "",
+                "ours": false,
+                "isNew": false
               }
             ],
             "recommendations": [],
