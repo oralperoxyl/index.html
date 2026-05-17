@@ -488,10 +488,10 @@
                 "price": "16300000",
                 "status": "active",
                 "statusText": "В продаже",
-                "note": "",
+                "note": "В рекламе 2 месяца. Снижаются по цене. Спрос вялый. ",
                 "url": "https://www.cian.ru/sale/flat/328109179/",
                 "ours": false,
-                "isNew": false
+                "isNew": true
               }
             ],
             "recommendations": [],
