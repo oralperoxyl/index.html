@@ -416,7 +416,7 @@
                 "price": "17 500 000 ₽",
                 "status": "sold",
                 "statusText": "продана",
-                "note": "Продали на 17,5 млн, со слов агента. ",
+                "note": "Продали на 17,5 млн, со слов агента за 1,5 недели. ",
                 "url": "https://www.cian.ru/sale/flat/327455618/",
                 "ours": false,
                 "isNew": false
@@ -426,7 +426,7 @@
                 "rooms": "2",
                 "area": "37,7",
                 "price": "14 500 000 ₽",
-                "status": "active",
+                "status": "sold",
                 "statusText": "В продаже",
                 "note": "Агент говорит, что продали за 14 500 000",
                 "url": "https://www.cian.ru/sale/flat/325334472/",
