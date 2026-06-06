@@ -1,0 +1,2341 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Подбор квартиры — Семён Гончаров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+::selection{background:#0066FF;color:#fff}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --serif:'Playfair Display',serif;
+  --sans:'Inter',sans-serif;
+  --bg:#FAFAF8;
+  --dark:#1C1C1E;
+  --text:#1A1A1A;
+  --muted:#888;
+  --border:rgba(0,0,0,0.07);
+  --accent:#0066FF;
+  --green:#2D8A4E;
+  --red:#C0392B;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column}
+button,a{-webkit-tap-highlight-color:transparent}
+#appRoot{flex:1}
+
+/* HEADER */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}
+.header-right{display:flex;align-items:center;gap:16px}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:#ccc;display:inline-block;margin-right:6px;transition:background 0.3s}
+.sync-dot.ok{background:var(--green)}
+.sync-text{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
+
+/* HERO */
+.hero{background:var(--dark);padding:80px 40px 64px}
+.hero-inner{max-width:860px;margin:0 auto}
+.hero-label{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:24px}
+.hero-title{font-family:var(--serif);font-size:clamp(30px,4.5vw,52px);font-weight:400;line-height:1.1;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:16px}
+.hero-title em{font-style:italic;color:rgba(229,229,229,0.45)}
+.hero-sub{font-size:15px;color:rgba(229,229,229,0.45);font-weight:300;line-height:1.7;max-width:520px;margin-bottom:28px}
+.hero-chips{display:flex;gap:20px;flex-wrap:wrap}
+.hero-chip{font-size:12px;color:rgba(229,229,229,0.4);font-weight:300}
+.hero-chip strong{color:rgba(229,229,229,0.75);font-weight:500}
+
+/* CONTENT */
+.content{max-width:860px;margin:0 auto;padding:56px 40px 80px}
+
+/* NEXT STEP */
+.steps-block{display:grid;gap:2px;margin-bottom:40px}
+.step-row{background:#fff;padding:18px 28px;display:flex;gap:20px;align-items:baseline}
+.step-row.situation{border-left:3px solid rgba(0,0,0,0.1)}
+.step-text{font-size:14px;font-weight:300;line-height:1.75;color:var(--text);white-space:normal}
+.hist-block{margin-bottom:32px;border-radius:8px;overflow:hidden}
+.hist-title{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0 0 12px;margin-bottom:0}
+.hist-item{background:#fff;padding:16px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:100px 1fr;gap:16px;align-items:start}
+.hist-item:last-child{border-bottom:none}
+.hist-date{font-size:11px;color:var(--muted);font-weight:400;padding-top:3px;white-space:nowrap}
+.hist-text{font-size:13px;font-weight:300;line-height:1.7;color:var(--text)}
+.step-row.next{border-left:3px solid var(--dark)}
+.step-row-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);flex-shrink:0;padding-top:2px;min-width:110px}
+.step-row-text{font-size:15px;color:var(--text);font-weight:400;line-height:1.6}
+
+/* HINT BLOCK — как оценивать */
+.updates-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.updates-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.updates-list{display:grid;gap:2px}
+.update-item{background:#fff;border-radius:2px;padding:14px 20px;display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start}
+.update-dot{width:6px;height:6px;border-radius:50%;background:var(--dark);margin-top:5px;flex-shrink:0}
+.update-dot.new{background:var(--accent)}
+.update-body{}
+.update-addr{font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px}
+.update-text{font-size:12px;color:var(--muted);font-weight:300;line-height:1.6}
+.update-date{font-size:11px;color:var(--muted);opacity:0.5;margin-top:3px}
+
+.logic-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.logic-block-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
+.logic-block-text{font-size:14px;line-height:1.8;color:var(--muted);font-weight:300;max-width:640px}
+.logic-block-text p+p{margin-top:12px}
+.logic-block-text strong{color:var(--text);font-weight:500}
+
+.hint-block{margin-bottom:48px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.hint-title{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:24px}
+.hint-items{display:grid;gap:0}
+.hint-item{display:grid;grid-template-columns:32px 1fr;gap:0;align-items:start;padding:16px 0;border-top:1px solid var(--border)}
+.hint-item:last-child{border-bottom:1px solid var(--border)}
+.hint-num{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.18);padding-top:2px}
+.hint-item-body{}
+.hint-item-q{font-size:15px;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.4}
+.hint-item-a{font-size:13px;color:var(--muted);font-weight:300;line-height:1.7}
+
+/* SECTION HEAD */
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px}
+.section-title{font-family:var(--serif);font-size:clamp(20px,2.5vw,28px);font-weight:400;letter-spacing:-0.01em}
+.section-count{font-size:12px;color:var(--muted);font-weight:300}
+
+/* PROPERTY CARDS */
+.props-list{display:grid;gap:2px;margin-bottom:56px}
+.prop-card{background:#fff;border-radius:2px;overflow:hidden}
+.prop-card-header{padding:22px 24px;display:grid;grid-template-columns:32px 1fr auto;gap:16px;align-items:start;cursor:pointer;user-select:none;transition:background 0.15s}
+.prop-card-header::after{content:'';display:block;grid-column:1/-1;height:0}
+.prop-num{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.18);padding-top:3px}
+.prop-card-header:hover,.prop-card-header:active{background:rgba(0,0,0,0.025)}
+.prop-status-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.prop-status{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;padding:3px 8px;border-radius:999px;font-weight:500}
+.prop-status.planned{background:rgba(0,102,255,0.08);color:var(--accent)}
+.prop-status.viewed{background:rgba(0,0,0,0.06);color:var(--muted)}
+.prop-status.considering{background:rgba(45,138,78,0.1);color:var(--green)}
+.prop-status.declined{background:rgba(192,57,43,0.08);color:var(--red)}
+.prop-status.reference{background:rgba(0,0,0,0.04);color:#999}
+.prop-status.pending{background:rgba(180,100,0,0.08);color:rgba(160,90,0,0.8)}
+.prop-status.sold{background:rgba(0,0,0,0.06);color:#999}
+.prop-card.sold-card{opacity:0.55}
+.prop-card.sold-card .prop-addr{text-decoration:line-through;text-decoration-color:rgba(0,0,0,0.25)}
+.prop-addr{font-size:16px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:8px}
+.prop-meta{display:flex;gap:16px;flex-wrap:wrap}
+.prop-meta-item{font-size:12px;color:var(--muted);font-weight:300}
+.prop-meta-item strong{color:var(--text);font-weight:500}
+.prop-price{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--text);white-space:nowrap;line-height:1.2}
+.prop-toggle-icon{width:20px;height:20px;flex-shrink:0;margin-top:4px;color:rgba(0,0,0,0.25);transition:transform 0.25s;display:block}
+.prop-card.open .prop-toggle-icon{transform:rotate(180deg)}
+
+.prop-body{display:none;border-top:1px solid var(--border);padding:20px 24px 24px}
+.prop-section{margin-bottom:16px}
+.prop-section:last-child{margin-bottom:0}
+.prop-section-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;font-weight:400}
+.prop-section-val{font-size:14px;color:var(--text);font-weight:300;line-height:1.65}
+.prop-card.open .prop-body{display:block}
+.prop-body-grid{display:flex;flex-direction:column;gap:0;margin-bottom:0}
+.prop-field-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;font-weight:400}
+.prop-field-val{font-size:14px;color:var(--text);font-weight:300;line-height:1.65}
+.prop-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:400;letter-spacing:0.04em;color:var(--muted);text-decoration:none;border:1px solid rgba(0,0,0,0.15);border-radius:999px;padding:6px 14px;transition:all 0.2s}
+.prop-link:hover,.prop-link:active,.prop-link.is-touched{background:var(--dark);color:#fff;border-color:var(--dark)}
+
+/* RATING */
+.rating-wrap{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.rating-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.stars-row{display:flex;gap:8px;margin-bottom:14px}
+.star-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:none;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;color:var(--muted);font-family:var(--sans)}
+.star-btn:hover,.star-btn:active,.star-btn.on,.star-btn.active,.star-btn.is-touched{background:var(--dark);border-color:var(--dark);color:#fff}
+.rating-comment{width:100%;border:none;border-bottom:1px solid var(--border);background:none;font-family:var(--sans);font-size:14px;color:var(--text);padding:8px 0;resize:none;outline:none;line-height:1.6}
+.rating-comment::placeholder{color:var(--muted)}
+.rating-comment:focus{border-color:var(--text)}
+.rating-actions{display:flex;align-items:center;gap:12px;margin-top:12px}
+.rating-save-btn{padding:8px 20px;background:none;color:var(--text);border:1px solid rgba(0,0,0,0.15);border-radius:999px;font-size:12px;font-weight:400;letter-spacing:0.04em;cursor:pointer;transition:all 0.2s;font-family:var(--sans)}
+.rating-save-btn:hover,.rating-save-btn:active,.rating-save-btn.is-touched{background:var(--dark);color:#fff;border-color:var(--dark)}
+.rating-ok{font-size:12px;color:var(--green);display:none}
+.existing-rating .stars-display{color:#F59E0B;font-size:18px;letter-spacing:2px}
+.existing-rating .rating-comment-text{font-size:13px;color:var(--muted);font-weight:300;margin-top:6px}
+.rating-change-btn{background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline;margin-top:8px;padding:0;font-family:var(--sans)}
+
+/* COMPARE TABLE */
+.compare-scroll{overflow-x:auto;margin-bottom:56px}
+.compare-table{width:100%;border-collapse:collapse;min-width:580px}
+.compare-table th{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:400;padding:10px 16px;text-align:left;border-bottom:2px solid var(--border);white-space:nowrap}
+.compare-table th.obj-col{font-size:12px;font-weight:500;color:var(--text);text-transform:none;letter-spacing:0;max-width:130px;white-space:normal;line-height:1.3}
+.compare-table td{padding:11px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--muted);font-weight:300;vertical-align:top}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table td.row-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:400;white-space:nowrap;background:rgba(0,0,0,0.012);width:110px}
+.compare-table td strong{color:var(--text);font-weight:500}
+.compare-stars{color:#F59E0B}
+
+/* AGENT PANEL */
+.agent-section{background:var(--dark);border-radius:16px;padding:32px;margin-bottom:32px}
+.agent-section-title{font-family:var(--serif);font-size:20px;font-weight:400;color:#F5F5F5;margin-bottom:24px}
+.agent-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.af{display:flex;flex-direction:column;gap:6px}
+.af.full{grid-column:1/-1}
+.af label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.55)}
+.ai{background:rgba(255,255,255,0.09);border:none;border-radius:10px;padding:11px 14px;font-family:var(--sans);font-size:14px;color:#E5E5E5;outline:none;transition:background 0.2s;width:100%}
+.ai:focus{background:rgba(255,255,255,0.14)}
+.ai::placeholder{color:rgba(255,255,255,0.25)}
+.ai option{background:var(--dark)}
+.abtn{padding:10px 24px;border:none;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;transition:opacity 0.2s;letter-spacing:0.02em;font-family:var(--sans)}
+.abtn.white{background:#fff;color:var(--dark)}
+.abtn.white:hover,.abtn.white:active{opacity:0.9}
+.abtn.danger{background:transparent;color:rgba(229,229,229,0.5);border:1px solid rgba(192,57,43,0.3)}
+.abtn.danger:hover,.abtn.danger:active{background:var(--red);color:#fff;border-color:var(--red);opacity:1}
+.abtn-row{display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap;grid-column:1/-1}
+
+/* PICKER */
+.picker-wrap{max-width:860px;margin:0 auto;padding:56px 40px 80px}
+.picker-title{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:400;margin-bottom:8px;letter-spacing:-0.02em}
+.picker-sub{font-size:14px;color:var(--muted);font-weight:300;margin-bottom:40px}
+.picker-list{display:grid;gap:2px}
+.picker-item{background:#fff;border-radius:2px;padding:18px 24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.picker-item-name{font-size:15px;font-weight:500;margin-bottom:3px}
+.picker-item-meta{font-size:13px;color:var(--muted);font-weight:300}
+.picker-btns{display:flex;gap:8px;flex-shrink:0;flex-wrap:wrap}
+.pbtn{padding:8px 20px;border-radius:999px;font-size:12px;font-weight:400;letter-spacing:0.04em;cursor:pointer;border:1px solid rgba(0,0,0,0.15);background:none;color:var(--muted);transition:all 0.2s;text-decoration:none;display:inline-flex;align-items:center;font-family:var(--sans)}
+.pbtn:hover,.pbtn:active,.pbtn.is-touched{background:var(--dark);color:#fff;border-color:var(--dark)}
+.pbtn.green{background:none;color:var(--green);border-color:rgba(45,138,78,0.3)}
+.pbtn.green:hover,.pbtn.green:active,.pbtn.green.is-touched{background:var(--green);color:#fff;border-color:var(--green)}
+.pbtn.red{color:rgba(192,57,43,0.6);border-color:rgba(192,57,43,0.15);background:none}
+.pbtn.red:hover,.pbtn.red:active,.pbtn.red.is-touched{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* NEW BUYER */
+.new-buyer{background:#fff;border-radius:2px;padding:28px;margin-bottom:16px}
+.new-buyer h3{font-size:14px;font-weight:500;margin-bottom:16px}
+.nb-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end}
+.nb-field{display:flex;flex-direction:column;gap:6px}
+.nb-field label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+.nb-input{border:none;border-bottom:1px solid var(--border);background:none;font-family:var(--sans);font-size:14px;padding:8px 0;outline:none;color:var(--text)}
+.nb-input::placeholder{color:var(--muted)}
+.nb-input:focus{border-color:var(--text)}
+
+/* TOKEN */
+.token-wrap{max-width:400px;margin:100px auto;padding:0 40px;text-align:center}
+.token-wrap h2{font-family:var(--serif);font-size:26px;font-weight:400;margin-bottom:8px}
+.token-wrap p{font-size:14px;color:var(--muted);margin-bottom:24px;font-weight:300;line-height:1.6}
+.token-in{width:100%;border:none;border-bottom:1px solid var(--border);background:none;font-family:var(--sans);font-size:15px;padding:10px 0;outline:none;color:var(--text);text-align:center}
+.token-in:focus{border-color:var(--text)}
+.token-btn{margin-top:20px;padding:12px 32px;background:var(--dark);color:#fff;border:none;border-radius:999px;font-size:13px;font-weight:500;cursor:pointer;letter-spacing:0.04em;font-family:var(--sans)}
+
+/* EDIT MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto}
+.overlay.open{display:flex}
+.modal{background:#2C2C2E;border-radius:16px;padding:32px;width:100%;max-width:560px;position:relative;margin:auto}
+.modal h3{font-family:var(--serif);font-size:20px;font-weight:400;color:#E5E5E5;margin-bottom:24px}
+.modal-x{position:absolute;top:16px;right:16px;background:none;border:none;color:rgba(229,229,229,0.4);font-size:20px;cursor:pointer;line-height:1;padding:4px}
+.modal-x:hover{color:rgba(229,229,229,0.8)}
+
+
+/* LOCATIONS */
+.loc-section{margin-bottom:56px}
+.loc-table{width:100%;border-collapse:collapse;margin-bottom:2px;background:#fff;border-radius:8px 8px 0 0;overflow:hidden}
+.loc-table th{padding:16px 20px;text-align:left;border-bottom:2px solid var(--border);vertical-align:bottom}
+.loc-table th:first-child{width:130px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.loc-th-name{font-size:15px;font-weight:500;color:var(--text);display:block;margin-bottom:6px}
+.loc-th-num{font-family:var(--serif);font-size:11px;color:rgba(0,0,0,0.2);display:block;margin-bottom:4px}
+.loc-score{display:flex;gap:3px;margin-top:6px}
+.loc-dot{width:7px;height:7px;border-radius:50%;background:var(--dark)}
+.loc-dot.empty{background:rgba(0,0,0,0.1)}
+.loc-table td{padding:12px 20px;border-bottom:1px solid var(--border);vertical-align:top;font-size:13px;font-weight:300;color:var(--muted);line-height:1.6}
+.loc-table td:first-child{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:400;white-space:nowrap;padding-top:14px}
+.agent-section .loc-table th{border-bottom-color:rgba(255,255,255,0.1);color:rgba(229,229,229,0.6)}
+.agent-section .loc-table td{border-bottom-color:rgba(255,255,255,0.07);color:rgba(229,229,229,0.7)}
+.agent-section .loc-table td:first-child{color:rgba(229,229,229,0.45)}
+.loc-table tr:last-child td{border-bottom:none}
+.loc-verdict{display:inline-block;font-size:11px;font-weight:500;white-space:nowrap;margin-bottom:4px}
+.loc-verdict.plus{color:var(--green)}
+.loc-verdict.minus{color:var(--red)}
+.loc-verdict.neutral{color:var(--muted)}
+.loc-items{list-style:none;padding:0;margin:0;display:grid;gap:2px}
+.loc-items li{padding-left:10px;position:relative}
+.loc-items li::before{content:'-';position:absolute;left:0;color:rgba(0,0,0,0.2)}
+.loc-table-agent{color:#E5E5E5!important}
+.loc-table-agent th{color:rgba(229,229,229,0.6)!important;border-bottom-color:rgba(255,255,255,0.1)!important}
+.loc-table-agent td{color:#E5E5E5!important;border-bottom-color:rgba(255,255,255,0.07)!important}
+.loc-table-agent td:first-child{color:rgba(229,229,229,0.5)!important}
+.loc-summary{background:var(--dark);border-radius:0 0 8px 8px;padding:20px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.loc-summary-item{padding:0 20px}
+.loc-summary-item:first-child{padding-left:0}
+.loc-summary-item:last-child{padding-right:0}
+.loc-summary-item+.loc-summary-item{border-left:1px solid rgba(255,255,255,0.07)}
+.loc-summary-name{font-size:10px;color:rgba(229,229,229,0.4);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px}
+.loc-summary-text{font-size:12px;color:rgba(229,229,229,0.65);font-weight:300;line-height:1.65}
+@media(max-width:640px){
+  .loc-table{display:block;overflow-x:auto}
+  .loc-summary{grid-template-columns:1fr}
+  .loc-summary-item{padding:10px 0 0}
+  .loc-summary-item:first-child{padding-top:0}
+  .loc-summary-item+.loc-summary-item{border-left:none;border-top:1px solid rgba(255,255,255,0.07)}
+}
+
+/* TABS */
+.tab-nav{display:flex;border-bottom:1px solid var(--border);margin-bottom:40px;gap:0;background:var(--bg);position:sticky;top:64px;z-index:50}
+.tab-btn{font-family:var(--sans);font-size:13px;font-weight:400;color:var(--muted);background:none;border:none;border-bottom:2px solid transparent;padding:14px 20px;cursor:pointer;letter-spacing:0.02em;transition:color 0.15s,border-color 0.15s;white-space:nowrap;margin-bottom:-1px}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--text);font-weight:500}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* BRIEF — AGENT EDIT */
+.brief-section{margin-bottom:40px}
+.brief-section-title{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(0,0,0,0.3);margin-bottom:16px;font-weight:400}
+.brief-criteria-list{display:grid;gap:2px}
+.brief-criterion{background:#fff;padding:18px 22px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+.brief-criterion-left{}
+.brief-criterion-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.28);margin-bottom:4px;font-weight:400}
+.brief-criterion-value{font-size:14px;font-weight:300;color:var(--text);line-height:1.6}
+.brief-criterion-comment{font-size:12px;color:var(--muted);font-weight:300;margin-top:6px;font-style:italic;line-height:1.55}
+.brief-criterion-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.brief-tag{font-size:10px;font-weight:500;letter-spacing:0.06em;padding:3px 10px;border-radius:2px;white-space:nowrap}
+.brief-tag.ok{background:rgba(45,138,78,0.08);color:var(--green)}
+.brief-tag.warn{background:rgba(180,100,0,0.08);color:rgba(140,80,0,0.9)}
+.brief-tag.hard{background:rgba(192,57,43,0.08);color:var(--red)}
+.brief-tag.none{background:rgba(0,0,0,0.04);color:var(--muted)}
+
+/* BRIEF — CLIENT VIEW */
+.brief-client-wrap{}
+.brief-summary-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.brief-summary-label{font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(0,0,0,0.28);margin-bottom:14px}
+.brief-summary-text{font-size:15px;color:var(--text);font-weight:300;line-height:1.8;max-width:640px}
+.brief-summary-text strong{color:var(--text);font-weight:500}
+.brief-params-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:40px}
+.brief-param-cell{background:#fff;padding:18px 22px}
+.brief-param-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.28);margin-bottom:5px;font-weight:400}
+.brief-param-value{font-size:14px;font-weight:300;color:var(--text);line-height:1.6}
+.brief-priorities-block{margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)}
+.brief-priority-row{display:grid;grid-template-columns:32px 1fr auto;gap:16px;padding:16px 0;border-top:1px solid var(--border);align-items:start}
+.brief-priority-row:last-child{border-bottom:1px solid var(--border)}
+.brief-priority-num{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.18);padding-top:2px}
+.brief-priority-name{font-size:14px;font-weight:400;color:var(--text);line-height:1.4}
+.brief-priority-comment{font-size:12px;color:var(--muted);font-weight:300;margin-top:4px;line-height:1.55;font-style:italic}
+.brief-signs-block{margin-bottom:40px}
+.brief-sign-item{background:#fff;padding:22px 26px;margin-bottom:2px}
+.brief-sign-num{font-family:var(--serif);font-size:11px;color:rgba(0,0,0,0.18);display:block;margin-bottom:6px}
+.brief-sign-text{font-size:15px;font-weight:300;color:var(--text);line-height:1.7}
+
+@media(max-width:640px){
+  .tab-btn{padding:12px 14px;font-size:12px}
+  .brief-params-grid{grid-template-columns:1fr}
+  .brief-priority-row{grid-template-columns:28px 1fr}
+  .brief-tag{display:none}
+}
+
+/* INLINE FORM */
+.if-eyebrow{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(0,0,0,0.25);margin-bottom:8px}
+.if-title{font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-weight:400;line-height:1.15;letter-spacing:-0.01em;margin-bottom:32px}
+.if-field{margin-bottom:32px}
+.if-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.35);margin-bottom:12px;display:block;font-weight:400}
+.if-input{width:100%;border:none;border-bottom:1px solid rgba(0,0,0,0.12);background:none;font-family:var(--sans);font-size:16px;color:var(--text);padding:10px 0;outline:none;transition:border-color 0.2s}
+.if-input::placeholder{color:rgba(0,0,0,0.2)}
+.if-input:focus{border-color:var(--text)}
+.if-textarea{width:100%;border:none;border-bottom:1px solid rgba(0,0,0,0.12);background:none;font-family:var(--sans);font-size:15px;color:var(--text);padding:10px 0;outline:none;line-height:1.7;resize:none;min-height:64px;transition:border-color 0.2s}
+.if-textarea::placeholder{color:rgba(0,0,0,0.2)}
+.if-textarea:focus{border-color:var(--text)}
+.if-chips{display:flex;gap:8px;flex-wrap:wrap}
+.if-chip{font-size:13px;font-weight:300;padding:8px 16px;border:1px solid rgba(0,0,0,0.12);border-radius:2px;cursor:pointer;background:none;color:var(--muted);font-family:var(--sans);transition:all 0.15s;line-height:1;user-select:none}
+.if-chip:hover{border-color:rgba(0,0,0,0.3);color:var(--text)}
+.if-chip.on{background:var(--dark);border-color:var(--dark);color:#fff}
+.if-chip:disabled{opacity:0.4;cursor:default}
+.if-priority-pool{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.if-prio-list{display:grid;gap:2px}
+.if-prio-item{background:#fff;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.if-prio-item button{background:none;border:none;cursor:pointer;color:rgba(0,0,0,0.2);font-size:16px;line-height:1;margin-left:auto;padding:0;transition:color 0.15s}
+.if-prio-item button:hover{color:rgba(0,0,0,0.5)}
+.if-prio-num{font-family:var(--serif);font-size:12px;color:rgba(0,0,0,0.2);flex-shrink:0;width:20px}
+.if-prio-name{font-size:14px;font-weight:300;color:var(--text);flex:1}
+.if-prio-empty{font-size:13px;color:rgba(0,0,0,0.22);padding:14px 0;font-style:italic}
+.tab-panel.active{animation:fadeUp 0.25s ease}
+@media(max-width:640px){.if-chip{font-size:12px;padding:7px 12px}}
+
+/* CTA FOOTER */
+.cta-footer{background:var(--dark);padding:72px 40px;text-align:center}
+.cta-footer-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:20px}
+.cta-footer-title{font-family:var(--serif);font-size:clamp(22px,3.5vw,36px);font-weight:400;color:#E5E5E5;line-height:1.2;margin-bottom:12px}
+.cta-footer-title em{font-style:italic;color:rgba(229,229,229,0.45)}
+.cta-footer-sub{font-size:14px;color:rgba(229,229,229,0.4);font-weight:300;margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.65}
+.tg-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid #0088cc;border-radius:999px;text-decoration:none;background:transparent;color:#E5E5E5;font-family:var(--sans);font-size:14px;font-weight:400;transition:background 0.2s,border-color 0.2s}
+.tg-btn:hover,.tg-btn:active,.tg-btn.is-touched{background:#0088cc;border-color:#0088cc}
+.footer-copy{margin-top:40px;font-size:12px;color:rgba(229,229,229,0.2)}
+.footer-copy a{color:rgba(229,229,229,0.3);text-decoration:none}
+.footer-copy a:hover{color:rgba(229,229,229,0.6)}
+
+@media(max-width:640px){
+  .prop-card-header{grid-template-columns:28px 1fr auto}
+  .site-header{padding:0 20px}
+  .hero{padding:56px 20px 48px}
+  .content{padding:36px 20px 60px}
+  .picker-wrap{padding:36px 20px 60px}
+  .token-wrap{padding:0 20px;margin:60px auto}
+  .cta-footer{padding:56px 20px}
+  .prop-body-grid{grid-template-columns:1fr}
+  .agent-grid{grid-template-columns:1fr}
+  .nb-grid{grid-template-columns:1fr}
+  .picker-item{grid-template-columns:1fr}
+  .picker-btns{justify-content:flex-start}
+  .hero-chips{gap:12px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
+  <div class="header-right" style="display:flex;align-items:center;gap:16px">
+    <span class="sync-text"><span class="sync-dot" id="syncDot"></span><span id="syncText">Загрузка…</span></span>
+    <button onclick="changeToken()" style="background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;font-family:var(--sans);letter-spacing:0.03em;padding:0">Сменить токен</button>
+  </div>
+</header>
+
+<div id="appRoot"></div>
+
+<!-- EDIT MODAL -->
+<div class="overlay" id="editModal">
+  <div class="modal">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle">Объект</h3>
+    <div class="agent-grid" id="modalFields"></div>
+  </div>
+</div>
+
+<script>
+
+
+function renderFooter(){
+  return `<footer class="cta-footer">
+    <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости</p>
+    <h2 class="cta-footer-title">Есть вопросы —<br><em>свяжитесь со мной.</em></h2>
+    <p class="cta-footer-sub">Обратная связь важна — говорите что думаете.</p>
+    <a class="tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z" fill="currentColor"/></svg>
+      Написать в Telegram
+    </a>
+    <p style="margin-top:12px;font-size:13px;color:rgba(229,229,229,0.35);">или позвонить: <a href="tel:+79118461965" style="color:rgba(229,229,229,0.55);text-decoration:none;">+7 911 846-19-65</a></p>
+    <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
+  </footer>`;
+}
+// ── CONFIG ──────────────────────────────────────────────────
+const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_BRANCH='main';
+const GH_FILE='data/buyers.json';
+const TOKEN_KEY='wr_gh_token';
+
+function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
+function setToken(t){try{localStorage.setItem(TOKEN_KEY,t);}catch(e){}}
+
+// ── STATE ───────────────────────────────────────────────────
+let allData={buyers:{}};
+let fileSha=null;
+let currentBuyerId=null;
+let editingPropIdx=null;
+
+// ── SYNC STATUS ─────────────────────────────────────────────
+function setSyncOk(msg){
+  document.getElementById('syncDot').className='sync-dot ok';
+  document.getElementById('syncText').textContent=msg||'Синхронизировано';
+}
+function setSyncPending(){
+  document.getElementById('syncDot').className='sync-dot';
+  document.getElementById('syncText').textContent='Сохранение…';
+}
+
+// ── GITHUB API ──────────────────────────────────────────────
+async function ghLoad(){
+  const token=getToken();
+  const headers=token?{Authorization:`token ${token}`}:{};
+  try{
+    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,{headers});
+    if(r.status===404){allData={buyers:{}};fileSha=null;setSyncOk('Новый файл');return;}
+    const j=await r.json();
+    fileSha=j.sha;
+    const decoded=atob(j.content.replace(/\n/g,''));
+    const text=new TextDecoder().decode(Uint8Array.from(decoded,x=>x.charCodeAt(0)));
+    allData=JSON.parse(text);
+    if(!allData.buyers)allData.buyers={};
+    setSyncOk('Синхронизировано');
+  }catch(e){setSyncOk('Ошибка загрузки');}
+}
+
+async function ghSave(){
+  const token=getToken();
+  if(!token)return;
+  setSyncPending();
+  try{
+    const text=JSON.stringify(allData,null,2);
+    const bytes=new TextEncoder().encode(text);
+    let binary='';
+    bytes.forEach(b=>binary+=String.fromCharCode(b));
+    const encoded=btoa(binary);
+    const body={message:'Update buyers',content:encoded,branch:GH_BRANCH};
+    if(fileSha)body.sha=fileSha;
+    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,{
+      method:'PUT',headers:{Authorization:`token ${token}`,'Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    const j=await r.json();
+    fileSha=j.content?.sha||fileSha;
+    setSyncOk('Синхронизировано');
+  }catch(e){setSyncOk('Ошибка сохранения');}
+}
+
+let saveTimer=null;
+function debounceSave(){clearTimeout(saveTimer);saveTimer=setTimeout(ghSave,1200);}
+
+// ── SLUGIFY ─────────────────────────────────────────────────
+function slugify(s){return s.toLowerCase().replace(/[^а-яёa-z0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,40);}
+function shortId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,4);}
+function escNl(s){return esc(s).replace(/\n/g,"<br>");}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmtShowDate(d,t){
+  if(!d)return '';
+  try{
+    const parts=d.split('-');
+    const months=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    const day=parseInt(parts[2]);
+    const mon=months[parseInt(parts[1])-1]||'';
+    const dateStr=day+' '+mon;
+    return t?dateStr+', '+t:dateStr;
+  }catch(e){return d;}
+}
+
+function fmtNum(v){
+  const n=Number(String(v||'').replace(/\D/g,''));
+  if(!n)return v||'';
+  return new Intl.NumberFormat('ru-RU').format(n)+' ₽';
+}
+
+function fmtPpm(price,area){
+  const p=Number(String(price||'').replace(/\D/g,''));
+  const a=parseFloat(area||0);
+  if(!p||!a)return null;
+  const ppm=Math.round(p/a);
+  return new Intl.NumberFormat('ru-RU').format(ppm)+' ₽/м²';
+}
+
+function fmtPrice(p){if(!p)return '—';const n=Number(String(p).replace(/\D/g,''));if(!n)return p;return(n/1000000).toFixed(2).replace(/\.?0+$/,'')+' млн ₽';}
+
+// ── STATUS ──────────────────────────────────────────────────
+const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл',pending:'Ждём показа',sold:'Объект продан'};
+const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',declined:'declined',pending:'pending',sold:'sold'};
+
+// ── STAR RATING ─────────────────────────────────────────────
+function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
+
+// ── RENDER RATING BLOCK (client) ────────────────────────────
+function renderRating(buyerId,propIdx,prop,forceClient){
+  const rating=prop.clientRating||0;
+  const comment=prop.clientComment||'';
+  const key=`rating-${buyerId}-${propIdx}`;
+
+  if((forceClient||!getToken())&&!rating){
+    // client can rate
+    return `<div class="rating-wrap">
+      <div class="rating-label">Ваша оценка</div>
+      <div class="stars-row" id="stars-${propIdx}">
+        ${[1,2,3,4,5].map(i=>`<button class="star-btn" onclick="setRating('${buyerId}',${propIdx},${i})" title="${i}">${i}</button>`).join('')}
+      </div>
+      <div style="margin-top:8px">
+        <textarea class="rating-comment" id="rc-${propIdx}" placeholder="Комментарий (необязательно)" rows="2">${esc(comment)}</textarea>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-top:10px">
+        <button class="rating-save-btn" onclick="saveRating('${buyerId}',${propIdx})">Сохранить оценку</button>
+        <span class="rating-ok" id="rs-${propIdx}">✓ Сохранено</span>
+      </div>
+    </div>`;
+  }
+  if(rating){
+    return `<div class="rating-wrap">
+      <div class="rating-label">Ваша оценка</div>
+      <div class="existing-rating">
+        <span class="stars-display">${starsHtml(rating)}</span>
+        ${comment?`<div style="margin-top:6px;font-size:13px;color:var(--muted);font-weight:300">${esc(comment)}</div>`:''}
+        ${!getToken()?`<button style="margin-top:8px;background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="resetRating('${buyerId}',${propIdx})">Изменить оценку</button>`:''}
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+function setRating(buyerId,propIdx,val){
+  document.querySelectorAll(`#stars-${propIdx} .star-btn`).forEach((btn,i)=>{
+    btn.classList.toggle('active',i<val);
+    btn.dataset.val=val;
+  });
+  document.querySelector(`#stars-${propIdx}`).dataset.selected=val;
+}
+
+async function saveRating(buyerId,propIdx){
+  const starsEl=document.querySelector(`#stars-${propIdx}`);
+  const val=parseInt(starsEl?.dataset.selected||0);
+  if(!val){alert('Выберите оценку от 1 до 5');return;}
+  const comment=document.getElementById(`rc-${propIdx}`)?.value||'';
+  const buyer=allData.buyers[buyerId];
+  if(!buyer||!buyer.props[propIdx])return;
+  buyer.props[propIdx].clientRating=val;
+  buyer.props[propIdx].clientComment=comment;
+  // Save to GH without token (public write not possible — use localStorage fallback)
+  try{localStorage.setItem(`rating-${buyerId}-${propIdx}`,JSON.stringify({val,comment}));}catch(e){}
+  const saved=document.getElementById(`rs-${propIdx}`);
+  if(saved){saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000);}
+  // If agent is viewing — save to GH
+  if(getToken()){debounceSave();}
+  renderClientView(buyerId);
+}
+
+async function resetRating(buyerId,propIdx){
+  try{localStorage.removeItem(`rating-${buyerId}-${propIdx}`);}catch(e){}
+  const buyer=allData.buyers[buyerId];
+  if(buyer?.props[propIdx]){buyer.props[propIdx].clientRating=0;buyer.props[propIdx].clientComment='';}
+  renderClientView(buyerId);
+}
+
+// Load local ratings into data
+function loadLocalRatings(buyerId,props){
+  props.forEach((p,i)=>{
+    if(!p.clientRating){
+      try{
+        const saved=localStorage.getItem(`rating-${buyerId}-${i}`);
+        if(saved){const{val,comment}=JSON.parse(saved);p.clientRating=val;p.clientComment=comment;}
+      }catch(e){}
+    }
+  });
+}
+
+// ── RENDER PROPERTY CARD ─────────────────────────────────────
+function renderPropCard(buyerId,prop,idx,isAgent){
+  const statusLabel=STATUS_LABELS[prop.status]||prop.status||'—';
+  const statusCls=STATUS_CLASS[prop.status]||'planned';
+  const rating=prop.clientRating||0;
+
+  return `<div class="prop-card${prop.status==='sold'?' sold-card':''}" id="prop-${idx}">
+    <div class="prop-card-header" onclick="toggleProp(${idx})">
+      <div class="prop-num">${String(idx+1).padStart(2,'0')}</div>
+      <div>
+        <div class="prop-status-row">
+          <span class="prop-status ${statusCls}">${statusLabel}</span>
+          ${(prop.showDate&&(prop.status==='planned'||prop.status==='pending'))?`<span style="font-size:12px;color:var(--muted);font-weight:300">${fmtShowDate(prop.showDate,prop.showTime)}</span>`:''}
+          ${rating?`<span style="font-size:12px;color:#F59E0B">${starsHtml(rating)}</span>`:''}
+        </div>
+        <div class="prop-addr">${esc(prop.address||'Без адреса')}</div>
+        <div class="prop-meta">
+          ${prop.rooms?`<span class="prop-meta-item"><strong>${esc(prop.rooms)}</strong>-комн.</span>`:''}
+          ${prop.area?`<span class="prop-meta-item"><strong>${esc(prop.area)}</strong> м²</span>`:''}
+          ${prop.floor?`<span class="prop-meta-item"><strong>${esc(prop.floor)}</strong> эт.</span>`:''}
+          ${prop.condition?`<span class="prop-meta-item">${esc(prop.condition)}</span>`:''}
+          ${prop.renovation?`<span class="prop-meta-item">вложения <strong>${fmtNum(prop.renovation)}</strong></span>`:''}
+          ${fmtPpm(prop.price,prop.area)?`<span class="prop-meta-item" style="color:var(--accent);font-weight:400">${fmtPpm(prop.price,prop.area)}</span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="prop-price">${fmtPrice(prop.price)}</div>
+        <svg class="prop-toggle-icon" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <div class="prop-body">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        ${prop.agentComment?`<div>
+          <div class="prop-section-label">Комментарий агента</div>
+          <div class="prop-section-val">${esc(prop.agentComment)}</div>
+        </div>`:''}
+        ${prop.showDate?`<div>
+          <div class="prop-section-label">Дата показа</div>
+          <div class="prop-section-val">${fmtShowDate(prop.showDate,prop.showTime)}</div>
+        </div>`:''}
+        ${prop.url?`<div>
+          <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть объявление</a>
+        </div>`:''}
+      </div>
+      ${renderRating(buyerId,prop._origIdx!==undefined?prop._origIdx:idx,prop,!isAgent)}
+      ${isAgent?`<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <button class="pbtn" onclick="openEditProp('${buyerId}',${prop._origIdx!==undefined?prop._origIdx:idx});event.stopPropagation()">Редактировать</button>
+      </div>`:''}
+    </div>
+  </div>`;
+}
+
+function toggleProp(idx){
+  const card=document.getElementById(`prop-${idx}`);
+  const wasOpen=card?.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.prop-card.open').forEach(el=>el.classList.remove('open'));
+  // Open this one if it was closed
+  if(!wasOpen)card?.classList.add('open');
+}
+
+// ── COMPARE TABLE ────────────────────────────────────────────
+function renderCompare(props){
+  if(props.length<2)return '';
+  const rows=[
+    {label:'Цена',key:'price',fmt:fmtPrice},
+    {label:'Площадь',key:'area',fmt:v=>v?v+' м²':'—'},
+    {label:'Комнат',key:'rooms',fmt:v=>v||'—'},
+    {label:'Этаж',key:'floor',fmt:v=>v||'—'},
+    {label:'Состояние',key:'condition',fmt:v=>v||'—'},
+    {label:'Вложения',key:'renovation',fmt:v=>v||'—'},
+    {label:'Оценка',key:'clientRating',fmt:v=>v?`<span class="compare-stars">${starsHtml(v)}</span>`:'—'},
+    {label:'Статус',key:'status',fmt:v=>STATUS_LABELS[v]||v||'—'},
+  ];
+
+  const viewed=props.filter(p=>p.status!=='planned');
+  const list=viewed.length?viewed:props;
+
+  return `<div class="section-head"><h2 class="section-title">Сравнение</h2><span class="section-count">${list.length} объект${list.length===1?'':'ов'}</span></div>
+  <div class="compare-scroll">
+    <table class="compare-table">
+      <thead><tr>
+        <th></th>
+        ${list.map(p=>`<th class="obj-col">${esc(p.address||'Объект')}</th>`).join('')}
+      </tr></thead>
+      <tbody>
+        ${rows.map(r=>`<tr>
+          <td class="row-label">${r.label}</td>
+          ${list.map(p=>`<td>${r.fmt(p[r.key])}</td>`).join('')}
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+
+// ── SORT PROPS ───────────────────────────────────────────────
+function sortProps(props){
+  const order={viewed:0,considering:1,declined:2,pending:3,planned:4,scout:5};
+  return props.map(function(p,i){return Object.assign({},p,{_origIdx:i});}).sort(function(a,b){
+    const sa=order[a.status]??2;
+    const sb=order[b.status]??2;
+    if(sa!==sb)return sa-sb;
+    // within same status — sort by date desc (newest first)
+    const da=a.showDate||a.addedAt||'';
+    const db=b.showDate||b.addedAt||'';
+    return db.localeCompare(da);
+  });
+}
+
+
+// ── UPDATES BLOCK ────────────────────────────────────────────
+function renderUpdates(props){
+  if(!props||!props.length)return '';
+  const now=new Date();
+  const recent=props.filter(function(p){
+    const d=new Date(p.updatedAt||p.addedAt||'2000-01-01');
+    return (now-d)/(1000*60*60*24)<=7;
+  }).slice(0,5);
+  if(!recent.length)return '';
+
+  function relDate(ds){
+    if(!ds)return '';
+    const d=new Date(ds);
+    const diff=Math.floor((now-d)/(1000*60*60*24));
+    if(diff===0)return 'сегодня';
+    if(diff===1)return 'вчера';
+    return diff+' дн. назад';
+  }
+  function updateText(p){
+    if(p.updatedAt&&p.updatedAt!==p.addedAt)return p.agentComment?'Обновлён комментарий агента':'Обновлены данные объекта';
+    return 'Добавлен новый объект';
+  }
+  function isNew(p){return !p.updatedAt||p.updatedAt===p.addedAt;}
+
+  const items=recent.map(function(p){
+    const dotClass='update-dot'+(isNew(p)?' new':'');
+    return '<div class="update-item">'+
+      '<div class="'+dotClass+'"></div>'+
+      '<div class="update-body">'+
+        '<div class="update-addr">'+esc(p.address||'Объект')+'</div>'+
+        '<div class="update-text">'+updateText(p)+'</div>'+
+        '<div class="update-date">'+relDate(p.updatedAt||p.addedAt)+'</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+
+  return '<div class="updates-block">'+
+    '<div class="updates-title">Обновления</div>'+
+    '<div class="updates-list">'+items+'</div>'+
+  '</div>';
+}
+
+
+
+
+// ── LOCATIONS ────────────────────────────────────────────────
+var DEFAULT_LOCS=[];
+
+function getLocations(buyer){
+  return buyer.locations||JSON.parse(JSON.stringify(DEFAULT_LOCS));
+}
+
+function scoreDots(n,max){
+  var d='';
+  for(var i=0;i<max;i++) d+='<div class="loc-dot'+(i<n?'':' empty')+'"></div>';
+  return d;
+}
+
+function renderLocations(buyer,buyerId,isAgent){
+  var locs=getLocations(buyer);
+  if(!locs||!locs.length) return '';
+  var allLabels=[];
+  locs.forEach(function(l){l.rows.forEach(function(r){if(allLabels.indexOf(r.label)<0)allLabels.push(r.label);});});
+
+  function getRow(l,label){return l.rows.find(function(r){return r.label===label;})||{verdict:'neutral',verdictText:'',items:[]};}
+  function verdictLabel(v){return v==='plus'?'Плюс':v==='minus'?'Минус':'Нейтр.';}
+
+  if(!isAgent){
+    var ths=locs.map(function(l,i){
+      return '<th><span class="loc-th-num">0'+(i+1)+'</span><span class="loc-th-name">'+esc(l.name)+'</span><div class="loc-score">'+scoreDots(l.score,5)+'</div></th>';
+    }).join('');
+    var trs=allLabels.map(function(label){
+      var cells=locs.map(function(l){
+        var row=getRow(l,label);
+        var items=row.items.map(function(it){return '<li>'+esc(it)+'</li>';}).join('');
+        return '<td><span class="loc-verdict '+row.verdict+'">'+esc(row.verdictText)+'</span><ul class="loc-items">'+items+'</ul></td>';
+      }).join('');
+      return '<tr><td>'+esc(label)+'</td>'+cells+'</tr>';
+    }).join('');
+    var sums=locs.map(function(l){
+      return '<div class="loc-summary-item"><div class="loc-summary-name">'+esc(l.name)+'</div><div class="loc-summary-text">'+esc(l.summary||'')+'</div></div>';
+    }).join('');
+    return '<div class="loc-section"><div class="section-head" style="margin-bottom:20px"><h2 class="section-title">\u0421\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u0435 \u043b\u043e\u043a\u0430\u0446\u0438\u0439</h2><span class="section-count">\u0441\u0440\u0435\u0434\u0430 \u0438 \u0436\u0438\u0437\u043d\u044c</span></div><div style="overflow-x:auto;border-radius:8px 8px 0 0"><table class="loc-table"><thead><tr><th></th>'+ths+'</tr></thead><tbody>'+trs+'</tbody></table></div><div class="loc-summary">'+sums+'</div></div>';
+  }
+
+  // Agent editable
+  var ths2=locs.map(function(l,i){
+    var dots=[1,2,3,4,5].map(function(n){
+      var bg=n<=l.score?'#fff':'rgba(255,255,255,0.2)';
+      return '<button onclick="updateLoc(\''+buyerId+'\','+i+',\'score\','+n+')" style="width:12px;height:12px;border-radius:50%;border:none;cursor:pointer;background:'+bg+'"></button>';
+    }).join('');
+    return '<th><input class="ai" value="'+esc(l.name)+'" style="display:block;width:100%;font-size:13px;font-weight:500;margin:4px 0" onchange="updateLoc(\''+buyerId+'\','+i+',\'name\',this.value)"><div style="display:flex;gap:3px;align-items:center;flex-wrap:wrap;margin-top:2px">'+dots+'<button onclick="removeLoc(\''+buyerId+'\','+i+')" style="background:rgba(192,57,43,0.4);border:none;color:#fff;border-radius:4px;font-size:10px;padding:1px 6px;cursor:pointer;margin-left:4px">x</button></div></th>';
+  }).join('');
+
+  var trs2=allLabels.map(function(label,ri){
+    var cells=locs.map(function(l,li){
+      var ri2=l.rows.findIndex(function(r){return r.label===label;});
+      var row=ri2>=0?l.rows[ri2]:{verdict:'neutral',verdictText:'',items:[]};
+      var realRi=ri2>=0?ri2:ri;
+      var opts=['plus','neutral','minus'].map(function(v){
+        return '<option value="'+v+'"'+(v===row.verdict?' selected':'')+'>'+verdictLabel(v)+'</option>';
+      }).join('');
+      var itemsText=(row.items||[]).join('\n');
+      return '<td style="color:#E5E5E5"><div style="display:flex;gap:3px;margin-bottom:4px"><select class="ai" style="font-size:11px;padding:2px 4px" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'verdict\',this.value)">'+opts+'</select><input class="ai" value="'+esc(row.verdictText)+'" style="font-size:11px;padding:2px 4px;flex:1;min-width:0" placeholder="\u0412\u0435\u0440\u0434\u0438\u043a\u0442" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'verdictText\',this.value)"></div><textarea class="ai" rows="3" style="font-size:12px;padding:4px;width:100%;resize:vertical" onchange="updateLocRow(\''+buyerId+'\','+li+','+realRi+',\'itemsRaw\',this.value)">'+esc(itemsText)+'</textarea></td>';
+    }).join('');
+    return '<tr><td style="color:rgba(229,229,229,0.7)"><input class="ai" value="'+esc(label)+'" style="font-size:11px;padding:2px 4px;width:90%;color:#E5E5E5" onchange="updateLocLabel(\''+buyerId+'\','+ri+',this.value)"></td>'+cells+'</tr>';
+  }).join('');
+
+  var sums2=locs.map(function(l,i){
+    return '<div class="loc-summary-item"><div class="loc-summary-name">'+esc(l.name)+'</div><textarea class="ai" rows="2" style="font-size:12px;padding:4px;width:100%;resize:none;margin-top:4px" placeholder="\u0418\u0442\u043e\u0433" onchange="updateLoc(\''+buyerId+'\','+i+',\'summary\',this.value)">'+esc(l.summary||'')+'</textarea></div>';
+  }).join('');
+
+  return '<div class="agent-section" style="border-radius:16px;padding:32px;margin-bottom:32px"><div class="section-head" style="margin-bottom:12px"><h2 class="agent-section-title" style="margin-bottom:0">\u0421\u0440\u0430\u0432\u043d\u0435\u043d\u0438\u0435 \u043b\u043e\u043a\u0430\u0446\u0438\u0439</h2><div style="display:flex;gap:8px"><button class="pbtn" style="font-size:11px;padding:4px 12px" onclick="addLocRow(\''+buyerId+'\')">+ \u0421\u0442\u0440\u043e\u043a\u0430</button><button class="pbtn" style="font-size:11px;padding:4px 12px" onclick="addLocCol(\''+buyerId+'\')">+ \u0420\u0430\u0439\u043e\u043d</button></div></div><div style="overflow-x:auto;border-radius:8px 8px 0 0;background:rgba(255,255,255,0.05)"><table class="loc-table" style="background:transparent"><thead><tr><th style="color:rgba(229,229,229,0.4);min-width:90px">\u041a\u0440\u0438\u0442\u0435\u0440\u0438\u0439</th>'+ths2+'</tr></thead><tbody>'+trs2+'</tbody></table></div><div class="loc-summary">'+sums2+'</div></div>';
+}
+
+function updateLoc(buyerId,locIdx,field,val){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  if(locs[locIdx])locs[locIdx][field]=(field==='score'?Number(val):val);
+  buyer.locations=locs;debounceSave();
+}
+
+function updateLocRow(buyerId,locIdx,rowIdx,field,val){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);if(!locs[locIdx])return;
+  if(!locs[locIdx].rows[rowIdx])locs[locIdx].rows[rowIdx]={label:'',verdict:'neutral',verdictText:'',items:[]};
+  if(field==='itemsRaw') locs[locIdx].rows[rowIdx].items=val.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+  else locs[locIdx].rows[rowIdx][field]=val;
+  buyer.locations=locs;debounceSave();
+}
+
+function updateLocLabel(buyerId,rowIdx,val){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  locs.forEach(function(l){if(l.rows[rowIdx])l.rows[rowIdx].label=val;});
+  buyer.locations=locs;debounceSave();
+}
+
+function addLocCol(buyerId){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  var allLabels=[];
+  locs.forEach(function(l){l.rows.forEach(function(r){if(allLabels.indexOf(r.label)<0)allLabels.push(r.label);});});
+  locs.push({name:'\u041d\u043e\u0432\u044b\u0439 \u0440\u0430\u0439\u043e\u043d',score:3,summary:'',rows:allLabels.map(function(label){return {label:label,verdict:'neutral',verdictText:'',items:[]};})});
+  buyer.locations=locs;debounceSave();renderAgentView(buyerId);
+}
+
+function addLocRow(buyerId){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  var label='\u041d\u043e\u0432\u044b\u0439 \u043a\u0440\u0438\u0442\u0435\u0440\u0438\u0439';
+  locs.forEach(function(l){l.rows.push({label:label,verdict:'neutral',verdictText:'',items:[]});});
+  buyer.locations=locs;debounceSave();renderAgentView(buyerId);
+}
+
+function removeLoc(buyerId,locIdx){
+  var buyer=allData.buyers[buyerId];if(!buyer)return;
+  var locs=getLocations(buyer);
+  locs.splice(locIdx,1);
+  buyer.locations=locs;debounceSave();renderAgentView(buyerId);
+}
+
+
+
+// ── VISIBILITY ────────────────────────────────────────────────
+var VIS_BLOCKS=[
+  {k:'locations',label:'Сравнение локаций'},
+  {k:'compare',label:'Таблица сравнения'},
+  {k:'logic',label:'Как мы отбираем объекты'},
+  {k:'hint',label:'На что обратить внимание'},
+  {k:'calc',label:'Ссылка на калькулятор'},
+];
+
+function getVis(buyer){
+  if(!buyer.vis)buyer.vis={};
+  return buyer.vis;
+}
+
+function renderVisControls(buyerId){
+  var buyer=allData.buyers[buyerId];
+  if(!buyer)return;
+  var vis=getVis(buyer);
+  var el=document.getElementById('vis-controls');
+  if(!el)return;
+  el.innerHTML=VIS_BLOCKS.map(function(b){
+    var on=vis[b.k]!==false;
+    return '<label style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.07);border-radius:8px;padding:10px 14px;cursor:pointer">'+
+      '<input type="checkbox" '+(on?'checked':'')+' data-bid="'+buyerId+'" data-vis="'+b.k+'" style="width:16px;height:16px;cursor:pointer;accent-color:#fff">'+
+      '<span style="font-size:13px;color:#E5E5E5;font-weight:300">'+b.label+'</span>'+
+    '</label>';
+  }).join('');
+  // Attach listeners
+  el.querySelectorAll('input[data-vis]').forEach(function(inp){
+    inp.addEventListener('change',function(){
+      toggleVis(inp.dataset.bid,inp.dataset.vis,inp.checked);
+    });
+  });
+}
+
+function toggleVis(buyerId,key,val){
+  var buyer=allData.buyers[buyerId];
+  if(!buyer)return;
+  if(!buyer.vis)buyer.vis={};
+  buyer.vis[key]=val;
+  debounceSave();
+}
+
+
+function applyVisibility(buyer){
+  var checks={
+    locations:'.loc-section',
+    compare:'.compare-scroll',
+    logic:'.logic-block',
+    hint:'.hint-block',
+    calc:'[data-calc-link]'
+  };
+  Object.keys(checks).forEach(function(k){
+    var el=document.querySelector(checks[k]);
+    if(el)el.style.display=isVisible(buyer,k)?'':'none';
+  });
+}
+
+function isVisible(buyer,key){
+  if(!buyer||!buyer.vis)return true;
+  return buyer.vis[key]!==false;
+}
+
+
+// ── CLIENT VIEW ──────────────────────────────────────────────
+
+function renderHistory(buyer){
+  const h=buyer.situationHistory;
+  if(!h||!h.length)return '';
+  const items=h.map(function(item){
+    const d=new Date(item.date);
+    const label=d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
+    return '<div class="hist-item"><div class="hist-date">'+label+'</div><div class="hist-text">'+escNl(item.text)+'</div></div>';
+  }).join('');
+  return '<div class="hist-block"><div class="hist-title">История изменений</div>'+items+'</div>';
+}
+
+function renderClientView(buyerId){
+  const buyer=allData.buyers[buyerId];
+  if(!buyer){
+    document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Покупатель не найден</div>`;
+    return;
+  }
+  loadLocalRatings(buyerId,buyer.props||[]);
+  const props=sortProps(buyer.props||[]);
+  const planned=props.filter(p=>p.status==='planned').length;
+  const viewed=props.filter(p=>p.status!=='planned').length;
+  const vis=buyer.vis||{};
+  const show=function(k){return vis[k]!==false;};
+
+  document.getElementById('appRoot').innerHTML=`
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-label">Семён Гончаров · Подбор квартиры</p>
+        <h1 class="hero-title">${esc(buyer.name||'Ваш подбор')},<br><em>вот квартиры которые мы рассматриваем.</em></h1>
+        <p class="hero-sub">${escNl(buyer.heroSub||'Здесь всё актуальное — объекты, даты показов, мои комментарии. После каждого просмотра поставьте оценку и оставьте впечатление.')}</p>
+        <div class="hero-chips">
+          <span class="hero-chip"><strong>${props.length}</strong> объект${props.length===1?'':'ов'}</span>
+          ${planned?`<span class="hero-chip"><strong>${planned}</strong> запланировано</span>`:''}
+          ${viewed?`<span class="hero-chip"><strong>${viewed}</strong> просмотрено</span>`:''}
+          ${buyer.budget?`<span class="hero-chip">бюджет <strong>${fmtPrice(buyer.budget)}</strong></span>`:''}
+        </div>
+      </div>
+    </section>
+    <div class="content">
+      <nav class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('objects',this)">Объекты</button>
+        <button class="tab-btn" onclick="switchTab('brief',this)">Подбор</button>
+        <button class="tab-btn" onclick="switchTab('locations',this)">Локации</button>
+      </nav>
+
+      <!-- TAB: OBJECTS -->
+      <div class="tab-panel active" id="tab-objects">
+        ${(buyer.situation||buyer.nextStep)?`<div class="steps-block">${buyer.situation?`<div class="step-row situation"><div class="step-label">Текущее состояние</div><div class="step-text">${escNl(buyer.situation)}</div></div>`:''} ${buyer.nextStep?`<div class="step-row next"><div class="step-label">Следующий шаг</div><div class="step-text">${escNl(buyer.nextStep)}</div></div>`:''}</div>`:''}
+        ${renderHistory(buyer)}
+        ${renderUpdates(props)}
+        ${show('logic')?`<div class="logic-block"><div class="logic-block-title">Как мы отбираем объекты</div><div class="logic-block-text"><p>Здесь только те квартиры, которые прошли первичный отбор — по соотношению цены и площади в конкретной локации, состоянию, этажу и общей адекватности предложения.</p><p>Если какого-то объекта нет в списке — скорее всего он уступает по цене за метр, имеет скрытые сложности, или просто не подходит под ваши параметры.</p><p>Если какой-то объект кажется завышенным по цене — это не ошибка. Значит мы <strong>проверяем сценарий</strong> или держим его как точку отсчёта.</p></div></div>`:''}
+        ${show('hint')?`<div class="hint-block"><div class="hint-title">На что обратить внимание при оценке</div><div class="hint-items"><div class="hint-item"><div class="hint-num">01</div><div class="hint-item-body"><div class="hint-item-q">Как вы себя чувствовали внутри?</div><div class="hint-item-a">Представьте что живёте там — комфортно или что-то мешает. Тесно, шумно, тёмно — или наоборот.</div></div></div><div class="hint-item"><div class="hint-num">02</div><div class="hint-item-body"><div class="hint-item-q">Что запомнилось первым?</div><div class="hint-item-a">Обычно это и есть главное — в плюс или в минус. Вид из окна, запах, высота потолков, двор.</div></div></div><div class="hint-item"><div class="hint-num">03</div><div class="hint-item-body"><div class="hint-item-q">Захотелось вернуться?</div><div class="hint-item-a">Если нет — почему. Если да — что держит. Это помогает понять реальный приоритет.</div></div></div></div></div>`:''}
+        <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
+        <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,false)).join('')}</div>
+        ${show('compare')?renderCompare(props):''}
+        ${show('calc')?`<div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px">Калькулятор платежей и доходов/расходов →</a></div>`:''}
+      </div>
+
+      <!-- TAB: BRIEF (client view) -->
+      <div class="tab-panel" id="tab-brief">${renderBriefClient(buyer, buyerId)}</div>
+
+      <!-- TAB: LOCATIONS -->
+      <div class="tab-panel" id="tab-locations">
+        ${show('locations')?renderLocations(buyer,buyerId,false):'<p style="color:var(--muted);font-size:14px;padding:40px 0;">Сравнение локаций появится позже.</p>'}
+      </div>
+    </div>
+    ${renderFooter()}`;
+
+  // Инициализируем чипы inline-формы через setTimeout чтобы DOM успел отрендериться
+  setTimeout(() => { if (document.getElementById('inlineFormWrap')) ifInitChips(); }, 50);
+}
+
+
+function renderAgentView(buyerId){
+  const buyer=allData.buyers[buyerId];
+  if(!buyer)return;
+  loadLocalRatings(buyerId,buyer.props||[]);
+  const props=sortProps(buyer.props||[]);
+  const dashUrl=window.location.origin+window.location.pathname+'?id='+buyerId;
+
+  document.getElementById('appRoot').innerHTML=`
+    <section class="hero">
+      <div class="hero-inner">
+        <p class="hero-label">Агент · Подбор</p>
+        <h1 class="hero-title">${esc(buyer.name||'Без имени')}</h1>
+        ${buyer.budget?`<p class="hero-sub">Бюджет: ${fmtPrice(buyer.budget)}</p>`:''}
+        <div style="margin-top:16px;display:grid;gap:8px">
+          <div>
+            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:6px">Подзаголовок для клиента</div>
+            <textarea id="heroSubInput" rows="2" style="width:100%;background:rgba(255,255,255,0.09);border:none;border-radius:8px;padding:10px 12px;font-family:var(--sans);font-size:13px;color:#fff;resize:none;outline:none;line-height:1.6" oninput="saveHeroSub('${buyerId}')">${esc(buyer.heroSub||'')}</textarea>
+            <div style="font-size:11px;color:rgba(229,229,229,0.25);margin-top:4px">По умолчанию: «Здесь всё актуальное — объекты, даты показов, мои комментарии...»</div>
+          </div>
+        </div>
+        <div class="hero-meta">
+          <span class="hero-chip"><strong>${props.length}</strong> объект${props.length===1?'':'ов'}</span>
+          <button onclick="copyUrl('${dashUrl}',this)" style="background:rgba(255,255,255,0.1);border:none;color:rgba(229,229,229,0.7);font-size:12px;padding:4px 12px;border-radius:999px;cursor:pointer">Скопировать ссылку клиенту</button>
+        </div>
+      </div>
+    </section>
+    <div class="content">
+      <nav class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('objects',this)">Объекты</button>
+        <button class="tab-btn" onclick="switchTab('brief',this)">Подбор</button>
+        <button class="tab-btn" onclick="switchTab('locations',this)">Локации</button>
+      </nav>
+
+      <!-- TAB: OBJECTS (agent) -->
+      <div class="tab-panel active" id="tab-objects">
+      <div class="agent-section" style="margin-bottom:32px"><div class="agent-section-title">Статус работы</div><div style="display:grid;gap:16px">
+          <div>
+            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.55);margin-bottom:8px">Текущая ситуация</div>
+            <textarea id="situationInput" placeholder="Например: задаток подписан, ждём одобрения ипотеки" rows="2" style="width:100%;border:none;border-radius:10px;background:rgba(255,255,255,0.1);font-size:15px;padding:10px 14px;outline:none;color:#fff;font-family:var(--sans);resize:none;line-height:1.6" oninput="saveSituation('${buyerId}')">${esc(buyer.situation||'')}</textarea>
+          </div>
+          <div>
+            <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.55);margin-bottom:8px">Следующий шаг</div>
+            <textarea id="nextStepInput" placeholder="Например: встреча с банком во вторник, 14:00" rows="2" style="width:100%;border:none;border-radius:10px;background:rgba(255,255,255,0.1);font-size:15px;padding:10px 14px;outline:none;color:#fff;font-family:var(--sans);resize:none;line-height:1.6" oninput="saveNextStep('${buyerId}')">${esc(buyer.nextStep||'')}</textarea>
+          </div>
+        </div></div>
+
+
+      <!-- VISIBILITY CONTROLS -->
+      <div class="agent-section" style="margin-bottom:24px">
+        <div class="agent-section-title" style="font-size:15px;margin-bottom:16px">Блоки для клиента</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="vis-controls"></div>
+      </div>
+      <!-- Add property -->
+      <div class="agent-section" style="margin-bottom:32px">
+        <div class="agent-section-title">Добавить объект</div>
+        <div class="agent-grid" id="addPropForm">
+          <div class="af"><label>Адрес *</label><input class="ai" id="np-address" placeholder="ул. Ленина, 12, кв. 45"></div>
+          <div class="af"><label>Цена ₽</label><input class="ai" id="np-price" placeholder="8500000" type="number" oninput="updatePpmHint('np')"></div>
+          <div class="af"><label>Площадь м²</label><input class="ai" id="np-area" placeholder="52" oninput="updatePpmHint('np')"><span id="np-ppm" style="font-size:11px;color:rgba(229,229,229,0.4);margin-top:4px;display:block;min-height:16px"></span></div>
+          <div class="af"><label>Комнатность</label><select class="ai" id="np-rooms"><option value="">Не указано</option><option>Студия</option><option>1</option><option>2</option><option>3</option><option>4+</option></select></div>
+          <div class="af"><label>Этаж</label><input class="ai" id="np-floor" placeholder="4/9"></div>
+          <div class="af"><label>Состояние</label>
+            <select class="ai" id="np-condition">
+              <option value="">Не указано</option>
+              <option>С ремонтом</option>
+              <option>Косметический ремонт</option>
+              <option>Требует ремонта</option>
+              <option>Без ремонта</option>
+              <option>Евроремонт</option>
+            </select>
+          </div>
+          <div class="af"><label>Вложения в ремонт</label><input class="ai" id="np-renovation" placeholder="~500 000 ₽"></div>
+          <div class="af"><label>Дата показа</label><input class="ai" id="np-showDate" type="date"></div>
+          <div class="af"><label>Время показа</label><input class="ai" id="np-showTime" type="time" placeholder="14:00"></div>
+          <div class="af"><label>Статус</label>
+            <select class="ai" id="np-status">
+              <option value="planned">Запланирован</option>
+              <option value="pending">Ждём показа</option>
+              <option value="reference">Для сравнения</option>
+              <option value="viewed">Просмотрен</option>
+              <option value="considering">Рассматриваем</option>
+              <option value="declined">Не подошёл</option>
+            </select>
+          </div>
+          <div class="af full"><label>Ссылка на объявление</label><input class="ai" id="np-url" placeholder="https://cian.ru/..."></div>
+          <div class="af full"><label>Комментарий агента</label><textarea class="ai" id="np-comment" placeholder="Светлая квартира, тихий двор, хозяйка готова торговаться..." rows="3"></textarea></div>
+          <div class="abtn-row">
+            <button class="abtn white" onclick="addProp('${buyerId}')">Добавить объект</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Props list -->
+      <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
+      <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,true)).join('')}</div>
+
+      ${renderLocations(buyer,buyerId,true)}
+      ${isVisible(buyer,"compare")?renderCompare(props):""}
+      <div data-calc-link style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px;font-weight:400">Калькулятор платежей и доходов/расходов →</a></div>
+      </div><!-- /tab-objects -->
+
+      <!-- TAB: BRIEF (agent edit) -->
+      <div class="tab-panel" id="tab-brief">
+        ${renderBriefAgent(buyerId, buyer)}
+      </div>
+
+      <!-- TAB: LOCATIONS (agent) -->
+      <div class="tab-panel" id="tab-locations">
+        ${renderLocations(buyer,buyerId,true)}
+      </div>
+
+    </div>
+    ${renderFooter()}`;
+  renderVisControls(buyerId);
+  setTimeout(() => { if (document.getElementById('inlineFormWrap')) ifInitChips(); }, 50);
+}
+
+// ── NEXT STEP ────────────────────────────────────────────────
+let nextStepTimer=null;
+let situationTimer=null;
+
+var heroSubTimer=null;
+function saveHeroSub(buyerId){
+  clearTimeout(heroSubTimer);
+  heroSubTimer=setTimeout(function(){
+    var val=document.getElementById('heroSubInput')&&document.getElementById('heroSubInput').value||'';
+    if(allData.buyers[buyerId])allData.buyers[buyerId].heroSub=val;
+    ghSave();
+  },1000);
+}
+
+function saveSituation(buyerId){
+  clearTimeout(situationTimer);
+  situationTimer=setTimeout(()=>{
+    const val=document.getElementById('situationInput')?.value||'';
+    const buyer=allData.buyers[buyerId];
+    if(buyer){
+      const prev=buyer.situation||'';
+      if(val!==prev&&prev.trim()){
+        if(!buyer.situationHistory)buyer.situationHistory=[];
+        buyer.situationHistory.unshift({text:prev,date:new Date().toISOString()});
+        if(buyer.situationHistory.length>20)buyer.situationHistory.length=20;
+      }
+      buyer.situation=val;
+      ghSave();
+    }
+  },1000);
+}
+
+function saveNextStep(buyerId){
+  clearTimeout(nextStepTimer);
+  nextStepTimer=setTimeout(()=>{
+    const val=document.getElementById('nextStepInput')?.value||'';
+    if(allData.buyers[buyerId]){
+      allData.buyers[buyerId].nextStep=val;
+      ghSave();
+    }
+  },1000);
+}
+
+// ── ADD PROPERTY ─────────────────────────────────────────────
+function addProp(buyerId){
+  const get=id=>document.getElementById(id)?.value?.trim()||'';
+  const address=get('np-address');
+  if(!address){alert('Укажите адрес');return;}
+  const prop={
+    address,price:get('np-price'),area:get('np-area'),rooms:get('np-rooms'),floor:get('np-floor'),
+    condition:get('np-condition'),renovation:get('np-renovation'),
+    showDate:get('np-showDate'),showTime:get('np-showTime'),status:get('np-status')||'planned',
+    url:get('np-url'),agentComment:get('np-comment'),
+    clientRating:0,clientComment:'',addedAt:new Date().toISOString().slice(0,10)
+  };
+  if(!allData.buyers[buyerId].props)allData.buyers[buyerId].props=[];
+  allData.buyers[buyerId].props.push(prop);
+  debounceSave();
+  renderAgentView(buyerId);
+}
+
+// ── EDIT PROPERTY MODAL ──────────────────────────────────────
+function openEditProp(buyerId,idx){
+  currentBuyerId=buyerId;
+  editingPropIdx=idx;
+  const prop=allData.buyers[buyerId]?.props[idx];
+  if(!prop)return;
+  document.getElementById('modalTitle').textContent='Редактировать объект';
+  document.getElementById('editModal').classList.add('open');
+
+  function field(id,label,type,val){
+    const ppm=id==='ep-area'?'<span id="ep-ppm" style="font-size:11px;color:rgba(229,229,229,0.4);margin-top:4px;display:block;min-height:16px"></span>':'';
+    const oninp=(id==='ep-price'||id==='ep-area')?' oninput="updatePpmHint(\u0027ep\u0027)"':'';
+    return '<div class="af"><label>'+label+'</label><input class="ai" id="'+id+'" type="'+type+'" value="'+esc(val||'')+'"'+oninp+'>'+ppm+'</div>';
+  }
+  function select(id,label,opts,curVal){
+    const options=opts.map(function(o){
+      const v=typeof o==='object'?o.v:o;
+      const l=typeof o==='object'?o.l:o;
+      return '<option value="'+v+'"'+(v===curVal?' selected':'')+'>'+l+'</option>';
+    }).join('');
+    return '<div class="af"><label>'+label+'</label><select class="ai" id="'+id+'">'+options+'</select></div>';
+  }
+
+  const condOpts=['','С ремонтом','Косметический ремонт','Требует ремонта','Без ремонта','Евроремонт'];
+  const statOpts=Object.entries(STATUS_LABELS).map(function(e){return{v:e[0],l:e[1]};});
+
+  document.getElementById('modalFields').innerHTML=
+    field('ep-address','Адрес','text',prop.address)+
+    field('ep-price','Цена ₽','number',prop.price)+
+    field('ep-area','Площадь м²','text',prop.area)+
+    field('ep-floor','Этаж','text',prop.floor)+
+    field('ep-renovation','Вложения в ремонт','text',prop.renovation)+
+    field('ep-showDate','Дата показа','date',prop.showDate)+
+    field('ep-showTime','Время показа','time',prop.showTime||'')+
+    field('ep-url','Ссылка','url',prop.url)+
+    select('ep-condition','Состояние',condOpts,prop.condition)+
+    select('ep-rooms','Комнатность',['','Студия','1','2','3','4+'],prop.rooms||'')+
+    select('ep-status','Статус',statOpts,prop.status)+
+    '<div class="af full"><label>Комментарий агента</label><textarea class="ai" id="ep-comment" rows="3">'+esc(prop.agentComment||'')+'</textarea></div>'+
+    '<div class="abtn-row" style="grid-column:1/-1"><button class="abtn white" onclick="saveModalProp()">Сохранить</button><button class="abtn danger" onclick="deleteModalProp()">Удалить объект</button></div>';
+
+  setTimeout(function(){updatePpmHint('ep');},50);
+}
+
+
+function closeModal(){
+  document.getElementById('editModal').classList.remove('open');
+  currentBuyerId=null;editingPropIdx=null;
+}
+
+function saveModalProp(){
+  if(currentBuyerId===null||editingPropIdx===null)return;
+  const prop=allData.buyers[currentBuyerId]?.props[editingPropIdx];
+  if(!prop)return;
+  const get=id=>document.getElementById(id)?.value?.trim()||'';
+  prop.address=get('ep-address');prop.price=get('ep-price');prop.area=get('ep-area');prop.rooms=get('ep-rooms');
+  prop.floor=get('ep-floor');prop.condition=get('ep-condition');prop.renovation=get('ep-renovation');
+  const sd=get('ep-showDate');const st=get('ep-showTime');
+  if(sd)prop.showDate=sd; else if(!prop.showDate)prop.showDate='';
+  if(st)prop.showTime=st;
+  prop.status=get('ep-status');
+  prop.url=get('ep-url');prop.agentComment=get('ep-comment');
+  const _bid=currentBuyerId;if(allData.buyers[_bid]?.props[editingPropIdx])allData.buyers[_bid].props[editingPropIdx].updatedAt=new Date().toISOString().slice(0,10);closeModal();debounceSave();renderAgentView(_bid);
+}
+
+function deleteModalProp(){
+  if(currentBuyerId===null||editingPropIdx===null)return;
+  if(!confirm('Удалить этот объект?'))return;
+  allData.buyers[currentBuyerId].props.splice(editingPropIdx,1);
+  const _bid=currentBuyerId;if(allData.buyers[_bid]?.props[editingPropIdx])allData.buyers[_bid].props[editingPropIdx].updatedAt=new Date().toISOString().slice(0,10);closeModal();debounceSave();renderAgentView(_bid);
+}
+
+// ── PPM HINT ────────────────────────────────────────────────
+function updatePpmHint(prefix){
+  const price=document.getElementById(prefix+'-price')?.value||'';
+  const area=document.getElementById(prefix+'-area')?.value||'';
+  const hint=document.getElementById(prefix+'-ppm');
+  if(!hint)return;
+  const ppm=fmtPpm(price,area);
+  hint.textContent=ppm?'→ '+ppm:'';
+}
+
+// ── COPY URL ─────────────────────────────────────────────────
+function copyUrl(url,btn){
+  navigator.clipboard.writeText(url).then(()=>{
+    const orig=btn.textContent;btn.textContent='Скопировано!';
+    setTimeout(()=>btn.textContent=orig,1500);
+  });
+}
+
+// ── AGENT PICKER ─────────────────────────────────────────────
+function renderPicker(){
+  const buyers=Object.entries(allData.buyers);
+  document.getElementById('appRoot').innerHTML=`
+    <div class="picker-wrap">
+      <h1 class="picker-title">Покупатели</h1>
+      <p class="picker-sub">Выберите покупателя или создайте нового</p>
+
+      <!-- New buyer -->
+      <div class="new-buyer">
+        <h3>Новый покупатель</h3>
+        <div class="nb-grid">
+          <div class="nb-field"><label>Имя *</label><input class="nb-input" id="nb-name" placeholder="Александр"></div>
+          <div class="nb-field"><label>Бюджет ₽</label><input class="nb-input" id="nb-budget" placeholder="8500000" type="number"></div>
+          <div style="display:flex;align-items:flex-end"><button class="pbtn green" onclick="createBuyer()" style="white-space:nowrap">+ Создать</button></div>
+        </div>
+      </div>
+
+      <!-- Buyers list -->
+      <div class="picker-list">
+        ${buyers.length?buyers.map(([id,b])=>`
+          <div class="picker-item">
+            <div>
+              <div class="picker-item-name">${esc(b.name||'Без имени')}</div>
+              <div class="picker-item-meta">${(b.props||[]).length} объект${(b.props||[]).length===1?'':'ов'}${b.budget?' · '+fmtPrice(b.budget):''}</div>
+            </div>
+            <div class="picker-btns">
+              <button class="pbtn" onclick="openBuyerAgent('${id}')">Открыть</button>
+              <button class="pbtn green" onclick="copyUrl('${window.location.origin+window.location.pathname}?id=${id}',this)">Скопировать ссылку</button>
+              <button class="pbtn" class="pbtn red" onclick="deleteBuyer('${id}',this)">✕</button>
+            </div>
+          </div>`).join(''):`<div style="padding:32px;text-align:center;color:var(--muted);font-size:14px">Нет покупателей. Создайте первого.</div>`}
+      </div>
+    </div>`;
+}
+
+function createBuyer(){
+  const name=document.getElementById('nb-name')?.value?.trim();
+  if(!name){alert('Введите имя');return;}
+  const budget=document.getElementById('nb-budget')?.value?.trim()||'';
+  const id=slugify(name)+'-'+shortId();
+  allData.buyers[id]={name,budget,props:[],nextStep:'',createdAt:new Date().toISOString().slice(0,10)};
+  debounceSave();
+  openBuyerAgent(id);
+}
+
+function openBuyerAgent(id){
+  currentBuyerId=id;
+  history.pushState({id},'',window.location.pathname+'?id='+id+'&edit=1');
+  renderAgentView(id);
+}
+
+function deleteBuyer(id,btn){
+  const name=allData.buyers[id]?.name||'этого покупателя';
+  if(!confirm(`Удалить ${name}?`))return;
+  delete allData.buyers[id];
+  debounceSave();renderPicker();
+}
+
+// ── TOKEN FORM ───────────────────────────────────────────────
+function renderTokenForm(){
+  document.getElementById('appRoot').innerHTML=`
+    <div class="token-wrap">
+      <h2>Вход для агента</h2>
+      <p>Введите GitHub токен для доступа</p>
+      <input class="token-in" type="password" id="tokenInput" placeholder="ghp_...">
+      <br><button class="token-btn" onclick="submitToken()">Войти</button>
+    </div>`;
+}
+
+function submitToken(){
+  const t=document.getElementById('tokenInput')?.value?.trim();
+  if(!t)return;
+  setToken(t);
+  location.reload();
+}
+
+function changeToken(){
+  try{localStorage.removeItem(TOKEN_KEY);}catch(e){}
+  location.reload();
+}
+
+// ── TABS ─────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('tab-' + id);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── BRIEF HELPERS ─────────────────────────────────────────────
+const TAG_LABELS = { ok: 'Реалистично', warn: 'С оговорками', hard: 'Сложно', none: '' };
+
+function getBrief(buyer) {
+  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
+  return buyer.brief;
+}
+
+// ── BRIEF CLIENT RENDER ──────────────────────────────────────
+function renderBriefClient(buyer, buyerId) {
+  const b = buyer.brief || {};
+
+  // Агент заполнил свою версию
+  const agentFilled = !!(
+    b.summary ||
+    (b.priorities && b.priorities.length > 0) ||
+    (b.criteria && b.criteria.length > 0)
+  );
+  // Клиент заполнял форму — есть formData
+  const clientFilled = !!(b.formData && Object.values(b.formData).some(v => v && v !== '—' && String(v).trim()));
+
+  // Нет ни того ни другого — показываем форму
+  if (!agentFilled && !clientFilled) {
+    return renderInlineForm(buyer, buyerId);
+  }
+
+  let html = '';
+
+  // Резюме агента
+  if (b.summary) {
+    html += `<div class="brief-summary-block">
+      <div class="brief-summary-label">Резюме подбора</div>
+      <div class="brief-summary-text">${escNl(b.summary)}</div>
+    </div>`;
+  }
+
+  // Параметры от агента (если заполнил)
+  const paramFields = [
+    { key: 'housing', label: 'Тип жилья' },
+    { key: 'budget', label: 'Бюджет' },
+    { key: 'area', label: 'Метраж' },
+    { key: 'rooms', label: 'Комнат' },
+    { key: 'location', label: 'Локация' },
+    { key: 'condition', label: 'Состояние' },
+  ];
+  const paramCells = paramFields.filter(f => b[f.key]).map(f =>
+    `<div class="brief-param-cell">
+      <div class="brief-param-label">${f.label}</div>
+      <div class="brief-param-value">${esc(b[f.key])}</div>
+    </div>`
+  ).join('');
+  if (paramCells) {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label" style="margin-bottom:16px">Параметры</div>
+      <div class="brief-params-grid">${paramCells}</div>
+    </div>`;
+  }
+
+  // Приоритеты от агента (с тегами)
+  if (b.priorities && b.priorities.length) {
+    html += `<div class="brief-priorities-block">
+      <div class="brief-summary-label" style="margin-bottom:0">Приоритеты</div>
+      <div>
+        ${b.priorities.map((p, i) => `
+          <div class="brief-priority-row">
+            <div class="brief-priority-num">${String(i+1).padStart(2,'0')}</div>
+            <div>
+              <div class="brief-priority-name">${esc(p.name)}</div>
+              ${p.comment ? `<div class="brief-priority-comment">${esc(p.comment)}</div>` : ''}
+            </div>
+            ${p.tag && p.tag !== 'none' ? `<div class="brief-tag ${p.tag}">${TAG_LABELS[p.tag]||''}</div>` : '<div></div>'}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Критерии от агента
+  if (b.criteria && b.criteria.length) {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label" style="margin-bottom:16px">Критерии</div>
+      <div class="brief-criteria-list">
+        ${b.criteria.map(c => `
+          <div class="brief-criterion">
+            <div class="brief-criterion-left">
+              <div class="brief-criterion-label">${esc(c.label)}</div>
+              <div class="brief-criterion-value">${esc(c.value)}</div>
+              ${c.comment ? `<div class="brief-criterion-comment">${esc(c.comment)}</div>` : ''}
+            </div>
+            ${c.tag && c.tag !== 'none' ? `<div class="brief-criterion-right"><span class="brief-tag ${c.tag}">${TAG_LABELS[c.tag]||''}</span></div>` : ''}
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Признаки — только если агент заполнил или есть данные формы
+  const signs = (b.signs || []).filter(s => s && s.trim());
+  if (signs.length && (agentFilled || clientFilled)) {
+    html += `<div class="brief-signs-block">
+      <div class="brief-summary-label" style="margin-bottom:16px">Как вы поймёте, что это ваша квартира</div>
+      ${signs.map((s, i) => `
+        <div class="brief-sign-item">
+          <span class="brief-sign-num">${String(i+1).padStart(2,'0')}</span>
+          <div class="brief-sign-text">${esc(s)}</div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  // Данные из формы клиента — если агент ещё не заполнил своё
+  if (!agentFilled) {
+    if (clientFilled) {
+      html += renderFormDataClient(b.formData);
+    }
+    // Кнопка «Изменить» — пока агент не обработал бриф
+    html += `<div style="margin-top:40px;padding-top:32px;border-top:1px solid var(--border)">
+      <button onclick="ifShowForm('${buyerId}')" style="font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(0,0,0,0.2)">Изменить ответы</button>
+    </div>`;
+  }
+
+  if (!html) return renderInlineForm(buyer, buyerId);
+  return `<div class="brief-client-wrap">${html}</div>`;
+}
+
+// Отображение сырых данных формы когда агент ещё не редактировал
+function renderFormDataClient(d) {
+  const rows = [
+    { label: 'Цель', val: d.purpose },
+    { label: 'Кто будет жить', val: d.residents },
+    { label: 'Срок', val: d.horizon },
+    { label: 'Тип жилья', val: d.housingType },
+    { label: 'Исключает', val: d.housingExclude },
+    { label: 'Главное в квартире', val: d.mainGoal },
+    { label: 'Локация', val: d.districts },
+    { label: 'Критично по локации', val: d.locPrio },
+    { label: 'Любимые места', val: d.favStreets },
+    { label: 'Метраж', val: d.areaFrom && d.areaFrom !== '—' && d.areaTo && d.areaTo !== '—' ? d.areaFrom + ' — ' + d.areaTo + ' м²' : (d.areaFrom !== '—' ? d.areaFrom + '+ м²' : '') },
+    { label: 'Комнаты', val: d.rooms },
+    { label: 'Этаж', val: d.floor },
+    { label: 'Состояние', val: d.condition },
+    { label: 'Дополнительно', val: d.extras },
+    { label: 'Бюджет комфортный', val: d.budgetOk !== '—' ? d.budgetOk + ' ₽' : '' },
+    { label: 'Бюджет максимальный', val: d.budgetMax !== '—' ? d.budgetMax + ' ₽' : '' },
+    { label: 'Способ покупки', val: d.payment },
+    { label: 'Срочность', val: d.urgency },
+    { label: 'Готовность к авансу', val: d.readiness },
+  ].filter(r => r.val && r.val !== '—' && r.val.trim());
+
+  const prio = d.priorities && d.priorities !== '—' ? d.priorities.split('\n').filter(Boolean) : [];
+  const signs = [d.sign1, d.sign2, d.sign3].filter(s => s && s !== '—');
+
+  let html = '';
+
+  if (rows.length) {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label" style="margin-bottom:16px">Ваши ответы</div>
+      <div class="brief-params-grid">
+        ${rows.map(r => `<div class="brief-param-cell">
+          <div class="brief-param-label">${r.label}</div>
+          <div class="brief-param-value">${esc(r.val)}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (d.dislike && d.dislike !== '—') {
+    html += `<div style="margin-bottom:32px;padding-bottom:32px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label">Что не устраивает сейчас</div>
+      <div class="brief-summary-text" style="margin-top:8px">${esc(d.dislike)}</div>
+    </div>`;
+  }
+
+  if (prio.length) {
+    html += `<div class="brief-priorities-block">
+      <div class="brief-summary-label" style="margin-bottom:0">Приоритеты</div>
+      <div>${prio.map((p, i) => `
+        <div class="brief-priority-row">
+          <div class="brief-priority-num">${String(i+1).padStart(2,'0')}</div>
+          <div><div class="brief-priority-name">${esc(p.replace(/^\d+\.\s*/,''))}</div></div>
+          <div></div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (d.tradeoff && d.tradeoff !== '—') {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label">Готов отказаться</div>
+      <div class="brief-summary-text" style="margin-top:8px">${esc(d.tradeoff)}</div>
+    </div>`;
+  }
+
+  if (d.whyOld && d.whyOld !== '—') {
+    html += `<div style="margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border)">
+      <div class="brief-summary-label">Почему старый фонд</div>
+      <div class="brief-summary-text" style="margin-top:8px">${esc(d.whyOld)}</div>
+    </div>`;
+  }
+
+  if (signs.length) {
+    html += `<div class="brief-signs-block">
+      <div class="brief-summary-label" style="margin-bottom:16px">Как вы поймёте, что это ваша квартира</div>
+      ${signs.map((s, i) => `<div class="brief-sign-item">
+        <span class="brief-sign-num">${String(i+1).padStart(2,'0')}</span>
+        <div class="brief-sign-text">${esc(s)}</div>
+      </div>`).join('')}
+    </div>`;
+  }
+
+  return html;
+}
+
+// ── INLINE FORM ──────────────────────────────────────────────
+function renderInlineForm(buyer, buyerId) {
+  if (!buyerId) buyerId = Object.keys(allData.buyers).find(k => allData.buyers[k] === buyer) || '';
+  inlineStep = 0;
+  inlinePriorities = [];
+  ifAnswers = {};
+  return `<div id="inlineFormWrap">
+    <div style="margin-bottom:48px">
+      <div style="font-family:var(--serif);font-size:clamp(22px,3vw,32px);font-weight:400;line-height:1.2;margin-bottom:12px">Расскажите,<br><em style="font-style:italic;color:var(--muted)">что вы ищете.</em></div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;max-width:480px">Это поможет мне подобрать действительно подходящие варианты — а не просто список квартир.</p>
+    </div>
+    ${renderInlineStep(0)}
+    ${renderInlineNav(buyerId)}
+  </div>`;
+}
+
+const INLINE_STEPS = [
+  { id: 'step-goal', title: 'Цель и контекст', eyebrow: '01 / 06' },
+  { id: 'step-housing', title: 'Тип жилья', eyebrow: '02 / 06' },
+  { id: 'step-location', title: 'Локация', eyebrow: '03 / 06' },
+  { id: 'step-params', title: 'Параметры', eyebrow: '04 / 06' },
+  { id: 'step-priorities', title: 'Приоритеты', eyebrow: '05 / 06' },
+  { id: 'step-finance', title: 'Финансы и финал', eyebrow: '06 / 06' },
+];
+
+let inlineStep = 0;
+let inlinePriorities = [];
+
+function renderInlineStep(idx) {
+  const steps = [
+    // 0: Цель
+    `<div class="if-step" id="if-step-0">
+      <div class="if-eyebrow">01 / 06</div>
+      <div class="if-title">Цель и контекст</div>
+      <div class="if-field">
+        <div class="if-label">Цель покупки</div>
+        <div class="if-chips" data-ig="purpose" data-multi="false">
+          <button class="if-chip" data-val="Для проживания">Для проживания</button>
+          <button class="if-chip" data-val="Инвестиция">Инвестиция</button>
+          <button class="if-chip" data-val="Сохранение капитала">Сохранение капитала</button>
+          <button class="if-chip" data-val="Под аренду">Под аренду</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Кто будет проживать</div>
+        <div class="if-chips" data-ig="residents" data-multi="false">
+          <button class="if-chip" data-val="Один">Один</button>
+          <button class="if-chip" data-val="С партнёром">С партнёром</button>
+          <button class="if-chip" data-val="Семья">Семья</button>
+          <button class="if-chip" data-val="С перспективой детей">С перспективой детей</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">На какой срок</div>
+        <div class="if-chips" data-ig="horizon" data-multi="false">
+          <button class="if-chip" data-val="3–5 лет">3–5 лет</button>
+          <button class="if-chip" data-val="Надолго">Надолго</button>
+          <button class="if-chip" data-val="Навсегда">Навсегда</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Что сейчас не устраивает в жилье</div>
+        <textarea class="if-textarea" id="if-dislike" placeholder="Расскажите свободно…" rows="3" oninput="autoResize(this)"></textarea>
+      </div>
+    </div>`,
+
+    // 1: Тип жилья
+    `<div class="if-step" id="if-step-1">
+      <div class="if-eyebrow">02 / 06</div>
+      <div class="if-title">Тип жилья</div>
+      <div class="if-field">
+        <div class="if-label">Что рассматриваете</div>
+        <div class="if-chips" data-ig="housing-type" data-multi="true">
+          <button class="if-chip" data-val="Старый фонд">Старый фонд</button>
+          <button class="if-chip" data-val="Новостройка">Новостройка</button>
+          <button class="if-chip" data-val="Вторичка (любая)">Вторичка (любая)</button>
+          <button class="if-chip" data-val="Без разницы">Без разницы</button>
+        </div>
+      </div>
+      <div class="if-field" id="if-why-old-wrap" style="display:none">
+        <div class="if-label">Почему именно старый фонд</div>
+        <textarea class="if-textarea" id="if-why-old" placeholder="Атмосфера, потолки, локации…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Что точно не рассматриваете</div>
+        <div class="if-chips" data-ig="housing-exclude" data-multi="true">
+          <button class="if-chip" data-val="Старый фонд">Старый фонд</button>
+          <button class="if-chip" data-val="Новостройки">Новостройки</button>
+          <button class="if-chip" data-val="Бывшие коммуналки">Бывшие коммуналки</button>
+          <button class="if-chip" data-val="Газовые плиты">Газовые плиты</button>
+          <button class="if-chip" data-val="Первые этажи">Первые этажи</button>
+          <button class="if-chip" data-val="Дворы-колодцы">Дворы-колодцы</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Главное, что ищете</div>
+        <div class="if-chips" data-ig="main-goal" data-multi="true">
+          <button class="if-chip" data-val="Комфорт">Комфорт</button>
+          <button class="if-chip" data-val="Статус">Статус</button>
+          <button class="if-chip" data-val="Локация">Локация</button>
+          <button class="if-chip" data-val="Тишина">Тишина</button>
+          <button class="if-chip" data-val="Престиж">Престиж</button>
+          <button class="if-chip" data-val="Ликвидность">Ликвидность</button>
+          <button class="if-chip" data-val="Простор">Простор</button>
+          <button class="if-chip" data-val="Свет">Свет</button>
+        </div>
+      </div>
+    </div>`,
+
+    // 2: Локация
+    `<div class="if-step" id="if-step-2">
+      <div class="if-eyebrow">03 / 06</div>
+      <div class="if-title">Локация</div>
+      <div class="if-field">
+        <div class="if-label">Допустимые районы</div>
+        <div class="if-chips" data-ig="districts" data-multi="true">
+          <button class="if-chip" data-val="Центральный">Центральный</button>
+          <button class="if-chip" data-val="Петроградский">Петроградский</button>
+          <button class="if-chip" data-val="Василеостровский">Василеостровский</button>
+          <button class="if-chip" data-val="Адмиралтейский">Адмиралтейский</button>
+          <button class="if-chip" data-val="Московский">Московский</button>
+          <button class="if-chip" data-val="Другие">Другие</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Любимые улицы, адреса, дома мечты</div>
+        <textarea class="if-textarea" id="if-fav-streets" placeholder="Каменноостровский, набережная Мойки…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Районы, которые точно не рассматриваете</div>
+        <textarea class="if-textarea" id="if-no-districts" placeholder="Конкретные улицы или кварталы" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Что критично по локации</div>
+        <div class="if-chips" data-ig="loc-prio" data-multi="true">
+          <button class="if-chip" data-val="Метро пешком">Метро пешком</button>
+          <button class="if-chip" data-val="Набережная">Набережная</button>
+          <button class="if-chip" data-val="Тихая улица">Тихая улица</button>
+          <button class="if-chip" data-val="Рестораны рядом">Рестораны рядом</button>
+          <button class="if-chip" data-val="Парки и скверы">Парки и скверы</button>
+          <button class="if-chip" data-val="Школа рядом">Школа рядом</button>
+          <button class="if-chip" data-val="Близко к работе">Близко к работе</button>
+        </div>
+      </div>
+    </div>`,
+
+    // 3: Параметры
+    `<div class="if-step" id="if-step-3">
+      <div class="if-eyebrow">04 / 06</div>
+      <div class="if-title">Параметры квартиры</div>
+      <div class="if-field">
+        <div class="if-label">Метраж</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <input class="if-input" id="if-area-from" type="number" placeholder="От, м²">
+          <input class="if-input" id="if-area-to" type="number" placeholder="До, м²">
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Комнат</div>
+        <div class="if-chips" data-ig="rooms" data-multi="true">
+          <button class="if-chip" data-val="Студия">Студия</button>
+          <button class="if-chip" data-val="1к">1к</button>
+          <button class="if-chip" data-val="2к">2к</button>
+          <button class="if-chip" data-val="3к">3к</button>
+          <button class="if-chip" data-val="4к+">4к+</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Этаж</div>
+        <div class="if-chips" data-ig="floor" data-multi="true">
+          <button class="if-chip" data-val="Не первый">Не первый</button>
+          <button class="if-chip" data-val="Не последний">Не последний</button>
+          <button class="if-chip" data-val="Высокий">Высокий</button>
+          <button class="if-chip" data-val="Без разницы">Без разницы</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Состояние</div>
+        <div class="if-chips" data-ig="condition" data-multi="false">
+          <button class="if-chip" data-val="Готовый ремонт">Готовый ремонт</button>
+          <button class="if-chip" data-val="Можно косметику">Можно косметику</button>
+          <button class="if-chip" data-val="Под капитальный">Под капитальный</button>
+          <button class="if-chip" data-val="Без разницы">Без разницы</button>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Дополнительно важно</div>
+        <div class="if-chips" data-ig="extras" data-multi="true">
+          <button class="if-chip" data-val="Высокие потолки">Высокие потолки</button>
+          <button class="if-chip" data-val="Лифт">Лифт</button>
+          <button class="if-chip" data-val="Балкон">Балкон</button>
+          <button class="if-chip" data-val="Парковка">Парковка</button>
+          <button class="if-chip" data-val="Закрытый двор">Закрытый двор</button>
+          <button class="if-chip" data-val="Тихий дом">Тихий дом</button>
+        </div>
+      </div>
+    </div>`,
+
+    // 4: Приоритеты
+    `<div class="if-step" id="if-step-4">
+      <div class="if-eyebrow">05 / 06</div>
+      <div class="if-title">Что важнее всего?</div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:28px;max-width:440px">Выберите 3–5 пунктов, без которых точно нельзя. Нажмите — добавится в список.</p>
+      <div class="if-field">
+        <div class="if-priority-pool" id="if-prio-pool">
+          ${['Локация / район','Бюджет','Метраж','Состояние / ремонт','Тишина','Этаж','Вид из окон','Высокие потолки','Лифт','Парковка','Закрытый двор','Метро пешком','Скорость сделки','Статус дома'].map(v =>
+            `<button class="if-chip" data-pval="${v}" onclick="ifAddPriority(this)">${v}</button>`
+          ).join('')}
+        </div>
+        <div class="if-prio-list" id="if-prio-list">
+          <div class="if-prio-empty">Добавьте пункты выше — первый в списке самый важный</div>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">От чего готовы отказаться</div>
+        <textarea class="if-textarea" id="if-tradeoff" placeholder="Готов взять этаж пониже, если хорошая локация…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+    </div>`,
+
+    // 5: Финансы + финал
+    `<div class="if-step" id="if-step-5">
+      <div class="if-eyebrow">06 / 06</div>
+      <div class="if-title">Финансы и финал</div>
+      <div class="if-field">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <div class="if-label">Комфортный бюджет, ₽</div>
+            <input class="if-input" id="if-budget-ok" type="text" placeholder="10 000 000" oninput="ifFmtMoney(this)">
+          </div>
+          <div>
+            <div class="if-label">Максимальный бюджет, ₽</div>
+            <input class="if-input" id="if-budget-max" type="text" placeholder="12 000 000" oninput="ifFmtMoney(this)">
+          </div>
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Способ покупки</div>
+        <div class="if-chips" data-ig="payment" data-multi="false">
+          <button class="if-chip" data-val="Наличные">Наличные</button>
+          <button class="if-chip" data-val="Ипотека">Ипотека</button>
+          <button class="if-chip" data-val="Продажа своей">Продажа своей</button>
+          <button class="if-chip" data-val="Комбинированно">Комбинированно</button>
+        </div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:32px;margin-top:8px;margin-bottom:32px">
+        <div class="if-label" style="margin-bottom:20px">Как вы поймёте, что это ваша квартира?</div>
+        <div style="display:grid;gap:2px">
+          ${[1,2,3].map(i => `<div style="background:#fff;padding:20px 24px">
+            <span style="font-family:var(--serif);font-size:11px;color:rgba(0,0,0,0.18);display:block;margin-bottom:8px">${String(i).padStart(2,'0')}</span>
+            <textarea class="if-textarea" id="if-sign-${i}" placeholder="Признак ${i}…" rows="2" oninput="autoResize(this)" style="border-bottom-color:rgba(0,0,0,0.08)"></textarea>
+          </div>`).join('')}
+        </div>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Насколько срочная покупка</div>
+        <textarea class="if-textarea" id="if-urgency" placeholder="Переезд через 3 месяца / смотрим без спешки…" rows="2" oninput="autoResize(this)"></textarea>
+      </div>
+      <div class="if-field">
+        <div class="if-label">Если идеальный вариант появится завтра</div>
+        <div class="if-chips" data-ig="readiness" data-multi="false">
+          <button class="if-chip" data-val="Готов выходить в аванс">Готов выходить в аванс</button>
+          <button class="if-chip" data-val="Нужно подумать">Нужно подумать</button>
+        </div>
+      </div>
+    </div>`,
+  ];
+
+  return steps[idx] || '';
+}
+
+function ifChips(g) {
+  return [...document.querySelectorAll(`[data-ig="${g}"] .if-chip.on`)].map(b => b.dataset.val || b.textContent).join(', ') || '—';
+}
+function ifVal(id) { return document.getElementById(id)?.value?.trim() || '—'; }
+function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+function ifFmtMoney(el) {
+  const raw = el.value.replace(/\D/g,'');
+  el.value = raw ? new Intl.NumberFormat('ru-RU').format(raw) : '';
+}
+
+function ifAddPriority(btn) {
+  const val = btn.dataset.pval;
+  if (inlinePriorities.find(p => p === val) || inlinePriorities.length >= 7) return;
+  btn.classList.add('on'); btn.disabled = true;
+  inlinePriorities.push(val);
+  ifRenderPrioList();
+}
+
+function ifRemovePriority(val) {
+  inlinePriorities = inlinePriorities.filter(p => p !== val);
+  document.querySelectorAll('#if-prio-pool .if-chip').forEach(b => {
+    if (b.dataset.pval === val) { b.classList.remove('on'); b.disabled = false; }
+  });
+  ifRenderPrioList();
+}
+
+function ifRenderPrioList() {
+  const list = document.getElementById('if-prio-list');
+  if (!list) return;
+  if (!inlinePriorities.length) {
+    list.innerHTML = '<div class="if-prio-empty">Добавьте пункты выше — первый в списке самый важный</div>';
+    return;
+  }
+  list.innerHTML = inlinePriorities.map((p, i) =>
+    `<div class="if-prio-item">
+      <span class="if-prio-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="if-prio-name">${p}</span>
+      <button onclick="ifRemovePriority('${p.replace(/'/g,"\\'")}')">×</button>
+    </div>`
+  ).join('');
+}
+
+function ifInitChips() {
+  document.querySelectorAll('[data-ig]').forEach(group => {
+    const multi = group.dataset.multi === 'true';
+    group.querySelectorAll('.if-chip:not([data-pval])').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (multi) { btn.classList.toggle('on'); }
+        else { group.querySelectorAll('.if-chip').forEach(b => b.classList.remove('on')); btn.classList.add('on'); }
+        // side effect: старый фонд
+        if (group.dataset.ig === 'housing-type') {
+          const oldOn = !!document.querySelector('[data-ig="housing-type"] .if-chip[data-val="Старый фонд"].on');
+          const wrap = document.getElementById('if-why-old-wrap');
+          if (wrap) wrap.style.display = oldOn ? 'block' : 'none';
+        }
+      });
+    });
+  });
+}
+
+// Хранилище ответов — заполняется по мере прохождения шагов
+let ifAnswers = {};
+
+function ifSaveCurrentStep() {
+  // Чипы
+  document.querySelectorAll('[data-ig]').forEach(group => {
+    const g = group.dataset.ig;
+    const selected = [...group.querySelectorAll('.if-chip.on')].map(b => b.dataset.val || b.textContent.trim()).join(', ');
+    if (selected) ifAnswers[g] = selected;
+  });
+  // Текстовые поля
+  document.querySelectorAll('.if-textarea, .if-input').forEach(el => {
+    if (el.id && el.value.trim()) ifAnswers[el.id] = el.value.trim();
+  });
+  // Приоритеты
+  if (inlinePriorities.length) {
+    ifAnswers['_priorities'] = inlinePriorities.slice();
+  }
+}
+
+function ifNextStep(buyerId) {
+  const wrap = document.getElementById('inlineFormWrap');
+  if (!wrap) return;
+  ifSaveCurrentStep(); // сохраняем до перерисовки
+  inlineStep++;
+  if (inlineStep >= INLINE_STEPS.length) {
+    ifSubmit(buyerId);
+    return;
+  }
+  wrap.innerHTML = `
+    <div style="margin-bottom:48px">
+      <div style="font-family:var(--serif);font-size:clamp(22px,3vw,32px);font-weight:400;line-height:1.2;margin-bottom:12px">Расскажите,<br><em style="font-style:italic;color:var(--muted)">что вы ищете.</em></div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;max-width:480px">Это поможет мне подобрать действительно подходящие варианты — а не просто список квартир.</p>
+    </div>
+    ${renderInlineStep(inlineStep)}
+    ${renderInlineNav(buyerId)}`;
+  setTimeout(() => ifInitChips(), 0);
+  window.scrollTo({top: document.getElementById('tab-brief')?.offsetTop || 0, behavior: 'smooth'});
+}
+
+function ifPrevStep(buyerId) {
+  const wrap = document.getElementById('inlineFormWrap');
+  if (!wrap || inlineStep <= 0) return;
+  ifSaveCurrentStep(); // сохраняем до перерисовки
+  inlineStep--;
+  wrap.innerHTML = `
+    <div style="margin-bottom:48px">
+      <div style="font-family:var(--serif);font-size:clamp(22px,3vw,32px);font-weight:400;line-height:1.2;margin-bottom:12px">Расскажите,<br><em style="font-style:italic;color:var(--muted)">что вы ищете.</em></div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;max-width:480px">Это поможет мне подобрать действительно подходящие варианты — а не просто список квартир.</p>
+    </div>
+    ${renderInlineStep(inlineStep)}
+    ${renderInlineNav(buyerId)}`;
+  setTimeout(() => ifInitChips(), 0);
+}
+
+function renderInlineNav(buyerId) {
+  const isLast = inlineStep >= INLINE_STEPS.length - 1;
+  const isFirst = inlineStep === 0;
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:28px;border-top:1px solid var(--border)">
+    ${!isFirst
+      ? `<button style="font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0" onclick="ifPrevStep('${buyerId}')">← Назад</button>`
+      : `<span></span>`}
+    <span style="font-size:11px;color:rgba(0,0,0,0.25)">${inlineStep+1} / ${INLINE_STEPS.length}</span>
+    <button style="padding:12px 28px;background:var(--dark);color:#fff;border:none;border-radius:2px;font-size:13px;font-weight:500;letter-spacing:0.06em;cursor:pointer;font-family:var(--sans)" onclick="${isLast ? `ifSubmit('${buyerId}')` : `ifNextStep('${buyerId}')`}">
+      ${isLast ? 'Готово →' : 'Далее →'}
+    </button>
+  </div>`;
+}
+
+function ifCollect() {
+  // Сохраняем последний открытый шаг перед сборкой
+  ifSaveCurrentStep();
+
+  const a = ifAnswers;
+  const v = (key) => a[key] || '—';
+  const prio = (a['_priorities'] || inlinePriorities);
+
+  return {
+    purpose:      v('purpose'),
+    residents:    v('residents'),
+    horizon:      v('horizon'),
+    dislike:      v('if-dislike'),
+    housingType:  v('housing-type'),
+    housingExclude: v('housing-exclude'),
+    whyOld:       v('if-why-old'),
+    mainGoal:     v('main-goal'),
+    districts:    v('districts'),
+    favStreets:   v('if-fav-streets'),
+    noDistricts:  v('if-no-districts'),
+    locPrio:      v('loc-prio'),
+    areaFrom:     v('if-area-from'),
+    areaTo:       v('if-area-to'),
+    rooms:        v('rooms'),
+    floor:        v('floor'),
+    condition:    v('condition'),
+    extras:       v('extras'),
+    priorities:   prio.length ? prio.map((p,i) => `${i+1}. ${p}`).join('\n') : '—',
+    tradeoff:     v('if-tradeoff'),
+    budgetOk:     v('if-budget-ok'),
+    budgetMax:    v('if-budget-max'),
+    payment:      v('payment'),
+    sign1:        v('if-sign-1'),
+    sign2:        v('if-sign-2'),
+    sign3:        v('if-sign-3'),
+    urgency:      v('if-urgency'),
+    readiness:    v('readiness'),
+  };
+}
+
+function ifShowForm(buyerId) {
+  // Рендерим форму прямо в панель, без перезагрузки всей страницы
+  const panel = document.getElementById('tab-brief');
+  if (!panel) return;
+  const buyer = allData.buyers[buyerId];
+  if (!buyer) return;
+  inlineStep = 0;
+  inlinePriorities = [];
+  ifAnswers = {};
+  panel.innerHTML = renderInlineForm(buyer, buyerId);
+  setTimeout(() => ifInitChips(), 0);
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function ifSubmit(buyerId) {
+  const navBtns = document.querySelectorAll('#inlineFormWrap button');
+  navBtns.forEach(b => b.disabled = true);
+  const lastBtn = navBtns[navBtns.length - 1];
+  if (lastBtn) lastBtn.textContent = 'Отправляем…';
+
+  const d = ifCollect();
+  const buyer = allData.buyers[buyerId];
+  if (!buyer) return;
+
+  // Формируем текст письма
+  const body = `
+Бриф на подбор квартиры
+Клиент: ${buyer.name || buyerId}
+
+ЦЕЛЬ И КОНТЕКСТ
+Цель: ${d.purpose}
+Проживание: ${d.residents}
+Срок: ${d.horizon}
+Что не устраивает: ${d.dislike}
+
+ТИП ЖИЛЬЯ
+Рассматривает: ${d.housingType}
+Исключает: ${d.housingExclude}
+Почему старый фонд: ${d.whyOld}
+Главное в квартире: ${d.mainGoal}
+
+ЛОКАЦИЯ
+Районы: ${d.districts}
+Любимые места: ${d.favStreets}
+Исключения: ${d.noDistricts}
+Критично: ${d.locPrio}
+
+ПАРАМЕТРЫ
+Метраж: ${d.areaFrom} — ${d.areaTo} м²
+Комнаты: ${d.rooms} / Этаж: ${d.floor}
+Состояние: ${d.condition}
+Дополнительно: ${d.extras}
+
+ПРИОРИТЕТЫ
+${d.priorities}
+
+Готов отказаться: ${d.tradeoff}
+
+ФИНАНСЫ
+Комфортный бюджет: ${d.budgetOk} ₽
+Максимальный: ${d.budgetMax} ₽
+Способ покупки: ${d.payment}
+
+СРОКИ
+Срочность: ${d.urgency}
+Готовность к авансу: ${d.readiness}
+
+КАК ПОЙМЁТ, ЧТО ЭТО ЕГО?
+1. ${d.sign1}
+2. ${d.sign2}
+3. ${d.sign3}
+  `.trim();
+
+  try {
+    await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        access_key: '15cc9dfa-af27-418a-aae7-5a195d354206',
+        subject: `Бриф на подбор: ${buyer.name || buyerId}`,
+        message: body,
+        from_name: buyer.name || 'Клиент'
+      })
+    });
+  } catch(e) {}
+
+  // Показываем благодарность прямо в панели
+  const panel = document.getElementById('tab-brief');
+  if (panel) {
+    panel.innerHTML = `<div style="padding:60px 0;text-align:center;max-width:480px;margin:0 auto">
+      <div style="width:48px;height:48px;border:1px solid rgba(0,0,0,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 32px;color:#2D8A4E">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#2D8A4E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="font-family:var(--serif);font-size:clamp(22px,3vw,30px);font-weight:400;line-height:1.2;margin-bottom:14px">Спасибо.<br><em style="font-style:italic;color:var(--muted)">Всё получил.</em></div>
+      <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.75">Изучу ваши пожелания и свяжусь с вами — подберём действительно подходящие варианты, а не просто список квартир.</p>
+      <button onclick="ifShowForm('${buyerId}')" style="margin-top:32px;font-size:12px;color:rgba(0,0,0,0.3);background:none;border:none;cursor:pointer;font-family:var(--sans);text-decoration:underline;text-underline-offset:3px">Изменить ответы</button>
+    </div>`;
+  }
+
+  inlineStep = 0;
+  inlinePriorities = [];
+  ifAnswers = {};
+}
+
+// ── BRIEF AGENT RENDER ───────────────────────────────────────
+function renderBriefAgent(buyerId, buyer) {
+  const b = getBrief(buyer);
+  const priorities = b.priorities || [];
+  const criteria = b.criteria || [];
+
+  const tagOpts = (cur) => ['ok','warn','hard','none'].map(t =>
+    `<option value="${t}" ${cur===t?'selected':''}>${TAG_LABELS[t]||'—'}</option>`
+  ).join('');
+
+  const paramFields = [
+    { key:'housing', label:'Тип жилья', ph:'Старый фонд / новостройка…' },
+    { key:'budget', label:'Бюджет', ph:'10–12 млн ₽' },
+    { key:'area', label:'Метраж', ph:'55–75 м²' },
+    { key:'rooms', label:'Комнат', ph:'2к или 3к' },
+    { key:'location', label:'Локация', ph:'Петроградский, Васильевский…' },
+    { key:'condition', label:'Состояние', ph:'Готовый ремонт или под отделку' },
+  ];
+
+  return `
+    <div class="agent-section" style="margin-bottom:24px">
+      <div class="agent-section-title">Резюме подбора <span style="font-size:11px;color:rgba(229,229,229,0.4);font-weight:300;font-family:var(--sans)">— видно клиенту</span></div>
+      <textarea class="ai" id="brief-summary" rows="4" placeholder="Свободный текст — ваше прочтение запроса клиента. Что ищет, в чём нюансы, на что ориентируемся…" style="width:100%;resize:vertical;line-height:1.7" oninput="saveBriefField('${buyerId}','summary',this.value)">${esc(b.summary||'')}</textarea>
+    </div>
+
+    <div class="agent-section" style="margin-bottom:24px">
+      <div class="agent-section-title">Базовые параметры</div>
+      <div class="agent-grid">
+        ${paramFields.map(f => `
+          <div class="af">
+            <label>${f.label}</label>
+            <input class="ai" placeholder="${f.ph}" value="${esc(b[f.key]||'')}" oninput="saveBriefField('${buyerId}','${f.key}',this.value)">
+          </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="agent-section" style="margin-bottom:24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div class="agent-section-title" style="margin-bottom:0">Приоритеты</div>
+        <button class="abtn white" style="font-size:11px;padding:6px 14px" onclick="addBriefPriority('${buyerId}')">+ Добавить</button>
+      </div>
+      <div id="brief-priorities-list" style="display:grid;gap:10px">
+        ${priorities.map((p, i) => renderBriefPriorityRow(buyerId, p, i)).join('')}
+      </div>
+      <p style="font-size:11px;color:rgba(229,229,229,0.3);margin-top:12px;font-weight:300">Порядок = важность. Первый — самый критичный.</p>
+    </div>
+
+    <div class="agent-section" style="margin-bottom:24px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+        <div class="agent-section-title" style="margin-bottom:0">Критерии с оценкой</div>
+        <button class="abtn white" style="font-size:11px;padding:6px 14px" onclick="addBriefCriterion('${buyerId}')">+ Добавить</button>
+      </div>
+      <div id="brief-criteria-list" style="display:grid;gap:10px">
+        ${criteria.map((c, i) => renderBriefCriterionRow(buyerId, c, i)).join('')}
+      </div>
+    </div>
+
+    <div class="agent-section" style="margin-bottom:24px">
+      <div class="agent-section-title">Признаки «своей» квартиры <span style="font-size:11px;color:rgba(229,229,229,0.4);font-weight:300;font-family:var(--sans)">— из брифа клиента</span></div>
+      <div style="display:grid;gap:8px">
+        ${[0,1,2].map(i => `
+          <div style="display:grid;grid-template-columns:20px 1fr;gap:10px;align-items:start">
+            <span style="font-size:11px;color:rgba(229,229,229,0.3);padding-top:12px;font-family:var(--serif)">${String(i+1).padStart(2,'0')}</span>
+            <input class="ai" placeholder="Признак ${i+1}…" value="${esc((b.signs||[])[i]||'')}" oninput="saveBriefSign('${buyerId}',${i},this.value)">
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderBriefPriorityRow(buyerId, p, i) {
+  const tagOpts = ['ok','warn','hard','none'].map(t =>
+    `<option value="${t}" ${p.tag===t?'selected':''}>${TAG_LABELS[t]||'—'}</option>`
+  ).join('');
+  return `<div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;display:grid;gap:8px" id="bprow-${i}">
+    <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center">
+      <input class="ai" placeholder="Название приоритета" value="${esc(p.name||'')}" style="font-size:13px" oninput="saveBriefPriority('${buyerId}',${i},'name',this.value)">
+      <select class="ai" style="font-size:11px;padding:6px 8px;width:auto" onchange="saveBriefPriority('${buyerId}',${i},'tag',this.value)">${tagOpts}</select>
+      <button onclick="removeBriefPriority('${buyerId}',${i})" style="background:rgba(192,57,43,0.3);border:none;color:#fff;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px">✕</button>
+    </div>
+    <input class="ai" placeholder="Комментарий агента — видно клиенту" value="${esc(p.comment||'')}" style="font-size:12px;background:rgba(255,255,255,0.06)" oninput="saveBriefPriority('${buyerId}',${i},'comment',this.value)">
+  </div>`;
+}
+
+function renderBriefCriterionRow(buyerId, c, i) {
+  const tagOpts = ['ok','warn','hard','none'].map(t =>
+    `<option value="${t}" ${c.tag===t?'selected':''}>${TAG_LABELS[t]||'—'}</option>`
+  ).join('');
+  return `<div style="background:rgba(255,255,255,0.06);border-radius:8px;padding:12px 14px;display:grid;gap:8px" id="bcrow-${i}">
+    <div style="display:grid;grid-template-columns:1fr 1fr auto auto;gap:8px;align-items:center">
+      <input class="ai" placeholder="Название критерия" value="${esc(c.label||'')}" style="font-size:12px" oninput="saveBriefCriterion('${buyerId}',${i},'label',this.value)">
+      <input class="ai" placeholder="Значение" value="${esc(c.value||'')}" style="font-size:12px" oninput="saveBriefCriterion('${buyerId}',${i},'value',this.value)">
+      <select class="ai" style="font-size:11px;padding:6px 8px;width:auto" onchange="saveBriefCriterion('${buyerId}',${i},'tag',this.value)">${tagOpts}</select>
+      <button onclick="removeBriefCriterion('${buyerId}',${i})" style="background:rgba(192,57,43,0.3);border:none;color:#fff;border-radius:4px;padding:4px 8px;cursor:pointer;font-size:11px">✕</button>
+    </div>
+    <input class="ai" placeholder="Комментарий — видно клиенту" value="${esc(c.comment||'')}" style="font-size:12px;background:rgba(255,255,255,0.06)" oninput="saveBriefCriterion('${buyerId}',${i},'comment',this.value)">
+  </div>`;
+}
+
+// ── BRIEF SAVE HELPERS ───────────────────────────────────────
+function saveBriefField(buyerId, field, val) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer)[field] = val;
+  debounceSave();
+}
+
+function saveBriefSign(buyerId, idx, val) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  const b = getBrief(buyer);
+  if (!b.signs) b.signs = [];
+  b.signs[idx] = val;
+  debounceSave();
+}
+
+function saveBriefPriority(buyerId, idx, field, val) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  const b = getBrief(buyer);
+  if (!b.priorities[idx]) return;
+  b.priorities[idx][field] = val;
+  debounceSave();
+}
+
+function removeBriefPriority(buyerId, idx) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer).priorities.splice(idx, 1);
+  debounceSave(); renderAgentView(buyerId);
+  switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
+}
+
+function addBriefPriority(buyerId) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer).priorities.push({ name: '', comment: '', tag: 'none' });
+  debounceSave(); renderAgentView(buyerId);
+  switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
+}
+
+function saveBriefCriterion(buyerId, idx, field, val) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  const b = getBrief(buyer);
+  if (!b.criteria[idx]) return;
+  b.criteria[idx][field] = val;
+  debounceSave();
+}
+
+function removeBriefCriterion(buyerId, idx) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer).criteria.splice(idx, 1);
+  debounceSave(); renderAgentView(buyerId);
+  switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
+}
+
+function addBriefCriterion(buyerId) {
+  const buyer = allData.buyers[buyerId]; if (!buyer) return;
+  getBrief(buyer).criteria.push({ label: '', value: '', comment: '', tag: 'none' });
+  debounceSave(); renderAgentView(buyerId);
+  switchTab('brief', document.querySelector('.tab-btn:nth-child(2)'));
+}
+
+// ── INIT ─────────────────────────────────────────────────────
+async function initApp(){
+  const params=new URLSearchParams(window.location.search);
+  const id=params.get('id');
+  const token=getToken();
+
+  // Admin version: always require token
+  if(!token){
+    renderTokenForm();
+    return;
+  }
+
+  await ghLoad();
+
+  if(id){
+    if(!allData.buyers[id]){
+      document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Покупатель не найден.</div>`;
+      return;
+    }
+    currentBuyerId=id;
+    renderAgentView(id);
+  } else {
+    renderPicker();
+  }
+}
+
+initApp();
+
+
+// ── TOUCH FEEDBACK ───────────────────────────────────────────
+function initTouchFeedback(){
+  document.addEventListener('touchstart',function(e){
+    const btn=e.target.closest('.pbtn,.prop-link,.rating-save-btn,.star-btn,.tg-btn,.abtn');
+    if(!btn)return;
+    btn.style.transition='none';
+    btn.classList.add('is-touched');
+  },{passive:true});
+
+  document.addEventListener('touchend',function(e){
+    const btn=e.target.closest('.pbtn,.prop-link,.rating-save-btn,.star-btn,.tg-btn,.abtn');
+    if(!btn)return;
+    setTimeout(function(){
+      btn.style.transition='all 0.3s ease';
+      btn.classList.remove('is-touched');
+    },180);
+  },{passive:true});
+
+  document.addEventListener('touchcancel',function(e){
+    const btn=e.target.closest('.pbtn,.prop-link,.rating-save-btn,.star-btn,.tg-btn,.abtn');
+    if(!btn)return;
+    btn.style.transition='all 0.3s ease';
+    btn.classList.remove('is-touched');
+  },{passive:true});
+}
+initTouchFeedback();
+</script>
+</body>
+</html>
