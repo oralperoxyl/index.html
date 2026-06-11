@@ -419,6 +419,16 @@ const TOKEN_KEY='wr_gh_token';
 function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
 function setToken(t){try{localStorage.setItem(TOKEN_KEY,t);}catch(e){}}
 
+// ── CRYPTO: только расшифровка своего покупателя ─────────────
+const _td=new TextDecoder();
+function b64d(s){const d=atob(s);return Uint8Array.from(d,c=>c.charCodeAt(0));}
+function b64ud(s){s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return b64d(s);}
+async function decryptWithKey(keyBytes,rec){
+  const key=await crypto.subtle.importKey('raw',keyBytes,'AES-GCM',false,['decrypt']);
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(rec.iv)},key,b64d(rec.data));
+  return JSON.parse(_td.decode(pt));
+}
+
 // ── STATE ───────────────────────────────────────────────────
 let allData={buyers:{}};
 let fileSha=null;
@@ -437,10 +447,19 @@ function setSyncPending(){
 
 // ── GITHUB API ──────────────────────────────────────────────
 async function ghLoad(){
-  const token=getToken();
-  const headers=token?{Authorization:`token ${token}`}:{};
+  // Клиент читает напрямую с raw — без лимитов GitHub API и без токена
   try{
-    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,{headers});
+    const r=await fetch(`https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_FILE}?t=${Date.now()}`);
+    if(r.ok){
+      allData=await r.json();
+      if(!allData.buyers)allData.buyers={};
+      setSyncOk('Синхронизировано');
+      return;
+    }
+  }catch(e){}
+  // Резерв: через API без токена
+  try{
+    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`);
     if(r.status===404){allData={buyers:{}};fileSha=null;setSyncOk('Новый файл');return;}
     const j=await r.json();
     fileSha=j.sha;
@@ -453,6 +472,8 @@ async function ghLoad(){
 }
 
 async function ghSave(){
+  // Клиентская версия только читает. Запись — через buyer-dashboard-admin.html.
+  return;
   const token=getToken();
   if(!token)return;
   setSyncPending();
@@ -574,7 +595,7 @@ async function saveRating(buyerId,propIdx){
   const saved=document.getElementById(`rs-${propIdx}`);
   if(saved){saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000);}
   // If agent is viewing — save to GH
-  if(getToken()){debounceSave();}
+  // Оценка хранится локально на устройстве клиента, в GitHub клиент не пишет
   renderClientView(buyerId);
 }
 
@@ -2280,33 +2301,44 @@ async function initApp(){
   const params=new URLSearchParams(window.location.search);
   const id=params.get('id');
   const isEdit=params.has('edit');
-  const token=getToken();
+
+  // Агентский режим переехал в отдельную админку
+  if(isEdit){
+    const adminBase=window.location.pathname.replace(/[^/]*$/,'buyer-dashboard-admin.html');
+    window.location.href=window.location.origin+adminBase+(id?'?id='+encodeURIComponent(id):'');
+    return;
+  }
+
+  if(!id){
+    document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Откройте персональную ссылку, которую вам отправил агент.</div>`;
+    return;
+  }
 
   await ghLoad();
 
-  if(id){
-    if(isEdit&&token){
-      // Agent view for specific buyer
-      if(!allData.buyers[id]){
-        document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Покупатель не найден.</div>`;
-        return;
-      }
-      currentBuyerId=id;
-      renderAgentView(id);
-    } else {
-      // Client view
-      renderClientView(id);
+  // Зашифрованный формат: расшифровываем только своего покупателя ключом из ссылки
+  if(allData&&allData.version===2){
+    const m=(window.location.hash||'').match(/k=([A-Za-z0-9_\-]+)/);
+    const rec=allData.buyers&&allData.buyers[id];
+    if(!m||!rec){
+      document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Ссылка устарела или неполная. Запросите у агента новую ссылку.</div>`;
+      return;
     }
-  } else {
-    // No id — agent picker
-    if(token){
-      renderPicker();
-    } else if(isEdit){
-      renderTokenForm();
-    } else {
-      renderTokenForm();
+    try{
+      const obj=await decryptWithKey(b64ud(m[1]),rec);
+      allData={buyers:{[id]:obj}};
+    }catch(e){
+      document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Не удалось открыть данные. Запросите у агента новую ссылку.</div>`;
+      return;
     }
   }
+
+  if(!allData.buyers||!allData.buyers[id]){
+    document.getElementById('appRoot').innerHTML=`<div style="padding:80px 40px;text-align:center;color:var(--muted)">Покупатель не найден. Запросите у агента новую ссылку.</div>`;
+    return;
+  }
+
+  renderClientView(id);
 }
 
 initApp();

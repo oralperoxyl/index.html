@@ -416,9 +416,34 @@ function renderFooter(){
 const GH_OWNER='oralperoxyl',GH_REPO='index.html',GH_BRANCH='main';
 const GH_FILE='data/buyers.json';
 const TOKEN_KEY='wr_gh_token';
+const MASTER_KEY='wr_master_pass';
 
 function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
 function setToken(t){try{localStorage.setItem(TOKEN_KEY,t);}catch(e){}}
+function getMaster(){try{return localStorage.getItem(MASTER_KEY)||'';}catch(e){return '';}}
+function setMaster(p){try{localStorage.setItem(MASTER_KEY,p);}catch(e){}}
+
+// ── CRYPTO: AES-256-GCM, ключ на каждого покупателя ─────────
+const _te=new TextEncoder(),_td=new TextDecoder();
+function b64e(buf){let b='';new Uint8Array(buf).forEach(x=>b+=String.fromCharCode(x));return btoa(b);}
+function b64d(s){const d=atob(s);return Uint8Array.from(d,c=>c.charCodeAt(0));}
+function b64u(buf){return b64e(buf).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+async function buyerKeyBytes(id){
+  const digest=await crypto.subtle.digest('SHA-256',_te.encode(getMaster()+'|'+id));
+  return new Uint8Array(digest);
+}
+async function importAes(bytes){return crypto.subtle.importKey('raw',bytes,'AES-GCM',false,['encrypt','decrypt']);}
+async function encryptBuyer(id,obj){
+  const key=await importAes(await buyerKeyBytes(id));
+  const iv=crypto.getRandomValues(new Uint8Array(12));
+  const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,_te.encode(JSON.stringify(obj)));
+  return{iv:b64e(iv),data:b64e(ct)};
+}
+async function decryptBuyer(id,rec){
+  const key=await importAes(await buyerKeyBytes(id));
+  const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(rec.iv)},key,b64d(rec.data));
+  return JSON.parse(_td.decode(pt));
+}
 
 // ── STATE ───────────────────────────────────────────────────
 let allData={buyers:{}};
@@ -448,6 +473,27 @@ async function ghLoad(){
     const decoded=atob(j.content.replace(/\n/g,''));
     const text=new TextDecoder().decode(Uint8Array.from(decoded,x=>x.charCodeAt(0)));
     allData=JSON.parse(text);
+    if(allData.version===2){
+      const enc=allData.buyers||{};const plain={};
+      window._undecryptable={};
+      let fail=0,total=0;
+      for(const bid of Object.keys(enc)){
+        total++;
+        try{plain[bid]=await decryptBuyer(bid,enc[bid]);}
+        catch(e){fail++;window._undecryptable[bid]=enc[bid];}
+      }
+      if(total>0&&fail===total){
+        try{localStorage.removeItem(MASTER_KEY);}catch(e){}
+        alert('Неверный ключ шифрования. Введите его заново.');
+        location.reload();return;
+      }
+      if(fail>0)alert('Внимание: '+fail+' запис(ь/и) не расшифровались. Они сохранены и не будут потеряны, но не отображаются.');
+      allData={buyers:plain};
+    } else {
+      // Старый открытый формат: сразу пересохраняем зашифрованным
+      if(!allData.buyers)allData.buyers={};
+      debounceSave();
+    }
     if(!allData.buyers)allData.buyers={};
     setSyncOk('Синхронизировано');
   }catch(e){setSyncOk('Ошибка загрузки');}
@@ -456,9 +502,18 @@ async function ghLoad(){
 async function ghSave(){
   const token=getToken();
   if(!token)return;
+  if(!getMaster()){setSyncOk('Нет ключа шифрования — сохранение остановлено');return;}
   setSyncPending();
   try{
-    const text=JSON.stringify(allData,null,2);
+    const out={version:2,buyers:{}};
+    for(const bid of Object.keys(allData.buyers||{})){
+      out.buyers[bid]=await encryptBuyer(bid,allData.buyers[bid]);
+    }
+    // Записи, которые не удалось расшифровать при загрузке, переносим как есть, не теряем
+    for(const bid of Object.keys(window._undecryptable||{})){
+      if(!out.buyers[bid])out.buyers[bid]=window._undecryptable[bid];
+    }
+    const text=JSON.stringify(out,null,2);
     const bytes=new TextEncoder().encode(text);
     let binary='';
     bytes.forEach(b=>binary+=String.fromCharCode(b));
@@ -1017,7 +1072,6 @@ function renderAgentView(buyerId){
   if(!buyer)return;
   loadLocalRatings(buyerId,buyer.props||[]);
   const props=sortProps(buyer.props||[]);
-  const dashUrl=window.location.origin+window.location.pathname+'?id='+buyerId;
 
   document.getElementById('appRoot').innerHTML=`
     <section class="hero">
@@ -1034,7 +1088,7 @@ function renderAgentView(buyerId){
         </div>
         <div class="hero-meta">
           <span class="hero-chip"><strong>${props.length}</strong> объект${props.length===1?'':'ов'}</span>
-          <button onclick="copyUrl('${dashUrl}',this)" style="background:rgba(255,255,255,0.1);border:none;color:rgba(229,229,229,0.7);font-size:12px;padding:4px 12px;border-radius:999px;cursor:pointer">Скопировать ссылку клиенту</button>
+          <button onclick="copyClientLink('${buyerId}',this)" style="background:rgba(255,255,255,0.1);border:none;color:rgba(229,229,229,0.7);font-size:12px;padding:4px 12px;border-radius:999px;cursor:pointer">Скопировать ссылку клиенту</button>
         </div>
       </div>
     </section>
@@ -1280,6 +1334,14 @@ function copyUrl(url,btn){
   });
 }
 
+// Ссылка для клиента: ведёт на buyer-dashboard.html, ключ расшифровки в #k= (не уходит на сервер)
+async function copyClientLink(id,btn){
+  const key=b64u(await buyerKeyBytes(id));
+  const base=window.location.pathname.replace(/[^/]*$/,'buyer-dashboard.html');
+  const url=window.location.origin+base+'?id='+encodeURIComponent(id)+'#k='+key;
+  copyUrl(url,btn);
+}
+
 // ── AGENT PICKER ─────────────────────────────────────────────
 function renderPicker(){
   const buyers=Object.entries(allData.buyers);
@@ -1308,7 +1370,7 @@ function renderPicker(){
             </div>
             <div class="picker-btns">
               <button class="pbtn" onclick="openBuyerAgent('${id}')">Открыть</button>
-              <button class="pbtn green" onclick="copyUrl('${window.location.origin+window.location.pathname}?id=${id}',this)">Скопировать ссылку</button>
+              <button class="pbtn green" onclick="copyClientLink('${id}',this)">Скопировать ссылку</button>
               <button class="pbtn" class="pbtn red" onclick="deleteBuyer('${id}',this)">✕</button>
             </div>
           </div>`).join(''):`<div style="padding:32px;text-align:center;color:var(--muted);font-size:14px">Нет покупателей. Создайте первого.</div>`}
@@ -1320,7 +1382,7 @@ function createBuyer(){
   const name=document.getElementById('nb-name')?.value?.trim();
   if(!name){alert('Введите имя');return;}
   const budget=document.getElementById('nb-budget')?.value?.trim()||'';
-  const id=slugify(name)+'-'+shortId();
+  const id=Array.from(crypto.getRandomValues(new Uint8Array(8)),b=>b.toString(16).padStart(2,'0')).join('');
   allData.buyers[id]={name,budget,props:[],nextStep:'',createdAt:new Date().toISOString().slice(0,10)};
   debounceSave();
   openBuyerAgent(id);
@@ -1344,21 +1406,25 @@ function renderTokenForm(){
   document.getElementById('appRoot').innerHTML=`
     <div class="token-wrap">
       <h2>Вход для агента</h2>
-      <p>Введите GitHub токен для доступа</p>
-      <input class="token-in" type="password" id="tokenInput" placeholder="ghp_...">
+      <p>GitHub токен и ключ шифрования данных</p>
+      <input class="token-in" type="password" id="tokenInput" placeholder="ghp_..." value="${esc(getToken())}">
+      <input class="token-in" type="password" id="masterInput" placeholder="Ключ шифрования" style="margin-top:14px">
+      <p style="margin-top:14px;font-size:12px;color:var(--muted)">Ключ шифрования придумываете один раз и вводите одинаковый на всех своих устройствах. Потеря ключа = потеря данных, запишите его в надёжном месте.</p>
       <br><button class="token-btn" onclick="submitToken()">Войти</button>
     </div>`;
 }
 
 function submitToken(){
   const t=document.getElementById('tokenInput')?.value?.trim();
-  if(!t)return;
+  const m=document.getElementById('masterInput')?.value?.trim();
+  if(!t||!m){alert('Заполните оба поля');return;}
   setToken(t);
+  setMaster(m);
   location.reload();
 }
 
 function changeToken(){
-  try{localStorage.removeItem(TOKEN_KEY);}catch(e){}
+  try{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(MASTER_KEY);}catch(e){}
   location.reload();
 }
 
@@ -2287,8 +2353,8 @@ async function initApp(){
   const id=params.get('id');
   const token=getToken();
 
-  // Admin version: always require token
-  if(!token){
+  // Admin version: always require token + master key
+  if(!token||!getMaster()){
     renderTokenForm();
     return;
   }

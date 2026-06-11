@@ -1090,7 +1090,7 @@ function renderPicker() {
           <div style="font-size:12px;color:var(--muted);margin-top:2px;">Неделя ${weekNum} · ${escHtml(period)}</div>
         </a>
         <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
-          <button onclick="copyLink('${id}',this)" style="font-size:11px;color:var(--accent);background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;padding:4px 10px;">Ссылка</button>
+          <!-- Кнопка «Ссылка» убрана: данные отчётов хранятся локально в браузере агента, у клиента по ссылке открывался пустой отчёт. Вернуть после переноса данных в облако. -->
           <button onclick="copyDashboard('${id}',this)" style="font-size:11px;color:#2D8A4E;background:none;border:1px solid rgba(45,138,78,0.25);border-radius:3px;cursor:pointer;padding:4px 10px;">Дашборд клиента</button>
           <button onclick="deleteObject('${id}')" style="font-size:11px;color:#C0392B;background:none;border:none;cursor:pointer;padding:4px 8px;">✕</button>
         </div>
