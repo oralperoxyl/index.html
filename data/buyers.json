@@ -705,6 +705,23 @@
           "clientComment": "",
           "addedAt": "2026-05-02",
           "updatedAt": "2026-06-11"
+        },
+        {
+          "address": "4-я Красноармейская ул., 2/35",
+          "price": "21970000",
+          "area": "92,8",
+          "rooms": "3",
+          "floor": "5/5",
+          "condition": "С ремонтом",
+          "renovation": "",
+          "showDate": "",
+          "showTime": "",
+          "status": "reference",
+          "url": "https://www.avito.ru/sankt-peterburg/kvartiry/3-k._kvartira_928_m_55_et._8193858504?utm_campaign=native&utm_medium=item_page_ios&utm_source=soc_sharing",
+          "agentComment": "Со слов агента Галины квартира светлая. Показы в вскр/понед утром или вечером",
+          "clientRating": 0,
+          "clientComment": "",
+          "addedAt": "2026-06-11"
         }
       ],
       "nextStep": "",
