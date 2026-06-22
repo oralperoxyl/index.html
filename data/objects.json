@@ -542,6 +542,22 @@
           }
         ]
       }
+    },
+    "санкт-петербург-ш-пулковское-д-11к2": {
+      "address": "Санкт-Петербург, ш. Пулковское, д.11к2",
+      "area": 0,
+      "rooms": 0,
+      "floor": "",
+      "location": "",
+      "date": "22 июня 2026 г.",
+      "sma": {
+        "competitors": [],
+        "recommendations": [],
+        "priceFrom": 0,
+        "priceTo": 0
+      },
+      "strategy": null,
+      "reports": null
     }
   }
 }
