@@ -555,8 +555,8 @@
           {
             "address": "Пулковское шоссе, 5К4",
             "agent": "Агент",
-            "area": "",
-            "rooms": "",
+            "area": "74,5",
+            "rooms": "3",
             "floor": "",
             "condition": "",
             "price": 0,
