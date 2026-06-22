@@ -551,7 +551,25 @@
       "location": "м. Московская",
       "date": "22 июня 2026 г.",
       "sma": {
-        "competitors": [],
+        "competitors": [
+          {
+            "address": "",
+            "agent": "",
+            "area": "",
+            "rooms": "",
+            "floor": "",
+            "condition": "",
+            "price": 0,
+            "ppm": 0,
+            "bargain": "",
+            "adDate": "",
+            "adViews": "",
+            "url": "",
+            "comment": "",
+            "ours": false,
+            "visited": false
+          }
+        ],
         "recommendations": [],
         "priceFrom": 0,
         "priceTo": 0
