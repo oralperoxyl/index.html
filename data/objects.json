@@ -689,7 +689,11 @@
             "visited": false
           }
         ],
-        "recommendations": [],
+        "recommendations": [
+          "",
+          "",
+          ""
+        ],
         "priceFrom": 13500000,
         "priceTo": 15000000
       },
