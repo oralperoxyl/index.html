@@ -271,7 +271,7 @@ body.editing .hero{padding-right:500px}
       <span id="syncText">—</span>
     </span>
     <button onclick="changeToken()" style="font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.04em;padding:6px 14px;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--muted);">Токен</button>
-    <button class="edit-toggle" id="editToggle" onclick="toggleEdit()" style="display:none;">Редактировать</button>
+    <button class="edit-toggle" id="editToggle" onclick="toggleEdit()" style="display:none;">Редактировать</button><button onclick="changeToken()" style="font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.04em;padding:6px 14px;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--muted);">Токен</button>
   </div>
 </header>
 
@@ -477,7 +477,7 @@ async function loadFromGitHub(){
     const resp=await ghFetch('GET');
     if(!resp){setSyncError('Нет токена');return false;}
     if(resp.status===404){allData={objects:{}};fileSha=null;setSyncOk('Новый файл');return true;}
-    if(!resp.ok){setSyncError('Ошибка '+resp.status);return false;}
+    if(!resp.ok){setSyncError('Ошибка '+resp.status);if(resp.status===401||resp.status===403)showTokenModal();return false;}
     const json=await resp.json();fileSha=json.sha;
     const content=atob(json.content.replace(/\n/g,''));
     const decoded=new TextDecoder().decode(Uint8Array.from(content,c=>c.charCodeAt(0)));
@@ -688,10 +688,10 @@ function render(){
     document.getElementById('priceBox').innerHTML=
       '<div class="price-box-label">\u0420\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0435\u043c\u0430\u044f \u0440\u044b\u043d\u043e\u0447\u043d\u0430\u044f \u0441\u0442\u043e\u0438\u043c\u043e\u0441\u0442\u044c</div>'
       +'<div class="price-range">'
-      +'<span class="price-val">'+fmtPrice(smaData.priceFrom)+'</span>'
+      +'<span class="price-val">'+fmtPrice(smaD.priceFrom)+'</span>'
       +(ppmFrom?'<span style="font-size:13px;color:rgba(229,229,229,0.4);margin-left:-8px;">('+ppmFrom+')</span>':'')
       +'<span class="price-sep">\u2014</span>'
-      +'<span class="price-val">'+fmtPrice(smaData.priceTo)+'</span>'
+      +'<span class="price-val">'+fmtPrice(smaD.priceTo)+'</span>'
       +(ppmTo?'<span style="font-size:13px;color:rgba(229,229,229,0.4);margin-left:-8px;">('+ppmTo+')</span>':'')
       +'</div>'
       +(avg?'<div class="price-avg">\u0421\u0440\u0435\u0434\u043d\u044f\u044f: <strong>'+fmtPrice(avg)+'</strong>'+(avgPpmRec?' ('+avgPpmRec+')':'')+'</div>':'')
@@ -925,7 +925,7 @@ function generateRecs(){
     `По статистике на текущем рынке покупатель выбирает 2–3 самых выгодных объекта из сегмента. Квартира — рыночный товар. Если объект не входит в число наиболее привлекательных предложений по цене и качеству, покупатель его просто не выберет.`,
     `Анализ проводится по выставленным предложениям, а <strong>реальная стоимость покупки</strong> определяется при переговорах и торге между сторонами. Имеет смысл говорить о <strong>потенциальной стоимости спроса</strong>, а не стоимости покупки.`,
     `Стоимость спроса и стоимость покупки могут отличаться на 10–15%. Объекты, где собственники не готовы к корректировке, стоят на рынке месяцами без реального спроса.`,
-    smaD.priceFrom&&smaD.priceTo?`<strong>Сравнивая выставленные на продажу объекты, а также учитывая тенденции рынка, рекомендуемая рыночная стоимость может составлять: ${fmtPrice(smaData.priceFrom)} (${ppmFrom} ₽/м²) — ${fmtPrice(smaData.priceTo)} (${ppmTo} ₽/м²), средняя ${fmtPrice(avg)}${avgPpm?' ('+avgPpm+' ₽/м²)':''}.</strong>`:'<strong>Рекомендуемая стоимость: [заполните диапазон цен выше]</strong>',
+    smaD.priceFrom&&smaD.priceTo?`<strong>Сравнивая выставленные на продажу объекты, а также учитывая тенденции рынка, рекомендуемая рыночная стоимость может составлять: ${fmtPrice(smaD.priceFrom)} (${ppmFrom} ₽/м²) — ${fmtPrice(smaD.priceTo)} (${ppmTo} ₽/м²), средняя ${fmtPrice(avg)}${avgPpm?' ('+avgPpm+' ₽/м²)':''}.</strong>`:'<strong>Рекомендуемая стоимость: [заполните диапазон цен выше]</strong>',
     `Стоимость может быть скорректирована в большую или меньшую сторону при наличии или отсутствии реальных покупателей и при согласовании с продавцом.`
   ];
   renderRecPanel();render();debounceSave();
