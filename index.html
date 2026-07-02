@@ -35,12 +35,18 @@
   function getRef() {
     try { return new URLSearchParams(window.location.search).get("ref") || ""; } catch(e) { return ""; }
   }
+  function getUtm(key) {
+    try { return new URLSearchParams(window.location.search).get(key) || ""; } catch(e) { return ""; }
+  }
   function send(event, extra) {
     var data = {
       event: event,
       page: window.location.pathname,
       ref: getRef(),
       referrer: document.referrer ? new URL(document.referrer).hostname : "direct",
+      utm_source: getUtm("utm_source"),
+      utm_medium: getUtm("utm_medium"),
+      utm_campaign: getUtm("utm_campaign"),
       ua: navigator.userAgent.substring(0, 80)
     };
     if (extra) Object.assign(data, extra);
