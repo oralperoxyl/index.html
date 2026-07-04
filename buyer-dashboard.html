@@ -112,6 +112,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .prop-status.considering{background:rgba(45,138,78,0.1);color:var(--green)}
 .prop-status.declined{background:rgba(192,57,43,0.08);color:var(--red)}
 .prop-status.reference{background:rgba(0,0,0,0.04);color:#999}
+.prop-status.clarifying{background:rgba(130,80,180,0.08);color:rgba(110,60,160,0.85)}
 .prop-status.pending{background:rgba(180,100,0,0.08);color:rgba(160,90,0,0.8)}
 .prop-status.sold{background:rgba(0,0,0,0.06);color:#999}
 .prop-card.sold-card{opacity:0.55}
@@ -532,8 +533,8 @@ function fmtPpm(price,area){
 function fmtPrice(p){if(!p)return '—';const n=Number(String(p).replace(/\D/g,''));if(!n)return p;return(n/1000000).toFixed(2).replace(/\.?0+$/,'')+' млн ₽';}
 
 // ── STATUS ──────────────────────────────────────────────────
-const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл',pending:'Ждём показа',sold:'Объект продан'};
-const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',declined:'declined',pending:'pending',sold:'sold'};
+const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',pending:'Ждём показа',clarifying:'Уточняем время',reference:'Для сравнения',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл',sold:'Объект продан'};
+const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',declined:'declined',pending:'pending',clarifying:'clarifying',reference:'reference',sold:'sold'};
 
 // ── STAR RATING ─────────────────────────────────────────────
 function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
@@ -1012,6 +1013,16 @@ function renderClientView(buyerId){
         ${show('logic')?`<div class="logic-block"><div class="logic-block-title">Как мы отбираем объекты</div><div class="logic-block-text"><p>Здесь только те квартиры, которые прошли первичный отбор — по соотношению цены и площади в конкретной локации, состоянию, этажу и общей адекватности предложения.</p><p>Если какого-то объекта нет в списке — скорее всего он уступает по цене за метр, имеет скрытые сложности, или просто не подходит под ваши параметры.</p><p>Если какой-то объект кажется завышенным по цене — это не ошибка. Значит мы <strong>проверяем сценарий</strong> или держим его как точку отсчёта.</p></div></div>`:''}
         ${show('hint')?`<div class="hint-block"><div class="hint-title">На что обратить внимание при оценке</div><div class="hint-items"><div class="hint-item"><div class="hint-num">01</div><div class="hint-item-body"><div class="hint-item-q">Как вы себя чувствовали внутри?</div><div class="hint-item-a">Представьте что живёте там — комфортно или что-то мешает. Тесно, шумно, тёмно — или наоборот.</div></div></div><div class="hint-item"><div class="hint-num">02</div><div class="hint-item-body"><div class="hint-item-q">Что запомнилось первым?</div><div class="hint-item-a">Обычно это и есть главное — в плюс или в минус. Вид из окна, запах, высота потолков, двор.</div></div></div><div class="hint-item"><div class="hint-num">03</div><div class="hint-item-body"><div class="hint-item-q">Захотелось вернуться?</div><div class="hint-item-a">Если нет — почему. Если да — что держит. Это помогает понять реальный приоритет.</div></div></div></div></div>`:''}
         <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;padding:16px;background:rgba(0,0,0,0.025);border-radius:2px">
+          <span style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);width:100%;margin-bottom:4px;font-weight:400">Статусы объектов</span>
+          <span class="prop-status planned">Запланирован</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— дата показа назначена</span>
+          <span class="prop-status pending">Ждём показа</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— договорились, ждём</span>
+          <span class="prop-status clarifying">Уточняем время</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— дата пока не определена</span>
+          <span class="prop-status viewed">Просмотрен</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— были на показе</span>
+          <span class="prop-status considering">Рассматриваем</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— в финальном выборе</span>
+          <span class="prop-status reference">Для сравнения</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— ориентир по рынку</span>
+          <span class="prop-status declined">Не подошёл</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center">— убрали из рассмотрения</span>
+        </div>
         <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,false)).join('')}</div>
         ${show('compare')?renderCompare(props):''}
         ${show('calc')?`<div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><span style="font-size:13px;color:var(--muted);font-weight:300">Думаете об ипотеке?</span><a href="/mortgage-calc.html" style="font-size:13px;color:var(--text);text-decoration:none;border-bottom:1px solid rgba(0,0,0,0.15);padding-bottom:1px">Калькулятор платежей и доходов/расходов →</a></div>`:''}
@@ -1126,6 +1137,16 @@ function renderAgentView(buyerId){
 
       <!-- Props list -->
       <div class="section-head"><h2 class="section-title">Объекты</h2><span class="section-count">${props.length}</span></div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;padding:16px;background:rgba(0,0,0,0.025);border-radius:2px">
+          <span style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);width:100%;margin-bottom:4px;font-weight:400">Статусы объектов</span>
+          <span class="prop-status planned">Запланирован</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— дата показа назначена</span>
+          <span class="prop-status pending">Ждём показа</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— договорились, ждём</span>
+          <span class="prop-status clarifying">Уточняем время</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— дата пока не определена</span>
+          <span class="prop-status viewed">Просмотрен</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— были на показе</span>
+          <span class="prop-status considering">Рассматриваем</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— в финальном выборе</span>
+          <span class="prop-status reference">Для сравнения</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center;margin-right:12px">— ориентир по рынку</span>
+          <span class="prop-status declined">Не подошёл</span><span style="font-size:11px;color:var(--muted);font-weight:300;align-self:center">— убрали из рассмотрения</span>
+        </div>
       <div class="props-list">${props.map((p,i)=>renderPropCard(buyerId,p,i,true)).join('')}</div>
 
       ${renderLocations(buyer,buyerId,true)}
