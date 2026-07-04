@@ -626,7 +626,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
 
   return `<div class="prop-card${prop.status==='sold'?' sold-card':''}" id="prop-${idx}">
     <div class="prop-card-header" onclick="toggleProp(${idx})">
-      <div class="prop-num">${String(idx+1).padStart(2,'0')}</div>
+      <div class="prop-num">${String(prop.num||idx+1).padStart(2,'0')}</div>
       <div>
         <div class="prop-status-row">
           <span class="prop-status ${statusCls}">${statusLabel}</span>
@@ -1205,6 +1205,7 @@ function addProp(buyerId){
     clientRating:0,clientComment:'',addedAt:new Date().toISOString().slice(0,10)
   };
   if(!allData.buyers[buyerId].props)allData.buyers[buyerId].props=[];
+  prop.num = (allData.buyers[buyerId].props.length + 1);
   allData.buyers[buyerId].props.push(prop);
   debounceSave();
   renderAgentView(buyerId);
