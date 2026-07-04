@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<!-- v202607041246 -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <title>Подбор квартиры — Семён Гончаров</title>
@@ -472,6 +468,11 @@ async function ghLoad(){
     const text=new TextDecoder().decode(Uint8Array.from(decoded,x=>x.charCodeAt(0)));
     allData=JSON.parse(text);
     if(!allData.buyers)allData.buyers={};
+    // Миграция: проставить фиксированный num всем объектам у которых его нет
+    Object.values(allData.buyers||{}).forEach(function(buyer){
+      var props = buyer.props||buyer.properties||[];
+      props.forEach(function(p,i){ if(!p.num) p.num = i+1; });
+    });
     setSyncOk('Синхронизировано');
   }catch(e){setSyncOk('Ошибка загрузки');}
 }
