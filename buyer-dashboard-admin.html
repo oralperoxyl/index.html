@@ -539,6 +539,20 @@ function slugify(s){return s.toLowerCase().replace(/[^а-яёa-z0-9]/gi,'-').rep
 function shortId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,4);}
 function escNl(s){return esc(s).replace(/\n/g,"<br>");}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escNl(s){return esc(s).replace(/\n/g,'<br>');}
+function isNewProp(p){
+  if(!p.addedAt)return false;
+  const d=new Date(p.addedAt);
+  return (Date.now()-d.getTime())<5*24*60*60*1000;
+}
+function updatedAgo(p){
+  if(!p.updatedAt||p.updatedAt===p.addedAt)return '';
+  const d=new Date(p.updatedAt);
+  const diff=Math.floor((Date.now()-d.getTime())/(24*60*60*1000));
+  if(diff===0)return 'обновлено сегодня';
+  if(diff===1)return 'обновлено вчера';
+  return 'обновлено '+diff+' дн. назад';
+}
 function fmtShowDate(d,t){
   if(!d)return '';
   try{
@@ -662,14 +676,16 @@ function renderPropCard(buyerId,prop,idx,isAgent){
 
   return `<div class="prop-card${prop.status==='sold'?' sold-card':''}" id="prop-${idx}">
     <div class="prop-card-header" onclick="toggleProp(${idx})">
-      <div class="prop-num">${String(idx+1).padStart(2,'0')}</div>
+      <div class="prop-num">${String(prop.num||idx+1).padStart(2,'0')}</div>
       <div>
         <div class="prop-status-row">
           <span class="prop-status ${statusCls}">${statusLabel}</span>
           ${(prop.showDate&&(prop.status==='planned'||prop.status==='pending'))?`<span style="font-size:12px;color:var(--muted);font-weight:300">${fmtShowDate(prop.showDate,prop.showTime)}</span>`:''}
+          ${isNewProp(prop)?`<span style="font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;background:rgba(45,138,78,0.1);color:#2D8A4E;padding:2px 8px;border-radius:999px">Новый</span>`:''}
           ${rating?`<span style="font-size:12px;color:#F59E0B">${starsHtml(rating)}</span>`:''}
         </div>
         <div class="prop-addr">${esc(prop.address||'Без адреса')}</div>
+        ${updatedAgo(prop)?`<div style="font-size:11px;color:var(--muted);font-weight:300;margin-top:-4px;margin-bottom:2px">${updatedAgo(prop)}</div>`:''}
         <div class="prop-meta">
           ${prop.rooms?`<span class="prop-meta-item"><strong>${esc(prop.rooms)}</strong>-комн.</span>`:''}
           ${prop.area?`<span class="prop-meta-item"><strong>${esc(prop.area)}</strong> м²</span>`:''}
@@ -691,7 +707,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
           <div class="prop-section-val" style="white-space:pre-line">${escNl(prop.agentComment)}</div>
         </div>`:''}
         ${prop.afterComment?`<div>
-          <div class="prop-section-label" style="color:var(--green,#2D8A4E)">Впечатление после просмотра</div>
+          <div class="prop-section-label" style="color:#2D8A4E">Впечатление после просмотра</div>
           <div class="prop-section-val" style="white-space:pre-line">${escNl(prop.afterComment)}</div>
         </div>`:''}
         ${prop.showDate?`<div>
@@ -756,10 +772,9 @@ function renderCompare(props){
 
 // ── SORT PROPS ───────────────────────────────────────────────
 function sortProps(props){
+  const order={viewed:0,considering:1,declined:2,pending:3,planned:4,scout:5};
   return props.map(function(p,i){return Object.assign({},p,{_origIdx:i});}).sort(function(a,b){
-    const da=a.addedAt||'';
-    const db=b.addedAt||'';
-    return da.localeCompare(db);
+    return (a.addedAt||'').localeCompare(b.addedAt||'');
   });
 }
 
@@ -1256,7 +1271,7 @@ function addProp(buyerId){
     address,price:get('np-price'),area:get('np-area'),rooms:get('np-rooms'),floor:get('np-floor'),
     condition:get('np-condition'),renovation:get('np-renovation'),
     showDate:get('np-showDate'),showTime:get('np-showTime'),status:get('np-status')||'planned',
-    url:get('np-url'),agentComment:get('np-comment'),afterComment:get('np-after'),
+    url:get('np-url'),agentComment:get('np-comment'),
     clientRating:0,clientComment:'',addedAt:new Date().toISOString().slice(0,10)
   };
   if(!allData.buyers[buyerId].props)allData.buyers[buyerId].props=[];
