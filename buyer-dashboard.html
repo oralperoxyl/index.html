@@ -653,7 +653,11 @@ function renderPropCard(buyerId,prop,idx,isAgent){
       <div style="display:flex;flex-direction:column;gap:14px">
         ${prop.agentComment?`<div>
           <div class="prop-section-label">Комментарий агента</div>
-          <div class="prop-section-val">${esc(prop.agentComment)}</div>
+          <div class="prop-section-val" style="white-space:pre-line">${escNl(prop.agentComment)}</div>
+        </div>`:''}
+        ${prop.afterComment?`<div>
+          <div class="prop-section-label" style="color:var(--green,#2D8A4E)">Впечатление после просмотра</div>
+          <div class="prop-section-val" style="white-space:pre-line">${escNl(prop.afterComment)}</div>
         </div>`:''}
         ${prop.showDate?`<div>
           <div class="prop-section-label">Дата показа</div>
@@ -718,7 +722,15 @@ function renderCompare(props){
 // ── SORT PROPS ───────────────────────────────────────────────
 function sortProps(props){
   const order={viewed:0,considering:1,declined:2,pending:3,planned:4,scout:5};
-  return props.map(function(p,i){return Object.assign({},p,{_origIdx:i});});
+  return props.map(function(p,i){return Object.assign({},p,{_origIdx:i});}).sort(function(a,b){
+    const sa=order[a.status]??2;
+    const sb=order[b.status]??2;
+    if(sa!==sb)return sa-sb;
+    // within same status — sort by date desc (newest first)
+    const da=a.showDate||a.addedAt||'';
+    const db=b.showDate||b.addedAt||'';
+    return db.localeCompare(da);
+  });
 }
 
 
@@ -1214,7 +1226,7 @@ function addProp(buyerId){
     address,price:get('np-price'),area:get('np-area'),rooms:get('np-rooms'),floor:get('np-floor'),
     condition:get('np-condition'),renovation:get('np-renovation'),
     showDate:get('np-showDate'),showTime:get('np-showTime'),status:get('np-status')||'planned',
-    url:get('np-url'),agentComment:get('np-comment'),
+    url:get('np-url'),agentComment:get('np-comment'),afterComment:get('np-after'),
     clientRating:0,clientComment:'',addedAt:new Date().toISOString().slice(0,10)
   };
   if(!allData.buyers[buyerId].props)allData.buyers[buyerId].props=[];
@@ -1263,6 +1275,7 @@ function openEditProp(buyerId,idx){
     select('ep-rooms','Комнатность',['','Студия','1','2','3','4+'],prop.rooms||'')+
     select('ep-status','Статус',statOpts,prop.status)+
     '<div class="af full"><label>Комментарий агента</label><textarea class="ai" id="ep-comment" rows="3">'+esc(prop.agentComment||'')+'</textarea></div>'+
+    '<div class="af full"><label>Впечатление после просмотра</label><textarea class="ai" id="ep-after" rows="3" placeholder="Заполните после показа...">'+esc(prop.afterComment||'')+'</textarea></div>'+
     '<div class="abtn-row" style="grid-column:1/-1"><button class="abtn white" onclick="saveModalProp()">Сохранить</button><button class="abtn danger" onclick="deleteModalProp()">Удалить объект</button></div>';
 
   setTimeout(function(){updatePpmHint('ep');},50);
@@ -1285,7 +1298,7 @@ function saveModalProp(){
   if(sd)prop.showDate=sd; else if(!prop.showDate)prop.showDate='';
   if(st)prop.showTime=st;
   prop.status=get('ep-status');
-  prop.url=get('ep-url');prop.agentComment=get('ep-comment');
+  prop.url=get('ep-url');prop.agentComment=get('ep-comment');prop.afterComment=get('ep-after');
   const _bid=currentBuyerId;if(allData.buyers[_bid]?.props[editingPropIdx])allData.buyers[_bid].props[editingPropIdx].updatedAt=new Date().toISOString().slice(0,10);closeModal();debounceSave();renderAgentView(_bid);
 }
 
