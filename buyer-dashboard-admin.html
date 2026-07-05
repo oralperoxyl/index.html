@@ -662,7 +662,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
 
   return `<div class="prop-card${prop.status==='sold'?' sold-card':''}" id="prop-${idx}">
     <div class="prop-card-header" onclick="toggleProp(${idx})">
-      <div class="prop-num">${String(prop.num||idx+1).padStart(2,'0')}</div>
+      <div class="prop-num">${String(idx+1).padStart(2,'0')}</div>
       <div>
         <div class="prop-status-row">
           <span class="prop-status ${statusCls}">${statusLabel}</span>
@@ -756,15 +756,10 @@ function renderCompare(props){
 
 // ── SORT PROPS ───────────────────────────────────────────────
 function sortProps(props){
-  const order={viewed:0,considering:1,declined:2,pending:3,planned:4,scout:5};
   return props.map(function(p,i){return Object.assign({},p,{_origIdx:i});}).sort(function(a,b){
-    const sa=order[a.status]??2;
-    const sb=order[b.status]??2;
-    if(sa!==sb)return sa-sb;
-    // within same status — sort by date desc (newest first)
-    const da=a.showDate||a.addedAt||'';
-    const db=b.showDate||b.addedAt||'';
-    return db.localeCompare(da);
+    const da=a.addedAt||'';
+    const db=b.addedAt||'';
+    return da.localeCompare(db);
   });
 }
 
