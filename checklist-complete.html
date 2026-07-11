@@ -43,22 +43,24 @@
     .section-intro { font-size: 16px; line-height: 1.7; color: var(--muted); max-width: 620px; margin-bottom: 52px; }
     
     .checklist { display: flex; flex-direction: column; }
-    .checklist-item { border-bottom: 1px solid var(--border); padding: 24px 0; }
+    .checklist-item { border-bottom: 1px solid var(--border); transition: border-color 0.3s ease; }
+    .checklist-item:hover { border-bottom-color: rgba(0,0,0,0.16); }
     .checklist-item:last-child { border-bottom: none; }
-    .item-header { cursor: pointer; user-select: none; }
+    .item-header { cursor: pointer; user-select: none; padding: 24px 0; display: flex; justify-content: space-between; align-items: flex-start; gap: 32px; position: relative; }
+    .item-header-text { flex: 1; }
     .item-num { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; }
-    .item-title { font-size: 18px; font-weight: 500; line-height: 1.4; color: var(--text); margin-bottom: 8px; }
-    .item-preview { font-size: 14px; line-height: 1.6; color: var(--muted); }
-    .item-content { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.35s ease, opacity 0.35s ease, margin-top 0.35s ease; }
-    .checklist-item.open .item-content { max-height: 600px; opacity: 1; margin-top: 20px; }
+    .item-title { font-size: 18px; font-weight: 500; line-height: 1.4; color: var(--text); margin-bottom: 8px; transition: opacity 0.2s ease; }
+    .item-header:hover .item-title { opacity: 0.7; }
+    .item-preview { font-size: 14px; line-height: 1.6; color: var(--muted); margin-bottom: 0; }
+    .item-header::after { content: '\2014'; font-size: 18px; color: var(--muted); opacity: 0.55; flex-shrink: 0; transition: transform 0.3s ease, opacity 0.2s ease; line-height: 1; margin-top: 3px; }
+    .item-header:hover::after { opacity: 0.8; }
+    .checklist-item.open .item-header::after { transform: rotate(90deg); opacity: 0.7; }
+    .item-content { max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.4s cubic-bezier(0.4,0,0.2,1); padding-bottom: 0; }
+    .checklist-item.open .item-content { max-height: 600px; opacity: 1; padding-bottom: 28px; }
     .item-details { font-size: 14px; line-height: 1.7; color: var(--text); margin-bottom: 20px; }
-    .item-why { background: white; border-radius: 8px; padding: 20px 24px; }
-    .item-why-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; display: block; font-weight: 500; }
+    .item-why { border-left: 2px solid var(--text); padding: 4px 0 4px 20px; }
+    .item-why-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block; font-weight: 500; }
     .item-why-text { font-size: 14px; line-height: 1.7; color: var(--muted); margin: 0; }
-    .item-toggle { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 12px; color: var(--text); cursor: pointer; background: none; border: none; padding: 0; font-family: var(--font-sans); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; transition: opacity 0.2s; }
-    .item-toggle:hover { opacity: 0.6; }
-    .item-toggle::after { content: ''; width: 8px; height: 8px; border-right: 1.5px solid var(--text); border-bottom: 1.5px solid var(--text); transform: rotate(45deg); transition: transform 0.25s; margin-top: -2px; }
-    .checklist-item.open .item-toggle::after { transform: rotate(-135deg); margin-top: 2px; }
     
     .social-proof { background: rgba(0,0,0,0.02); border-radius: 8px; padding: 20px 24px; margin: 32px 0; font-size: 13px; line-height: 1.7; color: var(--muted); border-left: 2px solid var(--text); }
     
@@ -139,10 +141,11 @@
   <div class="checklist">
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 1</span>
         <h3 class="item-title">Кто собственник и кто будет на сделке?</h3>
         <p class="item-preview">Единственный владелец или долевая собственность? Личное присутствие или доверенность?</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -158,10 +161,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 2</span>
         <h3 class="item-title">Как недвижимость попала в собственность?</h3>
         <p class="item-preview">Срок владения и основание получения: покупка, дарение, наследство, приватизация.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -177,10 +181,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 3</span>
         <h3 class="item-title">Материнский капитал и доли детям</h3>
         <p class="item-preview">Использование маткапитала и выделение долей всем детям.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -196,10 +201,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 4</span>
         <h3 class="item-title">История приватизации</h3>
         <p class="item-preview">Кто был зарегистрирован на момент приватизации и кто отказался от участия.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -215,10 +221,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 5</span>
         <h3 class="item-title">Обременения и ограничения</h3>
         <p class="item-preview">Свежая выписка из ЕГРН без арестов, залогов и ограничений.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -242,10 +249,11 @@
   <div class="checklist">
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 6</span>
         <h3 class="item-title">Соответствие планировки</h3>
         <p class="item-preview">Совпадение текущей планировки с планом БТИ.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -261,10 +269,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 7</span>
         <h3 class="item-title">Что скрывает свежий ремонт?</h3>
         <p class="item-preview">Косметика или капитальная замена электрики, труб, стояков.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -280,10 +289,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 8</span>
         <h3 class="item-title">История протечек и плесени</h3>
         <p class="item-preview">Затопления от соседей и обработка стен от плесени.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -299,10 +309,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 9</span>
         <h3 class="item-title">Состояние дома и коммуникаций</h3>
         <p class="item-preview">Капремонт, стояки, лифты, кровля.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -318,10 +329,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 10</span>
         <h3 class="item-title">Охранный статус здания</h3>
         <p class="item-preview">Памятник архитектуры и охранные обязательства.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -355,10 +367,11 @@
   <div class="checklist">
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 11</span>
         <h3 class="item-title">Статус дома</h3>
         <p class="item-preview">Аварийность, расселение, реновация.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -374,10 +387,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 12</span>
         <h3 class="item-title">Соседи</h3>
         <p class="item-preview">Кто живёт рядом и были ли конфликты.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -393,10 +407,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 13</span>
         <h3 class="item-title">Долги по капремонту</h3>
         <p class="item-preview">Задолженность по взносам на капитальный ремонт переходит к новому собственнику.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -420,10 +435,11 @@
   <div class="checklist">
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 14</span>
         <h3 class="item-title">Реальная цена в договоре</h3>
         <p class="item-preview">Полная стоимость или занижение для ухода от налогов.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -438,10 +454,11 @@
 
     <div class="checklist-item">
       <div class="item-header">
+        <div class="item-header-text">
         <span class="item-num">Вопрос 15</span>
         <h3 class="item-title">Требование предоплаты</h3>
         <p class="item-preview">Аванс до проверки документов юристом.</p>
-        <button class="item-toggle">Развернуть</button>
+        </div>
       </div>
       <div class="item-content">
         <div class="item-details">
@@ -533,28 +550,13 @@
 </section>
 
 <script>
-document.querySelectorAll('.item-toggle').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    e.stopPropagation();
+document.querySelectorAll('.item-header').forEach(header => {
+  header.addEventListener('click', function() {
     const item = this.closest('.checklist-item');
     const isOpen = item.classList.contains('open');
     const section = item.closest('.checklist');
-    section.querySelectorAll('.checklist-item').forEach(i => {
-      i.classList.remove('open');
-      const b = i.querySelector('.item-toggle');
-      if (b) b.textContent = 'Развернуть';
-    });
-    if (!isOpen) {
-      item.classList.add('open');
-      this.textContent = 'Свернуть';
-    }
-  });
-});
-
-document.querySelectorAll('.item-header').forEach(h => {
-  h.addEventListener('click', () => {
-    const btn = h.querySelector('.item-toggle');
-    if (btn) btn.click();
+    section.querySelectorAll('.checklist-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
   });
 });
 </script>
