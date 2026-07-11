@@ -9,7 +9,6 @@ Disallow: /weekly-report.html
 Disallow: /selection-form.html
 Disallow: /strategy.html
 Disallow: /sma.html
-Disallow: /checklist-complete.html
 Disallow: /data/
 
 Sitemap: https://fastbroker21.ru/sitemap.xml
