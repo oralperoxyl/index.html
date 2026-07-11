@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /buyer-dashboard.html
+Disallow: /buyer-dashboard-admin.html
+Disallow: /client-dashboard.html
+Disallow: /meeting-pack.html
+Disallow: /meeting-pack-agent.html
+Disallow: /meeting-pack-buyer.html
+Disallow: /weekly-report.html
+Disallow: /selection-form.html
+Disallow: /strategy.html
+Disallow: /sma.html
+Disallow: /checklist-complete.html
+Disallow: /data/
+
+Sitemap: https://fastbroker21.ru/sitemap.xml
