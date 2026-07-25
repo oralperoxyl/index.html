@@ -1029,7 +1029,9 @@ function deleteHistItem(buyerId,idx){
   if(!confirm('Удалить эту запись из истории изменений?'))return;
   buyer.situationHistory.splice(idx,1);
   ghSave();
-  renderClientView(buyerId);
+  const wrap=document.getElementById('histWrap');
+  if(wrap){wrap.innerHTML=renderHistory(buyer,buyerId);}
+  else{renderClientView(buyerId);}
 }
 
 function renderClientView(buyerId){
@@ -1149,6 +1151,8 @@ function renderAgentView(buyerId){
           </div>
         </div></div>
 
+      <!-- HISTORY (agent, editable) -->
+      <div id="histWrap" style="margin-bottom:32px">${renderHistory(buyer,buyerId)}</div>
 
       <!-- VISIBILITY CONTROLS -->
       <div class="agent-section" style="margin-bottom:24px">
@@ -1263,6 +1267,8 @@ function saveSituation(buyerId){
       }
       buyer.situation=val;
       ghSave();
+      const wrap=document.getElementById('histWrap');
+      if(wrap){wrap.innerHTML=renderHistory(buyer,buyerId);}
     }
   },1000);
 }
