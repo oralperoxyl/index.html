@@ -1205,7 +1205,11 @@ function saveSituation(buyerId){
     const buyer=allData.buyers[buyerId];
     if(buyer){
       const prev=buyer.situation||'';
-      if(val!==prev&&prev.trim()){
+      const normHist=s=>String(s||'').toLowerCase().replace(/[^а-яёa-z0-9]+/g,'');
+      const meaningfulChange=normHist(val)!==normHist(prev);
+      const lastHist=(buyer.situationHistory&&buyer.situationHistory[0])?buyer.situationHistory[0].text:null;
+      const isDupOfLast=lastHist!==null&&normHist(lastHist)===normHist(prev);
+      if(val!==prev&&prev.trim()&&meaningfulChange&&!isDupOfLast){
         if(!buyer.situationHistory)buyer.situationHistory=[];
         buyer.situationHistory.unshift({text:prev,date:new Date().toISOString()});
         if(buyer.situationHistory.length>20)buyer.situationHistory.length=20;
