@@ -707,9 +707,9 @@
     "жк-пульс-премьер": {
       "address": "ЖК Пульс Премьер",
       "area": 21.67,
-      "rooms": 0,
+      "rooms": 1,
       "floor": "12",
-      "location": "",
+      "location": "м. Дыбенко",
       "date": "28 июля 2026 г.",
       "sma": {
         "competitors": [],
