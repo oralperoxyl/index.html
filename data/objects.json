@@ -712,10 +712,28 @@
       "location": "м. Дыбенко",
       "date": "27 июля 2026 г.",
       "sma": {
-        "competitors": [],
+        "competitors": [
+          {
+            "address": "",
+            "agent": "",
+            "area": "",
+            "rooms": "",
+            "floor": "",
+            "condition": "",
+            "price": 0,
+            "ppm": 0,
+            "bargain": "",
+            "adDate": "",
+            "adViews": "",
+            "url": "",
+            "comment": "",
+            "ours": false,
+            "visited": false
+          }
+        ],
         "recommendations": [],
         "priceFrom": 6500000,
-        "priceTo": 0
+        "priceTo": 6800000
       },
       "strategy": null,
       "reports": null
