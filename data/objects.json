@@ -703,6 +703,22 @@
       },
       "strategy": null,
       "reports": null
+    },
+    "жк-пульс-премьер": {
+      "address": "ЖК Пульс Премьер",
+      "area": 0,
+      "rooms": 0,
+      "floor": "",
+      "location": "",
+      "date": "28 июля 2026 г.",
+      "sma": {
+        "competitors": [],
+        "recommendations": [],
+        "priceFrom": 0,
+        "priceTo": 0
+      },
+      "strategy": null,
+      "reports": null
     }
   }
 }
