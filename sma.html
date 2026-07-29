@@ -270,9 +270,8 @@ body.editing .hero{padding-right:500px}
       <span class="sync-dot" id="syncDot"></span>
       <span id="syncText">—</span>
     </span>
-    <button onclick="changeToken()" style="font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.04em;padding:6px 14px;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--muted);">Токен</button>
+    <button id="tokenBtn" onclick="changeToken()" style="display:none;font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.04em;padding:6px 14px;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--muted);">Токен</button>
     <button class="edit-toggle" id="editToggle" onclick="toggleEdit()" style="display:none;">Редактировать</button>
-    <button onclick="changeToken()" style="font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:0.04em;padding:6px 14px;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--muted);">Токен</button>
   </div>
 </header>
 
@@ -543,6 +542,14 @@ function showPicker(){
   renderPicker();
 }
 function renderPicker(){
+  if(!isEditMode){
+    pickerEl.innerHTML=`
+    <div style="padding:120px 0;text-align:center;">
+      <h1 style="font-family:var(--serif);font-size:28px;font-weight:400;margin-bottom:12px;">Маркетинговый анализ</h1>
+      <p style="color:var(--muted);font-size:15px;">Чтобы посмотреть анализ по вашему объекту,<br>откройте персональную ссылку, которую вам отправил агент.</p>
+    </div>`;
+    return;
+  }
   const ids=Object.keys(allData.objects);
   pickerEl.innerHTML=`
     <div style="margin-bottom:48px;">
@@ -953,6 +960,8 @@ async function initApp(){
   const token=getToken();
   const syncStatusEl=document.getElementById('syncStatus');
   isEditMode=!!token||params.has('edit');
+  const tokenBtnEl=document.getElementById('tokenBtn');
+  if(tokenBtnEl)tokenBtnEl.style.display=isEditMode?'':'none';
   syncStatusEl.style.display=token?'':'none';
   if(params.has('edit')&&!token){setSyncError('Нет токена — нажмите сюда');syncStatusEl.style.display='';}
 
