@@ -119,6 +119,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
   }
 
+  // Скрыть все H2 вне hero немедленно — до observer — чтобы не мерцали
+  if (!prefersReducedMotion && !isMobileDevice) {
+    document.querySelectorAll('h2.animate-on-scroll').forEach(el => {
+      // Только те что вне .hero
+      if (!el.closest('.hero')) {
+        el.style.opacity = '0';
+        el.style.filter = 'blur(14px)';
+        el.style.transform = 'scale(1.015)';
+      }
+    });
+  }
+
   // Only initialize animations if user hasn't requested reduced motion
   if (!prefersReducedMotion) {
     // Hero-элементы анимируются сразу при загрузке
