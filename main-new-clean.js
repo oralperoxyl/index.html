@@ -107,14 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Typewriter effect for headings
   function focusEffect(element) {
+    // Скрыть без transition
+    element.style.transition = 'none';
     element.style.opacity = '0';
-    element.style.filter = 'blur(12px)';
-    element.style.transform = 'scale(1.01)';
-    element.style.transition = 'opacity 0.9s ease, filter 0.9s ease, transform 0.9s ease';
-    element.getBoundingClientRect();
-    element.style.opacity = '1';
-    element.style.filter = 'blur(0)';
-    element.style.transform = 'scale(1)';
+    element.style.filter = 'blur(14px)';
+    element.style.transform = 'scale(1.015)';
+    // Дать браузеру применить начальное состояние, потом запустить transition
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        element.style.transition = 'opacity 1s ease, filter 1s ease, transform 1s ease';
+        element.style.opacity = '1';
+        element.style.filter = 'blur(0px)';
+        element.style.transform = 'scale(1)';
+      });
+    });
   }
 
   // Only initialize animations if user hasn't requested reduced motion
