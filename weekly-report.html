@@ -1070,6 +1070,14 @@ function showPicker() {
 }
 
 function renderPicker() {
+  if (!isEditMode) {
+    pickerEl.innerHTML = `
+    <div style="padding:120px 0;text-align:center;">
+      <h1 style="font-family:var(--serif);font-size:28px;font-weight:400;margin-bottom:12px;">Еженедельный отчёт</h1>
+      <p style="color:var(--muted);font-size:15px;">Чтобы посмотреть отчёт по вашему объекту,<br>откройте персональную ссылку, которую вам отправил агент.</p>
+    </div>`;
+    return;
+  }
   const ids = Object.keys(allData.objects);
   pickerEl.innerHTML = `
     <div style="margin-bottom:48px;">
