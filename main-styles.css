@@ -161,6 +161,11 @@ p {
   border-top: none;
 }
 
+.hero .section-frame {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .text-narrow {
   max-width: var(--measure);
 }

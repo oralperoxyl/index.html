@@ -107,53 +107,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Typewriter effect for headings
   function focusEffect(element) {
+    element.style.transition = 'none';
     element.style.opacity = '0';
-    element.style.filter = 'blur(12px)';
-    element.style.transform = 'scale(1.01)';
-    element.style.transition = 'opacity 0.9s ease, filter 0.9s ease, transform 0.9s ease';
-    element.getBoundingClientRect();
-    element.style.opacity = '1';
-    element.style.filter = 'blur(0)';
-    element.style.transform = 'scale(1)';
+    element.style.filter = 'blur(14px)';
+    element.style.transform = 'scale(1.015)';
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      element.style.transition = 'opacity 1s ease, filter 1s ease, transform 1s ease';
+      element.style.opacity = '1';
+      element.style.filter = 'blur(0px)';
+      element.style.transform = 'scale(1)';
+    }));
   }
 
   // Only initialize animations if user hasn't requested reduced motion
   if (!prefersReducedMotion) {
-    // Скрыть все H1/H2 заранее — до того как observer их поймает
-    const headings = Array.from(document.querySelectorAll('.animate-on-scroll')).filter(
-      el => (el.tagName === 'H1' || el.tagName === 'H2') && !isMobileDevice
-    );
-    headings.forEach(el => {
+    // Hero-элементы анимируются сразу при загрузке
+    const heroSection = document.querySelector('.hero');
+    const heroElements = heroSection ? Array.from(heroSection.querySelectorAll('.animate-on-scroll')) : [];
+    const delays = [0, 100, 200, 300, 400, 500];
+    heroElements.forEach((el, i) => {
       el.style.opacity = '0';
       el.style.filter = 'blur(14px)';
       el.style.transform = 'scale(1.015)';
+      setTimeout(() => focusEffect(el), delays[i] || i * 100);
     });
 
-    // Observer срабатывает при первом пикселе элемента
+    // Остальные — через observer при скролле
     const scrollObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const element = entry.target;
           const animationType = element.getAttribute('data-animate');
-
           if ((element.tagName === 'H1' || element.tagName === 'H2') && !isMobileDevice) {
-            focusEffect(element);
+            element.style.opacity = '0';
+            element.style.filter = 'blur(14px)';
+            element.style.transform = 'scale(1.015)';
+            requestAnimationFrame(() => requestAnimationFrame(() => focusEffect(element)));
           } else if (animationType) {
             element.classList.add(`animate-${animationType}`);
           }
-
           scrollObserver.unobserve(element);
         }
       });
-    }, {
-      threshold: 0,
-      rootMargin: '0px 0px -20px 0px'
-    });
+    }, { threshold: 0, rootMargin: '0px 0px -20px 0px' });
 
-    const animateElements = Array.from(document.querySelectorAll('.animate-on-scroll'));
-    animateElements.forEach(element => {
-      scrollObserver.observe(element);
-    });
+    const animateElements = Array.from(document.querySelectorAll('.animate-on-scroll'))
+      .filter(el => !heroElements.includes(el));
+    animateElements.forEach(element => scrollObserver.observe(element));
   } else {
     // If reduced motion is preferred, immediately show all elements
     const animateElements = Array.from(document.querySelectorAll('.animate-on-scroll'));
