@@ -107,49 +107,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Typewriter effect for headings
   function focusEffect(element) {
-    // Скрыть без transition
-    element.style.transition = 'none';
     element.style.opacity = '0';
-    element.style.filter = 'blur(14px)';
-    element.style.transform = 'scale(1.015)';
-    // Дать браузеру применить начальное состояние, потом запустить transition
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        element.style.transition = 'opacity 1s ease, filter 1s ease, transform 1s ease';
-        element.style.opacity = '1';
-        element.style.filter = 'blur(0px)';
-        element.style.transform = 'scale(1)';
-      });
-    });
+    element.style.filter = 'blur(12px)';
+    element.style.transform = 'scale(1.01)';
+    element.style.transition = 'opacity 0.9s ease, filter 0.9s ease, transform 0.9s ease';
+    element.getBoundingClientRect();
+    element.style.opacity = '1';
+    element.style.filter = 'blur(0)';
+    element.style.transform = 'scale(1)';
   }
 
   // Only initialize animations if user hasn't requested reduced motion
   if (!prefersReducedMotion) {
-    // Create Intersection Observer
+    // Скрыть все H1/H2 заранее — до того как observer их поймает
+    const headings = Array.from(document.querySelectorAll('.animate-on-scroll')).filter(
+      el => (el.tagName === 'H1' || el.tagName === 'H2') && !isMobileDevice
+    );
+    headings.forEach(el => {
+      el.style.opacity = '0';
+      el.style.filter = 'blur(14px)';
+      el.style.transform = 'scale(1.015)';
+    });
+
+    // Observer срабатывает при первом пикселе элемента
     const scrollObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          // Add animation class when element enters viewport
           const element = entry.target;
           const animationType = element.getAttribute('data-animate');
 
-          // На мобиле typewriter не используем — слишком дёргано
           if ((element.tagName === 'H1' || element.tagName === 'H2') && !isMobileDevice) {
-            setTimeout(() => focusEffect(element), 200);
+            focusEffect(element);
           } else if (animationType) {
             element.classList.add(`animate-${animationType}`);
           }
 
-          // Stop observing this element (animation only triggers once)
           scrollObserver.unobserve(element);
         }
       });
-    }, animationConfig);
+    }, {
+      threshold: 0,
+      rootMargin: '0px 0px -20px 0px'
+    });
 
-    // Select all elements to animate
     const animateElements = Array.from(document.querySelectorAll('.animate-on-scroll'));
-
-    // Observe each element
     animateElements.forEach(element => {
       scrollObserver.observe(element);
     });
