@@ -106,21 +106,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // Typewriter effect for headings
-  function typewriterEffect(element, speed = 50) {
-    const text = element.textContent;
-    element.textContent = '';
+  function focusEffect(element) {
+    element.style.opacity = '0';
+    element.style.filter = 'blur(12px)';
+    element.style.transform = 'scale(1.01)';
+    element.style.transition = 'opacity 0.9s ease, filter 0.9s ease, transform 0.9s ease';
+    element.getBoundingClientRect();
     element.style.opacity = '1';
-
-    let charIndex = 0;
-    const typeNextChar = () => {
-      if (charIndex < text.length) {
-        element.textContent += text.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeNextChar, speed);
-      }
-    };
-
-    typeNextChar();
+    element.style.filter = 'blur(0)';
+    element.style.transform = 'scale(1)';
   }
 
   // Only initialize animations if user hasn't requested reduced motion
@@ -135,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // На мобиле typewriter не используем — слишком дёргано
           if ((element.tagName === 'H1' || element.tagName === 'H2') && !isMobileDevice) {
-            setTimeout(() => typewriterEffect(element, 30), 200);
+            setTimeout(() => focusEffect(element), 200);
           } else if (animationType) {
             element.classList.add(`animate-${animationType}`);
           }
