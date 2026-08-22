@@ -161,11 +161,6 @@ p {
   border-top: none;
 }
 
-.hero .section-frame {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
 .text-narrow {
   max-width: var(--measure);
 }
@@ -264,7 +259,7 @@ p {
 
 .hero {
   background: var(--bg-main);
-  padding: 60px 0 clamp(80px, 12vh, 160px);
+  padding: clamp(48px, 8vh, 96px) 0 clamp(80px, 12vh, 160px);
   position: relative;
   overflow: hidden;
 }
@@ -1539,10 +1534,11 @@ textarea.form-control {
 }
 
 .contact-main-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-6);
+  display: flex;
+  flex-direction: row;
+  gap: 64px;
   margin-bottom: var(--space-6);
+  flex-wrap: wrap;
 }
 
 .contact-info-col {
@@ -1659,7 +1655,7 @@ textarea.form-control {
 }
 
 .contact-form-wrapper {
-  max-width: 720px;
+  max-width: 100%;
 }
 
 .contact-form-title {
@@ -1682,9 +1678,12 @@ textarea.form-control {
 
 .contact-form-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--space-4);
   align-items: start;
+}
+.contact-form-row textarea {
+  grid-column: 1 / -1;
 }
 
 .contact-form-field {
@@ -2333,8 +2332,6 @@ textarea.contact-form-control {
 .animate-on-scroll {
   /* opacity managed by JS animations only */
 }
-
-
 
 /* Fade In Up - Main animation for sections */
 .animate-fade-in-up {
