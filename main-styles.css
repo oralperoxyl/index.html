@@ -259,7 +259,7 @@ p {
 
 .hero {
   background: var(--bg-main);
-  padding: clamp(24px, 4vh, 48px) 0 clamp(80px, 12vh, 160px);
+  padding: 60px 0 clamp(80px, 12vh, 160px);
   position: relative;
   overflow: hidden;
 }
