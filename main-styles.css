@@ -161,6 +161,11 @@ p {
   border-top: none;
 }
 
+.hero .section-frame {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .text-narrow {
   max-width: var(--measure);
 }
@@ -1655,7 +1660,7 @@ textarea.form-control {
 }
 
 .contact-form-wrapper {
-  max-width: 100%;
+  max-width: 640px;
 }
 
 .contact-form-title {
