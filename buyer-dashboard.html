@@ -1553,6 +1553,7 @@ function renderBriefClient(buyer, buyerId) {
 // Отображение сырых данных формы когда агент ещё не редактировал
 function renderFormDataClient(d) {
   const rows = [
+    { label: 'Город', val: d.city },
     { label: 'Цель', val: d.purpose },
     { label: 'Кто будет жить', val: d.residents },
     { label: 'Срок', val: d.horizon },
@@ -1655,22 +1656,38 @@ function renderInlineForm(buyer, buyerId) {
 }
 
 const INLINE_STEPS = [
-  { id: 'step-goal', title: 'Цель и контекст', eyebrow: '01 / 06' },
-  { id: 'step-housing', title: 'Тип жилья', eyebrow: '02 / 06' },
-  { id: 'step-location', title: 'Локация', eyebrow: '03 / 06' },
-  { id: 'step-params', title: 'Параметры', eyebrow: '04 / 06' },
-  { id: 'step-priorities', title: 'Приоритеты', eyebrow: '05 / 06' },
-  { id: 'step-finance', title: 'Финансы и финал', eyebrow: '06 / 06' },
+  { id: 'step-city', title: 'Город', eyebrow: '01 / 07' },
+  { id: 'step-goal', title: 'Цель и контекст', eyebrow: '02 / 07' },
+  { id: 'step-housing', title: 'Тип жилья', eyebrow: '03 / 07' },
+  { id: 'step-location', title: 'Локация', eyebrow: '04 / 07' },
+  { id: 'step-params', title: 'Параметры', eyebrow: '05 / 07' },
+  { id: 'step-priorities', title: 'Приоритеты', eyebrow: '06 / 07' },
+  { id: 'step-finance', title: 'Финансы и финал', eyebrow: '07 / 07' },
 ];
 
 let inlineStep = 0;
 let inlinePriorities = [];
 
 function renderInlineStep(idx) {
+  const CITY = ifAnswers.city || 'Санкт-Петербург';
+  const isMsk = CITY === 'Москва';
   const steps = [
-    // 0: Цель
+    // 0: Город
+    `<div class="if-step" id="if-step-city">
+      <div class="if-eyebrow">01 / 07</div>
+      <div class="if-title">Город поиска</div>
+      <div class="if-field">
+        <div class="if-label">В каком городе ищете квартиру</div>
+        <div class="if-chips" data-ig="city" data-multi="false">
+          <button class="if-chip" data-val="Санкт-Петербург">Санкт-Петербург</button>
+          <button class="if-chip" data-val="Москва">Москва</button>
+        </div>
+      </div>
+    </div>`,
+
+    // 1: Цель
     `<div class="if-step" id="if-step-0">
-      <div class="if-eyebrow">01 / 06</div>
+      <div class="if-eyebrow">02 / 07</div>
       <div class="if-title">Цель и контекст</div>
       <div class="if-field">
         <div class="if-label">Цель покупки</div>
@@ -1706,7 +1723,7 @@ function renderInlineStep(idx) {
 
     // 1: Тип жилья
     `<div class="if-step" id="if-step-1">
-      <div class="if-eyebrow">02 / 06</div>
+      <div class="if-eyebrow">03 / 07</div>
       <div class="if-title">Тип жилья</div>
       <div class="if-field">
         <div class="if-label">Что рассматриваете</div>
@@ -1729,7 +1746,7 @@ function renderInlineStep(idx) {
           <button class="if-chip" data-val="Бывшие коммуналки">Бывшие коммуналки</button>
           <button class="if-chip" data-val="Газовые плиты">Газовые плиты</button>
           <button class="if-chip" data-val="Первые этажи">Первые этажи</button>
-          <button class="if-chip" data-val="Дворы-колодцы">Дворы-колодцы</button>
+          ${!isMsk ? `<button class="if-chip" data-val="Дворы-колодцы">Дворы-колодцы</button>` : ``}
         </div>
       </div>
       <div class="if-field">
@@ -1749,22 +1766,32 @@ function renderInlineStep(idx) {
 
     // 2: Локация
     `<div class="if-step" id="if-step-2">
-      <div class="if-eyebrow">03 / 06</div>
+      <div class="if-eyebrow">04 / 07</div>
       <div class="if-title">Локация</div>
       <div class="if-field">
         <div class="if-label">Допустимые районы</div>
         <div class="if-chips" data-ig="districts" data-multi="true">
+          ${isMsk ? `
+          <button class="if-chip" data-val="Хамовники">Хамовники</button>
+          <button class="if-chip" data-val="Пресненский">Пресненский</button>
+          <button class="if-chip" data-val="Тверской">Тверской</button>
+          <button class="if-chip" data-val="Арбат">Арбат</button>
+          <button class="if-chip" data-val="Замоскворечье">Замоскворечье</button>
+          <button class="if-chip" data-val="Якиманка">Якиманка</button>
+          <button class="if-chip" data-val="Другие">Другие</button>
+          ` : `
           <button class="if-chip" data-val="Центральный">Центральный</button>
           <button class="if-chip" data-val="Петроградский">Петроградский</button>
           <button class="if-chip" data-val="Василеостровский">Василеостровский</button>
           <button class="if-chip" data-val="Адмиралтейский">Адмиралтейский</button>
           <button class="if-chip" data-val="Московский">Московский</button>
           <button class="if-chip" data-val="Другие">Другие</button>
+          `}
         </div>
       </div>
       <div class="if-field">
         <div class="if-label">Любимые улицы, адреса, дома мечты</div>
-        <textarea class="if-textarea" id="if-fav-streets" placeholder="Каменноостровский, набережная Мойки…" rows="2" oninput="autoResize(this)"></textarea>
+        <textarea class="if-textarea" id="if-fav-streets" placeholder="${isMsk ? 'Патриаршие пруды, Остоженка…' : 'Каменноостровский, набережная Мойки…'}" rows="2" oninput="autoResize(this)"></textarea>
       </div>
       <div class="if-field">
         <div class="if-label">Районы, которые точно не рассматриваете</div>
@@ -1786,7 +1813,7 @@ function renderInlineStep(idx) {
 
     // 3: Параметры
     `<div class="if-step" id="if-step-3">
-      <div class="if-eyebrow">04 / 06</div>
+      <div class="if-eyebrow">05 / 07</div>
       <div class="if-title">Параметры квартиры</div>
       <div class="if-field">
         <div class="if-label">Метраж</div>
@@ -1838,7 +1865,7 @@ function renderInlineStep(idx) {
 
     // 4: Приоритеты
     `<div class="if-step" id="if-step-4">
-      <div class="if-eyebrow">05 / 06</div>
+      <div class="if-eyebrow">06 / 07</div>
       <div class="if-title">Что важнее всего?</div>
       <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:28px;max-width:440px">Выберите 3–5 пунктов, без которых точно нельзя. Нажмите — добавится в список.</p>
       <div class="if-field">
@@ -1859,7 +1886,7 @@ function renderInlineStep(idx) {
 
     // 5: Финансы + финал
     `<div class="if-step" id="if-step-5">
-      <div class="if-eyebrow">06 / 06</div>
+      <div class="if-eyebrow">07 / 07</div>
       <div class="if-title">Финансы и финал</div>
       <div class="if-field">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
@@ -1963,6 +1990,10 @@ function ifInitChips() {
           const wrap = document.getElementById('if-why-old-wrap');
           if (wrap) wrap.style.display = oldOn ? 'block' : 'none';
         }
+        // side effect: смена города — сбрасываем район, выбранный под другой город
+        if (group.dataset.ig === 'city') {
+          delete ifAnswers.districts;
+        }
       });
     });
   });
@@ -2046,6 +2077,7 @@ function ifCollect() {
   const prio = (a['_priorities'] || inlinePriorities);
 
   return {
+    city:         v('city'),
     purpose:      v('purpose'),
     residents:    v('residents'),
     horizon:      v('horizon'),
@@ -2105,6 +2137,7 @@ async function ifSubmit(buyerId) {
   const body = `
 Бриф на подбор квартиры
 Клиент: ${buyer.name || buyerId}
+Город: ${d.city}
 
 ЦЕЛЬ И КОНТЕКСТ
 Цель: ${d.purpose}
