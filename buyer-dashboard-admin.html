@@ -2203,6 +2203,11 @@ async function ifSubmit(buyerId) {
   const buyer = allData.buyers[buyerId];
   if (!buyer) return;
 
+  // Сохраняем ответы клиента в дашборд — чтобы бриф был виден в админке и не терялся
+  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
+  buyer.brief.formData = d;
+  try { await ghSave(); } catch(e) {}
+
   // Формируем текст письма
   const body = `
 Бриф на подбор квартиры
@@ -2285,6 +2290,110 @@ ${d.priorities}
 }
 
 // ── BRIEF AGENT RENDER ───────────────────────────────────────
+const CLIENT_FIELD_LABELS = [
+  { key: 'city', label: 'Город' },
+  { key: 'purpose', label: 'Цель' },
+  { key: 'residents', label: 'Кто будет жить' },
+  { key: 'horizon', label: 'Срок' },
+  { key: 'housingType', label: 'Тип жилья' },
+  { key: 'housingExclude', label: 'Исключает' },
+  { key: 'mainGoal', label: 'Главное в квартире' },
+  { key: 'districts', label: 'Локация' },
+  { key: 'locPrio', label: 'Критично по локации' },
+  { key: 'favStreets', label: 'Любимые места' },
+  { key: 'noDistricts', label: 'Не рассматривает' },
+  { key: 'rooms', label: 'Комнаты' },
+  { key: 'floor', label: 'Этаж' },
+  { key: 'condition', label: 'Состояние' },
+  { key: 'extras', label: 'Дополнительно' },
+  { key: 'budgetOk', label: 'Бюджет комфортный', suffix: ' ₽' },
+  { key: 'budgetMax', label: 'Бюджет максимальный', suffix: ' ₽' },
+  { key: 'payment', label: 'Способ покупки' },
+  { key: 'urgency', label: 'Срочность' },
+  { key: 'readiness', label: 'Готовность к авансу' },
+];
+
+function renderClientAnswersAgent(d) {
+  if (!d) return '';
+  const area = (d.areaFrom && d.areaFrom !== '—') ? `${d.areaFrom}${d.areaTo && d.areaTo !== '—' ? ' — ' + d.areaTo : ''} м²` : '';
+  const cells = CLIENT_FIELD_LABELS.map(f => {
+    const v = d[f.key];
+    if (!v || v === '—') return '';
+    return `<div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">${f.label}</div><div style="font-size:13px;color:#E5E5E5">${esc(v)}${f.suffix||''}</div></div>`;
+  });
+  if (area) cells.splice(11, 0, `<div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">Метраж</div><div style="font-size:13px;color:#E5E5E5">${esc(area)}</div></div>`);
+  const filled = cells.filter(Boolean);
+  const extraBlocks = [
+    d.dislike && d.dislike !== '—' ? `<div style="margin-top:14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">Что не устраивает сейчас</div><div style="font-size:13px;color:#E5E5E5;line-height:1.6">${escNl(d.dislike)}</div></div>` : '',
+    d.tradeoff && d.tradeoff !== '—' ? `<div style="margin-top:14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">Готов отказаться</div><div style="font-size:13px;color:#E5E5E5;line-height:1.6">${escNl(d.tradeoff)}</div></div>` : '',
+    d.priorities && d.priorities !== '—' ? `<div style="margin-top:14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">Приоритеты клиента</div><div style="font-size:13px;color:#E5E5E5;line-height:1.7;white-space:pre-line">${esc(d.priorities)}</div></div>` : '',
+  ].filter(Boolean).join('');
+  if (!filled.length && !extraBlocks) return '';
+  return `<div class="agent-section" style="margin-bottom:24px;background:rgba(255,255,255,0.04);border-radius:8px;padding:18px 20px">
+    <div class="agent-section-title" style="margin-bottom:14px">Ответы клиента <span style="font-size:11px;color:rgba(229,229,229,0.4);font-weight:300;font-family:var(--sans)">— из формы или письма</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 20px">${filled.join('')}</div>
+    ${extraBlocks}
+  </div>`;
+}
+
+function parseEmailBrief(text) {
+  const t = String(text || '').replace(/\r\n/g, '\n');
+  const g1 = (re) => { const m = t.match(re); return m ? m[1].trim() : '—'; };
+  const d = {
+    city: g1(/^Город:\s*(.+)$/m),
+    purpose: g1(/^Цель:\s*(.+)$/m),
+    residents: g1(/^Проживание:\s*(.+)$/m),
+    horizon: g1(/^Срок:\s*(.+)$/m),
+    dislike: g1(/^Что не устраивает:\s*(.+)$/m),
+    housingType: g1(/^Рассматривает:\s*(.+)$/m),
+    housingExclude: g1(/^Исключает:\s*(.+)$/m),
+    whyOld: g1(/^Почему старый фонд:\s*(.+)$/m),
+    mainGoal: g1(/^Главное в квартире:\s*(.+)$/m),
+    districts: g1(/^Районы:\s*(.+)$/m),
+    favStreets: g1(/^Любимые места:\s*(.+)$/m),
+    noDistricts: g1(/^Исключения:\s*(.+)$/m),
+    locPrio: g1(/^Критично:\s*(.+)$/m),
+    condition: g1(/^Состояние:\s*(.+)$/m),
+    extras: g1(/^Дополнительно:\s*(.+)$/m),
+    tradeoff: g1(/^Готов отказаться:\s*(.+)$/m),
+    payment: g1(/^Способ покупки:\s*(.+)$/m),
+    urgency: g1(/^Срочность:\s*(.+)$/m),
+    readiness: g1(/^Готовность к авансу:\s*(.+)$/m),
+    areaFrom: '—', areaTo: '—', rooms: '—', floor: '—',
+    budgetOk: '—', budgetMax: '—',
+    priorities: '—', sign1: '—', sign2: '—', sign3: '—',
+  };
+  const area = t.match(/^Метраж:\s*(.+?)\s*—\s*(.+?)\s*м²/m);
+  if (area) { d.areaFrom = area[1].trim(); d.areaTo = area[2].trim(); }
+  const rf = t.match(/^Комнаты:\s*(.+?)\s*\/\s*Этаж:\s*(.+)$/m);
+  if (rf) { d.rooms = rf[1].trim(); d.floor = rf[2].trim(); }
+  const bOk = t.match(/^Комфортный бюджет:\s*(.+?)\s*₽/m);
+  if (bOk) d.budgetOk = bOk[1].trim();
+  const bMax = t.match(/^Максимальный:\s*(.+?)\s*₽/m);
+  if (bMax) d.budgetMax = bMax[1].trim();
+  const prio = t.match(/ПРИОРИТЕТЫ\n([\s\S]*?)\n\nГотов отказаться:/);
+  if (prio) d.priorities = prio[1].trim();
+  const signs = t.match(/КАК ПОЙМЁТ, ЧТО ЭТО ЕГО\?\n1\.\s*(.+)\n2\.\s*(.+)\n3\.\s*(.+)/);
+  if (signs) { d.sign1 = signs[1].trim(); d.sign2 = signs[2].trim(); d.sign3 = signs[3].trim(); }
+  return d;
+}
+
+async function importBriefFromEmail(buyerId) {
+  const ta = document.getElementById('import-brief-text');
+  const status = document.getElementById('import-brief-status');
+  if (!ta || !ta.value.trim()) return;
+  const buyer = allData.buyers[buyerId];
+  if (!buyer) return;
+  const parsed = parseEmailBrief(ta.value);
+  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
+  buyer.brief.formData = parsed;
+  if (status) status.textContent = 'Сохраняю…';
+  await ghSave();
+  if (status) status.textContent = 'Сохранено';
+  const panel = document.getElementById('tab-brief');
+  if (panel) panel.innerHTML = renderBriefAgent(buyerId, buyer);
+}
+
 function renderBriefAgent(buyerId, buyer) {
   const b = getBrief(buyer);
   const priorities = b.priorities || [];
@@ -2304,6 +2413,16 @@ function renderBriefAgent(buyerId, buyer) {
   ];
 
   return `
+    ${renderClientAnswersAgent(b.formData)}
+    <div class="agent-section" style="margin-bottom:24px;border:1px dashed rgba(229,229,229,0.15);border-radius:8px;padding:16px 18px">
+      <div class="agent-section-title" style="margin-bottom:8px">Импорт брифа из письма</div>
+      <p style="font-size:12px;color:rgba(229,229,229,0.45);margin-bottom:12px;line-height:1.5">Ответы клиента приходят на почту, но сами не попадают в дашборд. Вставьте текст письма — и они сохранятся здесь и будут видны клиенту в его разделе «Подбор».</p>
+      <textarea id="import-brief-text" rows="4" placeholder="Вставьте текст письма целиком…" style="width:100%;resize:vertical;font-family:var(--sans);font-size:12px;padding:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(229,229,229,0.15);border-radius:4px;color:#E5E5E5;box-sizing:border-box"></textarea>
+      <div style="margin-top:10px;display:flex;align-items:center;gap:12px">
+        <button onclick="importBriefFromEmail('${buyerId}')" style="font-size:12px;padding:8px 16px;background:rgba(255,255,255,0.08);border:1px solid rgba(229,229,229,0.2);border-radius:4px;color:#E5E5E5;cursor:pointer;font-family:var(--sans)">Сохранить из письма</button>
+        <span id="import-brief-status" style="font-size:12px;color:#5FAE7D"></span>
+      </div>
+    </div>
     <div class="agent-section" style="margin-bottom:24px">
       <div class="agent-section-title">Резюме подбора <span style="font-size:11px;color:rgba(229,229,229,0.4);font-weight:300;font-family:var(--sans)">— видно клиенту</span></div>
       <textarea class="ai" id="brief-summary" rows="4" placeholder="Свободный текст — ваше прочтение запроса клиента. Что ищет, в чём нюансы, на что ориентируемся…" style="width:100%;resize:vertical;line-height:1.7" oninput="saveBriefField('${buyerId}','summary',this.value)">${esc(b.summary||'')}</textarea>
