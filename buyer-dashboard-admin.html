@@ -2329,7 +2329,7 @@ function renderClientAnswersAgent(d) {
     d.priorities && d.priorities !== '—' ? `<div style="margin-top:14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">Приоритеты клиента</div><div style="font-size:13px;color:#E5E5E5;line-height:1.7;white-space:pre-line">${esc(d.priorities)}</div></div>` : '',
   ].filter(Boolean).join('');
   if (!filled.length && !extraBlocks) return '';
-  return `<div class="agent-section" style="margin-bottom:24px;background:rgba(255,255,255,0.04);border-radius:8px;padding:18px 20px">
+  return `<div class="agent-section" style="margin-bottom:24px;padding:24px 26px">
     <div class="agent-section-title" style="margin-bottom:14px">Ответы клиента <span style="font-size:11px;color:rgba(229,229,229,0.4);font-weight:300;font-family:var(--sans)">— из формы или письма</span></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 20px">${filled.join('')}</div>
     ${extraBlocks}
