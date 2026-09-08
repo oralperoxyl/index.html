@@ -456,7 +456,7 @@ p {
 .work-container {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 160px var(--space-lg);
+  padding: 0 var(--space-lg);
 }
 
 .work-title {
