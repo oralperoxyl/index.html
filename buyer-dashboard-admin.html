@@ -34,6 +34,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .header-right{display:flex;align-items:center;gap:16px}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:#ccc;display:inline-block;margin-right:6px;transition:background 0.3s}
 .sync-dot.ok{background:var(--green)}
+.sync-dot.error{background:var(--red)}
 .sync-text{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
 
 /* HERO */
@@ -468,6 +469,10 @@ function setSyncOk(msg){
   document.getElementById('syncDot').className='sync-dot ok';
   document.getElementById('syncText').textContent=msg||'Синхронизировано';
 }
+function setSyncError(msg){
+  document.getElementById('syncDot').className='sync-dot error';
+  document.getElementById('syncText').textContent=msg||'Ошибка сохранения';
+}
 function setSyncPending(){
   document.getElementById('syncDot').className='sync-dot';
   document.getElementById('syncText').textContent='Сохранение…';
@@ -511,7 +516,7 @@ async function ghLoad(){
   }catch(e){setSyncOk('Ошибка загрузки');}
 }
 
-async function ghSave(){
+async function ghSave(isRetry){
   const token=getToken();
   if(!token)return;
   if(!getMaster()){setSyncOk('Нет ключа шифрования — сохранение остановлено');return;}
@@ -536,10 +541,53 @@ async function ghSave(){
       method:'PUT',headers:{Authorization:`token ${token}`,'Content-Type':'application/json'},
       body:JSON.stringify(body)
     });
+    if(r.ok){
+      const j=await r.json();
+      fileSha=j.content?.sha||fileSha;
+      setSyncOk('Синхронизировано');
+      return;
+    }
+    if(r.status===409){
+      // Кто-то сохранил параллельно (например, с другого устройства).
+      // Подтягиваем свежую версию и склеиваем: чужие новые/изменённые записи
+      // подхватываем, свои несохранённые правки не теряем.
+      if(isRetry){setSyncError('Конфликт сохранения — обновите страницу');return;}
+      const merged=await ghMergeRemote();
+      if(merged){setSyncPending();return ghSave(true);}
+      setSyncError('Конфликт сохранения — обновите страницу');
+      return;
+    }
+    const err=await r.json().catch(()=>({}));
+    console.error('GH save error:',r.status,err);
+    setSyncError('Ошибка сохранения ('+r.status+')');
+  }catch(e){
+    console.error('GH save:',e);
+    setSyncError('Ошибка сети — правки не сохранены');
+  }
+}
+
+// Подтягивает актуальную версию с GitHub и сливает с тем, что сейчас в
+// браузере: сервер — база, локальные правки поверх (свои изменения не
+// теряем), записи, которых нет локально, но есть на сервере — подхватываем.
+async function ghMergeRemote(){
+  const token=getToken();
+  try{
+    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,{headers:{Authorization:`token ${token}`}});
+    if(!r.ok)return false;
     const j=await r.json();
-    fileSha=j.content?.sha||fileSha;
-    setSyncOk('Синхронизировано');
-  }catch(e){setSyncOk('Ошибка сохранения');}
+    fileSha=j.sha;
+    const decoded=atob(j.content.replace(/\n/g,''));
+    const text=new TextDecoder().decode(Uint8Array.from(decoded,x=>x.charCodeAt(0)));
+    const remote=JSON.parse(text);
+    if(remote.version!==2)return true; // старый формат — берём свежий sha, локальные данные не трогаем
+    const remoteBuyers={};
+    for(const bid of Object.keys(remote.buyers||{})){
+      try{remoteBuyers[bid]=await decryptBuyer(bid,remote.buyers[bid]);}
+      catch(e){/* не расшифровалось этим ключом — пропускаем, не портим слияние */}
+    }
+    allData.buyers={...remoteBuyers,...allData.buyers};
+    return true;
+  }catch(e){console.error('GH merge:',e);return false;}
 }
 
 let saveTimer=null;
