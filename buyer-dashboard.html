@@ -116,6 +116,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .prop-status.pending{background:rgba(180,100,0,0.08);color:rgba(160,90,0,0.8)}
 .prop-status.unreachable{background:rgba(192,57,43,0.1);color:var(--red)}
 .prop-status.active{background:rgba(45,138,78,0.2);color:var(--green);font-weight:600}
+.prop-status.filtered{background:rgba(0,0,0,0.05);color:var(--muted)}
 .prop-status.sold{background:rgba(0,0,0,0.06);color:#999}
 .prop-card.sold-card{opacity:0.55}
 .prop-card.sold-card .prop-addr{text-decoration:line-through;text-decoration-color:rgba(0,0,0,0.25)}
@@ -556,8 +557,8 @@ function fmtPpm(price,area){
 function fmtPrice(p){if(!p)return '—';const n=Number(String(p).replace(/\D/g,''));if(!n)return p;return(n/1000000).toFixed(2).replace(/\.?0+$/,'')+' млн ₽';}
 
 // ── STATUS ──────────────────────────────────────────────────
-const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',pending:'Ждём показа',clarifying:'Уточняем время',unreachable:'Не дозвониться',reference:'Для сравнения',viewed:'Просмотрен',considering:'Рассматриваем',active:'В работе',declined:'Не подошёл',sold:'Объект продан'};
-const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',active:'active',declined:'declined',pending:'pending',clarifying:'clarifying',unreachable:'unreachable',reference:'reference',sold:'sold'};
+const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',pending:'Ждём показа',clarifying:'Уточняем время',unreachable:'Не дозвониться',reference:'Для сравнения',viewed:'Просмотрен',considering:'Рассматриваем',active:'В работе',declined:'Не подошёл',filtered:'Снят с подбора',sold:'Объект продан'};
+const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',active:'active',declined:'declined',filtered:'filtered',pending:'pending',clarifying:'clarifying',unreachable:'unreachable',reference:'reference',sold:'sold'};
 
 // ── STAR RATING ─────────────────────────────────────────────
 function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
