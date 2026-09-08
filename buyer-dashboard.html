@@ -375,7 +375,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   .hero-chips{gap:12px}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -614,13 +614,14 @@ async function saveRating(buyerId,propIdx){
   try{localStorage.setItem(`rating-${buyerId}-${propIdx}`,JSON.stringify({val,comment}));}catch(e){}
   // Пишем оценку в базу — появится у агента в реальном времени
   try{
-    await sb.from('ratings').insert({
+    const {error:sbErr}=await sb.from('ratings').insert({
       buyer_id: buyerId,
       object_address: buyer.props[propIdx].address||'',
       stars: val,
       comment: comment||null
     });
-  }catch(e){}
+    if(sbErr)console.error('Supabase rating insert error:',sbErr);
+  }catch(e){console.error('Supabase rating insert threw:',e);}
   // Резервное уведомление на почту
   try{
     await fetch('https://api.web3forms.com/submit',{
@@ -2161,8 +2162,9 @@ async function ifSubmit(buyerId) {
 
   // Пишем бриф в базу — появится у агента в реальном времени
   try{
-    await sb.from('brief_submissions').insert({buyer_id: buyerId, data: d});
-  }catch(e){}
+    const {error:sbErr}=await sb.from('brief_submissions').insert({buyer_id: buyerId, data: d});
+    if(sbErr)console.error('Supabase brief insert error:',sbErr);
+  }catch(e){console.error('Supabase brief insert threw:',e);}
 
   // Формируем текст письма
   const body = `
