@@ -212,6 +212,21 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ============================================
+  // ПЛАВАЮЩАЯ КНОПКА TELEGRAM — скрываем внутри хиро
+  // (там уже есть основная кнопка, а плавающая наезжала на текст)
+  // ============================================
+  const heroSectionForFab = document.querySelector('.hero');
+  const floatingTelegramBtn = document.querySelector('.floating-telegram');
+  if (heroSectionForFab && floatingTelegramBtn) {
+    const fabObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        floatingTelegramBtn.classList.toggle('is-hidden-in-hero', entry.isIntersecting);
+      });
+    }, { threshold: 0 });
+    fabObserver.observe(heroSectionForFab);
+  }
+
+  // ============================================
   // REFERRAL SYSTEM
   // ============================================
 
