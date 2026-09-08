@@ -375,6 +375,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   .hero-chips{gap:12px}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -398,6 +399,10 @@ button,a{-webkit-tap-highlight-color:transparent}
 
 <script>
 
+// ── SUPABASE (бриф + оценки в реальном времени) ────────────
+const SB_URL = 'https://pogmpmbgddljujzumvnr.supabase.co';
+const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvZ21wbWJnZGRsanVqenVtdm5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NzAzMDEsImV4cCI6MjEwNDQ0NjMwMX0.5gqh2ZsQJyRFmA8ZfhAf6lBinIIMfkc3X--Y81fKNLA';
+const sb = supabase.createClient(SB_URL, SB_ANON_KEY);
 
 function renderFooter(){
   return `<footer class="cta-footer">
@@ -607,6 +612,27 @@ async function saveRating(buyerId,propIdx){
   buyer.props[propIdx].clientComment=comment;
   // Save to GH without token (public write not possible — use localStorage fallback)
   try{localStorage.setItem(`rating-${buyerId}-${propIdx}`,JSON.stringify({val,comment}));}catch(e){}
+  // Пишем оценку в базу — появится у агента в реальном времени
+  try{
+    await sb.from('ratings').insert({
+      buyer_id: buyerId,
+      object_address: buyer.props[propIdx].address||'',
+      stars: val,
+      comment: comment||null
+    });
+  }catch(e){}
+  // Резервное уведомление на почту
+  try{
+    await fetch('https://api.web3forms.com/submit',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        access_key:'15cc9dfa-af27-418a-aae7-5a195d354206',
+        subject:`Оценка объекта: ${buyer.name||buyerId}`,
+        message:`Клиент: ${buyer.name||buyerId}\nОбъект: ${buyer.props[propIdx].address||'—'}\nОценка: ${val} из 5\nКомментарий: ${comment||'—'}`,
+        from_name:buyer.name||'Клиент'
+      })
+    });
+  }catch(e){}
   const saved=document.getElementById(`rs-${propIdx}`);
   if(saved){saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000);}
   // If agent is viewing — save to GH
@@ -2132,6 +2158,11 @@ async function ifSubmit(buyerId) {
   const d = ifCollect();
   const buyer = allData.buyers[buyerId];
   if (!buyer) return;
+
+  // Пишем бриф в базу — появится у агента в реальном времени
+  try{
+    await sb.from('brief_submissions').insert({buyer_id: buyerId, data: d});
+  }catch(e){}
 
   // Формируем текст письма
   const body = `

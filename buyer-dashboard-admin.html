@@ -378,6 +378,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   .hero-chips{gap:12px}
 }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
 
@@ -402,6 +403,10 @@ button,a{-webkit-tap-highlight-color:transparent}
 
 <script>
 
+// ── SUPABASE (бриф + оценки в реальном времени) ────────────
+const SB_URL = 'https://pogmpmbgddljujzumvnr.supabase.co';
+const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvZ21wbWJnZGRsanVqenVtdm5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NzAzMDEsImV4cCI6MjEwNDQ0NjMwMX0.5gqh2ZsQJyRFmA8ZfhAf6lBinIIMfkc3X--Y81fKNLA';
+const sb = supabase.createClient(SB_URL, SB_ANON_KEY);
 
 function renderFooter(){
   return `<footer class="cta-footer">
@@ -1107,7 +1112,123 @@ function renderClientView(buyerId){
 }
 
 
+// ── SUPABASE: живая синхронизация брифа и оценок ────────────
+let sbSession = null;
+let sbBriefs = {};   // {buyer_id: {data, submitted_at}}
+let sbRatings = {};  // {buyer_id: {normalized_address: {stars, comment, submitted_at}}}
+let sbChannelReady = false;
+
+function sbNormAddr(s){ return String(s||'').trim().toLowerCase(); }
+
+async function sbInit(){
+  try{
+    const {data:{session}} = await sb.auth.getSession();
+    if(session){
+      sbSession = session;
+      await sbLoadAll();
+      sbSubscribeRealtime();
+    }
+  }catch(e){}
+}
+
+async function sbLoadAll(){
+  try{
+    const {data:briefs} = await sb.from('brief_submissions').select('*').order('submitted_at',{ascending:false});
+    sbBriefs = {};
+    (briefs||[]).forEach(r=>{ if(!sbBriefs[r.buyer_id]) sbBriefs[r.buyer_id]=r; });
+
+    const {data:ratings} = await sb.from('ratings').select('*').order('submitted_at',{ascending:false});
+    sbRatings = {};
+    (ratings||[]).forEach(r=>{
+      const key = sbNormAddr(r.object_address);
+      if(!sbRatings[r.buyer_id]) sbRatings[r.buyer_id]={};
+      if(!sbRatings[r.buyer_id][key]) sbRatings[r.buyer_id][key]=r;
+    });
+  }catch(e){}
+}
+
+function sbSubscribeRealtime(){
+  if(sbChannelReady)return;
+  sbChannelReady = true;
+  sb.channel('admin-live')
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'brief_submissions'},payload=>{
+      sbBriefs[payload.new.buyer_id]=payload.new;
+      if(currentBuyerId===payload.new.buyer_id)renderAgentView(currentBuyerId);
+    })
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'ratings'},payload=>{
+      const bid=payload.new.buyer_id;
+      const key=sbNormAddr(payload.new.object_address);
+      if(!sbRatings[bid])sbRatings[bid]={};
+      sbRatings[bid][key]=payload.new;
+      if(currentBuyerId===bid)renderAgentView(currentBuyerId);
+    })
+    .subscribe();
+}
+
+async function sbSignIn(){
+  const email=document.getElementById('sb-email')?.value.trim();
+  const password=document.getElementById('sb-password')?.value;
+  const status=document.getElementById('sb-login-status');
+  if(!email||!password){if(status)status.textContent='Введите email и пароль';return;}
+  if(status)status.textContent='Вхожу…';
+  try{
+    const {data,error}=await sb.auth.signInWithPassword({email,password});
+    if(error){if(status)status.textContent='Ошибка входа';return;}
+    sbSession=data.session;
+    await sbLoadAll();
+    sbSubscribeRealtime();
+    if(currentBuyerId)renderAgentView(currentBuyerId);
+  }catch(e){if(status)status.textContent='Ошибка входа';}
+}
+
+async function sbSignOut(){
+  try{await sb.auth.signOut();}catch(e){}
+  sbSession=null; sbBriefs={}; sbRatings={};
+  if(currentBuyerId)renderAgentView(currentBuyerId);
+}
+
+// Подмешивает живые данные из Supabase в объект покупателя перед рендером —
+// остальной код (renderClientAnswersAgent, renderRating, renderCompare) не меняется,
+// просто видит уже актуальные значения.
+function applySupabaseData(buyerId){
+  const buyer=allData.buyers[buyerId];
+  if(!buyer)return;
+  if(sbBriefs[buyerId]){
+    if(!buyer.brief)buyer.brief={summary:'',criteria:[],priorities:[],signs:[]};
+    buyer.brief.formData=sbBriefs[buyerId].data;
+  }
+  const ratingsForBuyer=sbRatings[buyerId];
+  if(ratingsForBuyer&&buyer.props){
+    buyer.props.forEach(p=>{
+      const r=ratingsForBuyer[sbNormAddr(p.address)];
+      if(r){p.clientRating=r.stars;p.clientComment=r.comment||'';}
+    });
+  }
+}
+
+function renderSupabaseStatus(){
+  if(sbSession){
+    return `<div class="agent-section" style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
+      <div style="font-size:13px;color:rgba(229,229,229,0.6)">🟢 Бриф и оценки синхронизируются в реальном времени</div>
+      <button onclick="sbSignOut()" style="font-size:11px;padding:6px 12px;background:none;border:1px solid rgba(229,229,229,0.2);border-radius:4px;color:rgba(229,229,229,0.5);cursor:pointer;font-family:var(--sans)">Выйти</button>
+    </div>`;
+  }
+  return `<div class="agent-section" style="margin-bottom:24px">
+    <div class="agent-section-title" style="font-size:15px;margin-bottom:12px">Вход для живой синхронизации</div>
+    <p style="font-size:12px;color:rgba(229,229,229,0.45);margin-bottom:12px;line-height:1.5">Войдите один раз — и бриф с оценками клиента будут появляться здесь сами, без писем и ручного переноса.</p>
+    <div class="agent-grid">
+      <div class="af"><label>Email</label><input class="ai" id="sb-email" type="email" placeholder="you@example.com"></div>
+      <div class="af"><label>Пароль</label><input class="ai" id="sb-password" type="password"></div>
+    </div>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:12px">
+      <button onclick="sbSignIn()" style="font-size:12px;padding:8px 16px;background:rgba(255,255,255,0.08);border:1px solid rgba(229,229,229,0.2);border-radius:4px;color:#E5E5E5;cursor:pointer;font-family:var(--sans)">Войти</button>
+      <span id="sb-login-status" style="font-size:12px;color:#5FAE7D"></span>
+    </div>
+  </div>`;
+}
+
 function renderAgentView(buyerId){
+  applySupabaseData(buyerId);
   const buyer=allData.buyers[buyerId];
   if(!buyer)return;
   loadLocalRatings(buyerId,buyer.props||[]);
@@ -1141,6 +1262,7 @@ function renderAgentView(buyerId){
 
       <!-- TAB: OBJECTS (agent) -->
       <div class="tab-panel active" id="tab-objects">
+      ${renderSupabaseStatus()}
       <div class="agent-section" style="margin-bottom:32px"><div class="agent-section-title">Статус работы</div><div style="display:grid;gap:16px">
           <div>
             <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.55);margin-bottom:8px">Текущая ситуация</div>
@@ -2573,6 +2695,7 @@ async function initApp(){
   }
 
   await ghLoad();
+  await sbInit();
 
   if(id){
     if(!allData.buyers[id]){
