@@ -2407,6 +2407,37 @@ function addBriefCriterion(buyerId) {
 }
 
 // ── INIT ─────────────────────────────────────────────────────
+// Подтягивает собственные ранее отправленные оценки и бриф клиента
+// из Supabase — чтобы они были видны и с другого браузера/устройства,
+// а не только там, где были сохранены изначально.
+async function applyMyOwnData(buyerId){
+  try{
+    const {data,error}=await sb.rpc('get_my_data',{p_buyer_id:buyerId});
+    if(error||!data)return;
+    const buyer=allData.buyers[buyerId];
+    if(!buyer)return;
+    const norm=s=>String(s||'').trim().toLowerCase();
+    const seenAddr=new Set();
+    let latestBrief=null;
+    data.forEach(row=>{
+      if(row.kind==='rating'&&buyer.props){
+        const key=norm(row.object_address);
+        if(seenAddr.has(key))return;
+        seenAddr.add(key);
+        const p=buyer.props.find(pp=>norm(pp.address)===key);
+        if(p){p.clientRating=row.stars;p.clientComment=row.comment||'';}
+      }
+      if(row.kind==='brief'&&!latestBrief){
+        latestBrief=row.brief;
+      }
+    });
+    if(latestBrief){
+      if(!buyer.brief)buyer.brief={summary:'',criteria:[],priorities:[],signs:[]};
+      buyer.brief.formData=latestBrief;
+    }
+  }catch(e){console.error('Supabase own-data fetch failed:',e);}
+}
+
 async function initApp(){
   const params=new URLSearchParams(window.location.search);
   const id=params.get('id');
@@ -2448,6 +2479,7 @@ async function initApp(){
     return;
   }
 
+  await applyMyOwnData(id);
   renderClientView(id);
 }
 
