@@ -402,7 +402,9 @@ button,a{-webkit-tap-highlight-color:transparent}
 // ── SUPABASE (бриф + оценки в реальном времени) ────────────
 const SB_URL = 'https://pogmpmbgddljujzumvnr.supabase.co';
 const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvZ21wbWJnZGRsanVqenVtdm5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NzAzMDEsImV4cCI6MjEwNDQ0NjMwMX0.5gqh2ZsQJyRFmA8ZfhAf6lBinIIMfkc3X--Y81fKNLA';
-const sb = supabase.createClient(SB_URL, SB_ANON_KEY);
+const sb = supabase.createClient(SB_URL, SB_ANON_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
+});
 
 function renderFooter(){
   return `<footer class="cta-footer">
