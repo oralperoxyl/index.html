@@ -564,6 +564,77 @@ const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:
 function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
 
 // ── RENDER RATING BLOCK (client) ────────────────────────────
+function renderWantToView(buyerId,propIdx,prop,forceClient){
+  const decision=prop.wantToView||'';
+  if((forceClient||!getToken())&&!decision){
+    return `<div class="rating-wrap" id="wtv-wrap-${propIdx}">
+      <div class="rating-label">Хотите посмотреть этот вариант?</div>
+      <div style="display:flex;gap:10px;margin-top:8px">
+        <button class="pbtn" style="flex:1;background:#2D8A4E;color:#fff;border-color:#2D8A4E" onclick="setWantToView('${buyerId}',${propIdx},'yes')">Хочу посмотреть</button>
+        <button class="pbtn" style="flex:1" onclick="setWantToView('${buyerId}',${propIdx},'no')">Не интересует</button>
+      </div>
+    </div>`;
+  }
+  if(decision){
+    const label=decision==='yes'?'Хочет посмотреть':'Не интересует';
+    const color=decision==='yes'?'#2D8A4E':'var(--muted)';
+    return `<div class="rating-wrap">
+      <div class="rating-label">Ваше решение по объекту</div>
+      <div class="existing-rating">
+        <span style="font-size:14px;font-weight:500;color:${color}">${label}</span>
+        ${!getToken()?`<button style="margin-left:10px;background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="resetWantToView('${buyerId}',${propIdx})">Изменить</button>`:''}
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+async function setWantToView(buyerId,propIdx,value){
+  const buyer=allData.buyers[buyerId];
+  if(!buyer||!buyer.props[propIdx])return;
+  buyer.props[propIdx].wantToView=value;
+  try{localStorage.setItem(`wtv-${buyerId}-${propIdx}`,value);}catch(e){}
+  try{
+    const {error:sbErr}=await sb.from('ratings').insert({
+      buyer_id: buyerId,
+      object_address: buyer.props[propIdx].address||'',
+      want_to_view: value
+    });
+    if(sbErr)console.error('Supabase want_to_view insert error:',sbErr);
+  }catch(e){console.error('Supabase want_to_view insert threw:',e);}
+  try{
+    await fetch('https://api.web3forms.com/submit',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        access_key:'15cc9dfa-af27-418a-aae7-5a195d354206',
+        subject:`Решение по объекту: ${buyer.name||buyerId}`,
+        message:`Клиент: ${buyer.name||buyerId}\nОбъект: ${buyer.props[propIdx].address||'—'}\nРешение: ${value==='yes'?'Хочет посмотреть':'Не интересует'}`,
+        from_name:buyer.name||'Клиент'
+      })
+    });
+  }catch(e){}
+  renderClientView(buyerId);
+}
+
+async function resetWantToView(buyerId,propIdx){
+  try{localStorage.removeItem(`wtv-${buyerId}-${propIdx}`);}catch(e){}
+  const buyer=allData.buyers[buyerId];
+  if(buyer?.props[propIdx])buyer.props[propIdx].wantToView='';
+  renderClientView(buyerId);
+}
+
+// Загружает локально сохранённое решение "хочу посмотреть"
+function loadLocalWantToView(buyerId,props){
+  props.forEach((p,i)=>{
+    if(!p.wantToView){
+      try{
+        const saved=localStorage.getItem(`wtv-${buyerId}-${i}`);
+        if(saved)p.wantToView=saved;
+      }catch(e){}
+    }
+  });
+}
+
 function renderRating(buyerId,propIdx,prop,forceClient){
   const rating=prop.clientRating||0;
   const comment=prop.clientComment||'';
@@ -715,6 +786,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
           <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть объявление</a>
         </div>`:''}
       </div>
+      ${renderWantToView(buyerId,prop._origIdx!==undefined?prop._origIdx:idx,prop,!isAgent)}
       ${renderRating(buyerId,prop._origIdx!==undefined?prop._origIdx:idx,prop,!isAgent)}
       ${isAgent?`<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
         <button class="pbtn" onclick="openEditProp('${buyerId}',${prop._origIdx!==undefined?prop._origIdx:idx});event.stopPropagation()">Редактировать</button>
@@ -1025,6 +1097,7 @@ function renderClientView(buyerId){
     return;
   }
   loadLocalRatings(buyerId,buyer.props||[]);
+  loadLocalWantToView(buyerId,buyer.props||[]);
   const props=sortProps(buyer.props||[]);
   const planned=props.filter(p=>p.status==='planned').length;
   const viewed=props.filter(p=>p.status!=='planned').length;
@@ -1094,6 +1167,7 @@ function renderAgentView(buyerId){
   const buyer=allData.buyers[buyerId];
   if(!buyer)return;
   loadLocalRatings(buyerId,buyer.props||[]);
+  loadLocalWantToView(buyerId,buyer.props||[]);
   const props=sortProps(buyer.props||[]);
   const dashUrl=window.location.origin+window.location.pathname+'?id='+buyerId;
 
@@ -2420,15 +2494,24 @@ async function applyMyOwnData(buyerId){
     const buyer=allData.buyers[buyerId];
     if(!buyer)return;
     const norm=s=>String(s||'').trim().toLowerCase();
-    const seenAddr=new Set();
+    const seenRating=new Set();
+    const seenWtv=new Set();
     let latestBrief=null;
     data.forEach(row=>{
       if(row.kind==='rating'&&buyer.props){
         const key=norm(row.object_address);
-        if(seenAddr.has(key))return;
-        seenAddr.add(key);
         const p=buyer.props.find(pp=>norm(pp.address)===key);
-        if(p){p.clientRating=row.stars;p.clientComment=row.comment||'';}
+        if(p){
+          if(row.stars!=null&&!seenRating.has(key)){
+            seenRating.add(key);
+            p.clientRating=row.stars;
+            p.clientComment=row.comment||'';
+          }
+          if(row.want_to_view&&!seenWtv.has(key)){
+            seenWtv.add(key);
+            p.wantToView=row.want_to_view;
+          }
+        }
       }
       if(row.kind==='brief'&&!latestBrief){
         latestBrief=row.brief;

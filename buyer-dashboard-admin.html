@@ -651,11 +651,14 @@ function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
 function renderRating(buyerId,propIdx,prop,forceClient){
   const rating=prop.clientRating||0;
   const comment=prop.clientComment||'';
+  const wantToView=prop.wantToView||'';
   const key=`rating-${buyerId}-${propIdx}`;
+  const wtvBadge=wantToView?`<div style="margin-bottom:8px"><span style="font-size:13px;font-weight:500;color:${wantToView==='yes'?'#2D8A4E':'var(--muted)'}">${wantToView==='yes'?'● Хочет посмотреть':'○ Не интересует'}</span></div>`:'';
 
   if((forceClient||!getToken())&&!rating){
     // client can rate
     return `<div class="rating-wrap">
+      ${wtvBadge}
       <div class="rating-label">Ваша оценка</div>
       <div class="stars-row" id="stars-${propIdx}">
         ${[1,2,3,4,5].map(i=>`<button class="star-btn" onclick="setRating('${buyerId}',${propIdx},${i})" title="${i}">${i}</button>`).join('')}
@@ -673,10 +676,18 @@ function renderRating(buyerId,propIdx,prop,forceClient){
     return `<div class="rating-wrap">
       <div class="rating-label">Ваша оценка</div>
       <div class="existing-rating">
+        ${wtvBadge}
         <span class="stars-display">${starsHtml(rating)}</span>
         ${comment?`<div style="margin-top:6px;font-size:13px;color:var(--muted);font-weight:300">${esc(comment)}</div>`:''}
         ${!getToken()?`<button style="margin-top:8px;background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="resetRating('${buyerId}',${propIdx})">Изменить оценку</button>`:''}
       </div>
+    </div>`;
+  }
+  if(wantToView){
+    // Оценки ещё нет, но решение по просмотру уже есть — агенту важно это видеть
+    return `<div class="rating-wrap">
+      <div class="rating-label">Решение по объекту</div>
+      ${wtvBadge}
     </div>`;
   }
   return '';
@@ -805,6 +816,7 @@ function renderCompare(props){
     {label:'Состояние',key:'condition',fmt:v=>v||'—'},
     {label:'Вложения',key:'renovation',fmt:v=>v||'—'},
     {label:'Оценка',key:'clientRating',fmt:v=>v?`<span class="compare-stars">${starsHtml(v)}</span>`:'—'},
+    {label:'Хочет посмотреть',key:'wantToView',fmt:v=>v==='yes'?'<span style="color:#2D8A4E;font-weight:500">Да</span>':v==='no'?'<span style="color:var(--muted)">Нет</span>':'—'},
     {label:'Статус',key:'status',fmt:v=>STATUS_LABELS[v]||v||'—'},
   ];
 
@@ -1193,7 +1205,10 @@ async function sbLoadAll(){
     (ratings||[]).forEach(r=>{
       const key = sbNormAddr(r.object_address);
       if(!sbRatings[r.buyer_id]) sbRatings[r.buyer_id]={};
-      if(!sbRatings[r.buyer_id][key]) sbRatings[r.buyer_id][key]=r;
+      if(!sbRatings[r.buyer_id][key]) sbRatings[r.buyer_id][key]={};
+      const slot=sbRatings[r.buyer_id][key];
+      if(r.stars!=null && slot.stars===undefined){ slot.stars=r.stars; slot.comment=r.comment||''; }
+      if(r.want_to_view && slot.want_to_view===undefined){ slot.want_to_view=r.want_to_view; }
     });
   }catch(e){}
 }
@@ -1210,7 +1225,11 @@ function sbSubscribeRealtime(){
       const bid=payload.new.buyer_id;
       const key=sbNormAddr(payload.new.object_address);
       if(!sbRatings[bid])sbRatings[bid]={};
-      sbRatings[bid][key]=payload.new;
+      if(!sbRatings[bid][key])sbRatings[bid][key]={};
+      const slot=sbRatings[bid][key];
+      const r=payload.new;
+      if(r.stars!=null){slot.stars=r.stars;slot.comment=r.comment||'';}
+      if(r.want_to_view){slot.want_to_view=r.want_to_view;}
       if(currentBuyerId===bid)renderAgentView(currentBuyerId);
     })
     .subscribe();
@@ -1252,7 +1271,10 @@ function applySupabaseData(buyerId){
   if(ratingsForBuyer&&buyer.props){
     buyer.props.forEach(p=>{
       const r=ratingsForBuyer[sbNormAddr(p.address)];
-      if(r){p.clientRating=r.stars;p.clientComment=r.comment||'';}
+      if(r){
+        if(r.stars!==undefined){p.clientRating=r.stars;p.clientComment=r.comment||'';}
+        if(r.want_to_view!==undefined){p.wantToView=r.want_to_view;}
+      }
     });
   }
 }
