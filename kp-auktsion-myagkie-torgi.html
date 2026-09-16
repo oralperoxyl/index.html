@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="color-scheme" content="light">
+<title>Два формата продажи — Семён Гончаров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+::selection{background:#0066FF;color:#fff}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--serif:'Playfair Display',serif;--sans:'Inter',sans-serif;--bg:#FAFAF8;--dark:#1C1C1E;--text:#1A1A1A;--muted:#666;--border:rgba(0,0,0,0.08);--accent:#0066FF}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6}
+
+/* ── HEADER ── */
+.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;letter-spacing:0.01em;text-decoration:none;color:var(--text)}
+.header-tag{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
+
+/* ── HERO ── */
+.hero{background:var(--dark);padding:100px 40px 80px}
+.hero-inner{max-width:900px;margin:0 auto}
+.hero-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:28px}
+.hero-title{font-family:var(--serif);font-size:clamp(32px,5.5vw,56px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:20px;max-width:800px}
+.hero-sub{font-size:16px;line-height:1.75;color:rgba(229,229,229,0.6);max-width:580px}
+
+/* ── SECTIONS (как в meeting-pack / strategy) ── */
+.s{max-width:900px;margin:0 auto;padding:80px 40px;border-bottom:1px solid var(--border);background:var(--bg)}
+.s:last-of-type{border-bottom:none}
+.s-num{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:block}
+.s-title{font-family:var(--serif);font-size:clamp(28px,4vw,48px);font-weight:400;line-height:1.15;letter-spacing:-0.02em;margin-bottom:16px}
+.s-intro{font-size:16px;line-height:1.7;color:var(--muted);max-width:620px;margin-bottom:52px}
+.s-intro strong{color:var(--text);font-weight:500}
+
+/* ── SCENARIO COMPARE (как в strategy.html, адаптировано под 2 колонки) ── */
+.sc-compare{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:0;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.sc-col{padding:28px 24px;background:white;border-right:1px solid var(--border)}
+.sc-col:last-child{border-right:none}
+.sc-col-rec{background:rgba(0,102,255,0.03)}
+.sc-col-name{font-size:13px;font-weight:500;margin-bottom:4px}
+.sc-col-fee{font-family:var(--serif);font-size:36px;font-weight:400;letter-spacing:-0.02em;margin-bottom:20px}
+.sc-col-row{display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;font-size:13px;border-bottom:1px solid var(--border);gap:12px}
+.sc-col-row:last-child{border-bottom:none}
+.sc-col-label{color:var(--muted);font-weight:300;font-size:12px}
+.sc-col-val{font-weight:400;text-align:right}
+
+/* ── ALERTS ── */
+.sc-alert{font-size:14px;line-height:1.7;border-radius:8px;padding:20px 24px;margin-top:40px;font-weight:300}
+.sc-alert strong{font-weight:500}
+.sc-alert-info{color:#0C447C;background:#E6F1FB}
+
+/* ── SCENARIO POINTS / CONDITIONS (rule-style, как в strategy.html) ── */
+.cond{display:grid;grid-template-columns:40px 1fr;gap:0 24px;padding:28px 0;border-top:1px solid var(--border)}
+.cond:last-child{border-bottom:1px solid var(--border)}
+.cond-num{font-family:var(--serif);font-size:24px;font-weight:400;color:rgba(0,0,0,0.1);line-height:1;padding-top:2px}
+.cond-title{font-size:15px;font-weight:500;margin-bottom:6px}
+.cond-text{font-size:14px;color:var(--muted);line-height:1.65;font-weight:300}
+.cond-text strong{color:var(--text);font-weight:500}
+
+/* ── PROCESS TIMELINE (без кружков, rule-style) ── */
+.timeline{margin-top:8px}
+.tl-step{padding:24px 0;border-top:1px solid var(--border);display:grid;grid-template-columns:110px 1fr;gap:24px}
+.tl-step:first-child{border-top:none}
+.tl-day{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);font-weight:500;padding-top:2px}
+.tl-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px}
+.tl-note{font-size:14px;line-height:1.65;color:var(--muted);font-weight:300}
+.tl-meta{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.tl-meta-item{font-size:12px;color:var(--muted)}
+.tl-meta-item strong{color:var(--text);font-weight:500}
+
+/* ── PRICE TABLE (пример маркетингового плана с ценами и сроками) ── */
+.price-table{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:white}
+.price-group-head{padding:16px 20px 4px;background:rgba(0,102,255,0.03);font-size:12px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;color:var(--text);border-top:1px solid var(--border)}
+.price-group-head:first-child{border-top:none}
+.price-group-why{padding:0 20px 14px;background:rgba(0,102,255,0.03);font-size:12.5px;font-weight:300;color:var(--muted);line-height:1.55}
+.price-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 20px;border-top:1px solid var(--border)}
+.price-row-name{font-size:13.5px;color:var(--text);line-height:1.5}
+.price-row-meta{display:flex;gap:16px;flex-shrink:0;text-align:right}
+.price-row-days{font-size:12px;color:var(--muted);white-space:nowrap}
+.price-row-sum{font-size:13.5px;font-weight:500;color:var(--text);white-space:nowrap;min-width:84px;text-align:right}
+.price-total{display:flex;justify-content:space-between;align-items:baseline;padding:18px 20px;background:var(--dark);color:#E5E5E5}
+.price-total-label{font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:rgba(229,229,229,0.6)}
+.price-total-sum{font-family:var(--serif);font-size:22px;color:#E5E5E5}
+
+/* ── AD GRID (маркетинговый план, как в strategy.html) ── */
+.ad-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px}
+.ad-card{background:white;padding:28px 24px}
+.ad-card:first-child{border-radius:8px 0 0 8px}.ad-card:last-child{border-radius:0 8px 8px 0}
+.ad-card-title{font-size:14px;font-weight:500;margin-bottom:10px}
+.ad-card-text{font-size:13px;color:var(--muted);line-height:1.65;font-weight:300}
+
+/* ── COSTS ROW ── */
+.sc-costs{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:32px}
+.sc-cost{background:white;padding:24px 20px}
+.sc-cost:first-child{border-radius:8px 0 0 8px}.sc-cost:last-child{border-radius:0 8px 8px 0}
+.sc-cost-num{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:4px}
+.sc-cost-label{font-size:11px;color:var(--muted);letter-spacing:0.02em;font-weight:300}
+.sc-note{font-size:12px;color:var(--muted);line-height:1.6;font-weight:300;padding-top:12px}
+
+/* ── PLAN TOGGLE + MODAL (как edit-toggle / modal-overlay в strategy.html) ── */
+.plan-toggle{display:inline-flex;align-items:center;gap:8px;margin-top:28px;font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;padding:12px 22px;border:1px solid var(--border);border-radius:999px;background:transparent;color:var(--text);cursor:pointer}
+.plan-toggle:hover{border-color:var(--text)}
+.modal-overlay{display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:24px}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--bg);border-radius:12px;padding:0;max-width:640px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden}
+.modal-head{padding:28px 32px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.modal-head h3{font-family:var(--serif);font-size:20px;font-weight:400}
+.modal-head p{font-size:13px;color:var(--muted);font-weight:300;margin-top:6px;line-height:1.6}
+.modal-close{background:none;border:none;font-size:22px;line-height:1;color:var(--muted);cursor:pointer;padding:0 4px}
+.modal-body{padding:8px 32px 28px;overflow-y:auto}
+.plan-group{padding:20px 0;border-top:1px solid var(--border)}
+.plan-group:first-child{border-top:none}
+.plan-group-title{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);font-weight:500;margin-bottom:12px}
+.plan-list{list-style:none}
+.plan-list li{font-size:13.5px;line-height:1.7;color:var(--text);padding:4px 0 4px 16px;position:relative}
+.plan-list li::before{content:'—';position:absolute;left:0;color:var(--muted)}
+
+/* ── CTA FOOTER + TG BUTTON (фирменный стиль, как в seller-lead.html) ── */
+.cta-footer{background:var(--dark);padding:72px 40px;text-align:center}
+.cta-footer-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:20px}
+.cta-footer-title{font-family:var(--serif);font-size:clamp(24px,3.5vw,40px);font-weight:400;color:#E5E5E5;line-height:1.2;margin-bottom:16px}
+.cta-footer-sub{font-size:15px;color:rgba(229,229,229,0.5);font-weight:300;margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7}
+.footer-tg-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid #0088cc;border-radius:999px;text-decoration:none;background:transparent;color:#E5E5E5;font-family:var(--sans);font-size:14px}
+.footer-tg-btn:hover{background:#0088cc}.footer-tg-btn:active{background:#0088cc}
+.footer-phone{margin-top:16px;font-size:13px;color:rgba(229,229,229,0.35)}
+.footer-phone a{color:rgba(229,229,229,0.5);text-decoration:none}
+.doc-meta{max-width:900px;margin:0 auto;padding:20px 40px;display:flex;gap:32px;flex-wrap:wrap;border-bottom:1px solid var(--border)}
+.doc-meta-item{font-size:12px;color:var(--muted)}
+.doc-meta-item strong{color:var(--text);font-weight:500}
+.doc-meta-item strong[contenteditable]{border-bottom:1px dashed var(--border);padding:0 2px;min-width:60px;display:inline-block;cursor:text;outline:none}
+.doc-meta-item strong[contenteditable]:hover{border-bottom-color:var(--accent)}
+.doc-meta-item strong[contenteditable]:focus{border-bottom-color:var(--accent);border-bottom-style:solid}
+.doc-meta-item strong[contenteditable]:empty::before{content:attr(data-placeholder);color:var(--muted);font-weight:300}
+@media print{.doc-meta-item strong[contenteditable]{border-bottom:none}}
+
+/* ── STALE LISTING CALLOUT ── */
+.pain-block{background:var(--dark);color:#E5E5E5;padding:44px 40px;max-width:900px;margin:0 auto}
+.pain-block p{font-size:15px;line-height:1.75;color:rgba(229,229,229,0.65);max-width:640px}
+.pain-block p+p{margin-top:14px}
+.pain-block strong{color:#E5E5E5;font-weight:500}
+
+.footer-copy{margin-top:40px;font-size:11px;color:rgba(229,229,229,0.2)}
+.footer-copy a{color:rgba(229,229,229,0.3);text-decoration:none}
+
+/* ── TL;DR SUMMARY ── */
+.tldr{max-width:900px;margin:0 auto;padding:40px 40px 44px;border-bottom:1px solid var(--border);background:var(--bg)}
+.tldr-kicker{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
+.tldr-row{display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:14px 0;border-top:1px solid var(--border)}
+.tldr-row:first-of-type{border-top:none}
+.tldr-text{font-size:14.5px;line-height:1.6;color:var(--text);max-width:640px}
+.tldr-text strong{font-weight:500}
+.tldr-link{font-size:12px;color:var(--accent);text-decoration:none;white-space:nowrap;flex-shrink:0}
+.tldr-link:hover{text-decoration:underline}
+@media(max-width:640px){
+  .tldr-row{flex-direction:column;align-items:flex-start;gap:6px}
+}
+
+/* ── FAQ ACCORDION (как на основном сайте, main-styles.css) ── */
+.faq-item{border-bottom:1px solid var(--border);transition:border-color 0.3s ease}
+.faq-item:hover{border-bottom-color:rgba(0,0,0,0.16)}
+.faq-item:last-child{border-bottom:none}
+.faq-question{background:transparent;border:none;font-family:var(--sans);font-size:16px;font-weight:500;line-height:1.5;padding:20px 0;text-align:left;width:100%;cursor:pointer;display:flex;justify-content:space-between;align-items:start;gap:24px;color:var(--text);transition:color 0.2s ease;position:relative}
+.faq-question::after{content:'\2014';font-family:var(--sans);font-size:16px;color:var(--muted);opacity:0.4;flex-shrink:0;transition:transform 0.3s ease, opacity 0.2s ease;transform-origin:center;line-height:1;margin-top:3px}
+.faq-item.is-open .faq-question::after{transform:rotate(90deg);opacity:0.6}
+.faq-question:hover{color:var(--text)}
+.faq-question:hover::after{opacity:0.7}
+.faq-question:active{opacity:0.85}
+.faq-answer{max-height:0;overflow:hidden;opacity:0;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.4s cubic-bezier(0.4,0,0.2,1), padding 0.4s cubic-bezier(0.4,0,0.2,1);padding-bottom:0}
+.faq-item.is-open .faq-answer{max-height:800px;opacity:1;padding-bottom:20px}
+.faq-answer p{color:var(--muted);margin:0;padding:0;max-width:620px;font-family:var(--sans);font-size:14.5px;font-weight:300;line-height:1.7;letter-spacing:-0.01em}
+
+@media(max-width:768px){
+  .site-header{padding:0 20px}.hero{padding:60px 20px 48px}.s{padding:56px 20px}
+  .sc-compare{grid-template-columns:1fr;border:none;gap:8px;border-radius:0}
+  .sc-col{border-right:none;border-radius:8px;border:1px solid var(--border)}
+  .sc-costs{grid-template-columns:1fr}
+  .sc-cost:first-child,.sc-cost:last-child{border-radius:0}
+  .sc-cost{border-radius:0!important}
+  .sc-cost:first-child{border-radius:8px 8px 0 0!important}.sc-cost:last-child{border-radius:0 0 8px 8px!important}
+  .cond{grid-template-columns:28px 1fr;gap:0 16px}.cond-num{font-size:18px}
+  .ad-grid{grid-template-columns:1fr}
+  .ad-card{border-radius:0!important}
+  .ad-card:first-child{border-radius:8px 8px 0 0!important}.ad-card:last-child{border-radius:0 0 8px 8px!important}
+  .tl-step{grid-template-columns:1fr;gap:4px}
+  .price-row{flex-direction:column;align-items:flex-start;gap:6px}
+  .price-row-meta{width:100%;justify-content:space-between}
+  .cta-footer{padding:56px 20px}
+  .modal-box{max-height:88vh}
+  .modal-head{padding:22px 20px 16px}
+  .modal-body{padding:8px 20px 24px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a class="header-brand" href="https://fastbroker21.ru">fastbroker21.ru</a>
+  <span class="header-tag">Коммерческое предложение</span>
+</header>
+
+<div class="doc-meta" id="docMeta">
+  <span class="doc-meta-item">Подготовлено для: <strong contenteditable="true" data-placeholder="кликните и впишите имя" data-field="name"></strong></span>
+  <span class="doc-meta-item">Объект: <strong contenteditable="true" data-placeholder="кликните и впишите адрес" data-field="object"></strong></span>
+  <span class="doc-meta-item">Дата: <strong contenteditable="true" data-placeholder="кликните и впишите дату" data-field="date"></strong></span>
+</div>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-label">Два формата продажи объекта</p>
+    <h1 class="hero-title">Большинство продавцов теряют деньги не из-за низкой цены старта, а из-за того, что объект висит в рекламе месяцами.</h1>
+    <p class="hero-sub">Чем дольше объявление без движения, тем больше у покупателей повода торговаться вниз. Я работаю иначе. Свожу несколько заинтересованных покупателей к одной дате. Они конкурируют друг с другом, а не с вами. Никакого молотка и криков «продано» — покупатели просто подают письменные предложения. Формат и бюджет выбираете вы.</p>
+  </div>
+</section>
+
+<div class="pain-block">
+  <p><strong>Цена промедления реальна.</strong> Объект без движения в рекламе покупатели читают как сигнал: либо с квартирой что-то не так, либо продавец не спешит. И то, и другое — повод торговаться жёстче. Стартовая цена перестаёт работать: рынок её «выучивает» и обесценивает.</p>
+  <p>Именно так чаще всего и выглядит классическая продажа через агента. Объект выставлен в рекламу — и дальше ждут звонков. Показы идут по одному, в разные дни: покупатели никогда не видят друг друга и торгуются с чистого листа, как будто конкурентов нет. Через месяц-полтора без предложений — первое снижение цены. Ещё через месяц — второе, и на площадке уже висит отметка «в продаже 90+ дней», которая сама по себе провоцирует торг. Итог обычно один: объект продаётся ниже той цены, на которую рассчитывал собственник, либо снимается с продажи вовсе.</p>
+  <p>Оба формата ниже построены так, чтобы этого не допустить. Аукцион концентрирует спрос в сжатые сроки. Мягкие торги растягивают тот же процесс, но с чёткими контрольными точками — не бесконечно.</p>
+  <p style="margin-top:16px"><a href="https://fastbroker21.ru/meeting-pack.html" style="color:rgba(229,229,229,0.55);font-size:13px" target="_blank" rel="noopener">Подробнее о том, что отличает быструю продажу от зависшего объявления →</a></p>
+</div>
+
+<div class="tldr">
+  <div class="tldr-kicker">Коротко о главном — для тех, кто пробегает глазами</div>
+  <div class="tldr-row">
+    <div class="tldr-text"><strong>Одна механика, разный масштаб.</strong> Широкий маркетинг и заниженная стартовая цена собирают покупателей к одной дате. Они видят друг друга на показе и понимают: объект интересен не только им — и предлагают больше, чтобы не упустить. Аукцион — 6%, полный охват, задаток на 21-й день. Мягкие торги — 4%, та же логика в меньшем масштабе, задаток на 30–55-й день.</div>
+    <a class="tldr-link" href="#s-formats">Сравнение →</a>
+  </div>
+  <div class="tldr-row">
+    <div class="tldr-text"><strong>Экономика.</strong> На объекте за 15 млн ₽ аукцион даёт чистый выигрыш ≈ 600 000–1 350 000 ₽ против самостоятельной продажи — даже с учётом более высокой комиссии.</div>
+    <a class="tldr-link" href="#s-economics">Расчёт →</a>
+  </div>
+  <div class="tldr-row">
+    <div class="tldr-text"><strong>Маркетинг — отдельно от комиссии.</strong> Я рискую временем на объекте, вы — суммой маркетинга, на порядок меньшей стоимости объекта. Бюджет прозрачен, виден в смете до старта; комиссия — только по факту сделки.</div>
+    <a class="tldr-link" href="#s-marketing-plan">Смета →</a>
+  </div>
+  <div class="tldr-row">
+    <div class="tldr-text"><strong>Если не сработает с первого захода.</strong> Продлеваю показы и усиливаю рекламу — без паники и без скрытых доплат постфактум. Эксклюзив на 3 месяца — с запасом на оба формата.</div>
+    <a class="tldr-link" href="#s-mechanism-auction">Детали →</a>
+  </div>
+  <div class="tldr-row">
+    <div class="tldr-text"><strong>Следующий шаг.</strong> Короткий звонок → выезд и СМА, около недели → встреча с расчётом по обоим форматам. Решение — за вами.</div>
+    <a class="tldr-link" href="#s-choose">Как выбрать →</a>
+  </div>
+</div>
+
+<section class="s" id="s-formats">
+  <span class="s-num">01 / 08</span>
+  <h2 class="s-title">Два формата на выбор</h2>
+  <p class="s-intro">Оба формата работают на одном механизме. Широкий маркетинг и заниженная стартовая цена собирают на объект много покупателей одновременно. На показе они видят друг друга и понимают: объект интересен не только им — и предлагают больше, чтобы не упустить, вместо того чтобы сбивать цену вниз. Дальше — чёткий процесс с фиксированными датами, который отбирает лучшее предложение. Аукцион делает это в полном объёме и укладывается в 21 день. Мягкие торги — та же логика, только в меньшем масштабе: маркетинговый план скромнее, поэтому и срок обычно 30–55 дней.</p>
+
+  <div class="sc-compare">
+    <div class="sc-col sc-col-rec">
+      <div class="sc-col-name">Аукцион</div>
+      <div class="sc-col-fee">6%</div>
+      <div class="sc-col-row"><span class="sc-col-label">Срок до задатка</span><span class="sc-col-val">21 день</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Маркетинг</span><span class="sc-col-val">Интенсивный, от 45 000 ₽</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Показы</span><span class="sc-col-val">Концентрированы в 2 дня</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Порог входа</span><span class="sc-col-val">Выше</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Моё время</span><span class="sc-col-val">Ежедневная работа весь срок</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Отчётность</span><span class="sc-col-val">Еженедельно, с цифрами</span></div>
+    </div>
+    <div class="sc-col">
+      <div class="sc-col-name">Мягкие торги</div>
+      <div class="sc-col-fee">4%</div>
+      <div class="sc-col-row"><span class="sc-col-label">Срок до задатка</span><span class="sc-col-val">30–55 дней</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Маркетинг</span><span class="sc-col-val">Базовый, ≈ 37 000 ₽</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Показы</span><span class="sc-col-val">Группами, раз в неделю</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Порог входа</span><span class="sc-col-val">Низкий</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Моё время</span><span class="sc-col-val">Полная вовлечённость, без сжатых сроков</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Отчётность</span><span class="sc-col-val">Еженедельно, с цифрами</span></div>
+    </div>
+  </div>
+
+  <p class="sc-note" style="margin-top:16px">В обоих форматах вы получаете еженедельный отчёт: звонки, показы, обратная связь от покупателей и мои выводы. Не «работаем, ждите» — вы в любой момент видите, что реально происходит с объектом.</p>
+
+  <div class="sc-alert sc-alert-info"><strong>Почему маркетинг оплачивает собственник.</strong> Мы рискуем разными вещами. Я вкладываю время — на аукционе это ежедневная работа весь срок, без гарантии результата. Передумаете продавать в процессе — это время мне никто не вернёт. Вы вкладываете бюджет на порядок меньше стоимости объекта. Это не мой заработок, а показатель вашего настроя: готовы вложиться — значит, действительно хотите продать в срок, а не прощупываете рынок. Тогда я включаюсь на полную. Нет бюджета — работаем мягче и дольше, без обязательств с вашей стороны. Расчёт по цифрам — в FAQ ниже.</div>
+
+  <p class="sc-note" style="margin-top:24px">Оба формата — эксклюзивный договор на 3 месяца. Срок с запасом на случай, если процесс потребует больше времени, чем стандартные 21 или 30–55 дней — без необходимости перезаключать договор. Как распределяется комиссия и почему она именно такая — в разделе FAQ ниже.</p>
+</section>
+
+<section class="s" id="s-economics">
+  <span class="s-num">02 / 08</span>
+  <h2 class="s-title">Экономика выбора</h2>
+  <p class="s-intro">Разница между форматами — конкретная сумма, а не абстрактные проценты. Аукцион подходит не всем: только тем, кто реально мотивирован продать в срок. По опыту прошлых объектов широкий маркетинг и конкуренция покупателей поднимают цену в среднем на 10–15% выше того, что собственник получил бы, продавая сам. Это оценка по опыту, не прогноз — ниже условный пример, чтобы показать логику расчёта на круглых цифрах.</p>
+
+  <div class="price-table">
+    <div class="price-group-head">Условный пример — объект стоимостью 15 000 000 ₽</div>
+    <div class="price-row">
+      <div class="price-row-name">Самостоятельная продажа — база для сравнения</div>
+      <div class="price-row-meta"><span class="price-row-sum">15 000 000 ₽</span></div>
+    </div>
+    <div class="price-row">
+      <div class="price-row-name">Комиссия за аукцион, 6%</div>
+      <div class="price-row-meta"><span class="price-row-sum">−900 000 ₽</span></div>
+    </div>
+    <div class="price-row">
+      <div class="price-row-name">Прирост цены по опыту, 10–15% от самостоятельной продажи</div>
+      <div class="price-row-meta"><span class="price-row-sum">+1 500 000 – 2 250 000 ₽</span></div>
+    </div>
+    <div class="price-total">
+      <span class="price-total-label">Ориентировочный выигрыш аукциона</span>
+      <span class="price-total-sum">≈ 600 000 – 1 350 000 ₽</span>
+    </div>
+  </div>
+  <p class="sc-note">Условный пример на круглых цифрах — не прогноз и не гарантия для вашего объекта. Реальный процент зависит от сегмента, состояния объекта и спроса на момент старта. Цифры для вашего объекта считаю на встрече после осмотра.</p>
+  <p class="sc-note" style="margin-top:8px">Мягкие торги (4%) работают по той же логике конкуренции покупателей, но при меньшем охвате. Отдельной статистики по приросту цены для этого формата нет — не подставляю сюда аукционные цифры вместо неё.</p>
+
+  <div class="sc-alert sc-alert-info" style="margin-top:24px"><strong>Кому это не подходит.</strong> Если нет реальной мотивации продать в ближайшие 1–3 месяца, или цена принципиально не может быть ниже конкретной цифры без обсуждения — ни один из форматов не сработает как задумано. Оба построены на готовности собственника довериться процессу, а не на желании «просто прощупать рынок». Если это про вас — скажу на встрече прямо, без уговоров подписать договор.</div>
+
+  <p class="sc-note" style="margin-top:16px">Беру в работу не более 2 объектов одновременно: при большем количестве физически невозможно держать ежедневный контроль на нужном уровне — качество работы начинает падать на всех объектах сразу, а не только на новых.</p>
+</section>
+
+<section class="s" id="s-mechanism-auction">
+  <span class="s-num">03 / 08</span>
+  <h2 class="s-title">Механизм аукциона — 6%</h2>
+  <p class="s-intro">Задача — собрать на объект как можно больше квалифицированных покупателей к одной дате и создать между ними конкуренцию за право сделать лучшее предложение.</p>
+
+  <div class="timeline">
+    <div class="tl-step">
+      <div class="tl-day">День 0</div>
+      <div>
+        <div class="tl-title">Подготовка и стартовая цена</div>
+        <div class="tl-note">Фото, видео, определение стартовой цены — намеренно чуть ниже рынка. Это приманка, не скидка: низкий вход собирает максимум покупателей, а дальше цену двигает уже их конкуренция, не торг.</div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-day">Дни 1–11</div>
+      <div>
+        <div class="tl-title">Интенсивный маркетинг</div>
+        <div class="tl-note">Полный охват площадок, работа с базой агентов, приём звонков и запись на показы.</div>
+        <div class="tl-meta"><span class="tl-meta-item"><strong>Бюджет:</strong> от 45 000 ₽ (для загородных объектов бизнес-класса — выше)</span></div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-day">Дни 12–13</div>
+      <div>
+        <div class="tl-title">Показы, сжатые в 2 дня</div>
+        <div class="tl-note">8–15 покупателей в день видят друг друга на объекте — конкуренция видна физически, а не описывается на словах.</div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-day">Дни 14–16</div>
+      <div>
+        <div class="tl-title">Приём офферов</div>
+        <div class="tl-note">Покупатели подают письменные предложения (оферты) — без торга в моменте показа. Так у меня есть пауза на переговоры, а у вас — время принять решение спокойно.</div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-day">Дни 17–21</div>
+      <div>
+        <div class="tl-title">Выбор и задаток</div>
+        <div class="tl-note">Сравнение всех предложений по цене и условиям, определение лучшего, оформление задатка. Дальше — стандартная подготовка к сделке и регистрация, которую также веду я, до самого закрытия.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc-alert sc-alert-info"><strong>Если за 2 дня показов не набралось нужного числа покупателей.</strong> Такое бывает. Продлеваю показы, усиливаю рекламу по недостающим каналам — и это не провал, а просто сигнал, что объекту нужно больше охвата. Любые дополнительные расходы обсуждаем заранее, до того как их понести. Никаких сюрпризов постфактум.</div>
+</section>
+
+<section class="s" id="s-mechanism-soft">
+  <span class="s-num">04 / 08</span>
+  <h2 class="s-title">Механизм мягких торгов — 4%</h2>
+  <p class="s-intro">Тот же принцип конкурентных предложений, но без активного продвижения. Объект работает через Циан и Авито. Показы группирую раз в неделю: так к каждой дате набирается несколько заинтересованных, а не один покупатель за другим.</p>
+
+  <div class="timeline">
+    <div class="tl-step">
+      <div class="tl-day">День 0</div>
+      <div>
+        <div class="tl-title">Подготовка и размещение</div>
+        <div class="tl-note">Фото и видео, отрисовка планировки для рекламоносителей, макет и печать листовок, публикация на Циан и Авито.</div>
+        <div class="tl-meta"><span class="tl-meta-item"><strong>Бюджет:</strong> ≈ 15 000 ₽</span></div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-day">Дни 1–14</div>
+      <div>
+        <div class="tl-title">Платное продвижение объявлений</div>
+        <div class="tl-note">Усиленный показ объявления на площадках первые 14 дней — это не аукционный охват, но заметно больше, чем бесплатное размещение.</div>
+        <div class="tl-meta"><span class="tl-meta-item"><strong>Бюджет:</strong> ≈ 22 000 ₽</span></div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-day">Дни 7–45</div>
+      <div>
+        <div class="tl-title">Показы группами, раз в неделю</div>
+        <div class="tl-note">Не по одному покупателю в разнобой, а раз в неделю. К каждой дате набирается несколько заинтересованных, и между ними сохраняется конкуренция — просто без сжатых сроков и без аукционного бюджета. Идёт параллельно с продвижением и продолжается столько, сколько нужно для набора достаточного числа предложений.</div>
+      </div>
+    </div>
+    <div class="tl-step">
+      <div class="tl-day">Обычно на 30–55 день</div>
+      <div>
+        <div class="tl-title">Сравнение предложений и задаток</div>
+        <div class="tl-note">Как только набирается достаточно предложений — провожу переговоры между покупателями по той же логике торгов, только без сжатых сроков.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sc-alert sc-alert-info"><strong>Вовлечённость та же, темп другой.</strong> Я так же веду весь процесс от начала до конца: квалифицирую покупателей, провожу показы, слежу за откликами, договариваюсь об условиях. Просто кампания не сжата в 2 недели, поэтому не нужно ежедневно разгонять рекламу и разгребать пиковую нагрузку звонков. Полный список работы — в следующем разделе.</div>
+</section>
+
+<section class="s" id="s-marketing-plan">
+  <span class="s-num">05 / 08</span>
+  <h2 class="s-title">Пример маркетингового плана</h2>
+  <p class="s-intro">Реальные примеры по прошлым объектам — с ценами и сроками по каждому пункту, чтобы был виден объём работы. Состав и бюджет под ваш объект согласуем на встрече.</p>
+
+  <div class="sc-alert sc-alert-info">
+    <strong>Почему это не входит в комиссию, как «у других».</strong> Когда агент говорит «реклама за мой счёт, вам ничего не нужно платить» — почти всегда речь про съёмку на телефон и голое объявление на Avito. То есть про то, что действительно ничего не стоит. У каждого пункта ниже есть конкретная задача и измеримый эффект на продажу. Поэтому это отдельная, видимая вам статья расходов, а не что-то, спрятанное внутри процента.
+  </div>
+
+  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px">Мягкие торги — квартира 72 м², СПб</p>
+  <div class="price-table">
+    <div class="price-group-head">Фото + видео</div>
+    <div class="price-group-why">Первое, на что смотрит покупатель в объявлении. Слабые фото на телефон — причина №1, почему объявление листают дальше, даже не дочитав описание.</div>
+    <div class="price-row">
+      <div class="price-row-name">Выезд на объект, обработка фотографий</div>
+      <div class="price-row-meta"><span class="price-row-sum">3 400 ₽</span></div>
+    </div>
+    <div class="price-row">
+      <div class="price-row-name">Съёмка видео, монтаж, обработка</div>
+      <div class="price-row-meta"><span class="price-row-sum">1 500 ₽</span></div>
+    </div>
+    <div class="price-group-head">Отрисовка планировок</div>
+    <div class="price-group-why">Понятная планировка на карточке объекта закрывает половину вопросов ещё до звонка — покупатель сразу видит метраж и расположение комнат, а не выясняет это на созвоне.</div>
+    <div class="price-row">
+      <div class="price-row-name">План объекта для размещения на рекламоносителях</div>
+      <div class="price-row-meta"><span class="price-row-sum">5 000 ₽</span></div>
+    </div>
+    <div class="price-group-head">Листовки</div>
+    <div class="price-group-why">Часть покупателей в районе не сидит на Avito и Циан каждый день — листовка у подъезда и в почтовых ящиках доносит объявление до тех, кто ищет жильё именно в этом доме и квартале.</div>
+    <div class="price-row">
+      <div class="price-row-name">Разработка макета</div>
+      <div class="price-row-meta"><span class="price-row-sum">1 500 ₽</span></div>
+    </div>
+    <div class="price-row">
+      <div class="price-row-name">Печать 1000 шт, А5, цветная, двухсторонняя, глянец</div>
+      <div class="price-row-meta"><span class="price-row-sum">3 000 ₽</span></div>
+    </div>
+    <div class="price-row">
+      <div class="price-row-name">Доставка листовок по адресу</div>
+      <div class="price-row-meta"><span class="price-row-sum">500 ₽</span></div>
+    </div>
+    <div class="price-group-head">Публикации на профессиональных площадках</div>
+    <div class="price-group-why">Без платного продвижения объявление тонет среди тысяч похожих за первые же дни и падает вниз выдачи — просмотры и звонки идут в первую очередь тем, кто заплатил за поднятие в топ.</div>
+    <div class="price-row">
+      <div class="price-row-name">ЦИАН + Авито, размещение</div>
+      <div class="price-row-meta"><span class="price-row-sum">2 000 ₽</span></div>
+    </div>
+    <div class="price-row">
+      <div class="price-row-name">Платное продвижение на площадках</div>
+      <div class="price-row-meta"><span class="price-row-days">14 дней</span><span class="price-row-sum">20 000 ₽</span></div>
+    </div>
+    <div class="price-total">
+      <span class="price-total-label">Итого</span>
+      <span class="price-total-sum">36 900 ₽</span>
+    </div>
+  </div>
+  <p class="sc-note">Консультация перед стартом — бесплатно. Клининг перед съёмкой — по отдельной смете, зависит от площади и состояния квартиры (считаю на месте, в план выше не включён). Цены на публикации и печать зависят от текущих тарифов площадок и типографии на момент запуска.</p>
+
+  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:40px 0 12px">Аукцион — категории работ и ориентир по бюджету</p>
+  <div class="ad-grid">
+    <div class="ad-card">
+      <div class="ad-card-title">Аналитика и подготовка</div>
+      <div class="ad-card-text">СМА по объектам-аналогам, генеральная уборка, аромаклининг, хоум-стейджинг, вывоз лишней мебели и техники.</div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-card-title">Материалы и продвижение</div>
+      <div class="ad-card-text">Профессиональные фото и видео, аэросъёмка, 3D-тур, лендинг объекта, PDF-презентация, дизайн листовок и баннеров.</div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-card-title">Охват: площадки, агенты, территория</div>
+      <div class="ad-card-text">Премиум-размещение на Avito, Циан, Яндекс Недвижимость и профильных площадках, таргет и геотаргетинг, база агентов, брокер-тур, наружная реклама и обход территории.</div>
+    </div>
+  </div>
+
+  <div class="sc-costs">
+    <div class="sc-cost">
+      <div class="sc-cost-num">45 000–90 000 ₽</div>
+      <div class="sc-cost-label">Квартиры на вторичном рынке, 11 дней маркетинга</div>
+    </div>
+    <div class="sc-cost">
+      <div class="sc-cost-num">136 300 ₽</div>
+      <div class="sc-cost-label">Пример: загородный дом 311 м², бизнес-класс, полная команда</div>
+    </div>
+  </div>
+  <p class="sc-note">Загородная недвижимость и объекты бизнес-класса требуют более широкого охвата и стоят дороже в продвижении. Точную вилку для вашего объекта определяем после осмотра.</p>
+
+  <button class="plan-toggle" onclick="document.getElementById('planModal').classList.add('open')">Смотреть полный список работ по аукциону →</button>
+</section>
+
+<section class="s" id="s-workload">
+  <span class="s-num">06 / 08</span>
+  <h2 class="s-title">Объём работы: аукцион и мягкие торги</h2>
+  <p class="s-intro">Категории работы одинаковые в обоих форматах. Разница — в интенсивности и охвате внутри каждой из них. Комиссия выше там, где выше нагрузка на моё время и рекламный бюджет.</p>
+
+  <div class="sc-compare" style="margin-bottom:40px">
+    <div class="sc-col sc-col-rec">
+      <div class="sc-col-name">Аукцион — 21 день</div>
+      <ul class="plan-list">
+        <li>Анализ рынка, СМА, стартовая цена — до старта</li>
+        <li>Подготовка объекта: клининг, аромаклининг, хоум-стейджинг</li>
+        <li>Материалы и реклама — полный охват, ежедневный контроль кампании</li>
+        <li>База агентов — обзвон, рассылки, брокер-тур</li>
+        <li>Приём заявок и показы — пиковая нагрузка, всё сжато в 2 дня</li>
+        <li>Приём офферов, выбор лучшего предложения, задаток</li>
+      </ul>
+    </div>
+    <div class="sc-col">
+      <div class="sc-col-name">Мягкие торги — 30–55 дней</div>
+      <ul class="plan-list">
+        <li>Анализ рынка, СМА, стартовая цена — до старта</li>
+        <li>Подготовка объекта: базовая, без стейджинга</li>
+        <li>Материалы и реклама — фото, видео, листовки, платное продвижение 14 дней</li>
+        <li>База агентов — не задействована, бюджет не рассчитан на такой охват</li>
+        <li>Приём заявок и показы — распределены по неделям, без пиковой нагрузки</li>
+        <li>Приём предложений по мере набора, выбор лучшего, задаток</li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Аукцион — полный список работы</p>
+  <div class="cond">
+    <div class="cond-num">01</div>
+    <div>
+      <div class="cond-title">Анализ рынка и стратегия</div>
+      <div class="cond-text">Личный осмотр объектов-аналогов, подготовка СМА, определение стартовой цены и стратегии продажи.</div>
+    </div>
+  </div>
+  <div class="cond">
+    <div class="cond-num">02</div>
+    <div>
+      <div class="cond-title">Подготовка объекта</div>
+      <div class="cond-text">Координация клининга, аромаклининга, хоум-стейджинга — объект должен выглядеть максимально привлекательно к съёмке и показам.</div>
+    </div>
+  </div>
+  <div class="cond">
+    <div class="cond-num">03</div>
+    <div>
+      <div class="cond-title">Материалы и реклама</div>
+      <div class="cond-text">Организация фото- и видеосъёмки, написание текста объявления, лендинг, презентация, настройка и ведение рекламных кампаний.</div>
+    </div>
+  </div>
+  <div class="cond">
+    <div class="cond-num">04</div>
+    <div>
+      <div class="cond-title">Работа с базой агентов</div>
+      <div class="cond-text">Формирование и обзвон базы агентов района, e-mail и смс-рассылки, организация брокер-тура для агентств с покупателями.</div>
+    </div>
+  </div>
+  <div class="cond">
+    <div class="cond-num">05</div>
+    <div>
+      <div class="cond-title">Приём заявок и показы</div>
+      <div class="cond-text">Приём звонков, квалификация покупателей, запись, организация и личное проведение всех показов в сжатую дату.</div>
+    </div>
+  </div>
+  <div class="cond">
+    <div class="cond-num">06</div>
+    <div>
+      <div class="cond-title">Торги и сделка</div>
+      <div class="cond-text">Переговоры между покупателями, определение лучшего предложения, оформление задатка, сопровождение до регистрации.</div>
+    </div>
+  </div>
+</section>
+
+<section class="s" id="s-choose">
+  <span class="s-num">07 / 08</span>
+  <h2 class="s-title">Как выбрать формат</h2>
+  <p class="s-intro">Оба формата работают на одном принципе — конкуренции покупателей, а не торга с продавцом. Разница только в том, сколько вложено в скорость и охват.</p>
+
+  <div class="cond">
+    <div class="cond-num">01</div>
+    <div>
+      <div class="cond-title">Нужно продать быстро, готовы вложиться в рекламу</div>
+      <div class="cond-text">Аукцион. Стартовая цена ниже рынка привлекает максимум покупателей за 11 дней интенсивного маркетинга, показы сжаты в 2 дня, задаток — на 21-й день. Комиссия 6% окупается разницей в скорости и итоговой цене.</div>
+    </div>
+  </div>
+  <div class="cond">
+    <div class="cond-num">02</div>
+    <div>
+      <div class="cond-title">Срок не критичен, порог входа по бюджету важен</div>
+      <div class="cond-text">Мягкие торги. Тот же принцип конкуренции между покупателями, но без сжатых сроков и без крупных вложений в рекламу — бюджет от 37 000 ₽, задаток обычно на 30–55-й день. Комиссия 4%.</div>
+    </div>
+  </div>
+  <div class="cond">
+    <div class="cond-num">03</div>
+    <div>
+      <div class="cond-title">Не уверены, что выбрать</div>
+      <div class="cond-text">Начинаем с мягких торгов. Если за первые недели спрос не наберётся до нужного уровня — обсуждаем переход на аукцион отдельно, без обязательств.</div>
+    </div>
+  </div>
+  <div class="cond">
+    <div class="cond-num">04</div>
+    <div>
+      <div class="cond-title">Условия договора</div>
+      <div class="cond-text">Эксклюзивный договор на 3 месяца — независимо от формата. Срок с запасом: даже если аукцион или мягкие торги займут больше стандартных 21 или 30–55 дней, не нужно ничего перезаключать.</div>
+    </div>
+  </div>
+
+  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:40px 0 12px">Что будет, если вы напишете</p>
+  <div class="ad-grid">
+    <div class="ad-card">
+      <div class="ad-card-title">1 · Короткий звонок</div>
+      <div class="ad-card-text">15 минут, чтобы понять ситуацию с объектом и сроки. Ни к чему не обязывает.</div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-card-title">2 · Выезд и СМА</div>
+      <div class="ad-card-text">Осмотр объекта и сравнительный анализ рынка — занимает около недели.</div>
+    </div>
+    <div class="ad-card">
+      <div class="ad-card-title">3 · Встреча с расчётом</div>
+      <div class="ad-card-text">Показываю цифры по обоим форматам под ваш объект. Решение — за вами.</div>
+    </div>
+  </div>
+</section>
+
+<div class="modal-overlay" id="planModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <h3>Полный список работ по аукциону</h3>
+        <p>Реальный список по прошлым объектам. Под ваш объект состав и объём скорректируем. Диапазоны по категориям гибкие: бюджет перераспределяется между каналами по объекту, а не суммируется по максимуму каждой категории. Ориентир — 45 000–90 000 ₽ для квартир, для загородной недвижимости бизнес-класса выше.</p>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('planModal').classList.remove('open')">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="plan-group">
+        <div class="plan-group-title">Аналитика и подготовка объекта <span style="color:var(--muted);font-weight:400">— 5 000–15 000 ₽</span></div>
+        <ul class="plan-list">
+          <li>Сравнительный анализ по 5 объектам-аналогам (СМА)</li>
+          <li>Генеральная уборка, включая мойку окон</li>
+          <li>Вывоз мебели и техники, которая не переходит покупателю</li>
+          <li>Профессиональный аромаклининг</li>
+          <li>Хоум-стейджинг: свет, интерьер, расстановка мебели</li>
+        </ul>
+      </div>
+
+      <div class="plan-group">
+        <div class="plan-group-title">Рекламно-информационные материалы <span style="color:var(--muted);font-weight:400">— 10 000–25 000 ₽</span></div>
+        <ul class="plan-list">
+          <li>Профессиональная фотосъёмка</li>
+          <li>Видеосъёмка, включая аэросъёмку с квадрокоптера</li>
+          <li>Монтаж рекламного видеоролика для YouTube и соцсетей</li>
+          <li>3D-тур по объекту</li>
+          <li>Брендинг объекта: название, логотип, фирменный стиль подачи</li>
+          <li>Копирайтинг продающего текста объявления</li>
+          <li>PDF-презентация объекта</li>
+          <li>Лендинг объекта — с контактами и версия без контактов для брокер-тура</li>
+          <li>Дизайн и печать листовок, флаеров, баннеров, приглашений</li>
+        </ul>
+      </div>
+
+      <div class="plan-group">
+        <div class="plan-group-title">Онлайн-размещение и охват <span style="color:var(--muted);font-weight:400">— 15 000–40 000 ₽</span></div>
+        <ul class="plan-list">
+          <li>Премиум-размещение: Avito, Циан, Яндекс Недвижимость</li>
+          <li>Размещение на 30+ специализированных площадках по недвижимости</li>
+          <li>Удаление задвоенных и несанкционированных объявлений</li>
+          <li>Постинг в тематических группах и Telegram-чатах (недвижимость, инвестиции, риелторы)</li>
+          <li>Таргетированная реклама в Facebook и Instagram</li>
+          <li>Реклама в Яндекс.Директ по целевым запросам</li>
+          <li>Геотаргетинг</li>
+          <li>E-mail и SMS-рассылка по базе покупателей и агентов</li>
+        </ul>
+      </div>
+
+      <div class="plan-group">
+        <div class="plan-group-title">Работа с базой агентов <span style="color:var(--muted);font-weight:400">— 5 000–15 000 ₽</span></div>
+        <ul class="plan-list">
+          <li>Формирование базы агентов района (от 100 до 300+ контактов)</li>
+          <li>Обзвон агентов, продающих аналогичные объекты</li>
+          <li>Персональные приглашения ключевым агентствам</li>
+          <li>Организация и проведение брокер-тура / дня открытых дверей для агентов</li>
+          <li>Заключение субагентских договоров, раздел комиссии с агентом покупателя</li>
+        </ul>
+      </div>
+
+      <div class="plan-group">
+        <div class="plan-group-title">Наружная реклама и работа на территории <span style="color:var(--muted);font-weight:400">— 5 000–15 000 ₽</span></div>
+        <ul class="plan-list">
+          <li>Баннеры, перетяжки, штендеры у объекта и по городу</li>
+          <li>Расклейка объявлений у подъездов и в жилых комплексах сегмента</li>
+          <li>Распространение листовок промоутерами и по почтовым ящикам</li>
+          <li>Поквартирный обход соседей ближайших домов</li>
+          <li>Посещение управляющих компаний, ТСЖ, консьержей</li>
+          <li>Информирование школ, детских садов, локального бизнеса в округе</li>
+        </ul>
+      </div>
+
+      <div class="plan-group">
+        <div class="plan-group-title">Показы и торги <span style="color:var(--muted);font-weight:400">— моя работа, входит в комиссию</span></div>
+        <ul class="plan-list">
+          <li>Приём звонков от покупателей и агентов, квалификация</li>
+          <li>Запись на показы, формирование очереди</li>
+          <li>Знакомство покупателей с сопоставимыми предложениями на рынке — чтобы они принимали решение по вашему объекту на основе полной картины, а не в вакууме</li>
+          <li>Организация и личное проведение всех показов в сжатую дату</li>
+          <li>Приём и сравнение предложений, проведение торгов</li>
+          <li>Оформление задатка, подготовка к сделке</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<section class="s" id="s-faq">
+  <span class="s-num">08 / 08</span>
+  <h2 class="s-title">Частые вопросы</h2>
+  <p class="s-intro">То, что обычно спрашивают на встрече — чтобы не пришлось ждать до неё.</p>
+
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">Почему комиссия аукциона именно 6%, а не 2–3% как у обычного агента?</button>
+    <div class="faq-answer">
+      <p>Половина комиссии, 3%, заранее предложена каждому агенту в локации, у кого есть похожие покупатели. Это стимул привести их именно на ваш объект, а не показывать конкурентам — так и набирается конкуренция 8–15 покупателей за 2 дня. Но даже если ни один сторонний агент не приведёт покупателя, объём личной работы — маркетинг, база агентов, показы, переговоры — окупает комиссию за счёт итоговой цены. Плюс встречная мотивация с моей стороны: до старта кампании в договоре фиксируется резервная цена, на основе СМА — минимальная цена, ниже которой сделка не проходит. Превышу её — получаю премию, 50% от суммы превышения. Цифра зафиксирована заранее, задним числом её не подвинуть. Мне невыгодно останавливаться на первом же приемлемом предложении.</p>
+    </div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">Другой агент предлагает продать за 2%. Почему я должен платить больше?</button>
+    <div class="faq-answer">
+      <p>Можно продать и за 30 000 ₽. Вопрос не в проценте, а в том, что входит в работу за эти деньги. Низкая комиссия почти всегда означает минимальный план: фото и объявление на Avito, без охвата, без базы агентов, без концентрации спроса. И результат будет соответствующий. Сравнивайте не проценты, а то, что реально будет сделано для продажи вашего объекта — маркетинговый план в разделе выше открыт полностью.</p>
+    </div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">Почему маркетинг оплачиваю я? Другие агентства берут расходы на себя, а я и так плачу комиссию</button>
+    <div class="faq-answer">
+      <p>Мы рискуем разными вещами. Я вкладываю время: на аукционе это ежедневная работа весь срок — подготовка, реклама, звонки, показы, переговоры. Передумаете продавать в процессе — моё время мне никто не вернёт, это мой риск. Вы вкладываете бюджет, несопоставимо меньший, чем стоимость объекта: 45–90 тысяч на объект в 15–20 миллионов — доли процента. И это не расход в никуда, а рычаг. Именно за счёт него набирается критическая масса покупателей, которая толкает цену вверх на 10–15% — то есть на сотни тысяч, а иногда и миллионы. Агентства, которые «сами платят за рекламу», либо закладывают эти расходы в комиссию заранее, либо тратят на объект по минимуму: своими деньгами разгонять чужой объект невыгодно. У меня бюджет прозрачен и виден в смете до старта, а не спрятан внутри процента.</p>
+    </div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">Я плачу комиссию, даже если объект не продан?</button>
+    <div class="faq-answer">
+      <p>Нет. Комиссия — только по факту сделки. Маркетинговый бюджет — отдельная статья: собственник оплачивает его до старта и по ходу кампании, вне зависимости от результата. Это реальные расходы на рекламу, не моя прибыль.</p>
+    </div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">Нужно ли мне присутствовать на показах?</button>
+    <div class="faq-answer">
+      <p>Нет, и лучше не присутствовать. Без собственника в квартире покупатель ведёт себя свободнее и честнее — а присутствие часто читается как сигнал слабости позиции, повод торговаться жёстче. Показы провожу лично, отчёт по каждому получаете в тот же день.</p>
+    </div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">Обязан ли я принять самое высокое предложение?</button>
+    <div class="faq-answer">
+      <p>Нет. Я собираю и сравниваю предложения, но решение всегда за вами — по цене, срокам или условиям сделки, которые важны именно вам. Моя задача — чтобы у вас было из чего выбирать.</p>
+    </div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">Что означают СМА, резервная цена, задаток и оферта?</button>
+    <div class="faq-answer">
+      <p>СМА — сравнительный маркетинговый анализ, отчёт с ценами похожих объектов, на основе которого определяется стартовая цена. Резервная цена — минимальная цена, ниже которой сделка не проходит; фиксируется в договоре до старта на основе СМА и дальше не меняется. Оферта — письменное предложение от покупателя с ценой и условиями (ст. 435 ГК РФ). Задаток — сумма, которой покупатель подтверждает намерение купить после того, как его предложение выбрано (ст. 380–381 ГК РФ). Откажется покупатель — задаток остаётся у продавца. Откажется продавец — возвращает его в двойном размере. От аванса, у которого такой санкции нет, это и отличает: в договоре фиксируем именно задаток, его обеспечительная функция работает на вас.</p>
+    </div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-question" type="button" aria-expanded="false">Могу ли я выйти из эксклюзивного договора раньше срока, если что-то не устроит?</button>
+    <div class="faq-answer">
+      <p>Эксклюзив — это обязательство не работать параллельно с другими агентами, а не заморозка без права голоса. Есть вопросы по ходу процесса — сначала обсуждаем и корректируем стратегию. Мне это тоже на руку: недовольный собственник не продаёт объект по максимальной цене.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="cta-footer">
+  <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости</p>
+  <h2 class="cta-footer-title">Обсудим, какой формат подойдёт вашему объекту</h2>
+  <p class="cta-footer-sub">На СМА по объекту уходит около недели — после этого на встрече показываю расчёт по обоим форматам.</p>
+  <a class="footer-tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z"/></svg>
+    Написать в Telegram
+  </a>
+  <p class="footer-phone">или <a href="tel:+79118461965">+7 911 846-19-65</a></p>
+  <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
+</footer>
+
+<script>
+(function(){
+  // Подстановка имени/объекта/даты из ссылки (?name=...&object=...&date=...),
+  // иначе — сегодняшняя дата по умолчанию, остальное остаётся пустым для ручного ввода.
+  var params = new URLSearchParams(window.location.search);
+  var fields = document.querySelectorAll('#docMeta [data-field]');
+  fields.forEach(function(el){
+    var key = el.getAttribute('data-field');
+    var val = params.get(key);
+    if (val) {
+      el.textContent = val;
+    } else if (key === 'date' && !el.textContent.trim()) {
+      el.textContent = new Date().toLocaleDateString('ru-RU', {day:'numeric', month:'long', year:'numeric'});
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var faqItems = Array.prototype.slice.call(document.querySelectorAll('.faq-item'));
+  faqItems.forEach(function(item){
+    var btn = item.querySelector('.faq-question');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      var isOpen = item.classList.contains('is-open');
+      faqItems.forEach(function(i){
+        i.classList.remove('is-open');
+        var b = i.querySelector('.faq-question');
+        if(b) b.setAttribute('aria-expanded','false');
+      });
+      if(!isOpen){
+        item.classList.add('is-open');
+        btn.setAttribute('aria-expanded','true');
+      }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

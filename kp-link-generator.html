@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Генератор ссылок на КП — fastbroker21</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--serif:'Playfair Display',serif;--sans:'Inter',sans-serif;--bg:#FAFAF8;--dark:#1C1C1E;--text:#1A1A1A;--muted:#666;--border:rgba(0,0,0,0.1);--accent:#0066FF}
+html,body{background:var(--bg)}
+body{font-family:var(--sans);color:var(--text);font-size:15px;line-height:1.6;display:flex;justify-content:center;padding:60px 20px}
+.card{max-width:560px;width:100%}
+.kicker{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+h1{font-family:var(--serif);font-size:clamp(24px,4vw,32px);font-weight:400;letter-spacing:-0.01em;margin-bottom:8px}
+.sub{color:var(--muted);font-size:14px;margin-bottom:36px;line-height:1.6}
+label{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px;margin-top:20px}
+label:first-of-type{margin-top:0}
+input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:6px;font-family:var(--sans);font-size:14px;color:var(--text);background:white}
+input:focus{outline:none;border-color:var(--accent)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.hint{font-size:11px;color:var(--muted);margin-top:4px}
+button{margin-top:28px;width:100%;padding:14px;border:none;border-radius:6px;background:var(--dark);color:#E5E5E5;font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer}
+button:hover{background:#000}
+.result{margin-top:24px;display:none}
+.result.show{display:block}
+.result-box{display:flex;gap:8px;align-items:center}
+.result-box input{background:var(--bg);font-size:13px;color:var(--text)}
+.copy-btn{width:auto;margin-top:0;padding:12px 18px;flex-shrink:0;white-space:nowrap;background:var(--accent)}
+.copy-btn:hover{background:#0052cc}
+.copy-btn.copied{background:#1a7f37}
+.open-link{display:inline-block;margin-top:10px;font-size:13px;color:var(--accent);text-decoration:none}
+.open-link:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="kicker">fastbroker21 · внутренний инструмент</div>
+  <h1>Генератор ссылок на КП</h1>
+  <p class="sub">Вписываешь имя и объект — получаешь готовую ссылку с автоподстановкой полей. Сам файл КП с сервера не трогаем, меняются только параметры в адресе.</p>
+
+  <label>Адрес, где лежит файл на GitHub Pages</label>
+  <input id="base" type="text" value="https://fastbroker21.ru/">
+  <div class="hint">Домен репозитория или папки, где опубликован файл — с / на конце.</div>
+
+  <label>Имя файла КП</label>
+  <input id="file" type="text" value="kp-auktsion-myagkie-torgi.html">
+
+  <div class="row">
+    <div>
+      <label>Имя клиента</label>
+      <input id="name" type="text" placeholder="Иванов Игорь">
+    </div>
+    <div>
+      <label>Объект</label>
+      <input id="object" type="text" placeholder="ул. Ленина 15, кв. 42">
+    </div>
+  </div>
+
+  <label>Дата (необязательно)</label>
+  <input id="date" type="text" placeholder="по умолчанию — сегодняшняя">
+  <div class="hint">Если оставить пустым, в КП подставится сегодняшняя дата автоматически.</div>
+
+  <button onclick="generate()">Сгенерировать ссылку</button>
+
+  <div class="result" id="result">
+    <label>Готовая ссылка</label>
+    <div class="result-box">
+      <input id="resultUrl" type="text" readonly>
+      <button class="copy-btn" onclick="copyLink()">Скопировать</button>
+    </div>
+    <a class="open-link" id="openLink" href="#" target="_blank" rel="noopener">Открыть и проверить →</a>
+  </div>
+</div>
+
+<script>
+function generate(){
+  var base = document.getElementById('base').value.trim().replace(/\/?$/, '/');
+  var file = document.getElementById('file').value.trim();
+  var name = document.getElementById('name').value.trim();
+  var object = document.getElementById('object').value.trim();
+  var date = document.getElementById('date').value.trim();
+
+  var params = new URLSearchParams();
+  if(name) params.set('name', name);
+  if(object) params.set('object', object);
+  if(date) params.set('date', date);
+
+  var qs = params.toString();
+  var url = base + file + (qs ? '?' + qs : '');
+
+  document.getElementById('resultUrl').value = url;
+  document.getElementById('openLink').href = url;
+  document.getElementById('result').classList.add('show');
+}
+
+function copyLink(){
+  var input = document.getElementById('resultUrl');
+  input.select();
+  input.setSelectionRange(0, 99999);
+  var btn = document.querySelector('.copy-btn');
+  navigator.clipboard.writeText(input.value).then(function(){
+    btn.textContent = 'Скопировано';
+    btn.classList.add('copied');
+    setTimeout(function(){
+      btn.textContent = 'Скопировать';
+      btn.classList.remove('copied');
+    }, 1500);
+  }).catch(function(){
+    document.execCommand('copy');
+  });
+}
+</script>
+
+</body>
+</html>
