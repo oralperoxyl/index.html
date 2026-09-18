@@ -122,6 +122,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 /* ── CTA FOOTER + TG BUTTON (фирменный стиль, как в seller-lead.html) ── */
 .cta-footer{background:var(--dark);padding:72px 40px;text-align:center}
 .cta-footer-label{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.3);margin-bottom:20px}
+.footer-photo{width:68px;height:68px;border-radius:50%;object-fit:cover;display:block;margin:0 auto 20px;border:1px solid rgba(229,229,229,0.15)}
 .cta-footer-title{font-family:var(--serif);font-size:clamp(24px,3.5vw,40px);font-weight:400;color:#E5E5E5;line-height:1.2;margin-bottom:16px}
 .cta-footer-sub{font-size:15px;color:rgba(229,229,229,0.5);font-weight:300;margin-bottom:36px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7}
 .footer-tg-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid #0088cc;border-radius:999px;text-decoration:none;background:transparent;color:#E5E5E5;font-family:var(--sans);font-size:14px}
@@ -136,6 +137,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 .doc-meta-item strong[contenteditable]:focus{border-bottom-color:var(--accent);border-bottom-style:solid}
 .doc-meta-item strong[contenteditable]:empty::before{content:attr(data-placeholder);color:var(--muted);font-weight:300}
 @media print{.doc-meta-item strong[contenteditable]{border-bottom:none}}
+
+/* ── TRUST BAR ── */
+.trust-bar{max-width:900px;margin:0 auto;padding:26px 40px;display:flex;flex-wrap:wrap;align-items:center;gap:32px;border-bottom:1px solid var(--border);background:var(--bg)}
+.trust-stat{display:flex;flex-direction:column;gap:2px}
+.trust-stat-num{font-family:var(--serif);font-size:22px;font-weight:400;color:var(--text)}
+.trust-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.04em}
+.trust-links{margin-left:auto;display:flex;gap:20px}
+.trust-links a{font-size:12px;color:var(--accent);text-decoration:none}
+.trust-links a:hover{text-decoration:underline}
+@media(max-width:640px){.trust-bar{gap:20px;padding:22px 20px}.trust-links{margin-left:0;width:100%}}
 
 /* ── STALE LISTING CALLOUT ── */
 .pain-block{background:var(--dark)}
@@ -213,9 +224,19 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
   <div class="hero-inner">
     <p class="hero-label">Два формата продажи объекта</p>
     <h1 class="hero-title">Большинство продавцов теряют деньги не из-за низкой цены старта, а из-за того, что объект висит в рекламе месяцами.</h1>
-    <p class="hero-sub">Чем дольше объявление без движения, тем больше у покупателей повода торговаться вниз. Я работаю иначе. Свожу несколько заинтересованных покупателей к одной дате. Они конкурируют друг с другом, а не с вами. Никакого молотка и криков «продано» — покупатели просто подают письменные предложения. Формат и бюджет выбираете вы.</p>
+    <p class="hero-sub">Чем дольше объявление без движения, тем больше у покупателей повода торговаться вниз. Я работаю иначе. Свожу несколько заинтересованных покупателей в сжатые сроки. Они конкурируют друг с другом, а не с вами. Никакого молотка и криков «продано» — показы индивидуальные, покупатели подают письменные предложения. Формат и бюджет выбираете вы.</p>
   </div>
 </section>
+
+<div class="trust-bar">
+  <div class="trust-stat"><div class="trust-stat-num">2018</div><div class="trust-stat-label">На рынке с</div></div>
+  <div class="trust-stat"><div class="trust-stat-num">200+</div><div class="trust-stat-label">Сделок</div></div>
+  <div class="trust-stat"><div class="trust-stat-num">40+</div><div class="trust-stat-label">Из них аукционов</div></div>
+  <div class="trust-links">
+    <a href="https://fastbroker21.ru/#cases" target="_blank" rel="noopener">Кейсы →</a>
+    <a href="https://fastbroker21.ru/#reviews" target="_blank" rel="noopener">Отзывы →</a>
+  </div>
+</div>
 
 <div class="pain-block">
   <div class="pain-block-inner">
@@ -229,7 +250,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 <div class="tldr">
   <div class="tldr-kicker">Коротко о главном — для тех, кто пробегает глазами</div>
   <div class="tldr-row">
-    <div class="tldr-text"><strong>Одна механика, разный масштаб.</strong> Широкий маркетинг и заниженная стартовая цена собирают покупателей к одной дате. Они видят друг друга на показе и понимают: объект интересен не только им — и предлагают больше, чтобы не упустить. Аукцион — 6%, полный охват, задаток на 21-й день. Мягкие торги — 4%, та же логика в меньшем масштабе, задаток на 30–55-й день.</div>
+    <div class="tldr-text"><strong>Одна механика, разный масштаб.</strong> Широкий маркетинг и заниженная стартовая цена собирают покупателей в сжатые сроки. Показы индивидуальные: каждый видит стопку уже поданных офферов от предыдущих и понимает — объект интересен не только ему, предлагает больше, чтобы не упустить. Аукцион — 6%, полный охват, задаток на 21-й день. Мягкие торги — 4%, та же логика в меньшем масштабе, задаток на 30–55-й день.</div>
     <a class="tldr-link" href="#s-formats">Сравнение →</a>
   </div>
   <div class="tldr-row">
@@ -253,14 +274,14 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 <section class="s" id="s-formats">
   <span class="s-num">01 / 08</span>
   <h2 class="s-title">Два формата на выбор</h2>
-  <p class="s-intro">Оба формата работают на одном механизме. Широкий маркетинг и заниженная стартовая цена собирают на объект много покупателей одновременно. На показе они видят друг друга и понимают: объект интересен не только им — и предлагают больше, чтобы не упустить, вместо того чтобы сбивать цену вниз. Дальше — чёткий процесс с фиксированными датами, который отбирает лучшее предложение. Аукцион делает это в полном объёме и укладывается в 21 день. Мягкие торги — та же логика, только в меньшем масштабе: маркетинговый план скромнее, поэтому и срок обычно 30–55 дней.</p>
+  <p class="s-intro">Механика конкуренции покупателей — одна и та же в обоих форматах (см. выше). Разница только в масштабе. Аукцион задействует её в полном объёме и укладывается в 21 день. Мягкие торги — та же логика, но маркетинговый план скромнее, поэтому и срок обычно 30–55 дней.</p>
 
   <div class="sc-compare">
     <div class="sc-col sc-col-rec">
       <div class="sc-col-name">Аукцион</div>
       <div class="sc-col-fee">6%</div>
       <div class="sc-col-row"><span class="sc-col-label">Срок до задатка</span><span class="sc-col-val">21 день</span></div>
-      <div class="sc-col-row"><span class="sc-col-label">Маркетинг</span><span class="sc-col-val">Интенсивный, от 45 000 ₽</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Маркетинг</span><span class="sc-col-val">Интенсивный, полный охват</span></div>
       <div class="sc-col-row"><span class="sc-col-label">Показы</span><span class="sc-col-val">Концентрированы в 2 дня</span></div>
       <div class="sc-col-row"><span class="sc-col-label">Порог входа</span><span class="sc-col-val">Выше</span></div>
       <div class="sc-col-row"><span class="sc-col-label">Моё время</span><span class="sc-col-val">Ежедневная работа весь срок</span></div>
@@ -270,7 +291,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
       <div class="sc-col-name">Мягкие торги</div>
       <div class="sc-col-fee">4%</div>
       <div class="sc-col-row"><span class="sc-col-label">Срок до задатка</span><span class="sc-col-val">30–55 дней</span></div>
-      <div class="sc-col-row"><span class="sc-col-label">Маркетинг</span><span class="sc-col-val">Базовый, ≈ 37 000 ₽</span></div>
+      <div class="sc-col-row"><span class="sc-col-label">Маркетинг</span><span class="sc-col-val">Базовый, минимальный бюджет</span></div>
       <div class="sc-col-row"><span class="sc-col-label">Показы</span><span class="sc-col-val">Группами, раз в неделю</span></div>
       <div class="sc-col-row"><span class="sc-col-label">Порог входа</span><span class="sc-col-val">Низкий</span></div>
       <div class="sc-col-row"><span class="sc-col-label">Моё время</span><span class="sc-col-val">Полная вовлечённость, без сжатых сроков</span></div>
@@ -280,7 +301,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 
   <p class="sc-note" style="margin-top:16px">В обоих форматах вы получаете еженедельный отчёт: звонки, показы, обратная связь от покупателей и мои выводы. Не «работаем, ждите» — вы в любой момент видите, что реально происходит с объектом.</p>
 
-  <div class="sc-alert sc-alert-info"><strong>Почему маркетинг оплачивает собственник.</strong> Мы рискуем разными вещами. Я вкладываю время — на аукционе это ежедневная работа весь срок, без гарантии результата. Передумаете продавать в процессе — это время мне никто не вернёт. Вы вкладываете бюджет на порядок меньше стоимости объекта. Это не мой заработок, а показатель вашего настроя: готовы вложиться — значит, действительно хотите продать в срок, а не прощупываете рынок. Тогда я включаюсь на полную. Нет бюджета — работаем мягче и дольше, без обязательств с вашей стороны. Расчёт по цифрам — в FAQ ниже.</div>
+  <div class="sc-alert sc-alert-info"><strong>Почему маркетинг оплачивает собственник.</strong> Мы рискуем разными вещами. Я вкладываю время — на аукционе это ежедневная работа весь срок, без гарантии результата. Передумаете продавать в процессе — это время мне никто не вернёт. Вы вкладываете бюджет на порядок меньше стоимости объекта. Это не мой заработок, а показатель вашего настроя: готовы вложиться — значит, действительно хотите продать в срок, а не прощупываете рынок. Тогда я включаюсь на полную. Готовы вложить меньше — переходим на мягкие торги: бюджет скромнее, но не нулевой, без минимального вложения в продвижение конкуренция покупателей не наберётся. Совсем без бюджета на рекламу за проект не берусь — без него результата не гарантирует ни один из форматов. Расчёт по цифрам — в FAQ ниже.</div>
 
   <p class="sc-note" style="margin-top:24px">Оба формата — эксклюзивный договор на 3 месяца. Срок с запасом на случай, если процесс потребует больше времени, чем стандартные 21 или 30–55 дней — без необходимости перезаключать договор. Как распределяется комиссия и почему она именно такая — в разделе FAQ ниже.</p>
 </section>
@@ -335,28 +356,28 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
       <div>
         <div class="tl-title">Интенсивный маркетинг</div>
         <div class="tl-note">Полный охват площадок, работа с базой агентов, приём звонков и запись на показы.</div>
-        <div class="tl-meta"><span class="tl-meta-item"><strong>Бюджет:</strong> от 45 000 ₽ (для загородных объектов бизнес-класса — выше)</span></div>
+        <div class="tl-meta"><span class="tl-meta-item"><strong>Бюджет:</strong> зависит от объекта и сегмента, смета — на встрече после осмотра</span></div>
       </div>
     </div>
     <div class="tl-step">
       <div class="tl-day">Дни 12–13</div>
       <div>
-        <div class="tl-title">Показы, сжатые в 2 дня</div>
-        <div class="tl-note">8–15 покупателей в день видят друг друга на объекте — конкуренция видна физически, а не описывается на словах.</div>
+        <div class="tl-title">Показы — индивидуально, каждому своё время</div>
+        <div class="tl-note">15–25 покупателей суммарно, но не толпой: у каждого — отдельный слот. После показа покупатель оставляет письменное предложение (оферту). Следующие видят стопку уже поданных офферов — конкуренция ощущается физически, а не на словах.</div>
       </div>
     </div>
     <div class="tl-step">
       <div class="tl-day">Дни 14–16</div>
       <div>
-        <div class="tl-title">Приём офферов</div>
-        <div class="tl-note">Покупатели подают письменные предложения (оферты) — без торга в моменте показа. Так у меня есть пауза на переговоры, а у вас — время принять решение спокойно.</div>
+        <div class="tl-title">Торги по телефону</div>
+        <div class="tl-note">Обзваниваю всех, кто подал оферту, от наивысшего предложения к меньшему — участники могут поднять свою изначальную цену. Именно на этом этапе цена растёт сильнее всего.</div>
       </div>
     </div>
     <div class="tl-step">
       <div class="tl-day">Дни 17–21</div>
       <div>
         <div class="tl-title">Выбор и задаток</div>
-        <div class="tl-note">Сравнение всех предложений по цене и условиям, определение лучшего, оформление задатка. Дальше — стандартная подготовка к сделке и регистрация, которую также веду я, до самого закрытия.</div>
+        <div class="tl-note">Из общей массы остаются обычно 2–4 лучших покупателя. Вы выбираете самого выгодного и удобного — не обязательно того, кто предложил больше всех. На следующий день — задаток. Дальше стандартная подготовка к сделке и регистрация, которую также веду я, до самого закрытия.</div>
       </div>
     </div>
   </div>
@@ -375,7 +396,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
       <div>
         <div class="tl-title">Подготовка и размещение</div>
         <div class="tl-note">Фото и видео, отрисовка планировки для рекламоносителей, макет и печать листовок, публикация на Циан и Авито.</div>
-        <div class="tl-meta"><span class="tl-meta-item"><strong>Бюджет:</strong> ≈ 15 000 ₽</span></div>
+        <div class="tl-meta"><span class="tl-meta-item"><strong>Бюджет:</strong> минимальный, полная смета — в разделе с маркетинговым планом</span></div>
       </div>
     </div>
     <div class="tl-step">
@@ -383,14 +404,14 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
       <div>
         <div class="tl-title">Платное продвижение объявлений</div>
         <div class="tl-note">Усиленный показ объявления на площадках первые 14 дней — это не аукционный охват, но заметно больше, чем бесплатное размещение.</div>
-        <div class="tl-meta"><span class="tl-meta-item"><strong>Бюджет:</strong> ≈ 22 000 ₽</span></div>
+        <div class="tl-meta"><span class="tl-meta-item"><strong>Бюджет:</strong> по тарифам площадок на момент запуска</span></div>
       </div>
     </div>
     <div class="tl-step">
-      <div class="tl-day">Дни 7–45</div>
+      <div class="tl-day">Дни 7–55</div>
       <div>
         <div class="tl-title">Показы группами, раз в неделю</div>
-        <div class="tl-note">Не по одному покупателю в разнобой, а раз в неделю. К каждой дате набирается несколько заинтересованных, и между ними сохраняется конкуренция — просто без сжатых сроков и без аукционного бюджета. Идёт параллельно с продвижением и продолжается столько, сколько нужно для набора достаточного числа предложений.</div>
+        <div class="tl-note">Не по одному покупателю в разнобой, а раз в неделю. К каждой дате набирается несколько заинтересованных, и между ними сохраняется конкуренция — просто без сжатых сроков и без аукционного бюджета. Идёт параллельно с продвижением и продолжается до тех пор, пока не наберётся достаточно предложений.</div>
       </div>
     </div>
     <div class="tl-step">
@@ -585,7 +606,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
     <div class="cond-num">02</div>
     <div>
       <div class="cond-title">Срок не критичен, порог входа по бюджету важен</div>
-      <div class="cond-text">Мягкие торги. Тот же принцип конкуренции между покупателями, но без сжатых сроков и без крупных вложений в рекламу — бюджет от 37 000 ₽, задаток обычно на 30–55-й день. Комиссия 4%.</div>
+      <div class="cond-text">Мягкие торги. Тот же принцип конкуренции между покупателями, но без сжатых сроков и без крупных вложений в рекламу — бюджет минимальный, задаток обычно на 30–55-й день. Комиссия 4%.</div>
     </div>
   </div>
   <div class="cond">
@@ -599,7 +620,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
     <div class="cond-num">04</div>
     <div>
       <div class="cond-title">Условия договора</div>
-      <div class="cond-text">Эксклюзивный договор на 3 месяца — независимо от формата. Срок с запасом: даже если аукцион или мягкие торги займут больше стандартных 21 или 30–55 дней, не нужно ничего перезаключать.</div>
+      <div class="cond-text">Эксклюзив на 3 месяца, независимо от формата — с запасом на случай более долгого процесса.</div>
     </div>
   </div>
 
@@ -701,7 +722,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
           <li>Запись на показы, формирование очереди</li>
           <li>Знакомство покупателей с сопоставимыми предложениями на рынке — чтобы они принимали решение по вашему объекту на основе полной картины, а не в вакууме</li>
           <li>Организация и личное проведение всех показов в сжатую дату</li>
-          <li>Приём и сравнение предложений, проведение торгов</li>
+          <li>Приём офертов, торги по телефону от наивысшего предложения к меньшему</li>
           <li>Оформление задатка, подготовка к сделке</li>
         </ul>
       </div>
@@ -718,7 +739,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
   <div class="faq-item">
     <button class="faq-question" type="button" aria-expanded="false">Почему комиссия аукциона именно 6%, а не 2–3% как у обычного агента?</button>
     <div class="faq-answer">
-      <p>Половина комиссии, 3%, заранее предложена каждому агенту в локации, у кого есть похожие покупатели. Это стимул привести их именно на ваш объект, а не показывать конкурентам — так и набирается конкуренция 8–15 покупателей за 2 дня. Но даже если ни один сторонний агент не приведёт покупателя, объём личной работы — маркетинг, база агентов, показы, переговоры — окупает комиссию за счёт итоговой цены. Плюс встречная мотивация с моей стороны: до старта кампании в договоре фиксируется резервная цена, на основе СМА — минимальная цена, ниже которой сделка не проходит. Превышу её — получаю премию, 50% от суммы превышения. Цифра зафиксирована заранее, задним числом её не подвинуть. Мне невыгодно останавливаться на первом же приемлемом предложении.</p>
+      <p>Половина комиссии, 3%, заранее предложена каждому агенту в локации, у кого есть похожие покупатели. Это стимул привести их именно на ваш объект, а не показывать конкурентам — так и набирается конкуренция 15–25 покупателей за 2 дня. Но даже если ни один сторонний агент не приведёт покупателя, объём личной работы — маркетинг, база агентов, показы, переговоры — окупает комиссию за счёт итоговой цены. Плюс встречная мотивация с моей стороны: до старта кампании в договоре фиксируется резервная цена, на основе СМА — минимальная цена, ниже которой сделка не проходит. Превышу её — получаю премию, 50% от суммы превышения. Цифра зафиксирована заранее, задним числом её не подвинуть. Мне невыгодно останавливаться на первом же приемлемом предложении.</p>
     </div>
   </div>
   <div class="faq-item">
@@ -766,7 +787,8 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 </section>
 
 <footer class="cta-footer">
-  <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости</p>
+  <img class="footer-photo" src="https://fastbroker21.ru/processed_images/bwhero.jpg" alt="Семён Гончаров">
+  <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости · на рынке с 2018 года, 200+ сделок, 40+ аукционов</p>
   <h2 class="cta-footer-title">Обсудим, какой формат подойдёт вашему объекту</h2>
   <p class="cta-footer-sub">На СМА по объекту уходит около недели — после этого на встрече показываю расчёт по обоим форматам.</p>
   <a class="footer-tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
@@ -774,6 +796,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
     Написать в Telegram
   </a>
   <p class="footer-phone">или <a href="tel:+79118461965">+7 911 846-19-65</a></p>
+  <p class="footer-phone"><a href="https://fastbroker21.ru/#cases" target="_blank" rel="noopener">Кейсы</a> · <a href="https://fastbroker21.ru/#reviews" target="_blank" rel="noopener">Отзывы</a></p>
   <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
 </footer>
 
