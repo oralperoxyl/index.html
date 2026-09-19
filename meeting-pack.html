@@ -1577,6 +1577,22 @@
     staircase.style.setProperty('--line-h', '0px');
   }
 
+  // The last step's connecting line doesn't stop at its own number —
+  // it continues on into the separate "Сделка" block below the staircase.
+  const lastStep = steps[steps.length - 1];
+  const dealBadge = document.querySelector('.stair-end-badge');
+
+  function updateLineToDeal() {
+    if (!staircase || !dealBadge) return;
+    const staircaseRect = staircase.getBoundingClientRect();
+    const badgeRect = dealBadge.getBoundingClientRect();
+    const targetBottom = badgeRect.top - staircaseRect.top;
+    const currentHeight = parseFloat(staircase.style.getPropertyValue('--line-h') || '0');
+    if (targetBottom > currentHeight) {
+      staircase.style.setProperty('--line-h', targetBottom + 'px');
+    }
+  }
+
   // Animate each step as it scrolls into view
   const stepObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
@@ -1585,6 +1601,10 @@
         step.classList.add('visible');
         // Update line to reach this step
         requestAnimationFrame(() => updateLineHeight(step));
+        // On the last step, also grow the line the rest of the way to the deal badge
+        if (step === lastStep) {
+          requestAnimationFrame(() => updateLineToDeal());
+        }
         // Pulse the number circle after step fades in
         setTimeout(() => {
           step.classList.add('pulse');
