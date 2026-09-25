@@ -813,6 +813,22 @@
       },
       "strategy": null,
       "reports": null
+    },
+    "жк-ручьи-2": {
+      "address": "ЖК Ручьи 2",
+      "area": 0,
+      "rooms": 0,
+      "floor": "",
+      "location": "",
+      "date": "26 сентября 2026 г.",
+      "sma": {
+        "competitors": [],
+        "recommendations": [],
+        "priceFrom": 0,
+        "priceTo": 0
+      },
+      "strategy": null,
+      "reports": null
     }
   }
 }
