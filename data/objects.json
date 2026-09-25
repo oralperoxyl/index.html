@@ -911,9 +911,9 @@
           {
             "address": "Пискаревский просп., 145к5",
             "agent": "Агент Анна",
-            "area": "",
-            "rooms": "",
-            "floor": "",
+            "area": "29",
+            "rooms": "1",
+            "floor": "2/14",
             "condition": "",
             "price": 0,
             "ppm": 0,
