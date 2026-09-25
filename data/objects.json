@@ -843,8 +843,8 @@
           {
             "address": " ул. Пахомовская, 18к2",
             "agent": "Агент",
-            "area": "",
-            "rooms": "",
+            "area": "33,5",
+            "rooms": "1",
             "floor": "",
             "condition": "",
             "price": 0,
