@@ -817,12 +817,30 @@
     "жк-ручьи-2": {
       "address": "ЖК Ручьи 2",
       "area": 0,
-      "rooms": 0,
+      "rooms": 1,
       "floor": "15/20",
       "location": "",
       "date": "26 сентября 2026 г.",
       "sma": {
-        "competitors": [],
+        "competitors": [
+          {
+            "address": "",
+            "agent": "",
+            "area": "",
+            "rooms": "",
+            "floor": "",
+            "condition": "",
+            "price": 0,
+            "ppm": 0,
+            "bargain": "",
+            "adDate": "",
+            "adViews": "",
+            "url": "",
+            "comment": "",
+            "ours": false,
+            "visited": false
+          }
+        ],
         "recommendations": [],
         "priceFrom": 0,
         "priceTo": 0
