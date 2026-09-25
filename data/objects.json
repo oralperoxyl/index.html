@@ -860,8 +860,8 @@
           {
             "address": " Северный просп., 123к1",
             "agent": "Агент Татьяна",
-            "area": "",
-            "rooms": "",
+            "area": "33,3",
+            "rooms": "1",
             "floor": "",
             "condition": "",
             "price": 0,
