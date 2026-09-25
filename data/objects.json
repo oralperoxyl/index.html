@@ -826,8 +826,8 @@
           {
             "address": " ул. Пахомовская, 6к1",
             "agent": "Агент",
-            "area": "",
-            "rooms": "",
+            "area": "36",
+            "rooms": "1",
             "floor": "",
             "condition": "",
             "price": 0,
