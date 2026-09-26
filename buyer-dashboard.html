@@ -547,8 +547,8 @@ function fmtPpm(price,area){
 function fmtPrice(p){if(!p)return '—';const n=Number(String(p).replace(/\D/g,''));if(!n)return p;return(n/1000000).toFixed(2).replace(/\.?0+$/,'')+' млн ₽';}
 
 // ── STATUS ──────────────────────────────────────────────────
-const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',pending:'Ждём показа',clarifying:'Уточняем время',reference:'Для сравнения',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл',sold:'Объект продан'};
-const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',declined:'declined',pending:'pending',clarifying:'clarifying',reference:'reference',sold:'sold'};
+const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',pending:'Ждём показа',clarifying:'Уточняем время',reference:'Для сравнения',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл',filtered:'Снят с подбора',sold:'Объект продан'};
+const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',declined:'declined',filtered:'declined',pending:'pending',clarifying:'clarifying',reference:'reference',sold:'sold'};
 
 // ── STAR RATING ─────────────────────────────────────────────
 function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
@@ -639,7 +639,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
   const statusCls=STATUS_CLASS[prop.status]||'planned';
   const rating=prop.clientRating||0;
 
-  return `<div class="prop-card${(prop.status==='sold'||prop.status==='declined')?' sold-card':''}" id="prop-${idx}">
+  return `<div class="prop-card${(prop.status==='sold'||prop.status==='declined'||prop.status==='filtered')?' sold-card':''}" id="prop-${idx}">
     <div class="prop-card-header" onclick="toggleProp(${idx})">
       <div class="prop-num">${String(prop.num||idx+1).padStart(2,'0')}</div>
       <div>
@@ -1139,6 +1139,7 @@ function renderAgentView(buyerId){
               <option value="viewed">Просмотрен</option>
               <option value="considering">Рассматриваем</option>
               <option value="declined">Не подошёл</option>
+              <option value="filtered">Снят с подбора</option>
             </select>
           </div>
           <div class="af full"><label>Ссылка на объявление</label><input class="ai" id="np-url" placeholder="https://cian.ru/..."></div>
