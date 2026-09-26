@@ -34,7 +34,6 @@ button,a{-webkit-tap-highlight-color:transparent}
 .header-right{display:flex;align-items:center;gap:16px}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:#ccc;display:inline-block;margin-right:6px;transition:background 0.3s}
 .sync-dot.ok{background:var(--green)}
-.sync-dot.error{background:var(--red)}
 .sync-text{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted)}
 
 /* HERO */
@@ -58,10 +57,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 .step-text{font-size:14px;font-weight:300;line-height:1.75;color:var(--text);white-space:normal}
 .hist-block{margin-bottom:32px;border-radius:8px;overflow:hidden}
 .hist-title{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);padding:0 0 12px;margin-bottom:0}
-.hist-item{background:#fff;padding:16px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:100px 1fr auto;gap:16px;align-items:start}
-.hist-del{border:none;background:none;color:var(--muted);font-size:18px;line-height:1;cursor:pointer;padding:2px 6px;border-radius:4px;opacity:.35;transition:opacity .15s}
-.hist-item:hover .hist-del{opacity:1}
-.hist-del:hover{color:#c0392b;background:#faf0ee}
+.hist-item{background:#fff;padding:16px 20px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:100px 1fr;gap:16px;align-items:start}
 .hist-item:last-child{border-bottom:none}
 .hist-date{font-size:11px;color:var(--muted);font-weight:400;padding-top:3px;white-space:nowrap}
 .hist-text{font-size:13px;font-weight:300;line-height:1.7;color:var(--text)}
@@ -118,9 +114,6 @@ button,a{-webkit-tap-highlight-color:transparent}
 .prop-status.reference{background:rgba(0,0,0,0.04);color:#999}
 .prop-status.clarifying{background:rgba(130,80,180,0.08);color:rgba(110,60,160,0.85)}
 .prop-status.pending{background:rgba(180,100,0,0.08);color:rgba(160,90,0,0.8)}
-.prop-status.unreachable{background:rgba(192,57,43,0.1);color:var(--red)}
-.prop-status.active{background:rgba(45,138,78,0.2);color:var(--green);font-weight:600}
-.prop-status.filtered{background:rgba(0,0,0,0.05);color:var(--muted)}
 .prop-status.sold{background:rgba(0,0,0,0.06);color:#999}
 .prop-card.sold-card{opacity:0.55}
 .prop-card.sold-card .prop-addr{text-decoration:line-through;text-decoration-color:rgba(0,0,0,0.25)}
@@ -382,7 +375,6 @@ button,a{-webkit-tap-highlight-color:transparent}
   .hero-chips{gap:12px}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -407,10 +399,6 @@ button,a{-webkit-tap-highlight-color:transparent}
 
 <script>
 
-// ── SUPABASE (бриф + оценки в реальном времени) ────────────
-const SB_URL = 'https://pogmpmbgddljujzumvnr.supabase.co';
-const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvZ21wbWJnZGRsanVqenVtdm5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NzAzMDEsImV4cCI6MjEwNDQ0NjMwMX0.5gqh2ZsQJyRFmA8ZfhAf6lBinIIMfkc3X--Y81fKNLA';
-const sb = supabase.createClient(SB_URL, SB_ANON_KEY);
 
 function renderFooter(){
   return `<footer class="cta-footer">
@@ -469,10 +457,6 @@ function setSyncOk(msg){
   document.getElementById('syncDot').className='sync-dot ok';
   document.getElementById('syncText').textContent=msg||'Синхронизировано';
 }
-function setSyncError(msg){
-  document.getElementById('syncDot').className='sync-dot error';
-  document.getElementById('syncText').textContent=msg||'Ошибка сохранения';
-}
 function setSyncPending(){
   document.getElementById('syncDot').className='sync-dot';
   document.getElementById('syncText').textContent='Сохранение…';
@@ -516,7 +500,7 @@ async function ghLoad(){
   }catch(e){setSyncOk('Ошибка загрузки');}
 }
 
-async function ghSave(isRetry){
+async function ghSave(){
   const token=getToken();
   if(!token)return;
   if(!getMaster()){setSyncOk('Нет ключа шифрования — сохранение остановлено');return;}
@@ -541,53 +525,10 @@ async function ghSave(isRetry){
       method:'PUT',headers:{Authorization:`token ${token}`,'Content-Type':'application/json'},
       body:JSON.stringify(body)
     });
-    if(r.ok){
-      const j=await r.json();
-      fileSha=j.content?.sha||fileSha;
-      setSyncOk('Синхронизировано');
-      return;
-    }
-    if(r.status===409){
-      // Кто-то сохранил параллельно (например, с другого устройства).
-      // Подтягиваем свежую версию и склеиваем: чужие новые/изменённые записи
-      // подхватываем, свои несохранённые правки не теряем.
-      if(isRetry){setSyncError('Конфликт сохранения — обновите страницу');return;}
-      const merged=await ghMergeRemote();
-      if(merged){setSyncPending();return ghSave(true);}
-      setSyncError('Конфликт сохранения — обновите страницу');
-      return;
-    }
-    const err=await r.json().catch(()=>({}));
-    console.error('GH save error:',r.status,err);
-    setSyncError('Ошибка сохранения ('+r.status+')');
-  }catch(e){
-    console.error('GH save:',e);
-    setSyncError('Ошибка сети — правки не сохранены');
-  }
-}
-
-// Подтягивает актуальную версию с GitHub и сливает с тем, что сейчас в
-// браузере: сервер — база, локальные правки поверх (свои изменения не
-// теряем), записи, которых нет локально, но есть на сервере — подхватываем.
-async function ghMergeRemote(){
-  const token=getToken();
-  try{
-    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}?ref=${GH_BRANCH}`,{headers:{Authorization:`token ${token}`}});
-    if(!r.ok)return false;
     const j=await r.json();
-    fileSha=j.sha;
-    const decoded=atob(j.content.replace(/\n/g,''));
-    const text=new TextDecoder().decode(Uint8Array.from(decoded,x=>x.charCodeAt(0)));
-    const remote=JSON.parse(text);
-    if(remote.version!==2)return true; // старый формат — берём свежий sha, локальные данные не трогаем
-    const remoteBuyers={};
-    for(const bid of Object.keys(remote.buyers||{})){
-      try{remoteBuyers[bid]=await decryptBuyer(bid,remote.buyers[bid]);}
-      catch(e){/* не расшифровалось этим ключом — пропускаем, не портим слияние */}
-    }
-    allData.buyers={...remoteBuyers,...allData.buyers};
-    return true;
-  }catch(e){console.error('GH merge:',e);return false;}
+    fileSha=j.content?.sha||fileSha;
+    setSyncOk('Синхронизировано');
+  }catch(e){setSyncOk('Ошибка сохранения');}
 }
 
 let saveTimer=null;
@@ -641,8 +582,8 @@ function fmtPpm(price,area){
 function fmtPrice(p){if(!p)return '—';const n=Number(String(p).replace(/\D/g,''));if(!n)return p;return(n/1000000).toFixed(2).replace(/\.?0+$/,'')+' млн ₽';}
 
 // ── STATUS ──────────────────────────────────────────────────
-const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',pending:'Ждём показа',clarifying:'Уточняем время',unreachable:'Не дозвониться',reference:'Для сравнения',viewed:'Просмотрен',considering:'Рассматриваем',active:'В работе',declined:'Не подошёл',filtered:'Снят с подбора',sold:'Объект продан'};
-const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',active:'active',declined:'declined',filtered:'filtered',pending:'pending',clarifying:'clarifying',unreachable:'unreachable',reference:'reference',sold:'sold'};
+const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',pending:'Ждём показа',clarifying:'Уточняем время',reference:'Для сравнения',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл',sold:'Объект продан'};
+const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',declined:'declined',pending:'pending',clarifying:'clarifying',reference:'reference',sold:'sold'};
 
 // ── STAR RATING ─────────────────────────────────────────────
 function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
@@ -651,14 +592,11 @@ function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
 function renderRating(buyerId,propIdx,prop,forceClient){
   const rating=prop.clientRating||0;
   const comment=prop.clientComment||'';
-  const wantToView=prop.wantToView||'';
   const key=`rating-${buyerId}-${propIdx}`;
-  const wtvBadge=wantToView?`<div style="margin-bottom:8px"><span style="font-size:13px;font-weight:500;color:${wantToView==='yes'?'#2D8A4E':'var(--muted)'}">${wantToView==='yes'?'● Хочет посмотреть':'○ Не интересует'}</span></div>`:'';
 
   if((forceClient||!getToken())&&!rating){
     // client can rate
     return `<div class="rating-wrap">
-      ${wtvBadge}
       <div class="rating-label">Ваша оценка</div>
       <div class="stars-row" id="stars-${propIdx}">
         ${[1,2,3,4,5].map(i=>`<button class="star-btn" onclick="setRating('${buyerId}',${propIdx},${i})" title="${i}">${i}</button>`).join('')}
@@ -676,18 +614,10 @@ function renderRating(buyerId,propIdx,prop,forceClient){
     return `<div class="rating-wrap">
       <div class="rating-label">Ваша оценка</div>
       <div class="existing-rating">
-        ${wtvBadge}
         <span class="stars-display">${starsHtml(rating)}</span>
         ${comment?`<div style="margin-top:6px;font-size:13px;color:var(--muted);font-weight:300">${esc(comment)}</div>`:''}
         ${!getToken()?`<button style="margin-top:8px;background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="resetRating('${buyerId}',${propIdx})">Изменить оценку</button>`:''}
       </div>
-    </div>`;
-  }
-  if(wantToView){
-    // Оценки ещё нет, но решение по просмотру уже есть — агенту важно это видеть
-    return `<div class="rating-wrap">
-      <div class="rating-label">Решение по объекту</div>
-      ${wtvBadge}
     </div>`;
   }
   return '';
@@ -744,7 +674,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
   const statusCls=STATUS_CLASS[prop.status]||'planned';
   const rating=prop.clientRating||0;
 
-  return `<div class="prop-card${prop.status==='sold'?' sold-card':''}" id="prop-${idx}">
+  return `<div class="prop-card${(prop.status==='sold'||prop.status==='declined')?' sold-card':''}" id="prop-${idx}">
     <div class="prop-card-header" onclick="toggleProp(${idx})">
       <div class="prop-num">${String(prop.num||idx+1).padStart(2,'0')}</div>
       <div>
@@ -816,7 +746,6 @@ function renderCompare(props){
     {label:'Состояние',key:'condition',fmt:v=>v||'—'},
     {label:'Вложения',key:'renovation',fmt:v=>v||'—'},
     {label:'Оценка',key:'clientRating',fmt:v=>v?`<span class="compare-stars">${starsHtml(v)}</span>`:'—'},
-    {label:'Хочет посмотреть',key:'wantToView',fmt:v=>v==='yes'?'<span style="color:#2D8A4E;font-weight:500">Да</span>':v==='no'?'<span style="color:var(--muted)">Нет</span>':'—'},
     {label:'Статус',key:'status',fmt:v=>STATUS_LABELS[v]||v||'—'},
   ];
 
@@ -1016,7 +945,6 @@ function removeLoc(buyerId,locIdx){
 
 // ── VISIBILITY ────────────────────────────────────────────────
 var VIS_BLOCKS=[
-  {k:'history',label:'История изменений'},
   {k:'locations',label:'Сравнение локаций'},
   {k:'compare',label:'Таблица сравнения'},
   {k:'logic',label:'Как мы отбираем объекты'},
@@ -1081,26 +1009,15 @@ function isVisible(buyer,key){
 
 // ── CLIENT VIEW ──────────────────────────────────────────────
 
-function renderHistory(buyer,buyerId){
+function renderHistory(buyer){
   const h=buyer.situationHistory;
   if(!h||!h.length)return '';
-  const items=h.map(function(item,idx){
+  const items=h.map(function(item){
     const d=new Date(item.date);
     const label=d.toLocaleDateString('ru-RU',{day:'numeric',month:'long'});
-    return '<div class="hist-item"><div class="hist-date">'+label+'</div><div class="hist-text">'+escNl(item.text)+'</div><button class="hist-del" title="Удалить запись" onclick="deleteHistItem(\''+esc(buyerId)+'\','+idx+')">&times;</button></div>';
+    return '<div class="hist-item"><div class="hist-date">'+label+'</div><div class="hist-text">'+escNl(item.text)+'</div></div>';
   }).join('');
   return '<div class="hist-block"><div class="hist-title">История изменений</div>'+items+'</div>';
-}
-
-function deleteHistItem(buyerId,idx){
-  const buyer=allData.buyers[buyerId];
-  if(!buyer||!buyer.situationHistory)return;
-  if(!confirm('Удалить эту запись из истории изменений?'))return;
-  buyer.situationHistory.splice(idx,1);
-  ghSave();
-  const wrap=document.getElementById('histWrap');
-  if(wrap){wrap.innerHTML=renderHistory(buyer,buyerId);}
-  else{renderClientView(buyerId);}
 }
 
 function renderClientView(buyerId){
@@ -1140,7 +1057,7 @@ function renderClientView(buyerId){
       <!-- TAB: OBJECTS -->
       <div class="tab-panel active" id="tab-objects">
         ${(buyer.situation||buyer.nextStep)?`<div class="steps-block">${buyer.situation?`<div class="step-row situation"><div class="step-label">Текущее состояние</div><div class="step-text">${escNl(buyer.situation)}</div></div>`:''} ${buyer.nextStep?`<div class="step-row next"><div class="step-label">Следующий шаг</div><div class="step-text">${escNl(buyer.nextStep)}</div></div>`:''}</div>`:''}
-        ${show('history')?renderHistory(buyer,buyerId):''}
+        ${renderHistory(buyer)}
         ${renderUpdates(props)}
         ${show('logic')?`<div class="logic-block"><div class="logic-block-title">Как мы отбираем объекты</div><div class="logic-block-text"><p>Здесь только те квартиры, которые прошли первичный отбор — по соотношению цены и площади в конкретной локации, состоянию, этажу и общей адекватности предложения.</p><p>Если какого-то объекта нет в списке — скорее всего он уступает по цене за метр, имеет скрытые сложности, или просто не подходит под ваши параметры.</p><p>Если какой-то объект кажется завышенным по цене — это не ошибка. Значит мы <strong>проверяем сценарий</strong> или держим его как точку отсчёта.</p></div></div>`:''}
         ${show('hint')?`<div class="hint-block"><div class="hint-title">На что обратить внимание при оценке</div><div class="hint-items"><div class="hint-item"><div class="hint-num">01</div><div class="hint-item-body"><div class="hint-item-q">Как вы себя чувствовали внутри?</div><div class="hint-item-a">Представьте что живёте там — комфортно или что-то мешает. Тесно, шумно, тёмно — или наоборот.</div></div></div><div class="hint-item"><div class="hint-num">02</div><div class="hint-item-body"><div class="hint-item-q">Что запомнилось первым?</div><div class="hint-item-a">Обычно это и есть главное — в плюс или в минус. Вид из окна, запах, высота потолков, двор.</div></div></div><div class="hint-item"><div class="hint-num">03</div><div class="hint-item-body"><div class="hint-item-q">Захотелось вернуться?</div><div class="hint-item-a">Если нет — почему. Если да — что держит. Это помогает понять реальный приоритет.</div></div></div></div></div>`:''}
@@ -1175,133 +1092,7 @@ function renderClientView(buyerId){
 }
 
 
-// ── SUPABASE: живая синхронизация брифа и оценок ────────────
-let sbSession = null;
-let sbBriefs = {};   // {buyer_id: {data, submitted_at}}
-let sbRatings = {};  // {buyer_id: {normalized_address: {stars, comment, submitted_at}}}
-let sbChannelReady = false;
-
-function sbNormAddr(s){ return String(s||'').trim().toLowerCase(); }
-
-async function sbInit(){
-  try{
-    const {data:{session}} = await sb.auth.getSession();
-    if(session){
-      sbSession = session;
-      await sbLoadAll();
-      sbSubscribeRealtime();
-    }
-  }catch(e){}
-}
-
-async function sbLoadAll(){
-  try{
-    const {data:briefs} = await sb.from('brief_submissions').select('*').order('submitted_at',{ascending:false});
-    sbBriefs = {};
-    (briefs||[]).forEach(r=>{ if(!sbBriefs[r.buyer_id]) sbBriefs[r.buyer_id]=r; });
-
-    const {data:ratings} = await sb.from('ratings').select('*').order('submitted_at',{ascending:false});
-    sbRatings = {};
-    (ratings||[]).forEach(r=>{
-      const key = sbNormAddr(r.object_address);
-      if(!sbRatings[r.buyer_id]) sbRatings[r.buyer_id]={};
-      if(!sbRatings[r.buyer_id][key]) sbRatings[r.buyer_id][key]={};
-      const slot=sbRatings[r.buyer_id][key];
-      if(r.stars!=null && slot.stars===undefined){ slot.stars=r.stars; slot.comment=r.comment||''; }
-      if(r.want_to_view && slot.want_to_view===undefined){ slot.want_to_view=r.want_to_view; }
-    });
-  }catch(e){}
-}
-
-function sbSubscribeRealtime(){
-  if(sbChannelReady)return;
-  sbChannelReady = true;
-  sb.channel('admin-live')
-    .on('postgres_changes',{event:'INSERT',schema:'public',table:'brief_submissions'},payload=>{
-      sbBriefs[payload.new.buyer_id]=payload.new;
-      if(currentBuyerId===payload.new.buyer_id)renderAgentView(currentBuyerId);
-    })
-    .on('postgres_changes',{event:'INSERT',schema:'public',table:'ratings'},payload=>{
-      const bid=payload.new.buyer_id;
-      const key=sbNormAddr(payload.new.object_address);
-      if(!sbRatings[bid])sbRatings[bid]={};
-      if(!sbRatings[bid][key])sbRatings[bid][key]={};
-      const slot=sbRatings[bid][key];
-      const r=payload.new;
-      if(r.stars!=null){slot.stars=r.stars;slot.comment=r.comment||'';}
-      if(r.want_to_view){slot.want_to_view=r.want_to_view;}
-      if(currentBuyerId===bid)renderAgentView(currentBuyerId);
-    })
-    .subscribe();
-}
-
-async function sbSignIn(){
-  const email=document.getElementById('sb-email')?.value.trim();
-  const password=document.getElementById('sb-password')?.value;
-  const status=document.getElementById('sb-login-status');
-  if(!email||!password){if(status)status.textContent='Введите email и пароль';return;}
-  if(status)status.textContent='Вхожу…';
-  try{
-    const {data,error}=await sb.auth.signInWithPassword({email,password});
-    if(error){if(status)status.textContent='Ошибка входа';return;}
-    sbSession=data.session;
-    await sbLoadAll();
-    sbSubscribeRealtime();
-    if(currentBuyerId)renderAgentView(currentBuyerId);
-  }catch(e){if(status)status.textContent='Ошибка входа';}
-}
-
-async function sbSignOut(){
-  try{await sb.auth.signOut();}catch(e){}
-  sbSession=null; sbBriefs={}; sbRatings={};
-  if(currentBuyerId)renderAgentView(currentBuyerId);
-}
-
-// Подмешивает живые данные из Supabase в объект покупателя перед рендером —
-// остальной код (renderClientAnswersAgent, renderRating, renderCompare) не меняется,
-// просто видит уже актуальные значения.
-function applySupabaseData(buyerId){
-  const buyer=allData.buyers[buyerId];
-  if(!buyer)return;
-  if(sbBriefs[buyerId]){
-    if(!buyer.brief)buyer.brief={summary:'',criteria:[],priorities:[],signs:[]};
-    buyer.brief.formData=sbBriefs[buyerId].data;
-  }
-  const ratingsForBuyer=sbRatings[buyerId];
-  if(ratingsForBuyer&&buyer.props){
-    buyer.props.forEach(p=>{
-      const r=ratingsForBuyer[sbNormAddr(p.address)];
-      if(r){
-        if(r.stars!==undefined){p.clientRating=r.stars;p.clientComment=r.comment||'';}
-        if(r.want_to_view!==undefined){p.wantToView=r.want_to_view;}
-      }
-    });
-  }
-}
-
-function renderSupabaseStatus(){
-  if(sbSession){
-    return `<div class="agent-section" style="margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
-      <div style="font-size:13px;color:rgba(229,229,229,0.6)">🟢 Бриф и оценки синхронизируются в реальном времени</div>
-      <button onclick="sbSignOut()" style="font-size:11px;padding:6px 12px;background:none;border:1px solid rgba(229,229,229,0.2);border-radius:4px;color:rgba(229,229,229,0.5);cursor:pointer;font-family:var(--sans)">Выйти</button>
-    </div>`;
-  }
-  return `<div class="agent-section" style="margin-bottom:24px">
-    <div class="agent-section-title" style="font-size:15px;margin-bottom:12px">Вход для живой синхронизации</div>
-    <p style="font-size:12px;color:rgba(229,229,229,0.45);margin-bottom:12px;line-height:1.5">Войдите один раз — и бриф с оценками клиента будут появляться здесь сами, без писем и ручного переноса.</p>
-    <div class="agent-grid">
-      <div class="af"><label>Email</label><input class="ai" id="sb-email" type="email" placeholder="you@example.com"></div>
-      <div class="af"><label>Пароль</label><input class="ai" id="sb-password" type="password"></div>
-    </div>
-    <div style="margin-top:10px;display:flex;align-items:center;gap:12px">
-      <button onclick="sbSignIn()" style="font-size:12px;padding:8px 16px;background:rgba(255,255,255,0.08);border:1px solid rgba(229,229,229,0.2);border-radius:4px;color:#E5E5E5;cursor:pointer;font-family:var(--sans)">Войти</button>
-      <span id="sb-login-status" style="font-size:12px;color:#5FAE7D"></span>
-    </div>
-  </div>`;
-}
-
 function renderAgentView(buyerId){
-  applySupabaseData(buyerId);
   const buyer=allData.buyers[buyerId];
   if(!buyer)return;
   loadLocalRatings(buyerId,buyer.props||[]);
@@ -1335,7 +1126,6 @@ function renderAgentView(buyerId){
 
       <!-- TAB: OBJECTS (agent) -->
       <div class="tab-panel active" id="tab-objects">
-      ${renderSupabaseStatus()}
       <div class="agent-section" style="margin-bottom:32px"><div class="agent-section-title">Статус работы</div><div style="display:grid;gap:16px">
           <div>
             <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(229,229,229,0.55);margin-bottom:8px">Текущая ситуация</div>
@@ -1347,8 +1137,6 @@ function renderAgentView(buyerId){
           </div>
         </div></div>
 
-      <!-- HISTORY (agent, editable) -->
-      <div id="histWrap" style="margin-bottom:32px">${renderHistory(buyer,buyerId)}</div>
 
       <!-- VISIBILITY CONTROLS -->
       <div class="agent-section" style="margin-bottom:24px">
@@ -1452,19 +1240,13 @@ function saveSituation(buyerId){
     const buyer=allData.buyers[buyerId];
     if(buyer){
       const prev=buyer.situation||'';
-      const normHist=s=>String(s||'').toLowerCase().replace(/[^а-яёa-z0-9]+/g,'');
-      const meaningfulChange=normHist(val)!==normHist(prev);
-      const lastHist=(buyer.situationHistory&&buyer.situationHistory[0])?buyer.situationHistory[0].text:null;
-      const isDupOfLast=lastHist!==null&&normHist(lastHist)===normHist(prev);
-      if(val!==prev&&prev.trim()&&meaningfulChange&&!isDupOfLast){
+      if(val!==prev&&prev.trim()){
         if(!buyer.situationHistory)buyer.situationHistory=[];
         buyer.situationHistory.unshift({text:prev,date:new Date().toISOString()});
         if(buyer.situationHistory.length>20)buyer.situationHistory.length=20;
       }
       buyer.situation=val;
       ghSave();
-      const wrap=document.getElementById('histWrap');
-      if(wrap){wrap.innerHTML=renderHistory(buyer,buyerId);}
     }
   },1000);
 }
@@ -1818,7 +1600,6 @@ function renderBriefClient(buyer, buyerId) {
 // Отображение сырых данных формы когда агент ещё не редактировал
 function renderFormDataClient(d) {
   const rows = [
-    { label: 'Город', val: d.city },
     { label: 'Цель', val: d.purpose },
     { label: 'Кто будет жить', val: d.residents },
     { label: 'Срок', val: d.horizon },
@@ -1921,38 +1702,22 @@ function renderInlineForm(buyer, buyerId) {
 }
 
 const INLINE_STEPS = [
-  { id: 'step-city', title: 'Город', eyebrow: '01 / 07' },
-  { id: 'step-goal', title: 'Цель и контекст', eyebrow: '02 / 07' },
-  { id: 'step-housing', title: 'Тип жилья', eyebrow: '03 / 07' },
-  { id: 'step-location', title: 'Локация', eyebrow: '04 / 07' },
-  { id: 'step-params', title: 'Параметры', eyebrow: '05 / 07' },
-  { id: 'step-priorities', title: 'Приоритеты', eyebrow: '06 / 07' },
-  { id: 'step-finance', title: 'Финансы и финал', eyebrow: '07 / 07' },
+  { id: 'step-goal', title: 'Цель и контекст', eyebrow: '01 / 06' },
+  { id: 'step-housing', title: 'Тип жилья', eyebrow: '02 / 06' },
+  { id: 'step-location', title: 'Локация', eyebrow: '03 / 06' },
+  { id: 'step-params', title: 'Параметры', eyebrow: '04 / 06' },
+  { id: 'step-priorities', title: 'Приоритеты', eyebrow: '05 / 06' },
+  { id: 'step-finance', title: 'Финансы и финал', eyebrow: '06 / 06' },
 ];
 
 let inlineStep = 0;
 let inlinePriorities = [];
 
 function renderInlineStep(idx) {
-  const CITY = ifAnswers.city || 'Санкт-Петербург';
-  const isMsk = CITY === 'Москва';
   const steps = [
-    // 0: Город
-    `<div class="if-step" id="if-step-city">
-      <div class="if-eyebrow">01 / 07</div>
-      <div class="if-title">Город поиска</div>
-      <div class="if-field">
-        <div class="if-label">В каком городе ищете квартиру</div>
-        <div class="if-chips" data-ig="city" data-multi="false">
-          <button class="if-chip" data-val="Санкт-Петербург">Санкт-Петербург</button>
-          <button class="if-chip" data-val="Москва">Москва</button>
-        </div>
-      </div>
-    </div>`,
-
-    // 1: Цель
+    // 0: Цель
     `<div class="if-step" id="if-step-0">
-      <div class="if-eyebrow">02 / 07</div>
+      <div class="if-eyebrow">01 / 06</div>
       <div class="if-title">Цель и контекст</div>
       <div class="if-field">
         <div class="if-label">Цель покупки</div>
@@ -1988,7 +1753,7 @@ function renderInlineStep(idx) {
 
     // 1: Тип жилья
     `<div class="if-step" id="if-step-1">
-      <div class="if-eyebrow">03 / 07</div>
+      <div class="if-eyebrow">02 / 06</div>
       <div class="if-title">Тип жилья</div>
       <div class="if-field">
         <div class="if-label">Что рассматриваете</div>
@@ -2011,7 +1776,7 @@ function renderInlineStep(idx) {
           <button class="if-chip" data-val="Бывшие коммуналки">Бывшие коммуналки</button>
           <button class="if-chip" data-val="Газовые плиты">Газовые плиты</button>
           <button class="if-chip" data-val="Первые этажи">Первые этажи</button>
-          ${!isMsk ? `<button class="if-chip" data-val="Дворы-колодцы">Дворы-колодцы</button>` : ``}
+          <button class="if-chip" data-val="Дворы-колодцы">Дворы-колодцы</button>
         </div>
       </div>
       <div class="if-field">
@@ -2031,32 +1796,22 @@ function renderInlineStep(idx) {
 
     // 2: Локация
     `<div class="if-step" id="if-step-2">
-      <div class="if-eyebrow">04 / 07</div>
+      <div class="if-eyebrow">03 / 06</div>
       <div class="if-title">Локация</div>
       <div class="if-field">
         <div class="if-label">Допустимые районы</div>
         <div class="if-chips" data-ig="districts" data-multi="true">
-          ${isMsk ? `
-          <button class="if-chip" data-val="Хамовники">Хамовники</button>
-          <button class="if-chip" data-val="Пресненский">Пресненский</button>
-          <button class="if-chip" data-val="Тверской">Тверской</button>
-          <button class="if-chip" data-val="Арбат">Арбат</button>
-          <button class="if-chip" data-val="Замоскворечье">Замоскворечье</button>
-          <button class="if-chip" data-val="Якиманка">Якиманка</button>
-          <button class="if-chip" data-val="Другие">Другие</button>
-          ` : `
           <button class="if-chip" data-val="Центральный">Центральный</button>
           <button class="if-chip" data-val="Петроградский">Петроградский</button>
           <button class="if-chip" data-val="Василеостровский">Василеостровский</button>
           <button class="if-chip" data-val="Адмиралтейский">Адмиралтейский</button>
           <button class="if-chip" data-val="Московский">Московский</button>
           <button class="if-chip" data-val="Другие">Другие</button>
-          `}
         </div>
       </div>
       <div class="if-field">
         <div class="if-label">Любимые улицы, адреса, дома мечты</div>
-        <textarea class="if-textarea" id="if-fav-streets" placeholder="${isMsk ? 'Патриаршие пруды, Остоженка…' : 'Каменноостровский, набережная Мойки…'}" rows="2" oninput="autoResize(this)"></textarea>
+        <textarea class="if-textarea" id="if-fav-streets" placeholder="Каменноостровский, набережная Мойки…" rows="2" oninput="autoResize(this)"></textarea>
       </div>
       <div class="if-field">
         <div class="if-label">Районы, которые точно не рассматриваете</div>
@@ -2078,7 +1833,7 @@ function renderInlineStep(idx) {
 
     // 3: Параметры
     `<div class="if-step" id="if-step-3">
-      <div class="if-eyebrow">05 / 07</div>
+      <div class="if-eyebrow">04 / 06</div>
       <div class="if-title">Параметры квартиры</div>
       <div class="if-field">
         <div class="if-label">Метраж</div>
@@ -2130,7 +1885,7 @@ function renderInlineStep(idx) {
 
     // 4: Приоритеты
     `<div class="if-step" id="if-step-4">
-      <div class="if-eyebrow">06 / 07</div>
+      <div class="if-eyebrow">05 / 06</div>
       <div class="if-title">Что важнее всего?</div>
       <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:28px;max-width:440px">Выберите 3–5 пунктов, без которых точно нельзя. Нажмите — добавится в список.</p>
       <div class="if-field">
@@ -2151,7 +1906,7 @@ function renderInlineStep(idx) {
 
     // 5: Финансы + финал
     `<div class="if-step" id="if-step-5">
-      <div class="if-eyebrow">07 / 07</div>
+      <div class="if-eyebrow">06 / 06</div>
       <div class="if-title">Финансы и финал</div>
       <div class="if-field">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
@@ -2255,10 +2010,6 @@ function ifInitChips() {
           const wrap = document.getElementById('if-why-old-wrap');
           if (wrap) wrap.style.display = oldOn ? 'block' : 'none';
         }
-        // side effect: смена города — сбрасываем район, выбранный под другой город
-        if (group.dataset.ig === 'city') {
-          delete ifAnswers.districts;
-        }
       });
     });
   });
@@ -2342,7 +2093,6 @@ function ifCollect() {
   const prio = (a['_priorities'] || inlinePriorities);
 
   return {
-    city:         v('city'),
     purpose:      v('purpose'),
     residents:    v('residents'),
     horizon:      v('horizon'),
@@ -2398,16 +2148,10 @@ async function ifSubmit(buyerId) {
   const buyer = allData.buyers[buyerId];
   if (!buyer) return;
 
-  // Сохраняем ответы клиента в дашборд — чтобы бриф был виден в админке и не терялся
-  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
-  buyer.brief.formData = d;
-  try { await ghSave(); } catch(e) {}
-
   // Формируем текст письма
   const body = `
 Бриф на подбор квартиры
 Клиент: ${buyer.name || buyerId}
-Город: ${d.city}
 
 ЦЕЛЬ И КОНТЕКСТ
 Цель: ${d.purpose}
@@ -2485,110 +2229,6 @@ ${d.priorities}
 }
 
 // ── BRIEF AGENT RENDER ───────────────────────────────────────
-const CLIENT_FIELD_LABELS = [
-  { key: 'city', label: 'Город' },
-  { key: 'purpose', label: 'Цель' },
-  { key: 'residents', label: 'Кто будет жить' },
-  { key: 'horizon', label: 'Срок' },
-  { key: 'housingType', label: 'Тип жилья' },
-  { key: 'housingExclude', label: 'Исключает' },
-  { key: 'mainGoal', label: 'Главное в квартире' },
-  { key: 'districts', label: 'Локация' },
-  { key: 'locPrio', label: 'Критично по локации' },
-  { key: 'favStreets', label: 'Любимые места' },
-  { key: 'noDistricts', label: 'Не рассматривает' },
-  { key: 'rooms', label: 'Комнаты' },
-  { key: 'floor', label: 'Этаж' },
-  { key: 'condition', label: 'Состояние' },
-  { key: 'extras', label: 'Дополнительно' },
-  { key: 'budgetOk', label: 'Бюджет комфортный', suffix: ' ₽' },
-  { key: 'budgetMax', label: 'Бюджет максимальный', suffix: ' ₽' },
-  { key: 'payment', label: 'Способ покупки' },
-  { key: 'urgency', label: 'Срочность' },
-  { key: 'readiness', label: 'Готовность к авансу' },
-];
-
-function renderClientAnswersAgent(d) {
-  if (!d) return '';
-  const area = (d.areaFrom && d.areaFrom !== '—') ? `${d.areaFrom}${d.areaTo && d.areaTo !== '—' ? ' — ' + d.areaTo : ''} м²` : '';
-  const cells = CLIENT_FIELD_LABELS.map(f => {
-    const v = d[f.key];
-    if (!v || v === '—') return '';
-    return `<div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">${f.label}</div><div style="font-size:13px;color:#E5E5E5">${esc(v)}${f.suffix||''}</div></div>`;
-  });
-  if (area) cells.splice(11, 0, `<div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">Метраж</div><div style="font-size:13px;color:#E5E5E5">${esc(area)}</div></div>`);
-  const filled = cells.filter(Boolean);
-  const extraBlocks = [
-    d.dislike && d.dislike !== '—' ? `<div style="margin-top:14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">Что не устраивает сейчас</div><div style="font-size:13px;color:#E5E5E5;line-height:1.6">${escNl(d.dislike)}</div></div>` : '',
-    d.tradeoff && d.tradeoff !== '—' ? `<div style="margin-top:14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">Готов отказаться</div><div style="font-size:13px;color:#E5E5E5;line-height:1.6">${escNl(d.tradeoff)}</div></div>` : '',
-    d.priorities && d.priorities !== '—' ? `<div style="margin-top:14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:rgba(229,229,229,0.35);margin-bottom:4px">Приоритеты клиента</div><div style="font-size:13px;color:#E5E5E5;line-height:1.7;white-space:pre-line">${esc(d.priorities)}</div></div>` : '',
-  ].filter(Boolean).join('');
-  if (!filled.length && !extraBlocks) return '';
-  return `<div class="agent-section" style="margin-bottom:24px;padding:24px 26px">
-    <div class="agent-section-title" style="margin-bottom:14px">Ответы клиента <span style="font-size:11px;color:rgba(229,229,229,0.4);font-weight:300;font-family:var(--sans)">— из формы или письма</span></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px 20px">${filled.join('')}</div>
-    ${extraBlocks}
-  </div>`;
-}
-
-function parseEmailBrief(text) {
-  const t = String(text || '').replace(/\r\n/g, '\n');
-  const g1 = (re) => { const m = t.match(re); return m ? m[1].trim() : '—'; };
-  const d = {
-    city: g1(/^Город:\s*(.+)$/m),
-    purpose: g1(/^Цель:\s*(.+)$/m),
-    residents: g1(/^Проживание:\s*(.+)$/m),
-    horizon: g1(/^Срок:\s*(.+)$/m),
-    dislike: g1(/^Что не устраивает:\s*(.+)$/m),
-    housingType: g1(/^Рассматривает:\s*(.+)$/m),
-    housingExclude: g1(/^Исключает:\s*(.+)$/m),
-    whyOld: g1(/^Почему старый фонд:\s*(.+)$/m),
-    mainGoal: g1(/^Главное в квартире:\s*(.+)$/m),
-    districts: g1(/^Районы:\s*(.+)$/m),
-    favStreets: g1(/^Любимые места:\s*(.+)$/m),
-    noDistricts: g1(/^Исключения:\s*(.+)$/m),
-    locPrio: g1(/^Критично:\s*(.+)$/m),
-    condition: g1(/^Состояние:\s*(.+)$/m),
-    extras: g1(/^Дополнительно:\s*(.+)$/m),
-    tradeoff: g1(/^Готов отказаться:\s*(.+)$/m),
-    payment: g1(/^Способ покупки:\s*(.+)$/m),
-    urgency: g1(/^Срочность:\s*(.+)$/m),
-    readiness: g1(/^Готовность к авансу:\s*(.+)$/m),
-    areaFrom: '—', areaTo: '—', rooms: '—', floor: '—',
-    budgetOk: '—', budgetMax: '—',
-    priorities: '—', sign1: '—', sign2: '—', sign3: '—',
-  };
-  const area = t.match(/^Метраж:\s*(.+?)\s*—\s*(.+?)\s*м²/m);
-  if (area) { d.areaFrom = area[1].trim(); d.areaTo = area[2].trim(); }
-  const rf = t.match(/^Комнаты:\s*(.+?)\s*\/\s*Этаж:\s*(.+)$/m);
-  if (rf) { d.rooms = rf[1].trim(); d.floor = rf[2].trim(); }
-  const bOk = t.match(/^Комфортный бюджет:\s*(.+?)\s*₽/m);
-  if (bOk) d.budgetOk = bOk[1].trim();
-  const bMax = t.match(/^Максимальный:\s*(.+?)\s*₽/m);
-  if (bMax) d.budgetMax = bMax[1].trim();
-  const prio = t.match(/ПРИОРИТЕТЫ\n([\s\S]*?)\n\nГотов отказаться:/);
-  if (prio) d.priorities = prio[1].trim();
-  const signs = t.match(/КАК ПОЙМЁТ, ЧТО ЭТО ЕГО\?\n1\.\s*(.+)\n2\.\s*(.+)\n3\.\s*(.+)/);
-  if (signs) { d.sign1 = signs[1].trim(); d.sign2 = signs[2].trim(); d.sign3 = signs[3].trim(); }
-  return d;
-}
-
-async function importBriefFromEmail(buyerId) {
-  const ta = document.getElementById('import-brief-text');
-  const status = document.getElementById('import-brief-status');
-  if (!ta || !ta.value.trim()) return;
-  const buyer = allData.buyers[buyerId];
-  if (!buyer) return;
-  const parsed = parseEmailBrief(ta.value);
-  if (!buyer.brief) buyer.brief = { summary: '', criteria: [], priorities: [], signs: [] };
-  buyer.brief.formData = parsed;
-  if (status) status.textContent = 'Сохраняю…';
-  await ghSave();
-  if (status) status.textContent = 'Сохранено';
-  const panel = document.getElementById('tab-brief');
-  if (panel) panel.innerHTML = renderBriefAgent(buyerId, buyer);
-}
-
 function renderBriefAgent(buyerId, buyer) {
   const b = getBrief(buyer);
   const priorities = b.priorities || [];
@@ -2608,16 +2248,6 @@ function renderBriefAgent(buyerId, buyer) {
   ];
 
   return `
-    ${renderClientAnswersAgent(b.formData)}
-    <div class="agent-section" style="margin-bottom:24px;border:1px dashed rgba(229,229,229,0.15);border-radius:8px;padding:16px 18px">
-      <div class="agent-section-title" style="margin-bottom:8px">Импорт брифа из письма</div>
-      <p style="font-size:12px;color:rgba(229,229,229,0.45);margin-bottom:12px;line-height:1.5">Ответы клиента приходят на почту, но сами не попадают в дашборд. Вставьте текст письма — и они сохранятся здесь и будут видны клиенту в его разделе «Подбор».</p>
-      <textarea id="import-brief-text" rows="4" placeholder="Вставьте текст письма целиком…" style="width:100%;resize:vertical;font-family:var(--sans);font-size:12px;padding:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(229,229,229,0.15);border-radius:4px;color:#E5E5E5;box-sizing:border-box"></textarea>
-      <div style="margin-top:10px;display:flex;align-items:center;gap:12px">
-        <button onclick="importBriefFromEmail('${buyerId}')" style="font-size:12px;padding:8px 16px;background:rgba(255,255,255,0.08);border:1px solid rgba(229,229,229,0.2);border-radius:4px;color:#E5E5E5;cursor:pointer;font-family:var(--sans)">Сохранить из письма</button>
-        <span id="import-brief-status" style="font-size:12px;color:#5FAE7D"></span>
-      </div>
-    </div>
     <div class="agent-section" style="margin-bottom:24px">
       <div class="agent-section-title">Резюме подбора <span style="font-size:11px;color:rgba(229,229,229,0.4);font-weight:300;font-family:var(--sans)">— видно клиенту</span></div>
       <textarea class="ai" id="brief-summary" rows="4" placeholder="Свободный текст — ваше прочтение запроса клиента. Что ищет, в чём нюансы, на что ориентируемся…" style="width:100%;resize:vertical;line-height:1.7" oninput="saveBriefField('${buyerId}','summary',this.value)">${esc(b.summary||'')}</textarea>
@@ -2768,7 +2398,6 @@ async function initApp(){
   }
 
   await ghLoad();
-  await sbInit();
 
   if(id){
     if(!allData.buyers[id]){

@@ -114,9 +114,6 @@ button,a{-webkit-tap-highlight-color:transparent}
 .prop-status.reference{background:rgba(0,0,0,0.04);color:#999}
 .prop-status.clarifying{background:rgba(130,80,180,0.08);color:rgba(110,60,160,0.85)}
 .prop-status.pending{background:rgba(180,100,0,0.08);color:rgba(160,90,0,0.8)}
-.prop-status.unreachable{background:rgba(192,57,43,0.1);color:var(--red)}
-.prop-status.active{background:rgba(45,138,78,0.2);color:var(--green);font-weight:600}
-.prop-status.filtered{background:rgba(0,0,0,0.05);color:var(--muted)}
 .prop-status.sold{background:rgba(0,0,0,0.06);color:#999}
 .prop-card.sold-card{opacity:0.55}
 .prop-card.sold-card .prop-addr{text-decoration:line-through;text-decoration-color:rgba(0,0,0,0.25)}
@@ -378,7 +375,6 @@ button,a{-webkit-tap-highlight-color:transparent}
   .hero-chips{gap:12px}
 }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -402,12 +398,6 @@ button,a{-webkit-tap-highlight-color:transparent}
 
 <script>
 
-// ── SUPABASE (бриф + оценки в реальном времени) ────────────
-const SB_URL = 'https://pogmpmbgddljujzumvnr.supabase.co';
-const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvZ21wbWJnZGRsanVqenVtdm5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4NzAzMDEsImV4cCI6MjEwNDQ0NjMwMX0.5gqh2ZsQJyRFmA8ZfhAf6lBinIIMfkc3X--Y81fKNLA';
-const sb = supabase.createClient(SB_URL, SB_ANON_KEY, {
-  auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
-});
 
 function renderFooter(){
   return `<footer class="cta-footer">
@@ -557,84 +547,13 @@ function fmtPpm(price,area){
 function fmtPrice(p){if(!p)return '—';const n=Number(String(p).replace(/\D/g,''));if(!n)return p;return(n/1000000).toFixed(2).replace(/\.?0+$/,'')+' млн ₽';}
 
 // ── STATUS ──────────────────────────────────────────────────
-const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',pending:'Ждём показа',clarifying:'Уточняем время',unreachable:'Не дозвониться',reference:'Для сравнения',viewed:'Просмотрен',considering:'Рассматриваем',active:'В работе',declined:'Не подошёл',filtered:'Снят с подбора',sold:'Объект продан'};
-const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',active:'active',declined:'declined',filtered:'filtered',pending:'pending',clarifying:'clarifying',unreachable:'unreachable',reference:'reference',sold:'sold'};
+const STATUS_LABELS={scout:'Знакомимся',planned:'Запланирован',pending:'Ждём показа',clarifying:'Уточняем время',reference:'Для сравнения',viewed:'Просмотрен',considering:'Рассматриваем',declined:'Не подошёл',sold:'Объект продан'};
+const STATUS_CLASS={scout:'scout',planned:'planned',viewed:'viewed',considering:'considering',declined:'declined',pending:'pending',clarifying:'clarifying',reference:'reference',sold:'sold'};
 
 // ── STAR RATING ─────────────────────────────────────────────
 function starsHtml(n){return '★'.repeat(n)+'☆'.repeat(5-n);}
 
 // ── RENDER RATING BLOCK (client) ────────────────────────────
-function renderWantToView(buyerId,propIdx,prop,forceClient){
-  const decision=prop.wantToView||'';
-  if((forceClient||!getToken())&&!decision){
-    return `<div class="rating-wrap" id="wtv-wrap-${propIdx}">
-      <div class="rating-label">Хотите посмотреть этот вариант?</div>
-      <div style="display:flex;gap:10px;margin-top:8px">
-        <button class="pbtn" style="flex:1;background:#2D8A4E;color:#fff;border-color:#2D8A4E" onclick="setWantToView('${buyerId}',${propIdx},'yes')">Хочу посмотреть</button>
-        <button class="pbtn" style="flex:1" onclick="setWantToView('${buyerId}',${propIdx},'no')">Не интересует</button>
-      </div>
-    </div>`;
-  }
-  if(decision){
-    const label=decision==='yes'?'Хочет посмотреть':'Не интересует';
-    const color=decision==='yes'?'#2D8A4E':'var(--muted)';
-    return `<div class="rating-wrap">
-      <div class="rating-label">Ваше решение по объекту</div>
-      <div class="existing-rating">
-        <span style="font-size:14px;font-weight:500;color:${color}">${label}</span>
-        ${!getToken()?`<button style="margin-left:10px;background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;text-decoration:underline" onclick="resetWantToView('${buyerId}',${propIdx})">Изменить</button>`:''}
-      </div>
-    </div>`;
-  }
-  return '';
-}
-
-async function setWantToView(buyerId,propIdx,value){
-  const buyer=allData.buyers[buyerId];
-  if(!buyer||!buyer.props[propIdx])return;
-  buyer.props[propIdx].wantToView=value;
-  try{localStorage.setItem(`wtv-${buyerId}-${propIdx}`,value);}catch(e){}
-  try{
-    const {error:sbErr}=await sb.from('ratings').insert({
-      buyer_id: buyerId,
-      object_address: buyer.props[propIdx].address||'',
-      want_to_view: value
-    });
-    if(sbErr)console.error('Supabase want_to_view insert error:',sbErr);
-  }catch(e){console.error('Supabase want_to_view insert threw:',e);}
-  try{
-    await fetch('https://api.web3forms.com/submit',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        access_key:'15cc9dfa-af27-418a-aae7-5a195d354206',
-        subject:`Решение по объекту: ${buyer.name||buyerId}`,
-        message:`Клиент: ${buyer.name||buyerId}\nОбъект: ${buyer.props[propIdx].address||'—'}\nРешение: ${value==='yes'?'Хочет посмотреть':'Не интересует'}`,
-        from_name:buyer.name||'Клиент'
-      })
-    });
-  }catch(e){}
-  renderClientView(buyerId);
-}
-
-async function resetWantToView(buyerId,propIdx){
-  try{localStorage.removeItem(`wtv-${buyerId}-${propIdx}`);}catch(e){}
-  const buyer=allData.buyers[buyerId];
-  if(buyer?.props[propIdx])buyer.props[propIdx].wantToView='';
-  renderClientView(buyerId);
-}
-
-// Загружает локально сохранённое решение "хочу посмотреть"
-function loadLocalWantToView(buyerId,props){
-  props.forEach((p,i)=>{
-    if(!p.wantToView){
-      try{
-        const saved=localStorage.getItem(`wtv-${buyerId}-${i}`);
-        if(saved)p.wantToView=saved;
-      }catch(e){}
-    }
-  });
-}
-
 function renderRating(buyerId,propIdx,prop,forceClient){
   const rating=prop.clientRating||0;
   const comment=prop.clientComment||'';
@@ -688,28 +607,6 @@ async function saveRating(buyerId,propIdx){
   buyer.props[propIdx].clientComment=comment;
   // Save to GH without token (public write not possible — use localStorage fallback)
   try{localStorage.setItem(`rating-${buyerId}-${propIdx}`,JSON.stringify({val,comment}));}catch(e){}
-  // Пишем оценку в базу — появится у агента в реальном времени
-  try{
-    const {error:sbErr}=await sb.from('ratings').insert({
-      buyer_id: buyerId,
-      object_address: buyer.props[propIdx].address||'',
-      stars: val,
-      comment: comment||null
-    });
-    if(sbErr)console.error('Supabase rating insert error:',sbErr);
-  }catch(e){console.error('Supabase rating insert threw:',e);}
-  // Резервное уведомление на почту
-  try{
-    await fetch('https://api.web3forms.com/submit',{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        access_key:'15cc9dfa-af27-418a-aae7-5a195d354206',
-        subject:`Оценка объекта: ${buyer.name||buyerId}`,
-        message:`Клиент: ${buyer.name||buyerId}\nОбъект: ${buyer.props[propIdx].address||'—'}\nОценка: ${val} из 5\nКомментарий: ${comment||'—'}`,
-        from_name:buyer.name||'Клиент'
-      })
-    });
-  }catch(e){}
   const saved=document.getElementById(`rs-${propIdx}`);
   if(saved){saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000);}
   // If agent is viewing — save to GH
@@ -742,7 +639,7 @@ function renderPropCard(buyerId,prop,idx,isAgent){
   const statusCls=STATUS_CLASS[prop.status]||'planned';
   const rating=prop.clientRating||0;
 
-  return `<div class="prop-card${prop.status==='sold'?' sold-card':''}" id="prop-${idx}">
+  return `<div class="prop-card${(prop.status==='sold'||prop.status==='declined')?' sold-card':''}" id="prop-${idx}">
     <div class="prop-card-header" onclick="toggleProp(${idx})">
       <div class="prop-num">${String(prop.num||idx+1).padStart(2,'0')}</div>
       <div>
@@ -786,7 +683,6 @@ function renderPropCard(buyerId,prop,idx,isAgent){
           <a class="prop-link" href="${esc(prop.url)}" target="_blank" rel="noopener">Открыть объявление</a>
         </div>`:''}
       </div>
-      ${renderWantToView(buyerId,prop._origIdx!==undefined?prop._origIdx:idx,prop,!isAgent)}
       ${renderRating(buyerId,prop._origIdx!==undefined?prop._origIdx:idx,prop,!isAgent)}
       ${isAgent?`<div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
         <button class="pbtn" onclick="openEditProp('${buyerId}',${prop._origIdx!==undefined?prop._origIdx:idx});event.stopPropagation()">Редактировать</button>
@@ -1014,7 +910,6 @@ function removeLoc(buyerId,locIdx){
 
 // ── VISIBILITY ────────────────────────────────────────────────
 var VIS_BLOCKS=[
-  {k:'history',label:'История изменений'},
   {k:'locations',label:'Сравнение локаций'},
   {k:'compare',label:'Таблица сравнения'},
   {k:'logic',label:'Как мы отбираем объекты'},
@@ -1097,7 +992,6 @@ function renderClientView(buyerId){
     return;
   }
   loadLocalRatings(buyerId,buyer.props||[]);
-  loadLocalWantToView(buyerId,buyer.props||[]);
   const props=sortProps(buyer.props||[]);
   const planned=props.filter(p=>p.status==='planned').length;
   const viewed=props.filter(p=>p.status!=='planned').length;
@@ -1128,7 +1022,7 @@ function renderClientView(buyerId){
       <!-- TAB: OBJECTS -->
       <div class="tab-panel active" id="tab-objects">
         ${(buyer.situation||buyer.nextStep)?`<div class="steps-block">${buyer.situation?`<div class="step-row situation"><div class="step-label">Текущее состояние</div><div class="step-text">${escNl(buyer.situation)}</div></div>`:''} ${buyer.nextStep?`<div class="step-row next"><div class="step-label">Следующий шаг</div><div class="step-text">${escNl(buyer.nextStep)}</div></div>`:''}</div>`:''}
-        ${show('history')?renderHistory(buyer):''}
+        ${renderHistory(buyer)}
         ${renderUpdates(props)}
         ${show('logic')?`<div class="logic-block"><div class="logic-block-title">Как мы отбираем объекты</div><div class="logic-block-text"><p>Здесь только те квартиры, которые прошли первичный отбор — по соотношению цены и площади в конкретной локации, состоянию, этажу и общей адекватности предложения.</p><p>Если какого-то объекта нет в списке — скорее всего он уступает по цене за метр, имеет скрытые сложности, или просто не подходит под ваши параметры.</p><p>Если какой-то объект кажется завышенным по цене — это не ошибка. Значит мы <strong>проверяем сценарий</strong> или держим его как точку отсчёта.</p></div></div>`:''}
         ${show('hint')?`<div class="hint-block"><div class="hint-title">На что обратить внимание при оценке</div><div class="hint-items"><div class="hint-item"><div class="hint-num">01</div><div class="hint-item-body"><div class="hint-item-q">Как вы себя чувствовали внутри?</div><div class="hint-item-a">Представьте что живёте там — комфортно или что-то мешает. Тесно, шумно, тёмно — или наоборот.</div></div></div><div class="hint-item"><div class="hint-num">02</div><div class="hint-item-body"><div class="hint-item-q">Что запомнилось первым?</div><div class="hint-item-a">Обычно это и есть главное — в плюс или в минус. Вид из окна, запах, высота потолков, двор.</div></div></div><div class="hint-item"><div class="hint-num">03</div><div class="hint-item-body"><div class="hint-item-q">Захотелось вернуться?</div><div class="hint-item-a">Если нет — почему. Если да — что держит. Это помогает понять реальный приоритет.</div></div></div></div></div>`:''}
@@ -1167,7 +1061,6 @@ function renderAgentView(buyerId){
   const buyer=allData.buyers[buyerId];
   if(!buyer)return;
   loadLocalRatings(buyerId,buyer.props||[]);
-  loadLocalWantToView(buyerId,buyer.props||[]);
   const props=sortProps(buyer.props||[]);
   const dashUrl=window.location.origin+window.location.pathname+'?id='+buyerId;
 
@@ -1312,11 +1205,7 @@ function saveSituation(buyerId){
     const buyer=allData.buyers[buyerId];
     if(buyer){
       const prev=buyer.situation||'';
-      const normHist=s=>String(s||'').toLowerCase().replace(/[^а-яёa-z0-9]+/g,'');
-      const meaningfulChange=normHist(val)!==normHist(prev);
-      const lastHist=(buyer.situationHistory&&buyer.situationHistory[0])?buyer.situationHistory[0].text:null;
-      const isDupOfLast=lastHist!==null&&normHist(lastHist)===normHist(prev);
-      if(val!==prev&&prev.trim()&&meaningfulChange&&!isDupOfLast){
+      if(val!==prev&&prev.trim()){
         if(!buyer.situationHistory)buyer.situationHistory=[];
         buyer.situationHistory.unshift({text:prev,date:new Date().toISOString()});
         if(buyer.situationHistory.length>20)buyer.situationHistory.length=20;
@@ -1659,7 +1548,6 @@ function renderBriefClient(buyer, buyerId) {
 // Отображение сырых данных формы когда агент ещё не редактировал
 function renderFormDataClient(d) {
   const rows = [
-    { label: 'Город', val: d.city },
     { label: 'Цель', val: d.purpose },
     { label: 'Кто будет жить', val: d.residents },
     { label: 'Срок', val: d.horizon },
@@ -1762,38 +1650,22 @@ function renderInlineForm(buyer, buyerId) {
 }
 
 const INLINE_STEPS = [
-  { id: 'step-city', title: 'Город', eyebrow: '01 / 07' },
-  { id: 'step-goal', title: 'Цель и контекст', eyebrow: '02 / 07' },
-  { id: 'step-housing', title: 'Тип жилья', eyebrow: '03 / 07' },
-  { id: 'step-location', title: 'Локация', eyebrow: '04 / 07' },
-  { id: 'step-params', title: 'Параметры', eyebrow: '05 / 07' },
-  { id: 'step-priorities', title: 'Приоритеты', eyebrow: '06 / 07' },
-  { id: 'step-finance', title: 'Финансы и финал', eyebrow: '07 / 07' },
+  { id: 'step-goal', title: 'Цель и контекст', eyebrow: '01 / 06' },
+  { id: 'step-housing', title: 'Тип жилья', eyebrow: '02 / 06' },
+  { id: 'step-location', title: 'Локация', eyebrow: '03 / 06' },
+  { id: 'step-params', title: 'Параметры', eyebrow: '04 / 06' },
+  { id: 'step-priorities', title: 'Приоритеты', eyebrow: '05 / 06' },
+  { id: 'step-finance', title: 'Финансы и финал', eyebrow: '06 / 06' },
 ];
 
 let inlineStep = 0;
 let inlinePriorities = [];
 
 function renderInlineStep(idx) {
-  const CITY = ifAnswers.city || 'Санкт-Петербург';
-  const isMsk = CITY === 'Москва';
   const steps = [
-    // 0: Город
-    `<div class="if-step" id="if-step-city">
-      <div class="if-eyebrow">01 / 07</div>
-      <div class="if-title">Город поиска</div>
-      <div class="if-field">
-        <div class="if-label">В каком городе ищете квартиру</div>
-        <div class="if-chips" data-ig="city" data-multi="false">
-          <button class="if-chip" data-val="Санкт-Петербург">Санкт-Петербург</button>
-          <button class="if-chip" data-val="Москва">Москва</button>
-        </div>
-      </div>
-    </div>`,
-
-    // 1: Цель
+    // 0: Цель
     `<div class="if-step" id="if-step-0">
-      <div class="if-eyebrow">02 / 07</div>
+      <div class="if-eyebrow">01 / 06</div>
       <div class="if-title">Цель и контекст</div>
       <div class="if-field">
         <div class="if-label">Цель покупки</div>
@@ -1829,7 +1701,7 @@ function renderInlineStep(idx) {
 
     // 1: Тип жилья
     `<div class="if-step" id="if-step-1">
-      <div class="if-eyebrow">03 / 07</div>
+      <div class="if-eyebrow">02 / 06</div>
       <div class="if-title">Тип жилья</div>
       <div class="if-field">
         <div class="if-label">Что рассматриваете</div>
@@ -1852,7 +1724,7 @@ function renderInlineStep(idx) {
           <button class="if-chip" data-val="Бывшие коммуналки">Бывшие коммуналки</button>
           <button class="if-chip" data-val="Газовые плиты">Газовые плиты</button>
           <button class="if-chip" data-val="Первые этажи">Первые этажи</button>
-          ${!isMsk ? `<button class="if-chip" data-val="Дворы-колодцы">Дворы-колодцы</button>` : ``}
+          <button class="if-chip" data-val="Дворы-колодцы">Дворы-колодцы</button>
         </div>
       </div>
       <div class="if-field">
@@ -1872,32 +1744,22 @@ function renderInlineStep(idx) {
 
     // 2: Локация
     `<div class="if-step" id="if-step-2">
-      <div class="if-eyebrow">04 / 07</div>
+      <div class="if-eyebrow">03 / 06</div>
       <div class="if-title">Локация</div>
       <div class="if-field">
         <div class="if-label">Допустимые районы</div>
         <div class="if-chips" data-ig="districts" data-multi="true">
-          ${isMsk ? `
-          <button class="if-chip" data-val="Хамовники">Хамовники</button>
-          <button class="if-chip" data-val="Пресненский">Пресненский</button>
-          <button class="if-chip" data-val="Тверской">Тверской</button>
-          <button class="if-chip" data-val="Арбат">Арбат</button>
-          <button class="if-chip" data-val="Замоскворечье">Замоскворечье</button>
-          <button class="if-chip" data-val="Якиманка">Якиманка</button>
-          <button class="if-chip" data-val="Другие">Другие</button>
-          ` : `
           <button class="if-chip" data-val="Центральный">Центральный</button>
           <button class="if-chip" data-val="Петроградский">Петроградский</button>
           <button class="if-chip" data-val="Василеостровский">Василеостровский</button>
           <button class="if-chip" data-val="Адмиралтейский">Адмиралтейский</button>
           <button class="if-chip" data-val="Московский">Московский</button>
           <button class="if-chip" data-val="Другие">Другие</button>
-          `}
         </div>
       </div>
       <div class="if-field">
         <div class="if-label">Любимые улицы, адреса, дома мечты</div>
-        <textarea class="if-textarea" id="if-fav-streets" placeholder="${isMsk ? 'Патриаршие пруды, Остоженка…' : 'Каменноостровский, набережная Мойки…'}" rows="2" oninput="autoResize(this)"></textarea>
+        <textarea class="if-textarea" id="if-fav-streets" placeholder="Каменноостровский, набережная Мойки…" rows="2" oninput="autoResize(this)"></textarea>
       </div>
       <div class="if-field">
         <div class="if-label">Районы, которые точно не рассматриваете</div>
@@ -1919,7 +1781,7 @@ function renderInlineStep(idx) {
 
     // 3: Параметры
     `<div class="if-step" id="if-step-3">
-      <div class="if-eyebrow">05 / 07</div>
+      <div class="if-eyebrow">04 / 06</div>
       <div class="if-title">Параметры квартиры</div>
       <div class="if-field">
         <div class="if-label">Метраж</div>
@@ -1971,7 +1833,7 @@ function renderInlineStep(idx) {
 
     // 4: Приоритеты
     `<div class="if-step" id="if-step-4">
-      <div class="if-eyebrow">06 / 07</div>
+      <div class="if-eyebrow">05 / 06</div>
       <div class="if-title">Что важнее всего?</div>
       <p style="font-size:14px;color:var(--muted);font-weight:300;line-height:1.7;margin-bottom:28px;max-width:440px">Выберите 3–5 пунктов, без которых точно нельзя. Нажмите — добавится в список.</p>
       <div class="if-field">
@@ -1992,7 +1854,7 @@ function renderInlineStep(idx) {
 
     // 5: Финансы + финал
     `<div class="if-step" id="if-step-5">
-      <div class="if-eyebrow">07 / 07</div>
+      <div class="if-eyebrow">06 / 06</div>
       <div class="if-title">Финансы и финал</div>
       <div class="if-field">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
@@ -2096,10 +1958,6 @@ function ifInitChips() {
           const wrap = document.getElementById('if-why-old-wrap');
           if (wrap) wrap.style.display = oldOn ? 'block' : 'none';
         }
-        // side effect: смена города — сбрасываем район, выбранный под другой город
-        if (group.dataset.ig === 'city') {
-          delete ifAnswers.districts;
-        }
       });
     });
   });
@@ -2183,7 +2041,6 @@ function ifCollect() {
   const prio = (a['_priorities'] || inlinePriorities);
 
   return {
-    city:         v('city'),
     purpose:      v('purpose'),
     residents:    v('residents'),
     horizon:      v('horizon'),
@@ -2239,17 +2096,10 @@ async function ifSubmit(buyerId) {
   const buyer = allData.buyers[buyerId];
   if (!buyer) return;
 
-  // Пишем бриф в базу — появится у агента в реальном времени
-  try{
-    const {error:sbErr}=await sb.from('brief_submissions').insert({buyer_id: buyerId, data: d});
-    if(sbErr)console.error('Supabase brief insert error:',sbErr);
-  }catch(e){console.error('Supabase brief insert threw:',e);}
-
   // Формируем текст письма
   const body = `
 Бриф на подбор квартиры
 Клиент: ${buyer.name || buyerId}
-Город: ${d.city}
 
 ЦЕЛЬ И КОНТЕКСТ
 Цель: ${d.purpose}
@@ -2484,46 +2334,6 @@ function addBriefCriterion(buyerId) {
 }
 
 // ── INIT ─────────────────────────────────────────────────────
-// Подтягивает собственные ранее отправленные оценки и бриф клиента
-// из Supabase — чтобы они были видны и с другого браузера/устройства,
-// а не только там, где были сохранены изначально.
-async function applyMyOwnData(buyerId){
-  try{
-    const {data,error}=await sb.rpc('get_my_data',{p_buyer_id:buyerId});
-    if(error||!data)return;
-    const buyer=allData.buyers[buyerId];
-    if(!buyer)return;
-    const norm=s=>String(s||'').trim().toLowerCase();
-    const seenRating=new Set();
-    const seenWtv=new Set();
-    let latestBrief=null;
-    data.forEach(row=>{
-      if(row.kind==='rating'&&buyer.props){
-        const key=norm(row.object_address);
-        const p=buyer.props.find(pp=>norm(pp.address)===key);
-        if(p){
-          if(row.stars!=null&&!seenRating.has(key)){
-            seenRating.add(key);
-            p.clientRating=row.stars;
-            p.clientComment=row.comment||'';
-          }
-          if(row.want_to_view&&!seenWtv.has(key)){
-            seenWtv.add(key);
-            p.wantToView=row.want_to_view;
-          }
-        }
-      }
-      if(row.kind==='brief'&&!latestBrief){
-        latestBrief=row.brief;
-      }
-    });
-    if(latestBrief){
-      if(!buyer.brief)buyer.brief={summary:'',criteria:[],priorities:[],signs:[]};
-      buyer.brief.formData=latestBrief;
-    }
-  }catch(e){console.error('Supabase own-data fetch failed:',e);}
-}
-
 async function initApp(){
   const params=new URLSearchParams(window.location.search);
   const id=params.get('id');
@@ -2565,7 +2375,6 @@ async function initApp(){
     return;
   }
 
-  await applyMyOwnData(id);
   renderClientView(id);
 }
 
