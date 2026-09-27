@@ -939,8 +939,8 @@
             "adViews": "",
             "url": "",
             "comment": "",
-            "ours": false,
-            "visited": false
+            "ours": true,
+            "visited": true
           }
         ],
         "recommendations": [
