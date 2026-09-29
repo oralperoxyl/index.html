@@ -246,6 +246,7 @@ const editPanel=document.getElementById('editPanel'),editBtn=document.getElement
 const reportEls=['heroSection','introSection','scenarioSection','adSection','condSection','ctaSection'];
 function getToken(){try{return localStorage.getItem(TOKEN_KEY)||'';}catch(e){return '';}}
 function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+function escAttr(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function fmt(n){if(!n)return'\u2014';return Number(n).toLocaleString('ru-RU');}
 function fmtP(n){if(!n)return'\u2014';const m=Number(n);if(m>=1e6)return(m/1e6).toFixed(1).replace('.0','').replace('.',',')+' млн ₽';return fmt(m)+' ₽';}
 function parseNum(v){if(!v)return 0;return Number(String(v).replace(/,/g,'.').replace(/[^\d.]/g,''))||0;}
@@ -269,7 +270,9 @@ function defaultMarketing(){return[
 {name:'Аэросъёмка (дрон)',desc:'Фото и видео с воздуха — район, двор, вид',price:10000,on:false},
 {name:'Продающий текст объявления',desc:'Копирайтинг с акцентом на целевую аудиторию',price:0,on:true},
 {name:'ЦИАН — премиум-размещение',desc:'Топ-позиция, выделение в поиске',price:5000,on:true},
+{name:'ЦИАН — размещение',desc:'Стандартная публикация без продвижения',price:0,on:false},
 {name:'Авито — премиум-размещение',desc:'Поднятие, выделение, расширенный формат',price:3000,on:true},
+{name:'Авито — размещение',desc:'Стандартная публикация без продвижения',price:0,on:false},
 {name:'Яндекс.Недвижимость — размещение',desc:'Публикация и продвижение на площадке',price:2000,on:true},
 {name:'Домклик — размещение',desc:'Площадка Сбербанка, аудитория ипотечных покупателей',price:0,on:false},
 {name:'Таргетированная реклама',desc:'Соцсети: точечная реклама на покупателей в сегменте',price:15000,on:false},
@@ -451,11 +454,37 @@ function renderMkPanel(){
   if(!strat.marketing)strat.marketing=defaultMarketing();
   var h='';
   strat.marketing.forEach(function(t,i){
-    h+='<div style="display:flex;align-items:flex-start;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);"><input type="checkbox" '+(t.on?'checked':'')+' style="margin-top:3px;accent-color:var(--dark);" onchange="allData.objects[currentId].strategy.marketing['+i+'].on=this.checked;sav();"><div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:500;">'+esc(t.name)+'</div><div style="font-size:11px;color:var(--muted);">'+esc(t.desc)+'</div></div><input type="number" value="'+(t.price||0)+'" style="width:72px;font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:3px;text-align:right;background:var(--bg);font-family:var(--sans);" onchange="allData.objects[currentId].strategy.marketing['+i+'].price=parseInt(this.value)||0;sav();"></div>';
+    h+='<div style="display:flex;align-items:flex-start;gap:6px;padding:8px 0;border-bottom:1px solid var(--border);">'
+      +'<input type="checkbox" '+(t.on?'checked':'')+' style="margin-top:6px;accent-color:var(--dark);" onchange="allData.objects[currentId].strategy.marketing['+i+'].on=this.checked;sav();">'
+      +'<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;">'
+        +'<input type="text" value="'+escAttr(t.name)+'" placeholder="Название пункта" style="font-size:13px;font-weight:500;border:1px solid var(--border);border-radius:3px;padding:3px 6px;background:var(--bg);font-family:var(--sans);width:100%;" onchange="allData.objects[currentId].strategy.marketing['+i+'].name=this.value;sav();">'
+        +'<input type="text" value="'+escAttr(t.desc)+'" placeholder="Описание / пояснение" style="font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:3px;padding:3px 6px;background:var(--bg);font-family:var(--sans);width:100%;" onchange="allData.objects[currentId].strategy.marketing['+i+'].desc=this.value;sav();">'
+      +'</div>'
+      +'<input type="number" value="'+(t.price||0)+'" style="width:72px;font-size:12px;padding:4px 6px;border:1px solid var(--border);border-radius:3px;text-align:right;background:var(--bg);font-family:var(--sans);" onchange="allData.objects[currentId].strategy.marketing['+i+'].price=parseInt(this.value)||0;sav();">'
+      +'<button type="button" onclick="removeMarketingItem('+i+')" title="Удалить пункт" style="border:none;background:none;color:#C0392B;cursor:pointer;font-size:14px;padding:4px 2px;line-height:1;margin-top:4px;">✕</button>'
+      +'</div>';
   });
   var total=strat.marketing.filter(function(t){return t.on;}).reduce(function(s,t){return s+(t.price||0);},0);
+  h+='<button type="button" onclick="addMarketingItem()" style="margin-top:10px;font-family:var(--sans);font-size:12px;font-weight:500;padding:7px 14px;background:none;border:1px dashed var(--border);border-radius:4px;cursor:pointer;color:var(--text);width:100%;">+ Добавить свой пункт</button>';
   document.getElementById('e-marketing').innerHTML=h;
   document.getElementById('mkTotal').textContent='Итого: '+fmt(total)+' ₽';
+}
+function addMarketingItem(){
+  const s=allData.objects[currentId];if(!s)return;
+  if(!s.strategy)s.strategy={};
+  if(!s.strategy.marketing)s.strategy.marketing=defaultMarketing();
+  s.strategy.marketing.push({name:'',desc:'',price:0,on:true});
+  renderMkPanel();
+  debounceSave();
+  const inputs=document.querySelectorAll('#e-marketing input[type=text]');
+  if(inputs.length)inputs[inputs.length-2].focus();
+}
+function removeMarketingItem(i){
+  const s=allData.objects[currentId];if(!s||!s.strategy||!s.strategy.marketing)return;
+  s.strategy.marketing.splice(i,1);
+  renderMkPanel();
+  render();
+  debounceSave();
 }
 function toggleEdit(){if(!getToken()){showTokenModal();return;}const open=editPanel.classList.toggle('open');document.body.classList.toggle('editing',open);editBtn.classList.toggle('active',open);editBtn.textContent=open?'Закрыть':'Редактировать';if(open)populatePanel();}
 function populatePanel(){const s=allData.objects[currentId];if(!s)return;const strat=s.strategy||{};document.getElementById('e-address').value=s.address||'';document.getElementById('e-area').value=s.area||'';document.getElementById('e-rooms').value=s.rooms||'';document.getElementById('e-floor').value=s.floor||'';document.getElementById('e-location').value=s.location||'';document.getElementById('e-date').value=s.date||'';document.getElementById('e-priceFrom').value=strat.priceFrom||'';document.getElementById('e-priceTo').value=strat.priceTo||'';document.getElementById('e-comm1').value=strat.comm1||2.5;document.getElementById('e-comm2').value=strat.comm2||3;document.getElementById('e-comm3').value=strat.comm3||6;document.getElementById('e-start1').value=strat.start1||'';document.getElementById('e-start2').value=strat.start2||'';document.getElementById('e-start3').value=strat.start3||'';updateHint();renderMkPanel();}
