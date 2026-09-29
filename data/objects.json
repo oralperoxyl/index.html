@@ -959,7 +959,7 @@
       },
       "strategy": {
         "priceFrom": 7300000,
-        "priceTo": 0,
+        "priceTo": 8000000,
         "comm1": 2.5,
         "comm2": 3,
         "comm3": 6,
