@@ -85,12 +85,17 @@ function generate(){
   var object = document.getElementById('object').value.trim();
   var date = document.getElementById('date').value.trim();
 
-  var params = new URLSearchParams();
-  if(name) params.set('name', name);
-  if(object) params.set('object', object);
-  if(date) params.set('date', date);
+  // Читаемая ссылка: кириллицу оставляем как есть, кодируем только то, что ломает адрес.
+  function enc(v){
+    return v.replace(/[%&=#?+]/g, function(c){ return encodeURIComponent(c); })
+            .replace(/\s+/g, '+');
+  }
+  var pairs = [];
+  if(name) pairs.push('name=' + enc(name));
+  if(object) pairs.push('object=' + enc(object));
+  if(date) pairs.push('date=' + enc(date));
 
-  var qs = params.toString();
+  var qs = pairs.join('&');
   var url = base + file + (qs ? '?' + qs : '');
 
   document.getElementById('resultUrl').value = url;
