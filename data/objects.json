@@ -963,7 +963,7 @@
         "comm1": 2.5,
         "comm2": 3,
         "comm3": 6,
-        "start1": 0,
+        "start1": 8400000,
         "start2": 7990000,
         "start3": 6990000,
         "marketing": [
