@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
 <meta name="color-scheme" content="light">
+<meta name="format-detection" content="telephone=no">
 <title>Два формата продажи — Семён Гончаров</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -204,6 +205,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
   .modal-head{padding:22px 20px 16px}
   .modal-body{padding:8px 20px 24px}
 }
+
+/* iOS data detectors + mobile number layout */
+a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important;font:inherit!important}
+.price-row-sum,.price-total-sum,.sc-cost-num,.sc-col-fee{font-variant-numeric:tabular-nums}
+@media(max-width:768px){
+  .price-row-meta{justify-content:flex-start}
+  .price-row-sum{min-width:0;text-align:left}
+  .price-total{flex-direction:column;align-items:flex-start;gap:6px}
+  .price-total-sum{font-size:24px}
+}
 </style>
 </head>
 <body>
@@ -253,7 +264,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
     <a class="tldr-link" href="#s-formats">Сравнение →</a>
   </div>
   <div class="tldr-row">
-    <div class="tldr-text"><strong>Выигрыш — в деньгах, а не в процентах.</strong> На объекте за 15 млн ₽ аукцион приносит ≈ 420 000–795 000 ₽ сверху против самостоятельной продажи — уже за вычетом комиссии, премии и маркетинга.</div>
+    <div class="tldr-text"><strong>Выигрыш — в деньгах, а не в процентах.</strong> На объекте за 15 млн ₽ аукцион приносит ≈ 420 000–795 000 ₽ сверху против самостоятельной продажи — уже за вычетом комиссии, премии и маркетинга.</div>
     <a class="tldr-link" href="#s-economics">Расчёт →</a>
   </div>
   <div class="tldr-row">
@@ -306,37 +317,37 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
   <p class="s-intro">Разница между форматами — конкретная сумма, а не абстрактные проценты. По опыту прошлых объектов широкий маркетинг и конкуренция покупателей поднимают цену в среднем на 10–15% выше того, что собственник получил бы, продавая сам. Это оценка по опыту, не прогноз — ниже условный пример, чтобы показать логику расчёта на круглых цифрах.</p>
 
   <div class="price-table">
-    <div class="price-group-head">Условный пример — объект стоимостью 15 000 000 ₽</div>
+    <div class="price-group-head">Условный пример — объект стоимостью 15 000 000 ₽</div>
     <div class="price-row">
       <div class="price-row-name">Самостоятельная продажа — база для сравнения</div>
-      <div class="price-row-meta"><span class="price-row-sum">15 000 000 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">15 000 000 ₽</span></div>
     </div>
     <div class="price-row">
       <div class="price-row-name">Цена на аукционе — по опыту на 10–15% выше</div>
-      <div class="price-row-meta"><span class="price-row-sum">16 500 000 – 17 250 000 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">16 500 000 – 17 250 000 ₽</span></div>
     </div>
     <div class="price-row">
       <div class="price-row-name">Комиссия 6% от итоговой цены</div>
-      <div class="price-row-meta"><span class="price-row-sum">−990 000 – 1 035 000 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">−990 000 – 1 035 000 ₽</span></div>
     </div>
     <div class="price-row">
-      <div class="price-row-name">Премия агенту — 50% от суммы выше резервной цены (в примере 16 500 000 ₽ по СМА). Срабатывает не всегда — только если торги ушли выше неё</div>
-      <div class="price-row-meta"><span class="price-row-sum">0 – −375 000 ₽</span></div>
+      <div class="price-row-name">Премия агенту — 50% от суммы выше резервной цены (в примере 16 500 000 ₽ по СМА). Срабатывает не всегда — только если торги ушли выше неё</div>
+      <div class="price-row-meta"><span class="price-row-sum">до −375 000 ₽</span></div>
     </div>
     <div class="price-row">
       <div class="price-row-name">Маркетинговый бюджет аукциона</div>
-      <div class="price-row-meta"><span class="price-row-sum">−45 000 – 90 000 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">−45 000 – 90 000 ₽</span></div>
     </div>
     <div class="price-total">
       <span class="price-total-label">Остаётся вам сверх самостоятельной продажи</span>
-      <span class="price-total-sum">≈ 420 000 – 795 000 ₽</span>
+      <span class="price-total-sum">≈ 420 000 – 795 000 ₽</span>
     </div>
   </div>
   <p class="sc-note">Премия нужна не для того, чтобы забрать часть вашей выгоды, а чтобы у меня был стимул не останавливаться на целевой цифре и качать цену выше. Срабатывает она по ситуации — не на каждом объекте. И даже тогда каждый рубль сверх резервной цены делится пополам: половина остаётся вам.</p>
   <p class="sc-note" style="margin-top:8px">Условный пример на круглых цифрах — не прогноз и не гарантия для вашего объекта. Реальный процент зависит от сегмента, состояния объекта и спроса на момент старта. Цифры для вашего объекта считаю на встрече после осмотра.</p>
   <p class="sc-note" style="margin-top:8px">Мягкие торги (4%) работают по той же логике конкуренции покупателей, но при меньшем охвате. Отдельной статистики по приросту цены для этого формата нет — не подставляю сюда аукционные цифры вместо неё.</p>
 
-  <div class="sc-alert sc-alert-info" style="margin-top:24px"><strong>Маркетинг — это вложение, а не расход.</strong> В примере выше бюджет на рекламу — 45–90 тысяч ₽, а прирост цены — 1,5–2,25 млн ₽. Каждый вложенный рубль возвращается в цене продажи: именно маркетинг собирает ту конкуренцию покупателей, которая поднимает цену. Без него объект идёт по сценарию зависшего объявления — и теряет на снижениях больше, чем стоил бы весь рекламный бюджет.</div>
+  <div class="sc-alert sc-alert-info" style="margin-top:24px"><strong>Маркетинг — это вложение, а не расход.</strong> В примере выше бюджет на рекламу — 45–90 тысяч ₽, а прирост цены — 1,5–2,25 млн ₽. Каждый вложенный рубль возвращается в цене продажи: именно маркетинг собирает ту конкуренцию покупателей, которая поднимает цену. Без него объект идёт по сценарию зависшего объявления — и теряет на снижениях больше, чем стоил бы весь рекламный бюджет.</div>
 
   <div class="sc-alert sc-alert-info" style="margin-top:24px"><strong>Кому это не подходит.</strong> Если нет реальной мотивации продать в ближайшие 1–3 месяца, или ожидания по цене заметно выше рынка и не обсуждаются — ни один из форматов не сработает как задумано. Оба построены на готовности собственника довериться процессу, а не на желании «просто прощупать рынок». Если это про вас — скажу на встрече прямо, без уговоров подписать договор.</div>
 
@@ -440,51 +451,51 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
     <strong>Почему это не входит в комиссию, как «у других».</strong> Когда агент говорит «реклама за мой счёт, вам ничего не нужно платить» — почти всегда речь про съёмку на телефон и голое объявление на Avito. То есть про то, что действительно ничего не стоит. У каждого пункта ниже есть конкретная задача и измеримый эффект на продажу. Поэтому это отдельная, видимая вам статья расходов, а не что-то, спрятанное внутри процента. И каждый вложенный рубль окупается при продаже — он идёт на то, чтобы разогнать конкуренцию покупателей и поднять цену, а не тратится в никуда.
   </div>
 
-  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px">Мягкие торги — квартира 72 м², СПб</p>
+  <p style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin:24px 0 12px">Мягкие торги — квартира 72 м², СПб</p>
   <div class="price-table">
     <div class="price-group-head">Фото + видео</div>
     <div class="price-group-why">Первое, на что смотрит покупатель в объявлении. Слабые фото на телефон — причина №1, почему объявление листают дальше, даже не дочитав описание.</div>
     <div class="price-row">
       <div class="price-row-name">Выезд на объект, обработка фотографий</div>
-      <div class="price-row-meta"><span class="price-row-sum">3 400 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">3 400 ₽</span></div>
     </div>
     <div class="price-row">
       <div class="price-row-name">Съёмка видео, монтаж, обработка</div>
-      <div class="price-row-meta"><span class="price-row-sum">6 000 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">6 000 ₽</span></div>
     </div>
     <div class="price-group-head">Отрисовка планировок</div>
     <div class="price-group-why">Понятная планировка на карточке объекта закрывает половину вопросов ещё до звонка — покупатель сразу видит метраж и расположение комнат, а не выясняет это на созвоне.</div>
     <div class="price-row">
       <div class="price-row-name">План объекта для размещения на рекламоносителях</div>
-      <div class="price-row-meta"><span class="price-row-sum">3 000 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">3 000 ₽</span></div>
     </div>
     <div class="price-group-head">Листовки</div>
     <div class="price-group-why">Часть покупателей в районе не сидит на Avito и Циан каждый день — листовка у подъезда и в почтовых ящиках доносит объявление до тех, кто ищет жильё именно в этом доме и квартале.</div>
     <div class="price-row">
       <div class="price-row-name">Разработка макета</div>
-      <div class="price-row-meta"><span class="price-row-sum">1 500 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">1 500 ₽</span></div>
     </div>
     <div class="price-row">
       <div class="price-row-name">Печать 1000 шт, А5, цветная, двухсторонняя, глянец</div>
-      <div class="price-row-meta"><span class="price-row-sum">3 000 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">3 000 ₽</span></div>
     </div>
     <div class="price-row">
       <div class="price-row-name">Доставка листовок по адресу</div>
-      <div class="price-row-meta"><span class="price-row-sum">500 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">500 ₽</span></div>
     </div>
     <div class="price-group-head">Публикации на профессиональных площадках</div>
     <div class="price-group-why">Без платного продвижения объявление тонет среди тысяч похожих за первые же дни и падает вниз выдачи — просмотры и звонки идут в первую очередь тем, кто заплатил за поднятие в топ.</div>
     <div class="price-row">
       <div class="price-row-name">Размещение на всех основных площадках (Циан, Авито и др.)</div>
-      <div class="price-row-meta"><span class="price-row-sum">2 000 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-sum">2 000 ₽</span></div>
     </div>
     <div class="price-row">
       <div class="price-row-name">Платное продвижение на площадках</div>
-      <div class="price-row-meta"><span class="price-row-days">14 дней</span><span class="price-row-sum">20 000 ₽</span></div>
+      <div class="price-row-meta"><span class="price-row-days">14 дней</span><span class="price-row-sum">20 000 ₽</span></div>
     </div>
     <div class="price-total">
       <span class="price-total-label">Итого</span>
-      <span class="price-total-sum">39 400 ₽</span>
+      <span class="price-total-sum">39 400 ₽</span>
     </div>
   </div>
   <p class="sc-note">Консультация перед стартом — бесплатно. Клининг перед съёмкой — по отдельной смете, зависит от площади и состояния квартиры (считаю на месте, в план выше не включён). Цены на публикации и печать зависят от текущих тарифов площадок и типографии на момент запуска.</p>
@@ -507,12 +518,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
 
   <div class="sc-costs">
     <div class="sc-cost">
-      <div class="sc-cost-num">45 000–90 000 ₽</div>
+      <div class="sc-cost-num">45 000–90 000 ₽</div>
       <div class="sc-cost-label">Квартиры на вторичном рынке, 11 дней маркетинга</div>
     </div>
     <div class="sc-cost">
-      <div class="sc-cost-num">136 300 ₽</div>
-      <div class="sc-cost-label">Пример: загородный дом 311 м², бизнес-класс, полная команда</div>
+      <div class="sc-cost-num">136 300 ₽</div>
+      <div class="sc-cost-label">Пример: загородный дом 311 м², бизнес-класс, полная команда</div>
     </div>
   </div>
   <p class="sc-note">Загородная недвижимость и объекты бизнес-класса требуют более широкого охвата и стоят дороже в продвижении. Точную вилку для вашего объекта определяем после осмотра.</p>
@@ -714,13 +725,13 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
   <div class="faq-item">
     <button class="faq-question" type="button" aria-expanded="false">Другой агент предлагает продать за 2%. Почему я должен платить больше?</button>
     <div class="faq-answer">
-      <p>Можно продать и за 30 000 ₽. Вопрос не в проценте, а в том, что входит в работу за эти деньги. Низкая комиссия почти всегда означает минимальный план: фото и объявление на Avito, без охвата, без базы агентов, без концентрации спроса. И результат будет соответствующий. Сравнивайте не проценты, а то, что реально будет сделано для продажи вашего объекта — маркетинговый план в разделе выше открыт полностью.</p>
+      <p>Можно продать и за 30 000 ₽. Вопрос не в проценте, а в том, что входит в работу за эти деньги. Низкая комиссия почти всегда означает минимальный план: фото и объявление на Avito, без охвата, без базы агентов, без концентрации спроса. И результат будет соответствующий. Сравнивайте не проценты, а то, что реально будет сделано для продажи вашего объекта — маркетинговый план в разделе выше открыт полностью.</p>
     </div>
   </div>
   <div class="faq-item">
     <button class="faq-question" type="button" aria-expanded="false">Почему маркетинг оплачиваю я? Другие агентства берут расходы на себя, а я и так плачу комиссию</button>
     <div class="faq-answer">
-      <p>Мы рискуем разными вещами. Я вкладываю время: на аукционе это ежедневная работа весь срок — подготовка, реклама, звонки, показы, переговоры. Передумаете продавать в процессе — моё время мне никто не вернёт, это мой риск. Вы вкладываете бюджет, несопоставимо меньший, чем стоимость объекта: 45–90 тысяч на объект в 15–20 миллионов — доли процента. Как этот бюджет окупается ценой продажи — в разделе «Экономика выбора». Агентства, которые «сами платят за рекламу», либо закладывают эти расходы в комиссию заранее, либо тратят на объект по минимуму: своими деньгами разгонять чужой объект невыгодно. У меня бюджет прозрачен и виден в смете до старта, а не спрятан внутри процента. Готовы вложить меньше — подойдут мягкие торги. Совсем без бюджета на рекламу за объект не берусь: без него конкуренция покупателей не наберётся ни в одном формате.</p>
+      <p>Мы рискуем разными вещами. Я вкладываю время: на аукционе это ежедневная работа весь срок — подготовка, реклама, звонки, показы, переговоры. Передумаете продавать в процессе — моё время мне никто не вернёт, это мой риск. Вы вкладываете бюджет, несопоставимо меньший, чем стоимость объекта: 45–90 тысяч на объект в 15–20 миллионов — доли процента. Как этот бюджет окупается ценой продажи — в разделе «Экономика выбора». Агентства, которые «сами платят за рекламу», либо закладывают эти расходы в комиссию заранее, либо тратят на объект по минимуму: своими деньгами разгонять чужой объект невыгодно. У меня бюджет прозрачен и виден в смете до старта, а не спрятан внутри процента. Готовы вложить меньше — подойдут мягкие торги. Совсем без бюджета на рекламу за объект не берусь: без него конкуренция покупателей не наберётся ни в одном формате.</p>
     </div>
   </div>
   <div class="faq-item">
@@ -770,7 +781,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);font-size:16
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z"/></svg>
     Написать в Telegram
   </a>
-  <p class="footer-phone">или <a href="tel:+79118461965">+7 911 846-19-65</a></p>
+  <p class="footer-phone">или <a href="tel:+79118461965">+7 911 846-19-65</a></p>
   <p class="footer-phone"><a href="https://fastbroker21.ru/#cases" target="_blank" rel="noopener">Кейсы</a> · <a href="https://fastbroker21.ru/#reviews" target="_blank" rel="noopener">Отзывы</a></p>
   <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
 </footer>
