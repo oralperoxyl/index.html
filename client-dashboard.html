@@ -246,14 +246,33 @@ function findEntry(col, urlId, nameField){
   return [null,null];
 }
 
+// Последняя ошибка загрузки — чтобы показать агенту реальную причину, а не «объекты не найдены»
+let ghLastError='';
 async function ghGet(file){
+  ghLastError='';
+  const url=`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}?ref=${GH_BRANCH}`;
   try{
-    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${file}?ref=${GH_BRANCH}`);
-    if(!r.ok) return null;
+    // С токеном лимит GitHub — 5000 запросов/час, без токена — 60 на IP
+    const token=getToken();
+    let r=token?await fetch(url,{headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'}}):null;
+    if(!r||r.status===401) r=await fetch(url); // нет токена или он недействителен — читаем публично
+    if(!r.ok){
+      const remaining=r.headers.get('x-ratelimit-remaining');
+      if((r.status===403||r.status===429)&&remaining==='0'){
+        const reset=Number(r.headers.get('x-ratelimit-reset'))*1000;
+        const at=reset?new Date(reset).toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}):'';
+        ghLastError='GitHub временно ограничил число запросов'+(at?' — попробуйте после '+at:'')+'. Подключите токен ниже, чтобы лимит не мешал.';
+      } else if(r.status===404){
+        ghLastError='Файл с объектами не найден в репозитории.';
+      } else {
+        ghLastError='GitHub ответил ошибкой '+r.status+'.';
+      }
+      return null;
+    }
     const j=await r.json();
     const raw=atob(j.content.replace(/\n/g,''));
     return JSON.parse(new TextDecoder().decode(Uint8Array.from(raw,c=>c.charCodeAt(0))));
-  }catch(e){return null;}
+  }catch(e){ghLastError='Не удалось связаться с GitHub. Проверьте интернет.';return null;}
 }
 
 function showLoading(){document.getElementById('appRoot').innerHTML='<div class="state-block"><div class="spinner"></div><p class="state-sub">Загружаем данные…</p></div>';}
@@ -421,8 +440,8 @@ async function showAgentPicker(token){
 
   if(!allIds.size){
     document.getElementById('appRoot').innerHTML=`<div class="agent-picker">
-      <div class="agent-picker-title">Объекты не найдены</div>
-      <div class="agent-picker-sub">Создайте первый объект в СМА.</div>
+      <div class="agent-picker-title">${objData?'Объекты не найдены':'Не удалось загрузить объекты'}</div>
+      <div class="agent-picker-sub">${objData?'Создайте первый объект в СМА.':esc(ghLastError||'Попробуйте обновить страницу.')}</div>
       ${tokenBar()}
     </div>`;
     return;
@@ -584,6 +603,10 @@ async function init(){
   // Has ?id= → show client dashboard (public read)
   showLoading();
   const objData=await ghGet(FILES.objects);
+  if(!objData){
+    document.getElementById('appRoot').innerHTML=`<div class="state-block"><p class="state-title">Не удалось загрузить данные</p><p class="state-sub">Попробуйте обновить страницу через несколько минут.</p></div>`;
+    return;
+  }
   if(!objData?.objects?.[id] && !findEntry(objData?.objects,id,'address')[1]){
     showError('Объект не найден. Проверьте ссылку или запросите актуальную у Семёна.');return;
   }
