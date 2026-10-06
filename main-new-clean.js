@@ -578,3 +578,162 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+/* --- SOLD CASES: horizontal carousel + detail panel ------------------- */
+(function(){
+  var rail = document.querySelector('.sold-rail');
+  var scroll = document.getElementById('soldScroll');
+  if(!rail || !scroll) return;
+
+  var detail = document.getElementById('soldDetail');
+  var detailContent = document.getElementById('soldDetailContent');
+  var detailClose = detail && detail.querySelector('.sold-detail-close');
+  var openedCard = null;
+
+  // -- Edge fade: show/hide hints based on scroll position
+  function updateEdges(){
+    var sl = scroll.scrollLeft;
+    var max = scroll.scrollWidth - scroll.clientWidth;
+    rail.classList.toggle('at-start', sl <= 4);
+    rail.classList.toggle('at-end', sl >= max - 4);
+    // Nav button state
+    var prev = rail.parentNode.querySelector('.sold-nav-btn[data-dir="-1"]');
+    var next = rail.parentNode.querySelector('.sold-nav-btn[data-dir="1"]');
+    if(prev) prev.disabled = sl <= 4;
+    if(next) next.disabled = sl >= max - 4;
+  }
+  scroll.addEventListener('scroll', updateEdges, { passive: true });
+  window.addEventListener('resize', updateEdges);
+  updateEdges();
+
+  // -- Nav buttons: scroll by one card
+  var navBtns = document.querySelectorAll('.sold-nav-btn');
+  navBtns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var dir = parseInt(b.getAttribute('data-dir') || '1', 10);
+      var card = scroll.querySelector('.sold-card');
+      if(!card) return;
+      var step = card.getBoundingClientRect().width + 4; // + gap
+      scroll.scrollBy({ left: dir * step, behavior: 'smooth' });
+    });
+  });
+
+  // -- Keyboard support on scroll track
+  scroll.setAttribute('tabindex', '0');
+  scroll.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight' || e.key === 'ArrowLeft'){
+      var card = scroll.querySelector('.sold-card');
+      if(!card) return;
+      var step = card.getBoundingClientRect().width + 4;
+      scroll.scrollBy({ left: e.key === 'ArrowRight' ? step : -step, behavior: 'smooth' });
+      e.preventDefault();
+    }
+  });
+
+  // -- Detail panel: open on card click, populate from <template>
+  function cardSnapshot(card){
+    // Extract metadata from the card to render into detail panel
+    var g = function(sel){ var el = card.querySelector(sel); return el ? el.textContent.trim() : ''; };
+    var title = g('.sold-card-title');
+    var type  = g('.sold-card-type');
+    var city  = g('.sold-card-city');
+    var status= g('.sold-card-status');
+    var result= g('.sold-card-result');
+    // Metrics
+    var metrics = [];
+    card.querySelectorAll('.sold-card-metric').forEach(function(m){
+      var label = m.querySelector('em'); var val = m.querySelector('strong');
+      if(label && val) metrics.push({label: label.textContent.trim(), val: val.textContent.trim()});
+    });
+    // Template inner HTML (text + gallery)
+    var tpl = card.querySelector('.sold-card-detail-tpl');
+    var inner = tpl ? tpl.innerHTML : '';
+    return { title: title, type: type, city: city, status: status, result: result, metrics: metrics, inner: inner };
+  }
+
+  function renderDetail(snap){
+    var m = snap.metrics.map(function(x){
+      return '<div><em>'+x.label+'</em><strong>'+x.val+'</strong></div>';
+    }).join('');
+    var metricsHtml = m ? '<div class="sold-detail-metrics">'+m+'</div>' : '';
+    var resultHtml = snap.result ? '<p class="sold-detail-result-txt">'+snap.result+'</p>' : '';
+    // Split template content into description (paragraphs) and gallery (if any)
+    var tmp = document.createElement('div');
+    tmp.innerHTML = snap.inner;
+    var gal = tmp.querySelector('.sold-detail-gallery');
+    var galHtml = gal ? gal.outerHTML : '';
+    if (gal) gal.remove();
+    var descHtml = tmp.innerHTML;
+    detailContent.innerHTML =
+      '<div class="sold-detail-text">'+
+        '<div class="sold-detail-head">'+
+          '<span class="sold-detail-eyebrow">'+esc(snap.city)+' · '+esc(snap.status)+'</span>'+
+        '</div>'+
+        '<h3>'+esc(snap.title)+'</h3>'+
+        '<p class="sold-detail-sub">'+esc(snap.type)+'</p>'+
+        metricsHtml+
+        resultHtml+
+        descHtml+
+      '</div>'+
+      '<div class="sold-detail-aside">'+galHtml+'</div>';
+  }
+  function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function openDetail(card){
+    if(openedCard === card){
+      closeDetail();
+      return;
+    }
+    if(openedCard){
+      var oldBtn = openedCard.querySelector('.sold-card-main');
+      if(oldBtn) oldBtn.setAttribute('aria-expanded', 'false');
+    }
+    openedCard = card;
+    var btn = card.querySelector('.sold-card-main');
+    if(btn) btn.setAttribute('aria-expanded', 'true');
+    renderDetail(cardSnapshot(card));
+    detail.hidden = false;
+    // Scroll detail into view smoothly (not jumping too hard)
+    setTimeout(function(){
+      detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 20);
+  }
+  function closeDetail(){
+    if(!openedCard) return;
+    var btn = openedCard.querySelector('.sold-card-main');
+    if(btn) btn.setAttribute('aria-expanded', 'false');
+    openedCard = null;
+    detail.hidden = true;
+    detailContent.innerHTML = '';
+  }
+
+  document.querySelectorAll('.sold-card .sold-card-main').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      openDetail(btn.closest('.sold-card'));
+    });
+  });
+  if(detailClose) detailClose.addEventListener('click', closeDetail);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && openedCard) closeDetail();
+  });
+
+  // -- Nice-to-have: drag-to-scroll on desktop (optional, light)
+  var isDown = false, startX = 0, startScroll = 0, didDrag = false;
+  scroll.addEventListener('mousedown', function(e){
+    if(e.target.closest('button')) return; // let clicks on card buttons work
+    isDown = true; didDrag = false;
+    startX = e.pageX; startScroll = scroll.scrollLeft;
+    scroll.style.cursor = 'grabbing';
+  });
+  scroll.addEventListener('mouseleave', function(){ isDown = false; scroll.style.cursor = ''; });
+  scroll.addEventListener('mouseup', function(){ isDown = false; scroll.style.cursor = ''; });
+  scroll.addEventListener('mousemove', function(e){
+    if(!isDown) return;
+    var dx = e.pageX - startX;
+    if(Math.abs(dx) > 4) didDrag = true;
+    scroll.scrollLeft = startScroll - dx;
+  });
+  // Prevent click right after drag
+  scroll.addEventListener('click', function(e){
+    if(didDrag){ e.preventDefault(); e.stopPropagation(); }
+  }, true);
+})();
