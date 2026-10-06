@@ -2968,6 +2968,9 @@ textarea.contact-form-control {
   flex-wrap: wrap;
 }
 .sold-header h2{ margin: 0 0 10px 0; }
+.sold-section{
+  overflow-x: clip; /* contain the full-bleed carousel; does not clip vertical overflow */
+}
 .sold-intro{
   color: var(--text-muted);
   margin: 0;
@@ -3005,15 +3008,17 @@ textarea.contact-form-control {
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-padding-inline-start: calc(50vw - 50%);
-  padding: 4px calc(50vw - 50%) 20px;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0,0,0,.18) transparent;
+  padding: 4px calc(50vw - 50%) 4px;
   -webkit-overflow-scrolling: touch;
+  /* Hide visual scrollbar — scrolling still works via wheel/drag/swipe/keys/nav buttons */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
-.sold-scroll::-webkit-scrollbar{ height: 6px; }
-.sold-scroll::-webkit-scrollbar-track{ background: transparent; }
-.sold-scroll::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.15); border-radius: 3px; }
-.sold-scroll::-webkit-scrollbar-thumb:hover{ background: rgba(0,0,0,.3); }
+.sold-scroll::-webkit-scrollbar{
+  display: none;
+  width: 0;
+  height: 0;
+}
 
 /* Fade edges — subtle hint of overflow. Hidden on mobile where the
    half-visible next card already signals that the row is swipeable. */
@@ -3022,7 +3027,7 @@ textarea.contact-form-control {
   content: "";
   position: absolute;
   top: 0;
-  bottom: 24px;
+  bottom: 0;
   width: 26px;
   pointer-events: none;
   z-index: 2;
