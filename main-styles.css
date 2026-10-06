@@ -3015,26 +3015,48 @@ textarea.contact-form-control {
 .sold-scroll::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.15); border-radius: 3px; }
 .sold-scroll::-webkit-scrollbar-thumb:hover{ background: rgba(0,0,0,.3); }
 
-/* Fade edges to hint overflow */
-.sold-rail-fade{
+/* Fade edges — subtle hint of overflow. Hidden on mobile where the
+   half-visible next card already signals that the row is swipeable. */
+.sold-rail::before,
+.sold-rail::after{
+  content: "";
   position: absolute;
   top: 0;
-  bottom: 24px; /* above scrollbar */
-  width: 60px;
+  bottom: 24px;
+  width: 26px;
   pointer-events: none;
   z-index: 2;
-  transition: opacity .3s;
+  opacity: 0.55;
+  transition: opacity .3s ease;
 }
-.sold-rail-fade--left{
+.sold-rail::before{
   left: 0;
-  background: linear-gradient(to right, var(--bg-main, #fff), rgba(255,255,255,0));
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.65) 0%,
+    rgba(255,255,255,0.14) 45%,
+    rgba(255,255,255,0) 100%
+  );
 }
-.sold-rail-fade--right{
+.sold-rail::after{
   right: 0;
-  background: linear-gradient(to left, var(--bg-main, #fff), rgba(255,255,255,0));
+  background: linear-gradient(
+    270deg,
+    rgba(255,255,255,0.65) 0%,
+    rgba(255,255,255,0.14) 45%,
+    rgba(255,255,255,0) 100%
+  );
 }
-.sold-rail.at-start .sold-rail-fade--left{ opacity: 0; }
-.sold-rail.at-end .sold-rail-fade--right{ opacity: 0; }
+.sold-rail.at-start::before{ opacity: 0; }
+.sold-rail.at-end::after{ opacity: 0; }
+@media (min-width: 641px) and (max-width: 1023px){
+  .sold-rail::before,
+  .sold-rail::after{ width: 14px; opacity: 0.4; }
+}
+@media (max-width: 640px){
+  .sold-rail::before,
+  .sold-rail::after{ display: none; }
+}
 
 /* --- Card --- */
 .sold-card{
@@ -3067,9 +3089,7 @@ textarea.contact-form-control {
   outline: 2px solid var(--accent, #0066FF);
   outline-offset: 2px;
 }
-.sold-card-main[aria-expanded="true"]{
-  box-shadow: 0 0 0 2px var(--accent, #0066FF);
-}
+
 
 .sold-card-main picture,
 .sold-card-main img{
