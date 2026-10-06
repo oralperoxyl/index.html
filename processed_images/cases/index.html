@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="yandex-verification" content="6b52a8db0c261d41" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="theme-color" content="#F2F2F2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="icon" href="favicon/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg">
+  <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96">
+  <link rel="apple-touch-icon" href="favicon/apple-touch-icon.png">
+  <title>Продажа квартир в Санкт-Петербурге — агент по недвижимости Семён Гончаров</title>
+  <meta name="description" content="Продаю квартиры в Санкт-Петербурге через конкуренцию покупателей, а не снижение цены. Более 200 сделок с 2018 года. Первый разговор — бесплатно, 15 минут без обязательств.">
+  <link rel="canonical" href="https://fastbroker21.ru/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:url" content="https://fastbroker21.ru/">
+  <meta property="og:site_name" content="Семён Гончаров — агент по недвижимости">
+  <meta property="og:title" content="Продажа квартир в Санкт-Петербурге — агент по недвижимости Семён Гончаров">
+  <meta property="og:description" content="Продаю квартиры через конкуренцию покупателей, а не снижение цены. Более 200 сделок с 2018 года. Первый разговор — бесплатно.">
+  <meta property="og:image" content="https://fastbroker21.ru/processed_images/bwhero.jpg">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Продажа квартир в Санкт-Петербурге — агент по недвижимости Семён Гончаров">
+  <meta name="twitter:description" content="Продаю квартиры через конкуренцию покупателей, а не снижение цены. Более 200 сделок с 2018 года.">
+  <meta name="twitter:image" content="https://fastbroker21.ru/processed_images/bwhero.jpg">
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main-styles.css?v=106">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-R7PMRC7B3V"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=108495825', 'ym');
+    ym(108495825, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/108495825" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+<!-- CRM Bot Tracker -->
+<script>
+(function() {
+  var BOT_URL = "https://crm-bot-production-7458.up.railway.app/track";
+
+  function getRef() {
+    try { return new URLSearchParams(window.location.search).get("ref") || ""; } catch(e) { return ""; }
+  }
+  function getUtm(key) {
+    try { return new URLSearchParams(window.location.search).get(key) || ""; } catch(e) { return ""; }
+  }
+  function send(event, extra) {
+    var data = {
+      event: event,
+      page: window.location.pathname,
+      ref: getRef(),
+      referrer: document.referrer ? new URL(document.referrer).hostname : "direct",
+      utm_source: getUtm("utm_source"),
+      utm_medium: getUtm("utm_medium"),
+      utm_campaign: getUtm("utm_campaign"),
+      ua: navigator.userAgent.substring(0, 80)
+    };
+    if (extra) Object.assign(data, extra);
+    fetch(BOT_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(data),
+      keepalive:true
+    }).catch(function(e){ console.warn("[CRM tracker] error:", e.message); });
+  }
+
+  // 1. Посещение — только уникальные за сессию
+  if (!sessionStorage.getItem("_crm_visited")) {
+    sessionStorage.setItem("_crm_visited", "1");
+    send("visit");
+  }
+
+  // 2. Время на странице — при уходе
+  var startTime = Date.now();
+  function sendTimeOnPage() {
+    var sec = Math.round((Date.now() - startTime) / 1000);
+    if (sec < 10) return;
+    var min = Math.floor(sec / 60);
+    var s   = sec % 60;
+    var label = min > 0 ? (min + " мин " + s + " сек") : (s + " сек");
+    send("time_on_page", { duration: label, duration_sec: sec });
+  }
+  window.addEventListener("beforeunload", sendTimeOnPage);
+  document.addEventListener("visibilitychange", function() {
+    if (document.visibilityState === "hidden") sendTimeOnPage();
+  });
+
+  // 2. Клик на Telegram / WhatsApp / телефон
+  document.addEventListener("click", function(e) {
+    var a = e.target.closest("a[href]");
+    if (!a) return;
+    var href = a.href || "";
+    if (/t\.me|telegram/i.test(href))   send("click_telegram", { href: href });
+    if (/wa\.me|whatsapp/i.test(href))  send("click_whatsapp", { href: href });
+    if (/^tel:/i.test(href))            send("click_phone",    { href: href });
+  });
+
+  // 3. Отправка формы
+  document.addEventListener("submit", function(e) {
+    var form = e.target;
+    var phone = (form.querySelector("[name=phone]") || {}).value || "";
+    var name  = (form.querySelector("[name=name]")  || {}).value || "";
+    var msg   = (form.querySelector("[name=message]") || {}).value || "";
+    send("form_submit", { phone: phone, name: name, message: msg.substring(0, 100) });
+  });
+})();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "Семён Гончаров — агент по недвижимости",
+  "image": "https://fastbroker21.ru/processed_images/bwhero.jpg",
+  "url": "https://fastbroker21.ru/",
+  "telephone": "+7-911-846-19-65",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "наб. Мойки, д. 36, БЦ «Сенатор»",
+    "addressLocality": "Санкт-Петербург",
+    "addressCountry": "RU"
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "Санкт-Петербург"
+  },
+  "sameAs": [
+    "https://t.me/semengme",
+    "https://t.me/mezhdu_pokazami",
+    "https://www.instagram.com/fastbroker21"
+  ]
+}
+</script>
+</head>
+<body>
+  <header class="site-header bg-main">
+    <div class="container header-inner">
+      <a class="brand" href="#top">Goncharov Semen</a>
+      <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false">
+        <span class="menu-toggle-icon"></span>
+      </button>
+      <nav class="site-nav">
+        <a href="#approach">О работе</a>
+        <a href="#process">Процесс</a>
+        <a href="#cases">Кейсы</a>
+        <a href="#reviews">Отзывы</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Контакты</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section id="top" class="hero bg-main">
+      <div class="section-frame">
+        <div class="hero-inner hero-with-photo">
+          <div class="hero-content">
+            <p class="hero-kicker animate-on-scroll animate-delay-1" data-animate="fade-in">АГЕНТ ПО НЕДВИЖИМОСТИ · САНКТ-ПЕТЕРБУРГ</p>
+            <h1 class="hero-title animate-on-scroll animate-delay-2" data-animate="fade-in-up">Продажа квартир в Санкт-Петербурге. Без случайностей — с результатом, который можно объяснить.</h1>
+            <div class="hero-meta">
+              <p class="hero-subtitle animate-on-scroll animate-delay-3" data-animate="fade-in-up">Беру объект под полный контроль — от подготовки до сделки. Вы знаете что происходит на каждом шаге.</p>
+              <div class="cta-wrap">
+                <a href="#contact" class="cta-primary animate-on-scroll animate-delay-4" data-animate="fade-in-up">Обсудить мою ситуацию</a>
+                <p class="cta-micro animate-on-scroll animate-delay-4" data-animate="fade-in-up">15 минут разговора. Без обязательств.</p>
+              </div>
+            </div>
+          </div>
+          <div class="hero-photo-wrap">
+            <picture>
+              <source srcset="processed_images/bwhero.webp" type="image/webp">
+              <img src="processed_images/bwhero.jpg" alt="Семён Гончаров" class="hero-photo" width="832" height="1248" loading="eager" fetchpriority="high" decoding="async">
+            </picture>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="rule"></div>
+
+    <section id="approach" class="section-work">
+      <div class="work-container">
+        <h2 class="work-title animate-on-scroll" data-animate="fade-in-up">Как я работаю</h2>
+        <div class="work-intro animate-on-scroll" data-animate="fade-in-up">
+          <p class="work-manifest">Занимаюсь продажами с 2012 года, с 2018 — только недвижимостью.</p>
+          <div class="work-body">
+            <p>За это время провёл больше 200 сделок.</p>
+            <p>Берусь за объект — значит отвечаю за него полностью. Вы всегда знаете что происходит и почему принимаются именно эти решения.</p>
+            <p>Работаю по эксклюзивному договору. Не потому что так принято — а потому что только так можно управлять процессом и отвечать за результат.</p>
+          </div>
+        </div>
+
+        <div class="work-divider"></div>
+
+        <div class="work-accordion">
+          <div class="work-item animate-on-scroll animate-delay-1" data-animate="slide-in-left">
+            <button class="work-header" type="button" aria-expanded="false">
+              <span class="work-index">01.</span>
+              <span class="work-name">Продажа квартиры</span>
+            </button>
+            <div class="work-content">
+              <p>Два формата продажи квартиры в Санкт-Петербурге — быстрый результат за 21 день или более размеренный процесс со средним сроком 55 дней. В обоих случаях цель одна — максимальная цена за объект.</p>
+            </div>
+          </div>
+          <div class="work-item animate-on-scroll animate-delay-2" data-animate="slide-in-left">
+            <button class="work-header" type="button" aria-expanded="false">
+              <span class="work-index">02.</span>
+              <span class="work-name">Покупка квартиры</span>
+            </button>
+            <div class="work-content">
+              <p>Поиск, анализ, переговоры, торг, проверка документов. Вы выбираете — я делаю всё остальное. От первого просмотра до ключей.</p>
+              <p style="margin-top:14px;"><a href="checklist-complete.html" style="color:var(--accent, #0066FF);text-decoration:none;border-bottom:1px solid rgba(0,102,255,0.35);font-size:14px;">15 вопросов, которые отсекают 90% проблемных объектов →</a></p>
+            </div>
+          </div>
+          <div class="work-item animate-on-scroll animate-delay-3" data-animate="slide-in-left">
+            <button class="work-header" type="button" aria-expanded="false">
+              <span class="work-index">03.</span>
+              <span class="work-name">Новостройки</span>
+            </button>
+            <div class="work-content">
+              <p>Помогаю выбрать проект без маркетинга застройщика. Сравниваю по существу — качество, девелопер, условия, реальный потенциал.</p>
+            </div>
+          </div>
+          <div class="work-item animate-on-scroll animate-delay-4" data-animate="slide-in-left">
+            <button class="work-header" type="button" aria-expanded="false">
+              <span class="work-index">04.</span>
+              <span class="work-name">Сопровождение сделки</span>
+            </button>
+            <div class="work-content">
+              <p>Если покупатель уже есть — помогу провести сделку безопасно. Документы, расчёты, регистрация. Без сюрпризов в последний момент.</p>
+            </div>
+          </div>
+          <div class="work-item animate-on-scroll animate-delay-5" data-animate="slide-in-left">
+            <button class="work-header" type="button" aria-expanded="false">
+              <span class="work-index">05.</span>
+              <span class="work-name">Ипотека</span>
+            </button>
+            <div class="work-content">
+              <p>Работаю в связке с брокером. Подбираем программу, готовим документы, получаем одобрение на лучших условиях.</p>
+            </div>
+          </div>
+          <div class="work-item animate-on-scroll animate-delay-6" data-animate="slide-in-left">
+            <button class="work-header" type="button" aria-expanded="false">
+              <span class="work-index">06.</span>
+              <span class="work-name">Первый разговор — бесплатно</span>
+            </button>
+            <div class="work-content">
+              <p>15 минут чтобы понять вашу ситуацию и сказать честно — чем могу помочь. Без давления и обязательств.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="rule"></div>
+
+    <section id="process" class="process bg-main">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Процесс</h2>
+        <p class="process-subtitle animate-on-scroll" data-animate="fade-in-up">Я не начинаю с рекламы. Сначала — понимаю объект и ситуацию. Потом выстраиваю стратегию. Потом выхожу на рынок.</p>
+        <div class="process-essay animate-on-scroll" data-animate="fade-in-up">
+          <div class="process-body">
+          <p>Такой порядок даёт предсказуемый результат. Без хаотичных шагов, без давления на клиента — просто понятная последовательность действий.</p>
+          </div>
+        </div>
+        <ol class="process-steps animate-on-scroll" data-animate="fade-in-up">
+          <li>
+            <span class="process-num">01</span>
+            <span class="process-text">
+              <span class="process-title">Понимание задачи и контекста ситуации.</span>
+              <span class="process-desc">Цели, ограничения, сроки, риски.</span>
+            </span>
+          </li>
+          <li>
+            <span class="process-num">02</span>
+            <span class="process-text">
+              <span class="process-title">Формирование стратегии и подготовка объекта к выходу на рынок.</span>
+              <span class="process-desc">Цена, сценарий спроса, позиционирование.</span>
+            </span>
+          </li>
+          <li>
+            <span class="process-num">03</span>
+            <span class="process-text">
+              <span class="process-title">Запуск и наблюдение за реакцией рынка.</span>
+              <span class="process-desc">Сколько звонков, кто смотрит, какие вопросы — это данные, а не ощущения.</span>
+            </span>
+          </li>
+          <li>
+            <span class="process-num">04</span>
+            <span class="process-text">
+              <span class="process-title">Корректировка действий на основе данных.</span>
+              <span class="process-desc">Цена, подача, акценты — меняем то что мешает, оставляем то что работает.</span>
+            </span>
+          </li>
+          <li>
+            <span class="process-num">05</span>
+            <span class="process-text">
+              <span class="process-title">Сделка с прогнозируемым итогом.</span>
+              <span class="process-desc">Без суеты и неожиданных решений в последний момент.</span>
+            </span>
+          </li>
+        </ol>
+        <p class="process-bridge">Вы понимаете что происходит на каждом этапе — и почему принимаются именно эти решения.</p>
+        
+      </div>
+    </section>
+
+    <section id="advantages" class="advantages bg-soft">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Что это даёт</h2>
+        <div class="advantages-grid">
+          <div class="adv-column animate-on-scroll animate-delay-1" data-animate="fade-in-up">
+            <h3>Для продавца</h3>
+            <div class="adv-list">
+              <div class="adv-item">
+                <h4>Покупатели приходят подготовленными</h4>
+                <p>Фильтрую звонки, квалифицирую покупателей. На показ приходят те кто реально готов покупать — не любопытствующие.</p>
+              </div>
+              <div class="adv-item">
+                <h4>Максимальная цена — не случайность</h4>
+                <p>Анализирую конкурентов, выбираю правильный момент выхода, управляю торгом. Итоговая цена выше чем при самостоятельной продаже.</p>
+              </div>
+              <div class="adv-item">
+                <h4>Никаких сюрпризов в расчётах</h4>
+                <p>Выстраиваю схему взаиморасчётов с учётом формы сделки и возможных рисков. Все этапы фиксируются и контролируются.</p>
+              </div>
+            </div>
+          </div>
+          <div class="adv-column animate-on-scroll animate-delay-2" data-animate="fade-in-up">
+            <h3>Для покупателя</h3>
+            <div class="adv-list">
+              <div class="adv-item">
+                <h4>Только подходящие варианты</h4>
+                <p>Анализирую рынок и отбираю объекты под вашу задачу. Переговоры строятся на фактах, а не на маркетинговых обещаниях продавца.</p>
+              </div>
+              <div class="adv-item">
+                <h4>Никаких сюрпризов в документах</h4>
+                <p>Проверяю историю объекта и правовую чистоту сделки. Если есть риск — говорю об этом до подписания.</p>
+              </div>
+              <div class="adv-item">
+                <h4>Вы понимаете за что платите</h4>
+                <p>Объясняю каждое решение. Цена, условия, сроки — всё прозрачно и согласовано заранее.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="newbuild" class="newbuild bg-main">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Новостройки без иллюзий и переплат</h2>
+        <p class="text-narrow animate-on-scroll" data-animate="fade-in-up">Каждый проект я разбираю по существу: качество строительства, подход девелопера, условия покупки и реальный потенциал объекта. Работаю в интересах клиента, а не застройщика — без эмоций и маркетинговых обещаний. Это позволяет принимать взвешенные решения и понимать, за что именно вы платите.</p>
+        <a class="btn animate-on-scroll" data-animate="fade-in-up" href="https://agent-goncharov.toprealtors.ru" target="_blank" rel="noreferrer">Перейти к подбору</a>
+      </div>
+    </section>
+
+    <section id="cases" class="cases bg-main">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Кейсы</h2>
+        <p class="text-narrow animate-on-scroll" data-animate="fade-in-up">Реальные сделки в разных сценариях рынка</p>
+        <div class="cases-track">
+          <article class="content-card case-card animate-on-scroll animate-delay-1" data-animate="scale-in">
+            <div class="case-media">
+              <picture>
+                <source srcset="processed_images/cases/dunayski1.webp" type="image/webp">
+                <img src="processed_images/cases/dunayski1.jpg" alt="Продажа 1-комнатной квартиры у метро Дунайская, Санкт-Петербург" width="720" height="1034" loading="lazy" decoding="async">
+              </picture>
+            </div>
+            <h3>1-к у м. Дунайская</h3>
+            <div class="case-pills">
+              <span class="case-pill">20 дней</span>
+              <span class="case-pill">25+ офферов</span>
+              <span class="case-pill">6,1 млн старт</span>
+            </div>
+            <p>Компактная планировка, высокий спрос локации.</p>
+            <button class="btn case-toggle" type="button" aria-expanded="false">Детали</button>
+            <div class="case-details">
+              <ul>
+                <li><strong>Старт:</strong> продать без потери в цене, так как до этого пытались продать самостоятельно</li>
+                <li><strong>Действия:</strong> более 2000 соседей узнали о продаже благодаря листовкам, большой баннер, постеры на локации, 3 дня окна показов, более 40 просмотров</li>
+                <li><strong>Результат:</strong> 25+ офферов, закрыли за 20 дней</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="content-card case-card animate-on-scroll animate-delay-2" data-animate="scale-in">
+            <div class="case-media">
+              <picture>
+                <source srcset="processed_images/cases/sadovaya2.webp" type="image/webp">
+                <img src="processed_images/cases/sadovaya2.jpg" alt="Продажа 3-комнатной квартиры в центре Санкт-Петербурга" width="720" height="1031" loading="lazy" decoding="async">
+              </picture>
+            </div>
+            <h3>3-к в центре СПб</h3>
+            <div class="case-pills">
+              <span class="case-pill">30 дней</span>
+              <span class="case-pill">+7% к ожиданиям</span>
+              <span class="case-pill">14,5 млн старт</span>
+            </div>
+            <p>Светлая квартира с высокими потолками.</p>
+            <button class="btn case-toggle" type="button" aria-expanded="false">Детали</button>
+            <div class="case-details">
+              <ul>
+                <li><strong>Старт:</strong> необходимо быстро найти покупателя т.к встречный объект был уже на задатке</li>
+                <li><strong>Действия:</strong> хоумстейджинг, работа на территории, 2 дня показов</li>
+                <li><strong>Результат:</strong> закрыли сделку на 7% выше ожиданий</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="content-card case-card animate-on-scroll animate-delay-3" data-animate="scale-in">
+            <div class="case-media">
+              <picture>
+                <source srcset="processed_images/cases/petroga3.webp" type="image/webp">
+                <img src="processed_images/cases/petroga3.jpg" alt="Продажа 3-комнатной квартиры на Петроградской стороне, Санкт-Петербург" width="720" height="1012" loading="lazy" decoding="async">
+              </picture>
+            </div>
+            <h3>3-к, Петроградка</h3>
+            <div class="case-pills">
+              <span class="case-pill">21 день</span>
+              <span class="case-pill">25,1 млн старт</span>
+              <span class="case-pill">альтернатива</span>
+            </div>
+            <p>Престижный район, качественный покупательский поток.</p>
+            <button class="btn case-toggle" type="button" aria-expanded="false">Детали</button>
+            <div class="case-details">
+              <ul>
+                <li><strong>Старт:</strong> квартира сразу после ремонта, престиж локации</li>
+                <li><strong>Действия:</strong> аукционная подача, таргетированная реклама, работа на территории, сложные переговоры из за альтернативной сделки</li>
+                <li><strong>Результат:</strong> продавец выбрал покупателя с наиболее комфортными условиями</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="content-card case-card animate-on-scroll animate-delay-4" data-animate="scale-in">
+            <div class="case-media">
+              <picture>
+                <source srcset="processed_images/cases/parkpobedy4.webp" type="image/webp">
+                <img src="processed_images/cases/parkpobedy4.jpg" alt="Продажа 2-комнатной квартиры с окнами на две стороны, Санкт-Петербург" width="720" height="991" loading="lazy" decoding="async">
+              </picture>
+            </div>
+            <h3>2-к, двусторонняя</h3>
+            <div class="case-pills">
+              <span class="case-pill">15 дней</span>
+              <span class="case-pill">9,8 млн старт</span>
+              <span class="case-pill">задаток 2-я неделя</span>
+            </div>
+            <p>Удобная планировка для семьи, окна на две стороны.</p>
+            <button class="btn case-toggle" type="button" aria-expanded="false">Детали</button>
+            <div class="case-details">
+              <ul>
+                <li><strong>Старт:</strong> семейный переезд, жёсткие сроки</li>
+                <li><strong>Действия:</strong> предпродажная подготовка, агрессивная реклама объекта, промоутер с листовками у метро, показы в выходные</li>
+                <li><strong>Результат:</strong> задаток на 2-й неделе</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="content-card case-card animate-on-scroll animate-delay-5" data-animate="scale-in">
+            <div class="case-media">
+              <picture>
+                <source srcset="processed_images/cases/vaska5.webp" type="image/webp">
+                <img src="processed_images/cases/vaska5.jpg" alt="Продажа 2-комнатной квартиры на Васильевском острове, Санкт-Петербург" width="720" height="1029" loading="lazy" decoding="async">
+              </picture>
+            </div>
+            <h3>2-к, Васильевский остров</h3>
+            <div class="case-pills">
+              <span class="case-pill">18 дней</span>
+              <span class="case-pill">20+ заявок</span>
+              <span class="case-pill">14,1 млн старт</span>
+            </div>
+            <p>Уютная квартира в историческом районе, рядом набережная.</p>
+            <button class="btn case-toggle" type="button" aria-expanded="false">Детали</button>
+            <div class="case-details">
+              <ul>
+                <li><strong>Старт:</strong> собственник хотел продать по максимальной цене, без спешки</li>
+                <li><strong>Действия:</strong> профессиональная съёмка, аукционная подача, организация показов в два дня</li>
+                <li><strong>Результат:</strong> 20+ заявок, выбрали покупателя с лучшими условиями, сделка с альтернативой прошла без задержек</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="content-card case-card animate-on-scroll animate-delay-6" data-animate="scale-in">
+            <div class="case-media">
+              <picture>
+                <source srcset="processed_images/cases/petroga6.webp" type="image/webp">
+                <img src="processed_images/cases/petroga6.jpg" alt="Срочная продажа 3-комнатной квартиры на Петроградской стороне, Санкт-Петербург" width="720" height="999" loading="lazy" decoding="async">
+              </picture>
+            </div>
+            <h3>3-к, Петроградская сторона</h3>
+            <div class="case-pills">
+              <span class="case-pill">12 дней</span>
+              <span class="case-pill">21,3 млн старт</span>
+              <span class="case-pill">срочная продажа</span>
+            </div>
+            <p>Жилой фонд в престижном районе.</p>
+            <button class="btn case-toggle" type="button" aria-expanded="false">Детали</button>
+            <div class="case-details">
+              <ul>
+                <li><strong>Старт:</strong> собственник переезжал в другой город, нужно закрыть до отъезда</li>
+                <li><strong>Действия:</strong> за 48 часов подготовили объект, вышли на рынок, за первые выходные провели 14 показов</li>
+                <li><strong>Результат:</strong> 3 оффера, закрыли на 12-й день по цене выше стартовой</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="content-card case-card animate-on-scroll animate-delay-1" data-animate="scale-in">
+            <div class="case-media">
+              <picture>
+                <source srcset="processed_images/cases/tokyo7.webp" type="image/webp">
+                <img src="processed_images/cases/tokyo7.jpg" alt="Продажа 3-комнатной квартиры в ЖК Tokyo, Санкт-Петербург" width="720" height="993" loading="lazy" decoding="async">
+              </picture>
+            </div>
+            <h3>3-к в ЖК Tokyo</h3>
+            <div class="case-pills">
+              <span class="case-pill">25 дней</span>
+              <span class="case-pill">15+ офферов</span>
+              <span class="case-pill">13,9 млн старт</span>
+            </div>
+            <p>Современный жилой комплекс с высокой конкуренцией в локации.</p>
+            <button class="btn case-toggle" type="button" aria-expanded="false">Детали</button>
+            <div class="case-details">
+              <ul>
+                <li><strong>Старт:</strong> быстрая продажа без потери в цене</li>
+                <li><strong>Действия:</strong> Фото, реклама на локации, брокер-тур, дополнительные показы</li>
+                <li><strong>Результат:</strong> 15+ офферов, продано за 25 дней</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="content-card case-card animate-on-scroll animate-delay-2" data-animate="scale-in">
+            <div class="case-media">
+              <picture>
+                <source srcset="processed_images/cases/gjatskaya8.webp" type="image/webp">
+                <img src="processed_images/cases/gjatskaya8.jpg" alt="Продажа 3-комнатной квартиры на улице Гжатской, Москва" width="720" height="942" loading="lazy" decoding="async">
+              </picture>
+            </div>
+            <h3>3Е-к, ул. Гжатская</h3>
+            <div class="case-pills">
+              <span class="case-pill">25 дней</span>
+              <span class="case-pill">75+ просмотров</span>
+              <span class="case-pill">23 млн старт</span>
+            </div>
+            <p>Москва, СЗАО, метро в шаговой доступности, собственная набережная на территории комплекса.</p>
+            <button class="btn case-toggle" type="button" aria-expanded="false">Детали</button>
+            <div class="case-details">
+              <ul>
+                <li><strong>Старт:</strong> локация у набережной и статусный район</li>
+                <li><strong>Действия:</strong> Сильная подача, таргетированная реклама, персональные показы</li>
+                <li><strong>Результат:</strong> 75+ реальных просмотров, покупатель выбран на 25-й день</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="reviews" class="reviews bg-soft">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Отзывы</h2>
+        <p class="text-narrow animate-on-scroll" data-animate="fade-in-up">Обратная связь от клиентов</p>
+        <blockquote class="review-hero animate-on-scroll" data-animate="fade-in-up">
+          <p class="review-hero-text">Самый грамотный специалист, которого я встречала. Покупатель найден за 21 день. Сделка была сложной — 2 встречные ипотеки, опека. Если бы не профессионализм Семёна, сделка бы не состоялась. На каждом этапе мне оказывалась любая помощь в любое время.</p>
+          <footer class="review-hero-author">Елена Григорьева <span>· Собственник, сложная сделка</span></footer>
+        </blockquote>
+
+                <div class="freecards-stage animate-on-scroll" data-animate="fade-in-up" id="freecards-stage">
+
+          <div class="freecard" 
+               style="background:#1C1C1E; color:#F5F5F0; left:20px; top:20px; --rot:-3deg;"
+               data-x="20" data-y="20">
+            <p class="freecard-quote">Семён помог продать нашу квартиру за 19 дней. Получили на 7% больше, чем ожидали.</p>
+            <p class="freecard-author">Марина и Роман<span class="freecard-role"> · Семья, продажа квартиры</span></p>
+          </div>
+          <div class="freecard" 
+               style="background:#F5F5F0; color:#1C1C1E; left:360px; top:40px; --rot:2deg;"
+               data-x="360" data-y="40">
+            <p class="freecard-quote">27 показов за выходные, выбрали лучшего покупателя.</p>
+            <p class="freecard-author">Александр П.<span class="freecard-role"> · Собственник, быстрая продажа</span></p>
+          </div>
+          <div class="freecard" 
+               style="background:#2C2C2E; color:#F5F5F0; left:700px; top:15px; --rot:-4deg;"
+               data-x="700" data-y="15">
+            <p class="freecard-quote">Безопасные расчёты и полное сопровождение. Спокойно на сделке.</p>
+            <p class="freecard-author">Ирина К.<span class="freecard-role"> · Покупатель, сопровождение сделки</span></p>
+          </div>
+          <div class="freecard" 
+               style="background:#EFEFEA; color:#1C1C1E; left:60px; top:240px; --rot:4deg;"
+               data-x="60" data-y="240">
+            <p class="freecard-quote">Организовал всё от фото до ключей. Мы только подписали.</p>
+            <p class="freecard-author">Дмитрий и Наталья<span class="freecard-role"> · Семья, продажа квартиры</span></p>
+          </div>
+          <div class="freecard" 
+               style="background:#111111; color:#F5F5F0; left:380px; top:260px; --rot:-2deg;"
+               data-x="380" data-y="260">
+            <p class="freecard-quote">Финальная цена выше на 500 тыс.</p>
+            <p class="freecard-author">Анна С.<span class="freecard-role"> · Собственник, продажа</span></p>
+          </div>
+          <div class="freecard" 
+               style="background:#FAF9F6; color:#1C1C1E; left:720px; top:230px; --rot:3deg;"
+               data-x="720" data-y="230">
+            <p class="freecard-quote">Покупатель найден за 2 недели, сделка быстро и безопасно.</p>
+            <p class="freecard-author">Олег Т.<span class="freecard-role"> · Собственник, срочная продажа</span></p>
+          </div>
+          <div class="freecard freecard--long" 
+               style="background:#3A3A3C; color:#F5F5F0; left:30px; top:470px; --rot:-5deg;"
+               data-x="30" data-y="470">
+            <p class="freecard-quote">Большое спасибо Семену за помощь в продаже квартиры, которая находилась в ипотеке. Сделка состоялась довольно быстро, Семен помог собрать все необходимые документы, все время был на связи и консультировал меня по всем имеющимся вопросам. Очень грамотный и ответственный специалист. Ни разу не пожалела, что обратилась именно к нему.</p>
+            <p class="freecard-author">Маргарита Страшенко<span class="freecard-role"> · Собственник, ипотечная сделка</span></p>
+          
+            <button class="freecard-expand" type="button">Читать</button>
+          </div>
+          <div class="freecard freecard--long" 
+               style="background:#E8E8E3; color:#1C1C1E; left:370px; top:490px; --rot:3deg;"
+               data-x="370" data-y="490">
+            <p class="freecard-quote">Спасибо огромное Семену за труд и терпение. Грамотный, отзывчивый, пунктуальный, добросовестный, профессионал своего дела. Я купила квартиру и очень довольна результатом. Процветания и благополучия вам, Семен.</p>
+            <p class="freecard-author">Наталья<span class="freecard-role"> · Покупатель квартиры</span></p>
+          
+            <button class="freecard-expand" type="button">Читать</button>
+          </div>
+          <div class="freecard freecard--long" 
+               style="background:#1C1C1E; color:#F5F5F0; left:710px; top:460px; --rot:-2deg;"
+               data-x="710" data-y="460">
+            <p class="freecard-quote">Самый грамотный специалист, которого я встречала! Продавала квартиру более года, пришлось сменить более 2 риэлторов... к счастью, обратилась к Семену. Результат: покупатель был найден ровно за 21 день! Сделка была сложной: 2 встречные ипотеки, выделение долей для детей покупателя, опека... Но всё уже в прошлом. Если бы не профессионализм Семена, сделка бы не состоялась, фактически он отработал и за агентов покупателя, консультируя и их тоже, исправляя их огрехи. На каждом этапе сделки мне оказывалась любая помощь в любое время! Сейчас планирую покупку новой квартиры и, бесспорно, обращаться буду только к нему!</p>
+            <p class="freecard-author">Елена Григорьева<span class="freecard-role"> · Собственник, сложная сделка</span></p>
+          
+            <button class="freecard-expand" type="button">Читать</button>
+          </div>
+          <div class="freecard freecard--long" 
+               style="background:#F5F5F0; color:#1C1C1E; left:100px; top:680px; --rot:2deg;"
+               data-x="100" data-y="680">
+            <p class="freecard-quote">Хоть квартиру мы и не купили, но очень понравилось, как Семён с командой проводят свою работу. Такого сервиса и клиентоориентированности не видели с мужем ни в одном агентстве. Когда будем продавать свою квартиру — хотели бы, чтобы нашу квартиру продавали именно Семён с командой. Обязательно обратимся в будущем!</p>
+            <p class="freecard-author">Сергей и Анна<span class="freecard-role"> · Потенциальные клиенты</span></p>
+          
+            <button class="freecard-expand" type="button">Читать</button>
+          </div>
+          <div class="freecard" 
+               style="background:#2C2C2E; color:#F5F5F0; left:400px; top:700px; --rot:-3deg;"
+               data-x="400" data-y="700">
+            <p class="freecard-quote">Спасибо Семену, помог осуществить мечту о новой квартире. Несмотря на «опеку» и другие сложности сделки — всё прошло быстро и по выгодной цене.</p>
+            <p class="freecard-author">Татьяна<span class="freecard-role"> · Покупатель, опека</span></p>
+          </div>
+          <div class="freecard" 
+               style="background:#EFEFEA; color:#1C1C1E; left:730px; top:670px; --rot:4deg;"
+               data-x="730" data-y="670">
+            <p class="freecard-quote">Продавали квартиру с целью расширения. Семён всё организовал — от оценки до ключей. Всё чётко, без потерь по времени и нервам.</p>
+            <p class="freecard-author">Илья<span class="freecard-role"> · Собственник, продажа</span></p>
+          </div>
+          <div class="freecard freecard--long" 
+               style="background:#111111; color:#F5F5F0; left:20px; top:150px; --rot:-2deg;"
+               data-x="20" data-y="150">
+            <p class="freecard-quote">Семён помог продать старую квартиру в Мурманске и подобрать новую в Питере. Всё по делу, с пониманием и уважением к моим условиям. Супруг периодически рекомендует Семена своим знакомым.</p>
+            <p class="freecard-author">Светлана М.<span class="freecard-role"> · Собственник, переезд</span></p>
+          
+            <button class="freecard-expand" type="button">Читать</button>
+          </div>
+          <div class="freecard" 
+               style="background:#FAF9F6; color:#1C1C1E; left:360px; top:140px; --rot:3deg;"
+               data-x="360" data-y="140">
+            <p class="freecard-quote">Работаем в партнёрстве. Семён всегда держит высокий уровень: корректно, грамотно, с уважением к коллегам и клиентам.</p>
+            <p class="freecard-author">Александр<span class="freecard-role"> · Партнёр-агент</span></p>
+          </div>
+          <div class="freecard freecard--long" 
+               style="background:#3A3A3C; color:#F5F5F0; left:700px; top:160px; --rot:-3deg;"
+               data-x="700" data-y="160">
+            <p class="freecard-quote">Занимаюсь только первичной недвижимостью, и когда приходят клиенты, которым нужно сначала продать своё вторичное жильё — без сомнений направляю их к Семёну. Он всегда закрывает сделки в срок и по максимальной цене.</p>
+            <p class="freecard-author">Валентин<span class="freecard-role"> · Агент по новостройкам</span></p>
+          
+            <button class="freecard-expand" type="button">Читать</button>
+          </div>
+        </div>
+        <p class="freecards-hint">Перетащите карточки</p>
+        <button class="btn review-toggle" type="button" aria-expanded="false" aria-controls="review-form">Оставить отзыв</button>
+      </div>
+    </section>
+
+    <section id="review-form" class="review-form bg-soft" hidden>
+      <div class="section-frame">
+        <div class="review-form-container">
+          <h3 class="review-form-title">Поделитесь опытом работы</h3>
+          <p class="review-form-intro">Ваше мнение важно — оно помогает другим принимать решения и мне становиться лучше.</p>
+          <form action="https://api.web3forms.com/submit" method="POST" class="review-form-inner">
+            <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+            <label class="form-field">
+              <span class="form-label">Ваш отзыв</span>
+              <textarea class="form-control" name="comment" rows="5" placeholder="Расскажите о вашем опыте..." required></textarea>
+            </label>
+            <label class="form-field">
+              <span class="form-label">Имя</span>
+              <input class="form-control" type="text" name="name" placeholder="Как к вам обращаться" required>
+            </label>
+            <label class="consent-label" style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--muted, #888);margin:12px 0;line-height:1.4;">
+              <input type="checkbox" name="consent" required style="margin-top:2px;flex-shrink:0;">
+              <span>Согласен(-на) на обработку персональных данных в соответствии с <a href="privacy-policy.html" target="_blank" style="color:inherit;text-decoration:underline;">политикой конфиденциальности</a></span>
+            </label>
+            <button class="form-submit" type="submit">Отправить отзыв</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-mid">
+      <div class="section-frame cta-mid-inner">
+        <p class="cta-mid-label">Без обязательств</p>
+        <h2 class="cta-mid-title">Иногда достаточно просто поговорить</h2>
+        <p class="cta-mid-sub">Расскажите о своей ситуации — я отвечу честно. Часто хватает одного разговора чтобы понять в какую сторону двигаться.</p>
+        <a class="cta-mid-btn" href="https://t.me/semengme" target="_blank" rel="noopener">Написать в Telegram</a>
+      </div>
+    </section>
+
+    <section id="about" class="about bg-main">
+      <div class="section-frame">
+        <div class="about-header animate-on-scroll" data-animate="fade-in-up">
+          <h2>Обо мне</h2>
+        </div>
+        <div class="about-stats animate-on-scroll" data-animate="fade-in-up">
+          <div class="about-stat">
+            <span class="about-stat-num" data-target="13" data-suffix="+ лет">0</span>
+            <span class="about-stat-label">в продажах</span>
+          </div>
+          <div class="about-stat">
+            <span class="about-stat-num" data-target="200" data-suffix="+">0</span>
+            <span class="about-stat-label">закрытых сделок</span>
+          </div>
+          <div class="about-stat">
+            <span class="about-stat-num" data-target="21" data-suffix=" день">0</span>
+            <span class="about-stat-label">срочная продажа</span>
+          </div>
+          <div class="about-stat">
+            <span class="about-stat-num" data-target="55" data-suffix=" дней">0</span>
+            <span class="about-stat-label">средний срок продажи</span>
+          </div>
+        </div>
+        <div class="about-grid about-no-photo">
+          <div class="about-text animate-on-scroll animate-delay-1" data-animate="fade-in-up">
+            <p>Меня зовут Семён Гончаров. Я — агент по недвижимости в Санкт-Петербурге с глубоким опытом в продажах с 2012 года. С 2018 года полностью сфокусирован на рынке недвижимости.</p>
+            <p>За эти годы я прошёл весь путь: от агента в крупном петербургском агентстве до руководителя группы продаж и директора агентства, специализирующегося на историческом центре города. Работа руководителем отдела продаж строительной компании дала мне сильную экспертизу и в загородной недвижимости.</p>
+            <p>Этот опыт позволяет мне точно понимать рынок, грамотно вести переговоры, предлагать нестандартные решения и уверенно сопровождать клиента на каждом этапе сделки.</p>
+            <p>Сегодня я часто использую аукционную модель продаж. Она обеспечивает прозрачность, честность и безопасность для всех участников сделки, а главное — помогает продавцам получать максимальную цену за свой объект.</p>
+            <p>Если хотите понять подходит ли мой подход вашей ситуации — просто напишите. Первый разговор бесплатный.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="faq bg-alt">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">FAQ</h2>
+        <div class="faq-item animate-on-scroll animate-delay-1" data-animate="fade-in-up">
+          <button class="faq-question" type="button" aria-expanded="false">Какие сценарии продажи вы предлагаете?</button>
+          <div class="faq-answer">
+            <p>Работаю в нескольких форматах, и каждый подходит разным собственникам. Есть ускоренная модель, когда мы заранее готовим объект, концентрируем спрос и выходим на максимальную цену в коротком сроке — обычно это 21 день. Есть и более спокойный формат без конкретного дедлайна: тоже нацелен на максимальную цену, но занимает в среднем до двух месяцев. У каждого сценария есть свои нюансы — лучше обсудить ваш конкретный объект, чтобы понять, какой формат даст оптимальный результат.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Сколько стоит ваша работа?</button>
+          <div class="faq-answer">
+            <p>Вознаграждение формируется под задачу и согласовывается заранее. Оно складывается из объёма работ, сложности объекта и выбранного сценария продажи. Размер вознаграждения — от 2% от суммы сделки. Работаю в рамках рыночных условий, но всегда детально объясняю, что именно входит в услугу и какую пользу вы получаете. Все условия фиксируем в договоре — прозрачно, без скрытых пунктов.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Вы занимаетесь новостройками?</button>
+          <div class="faq-answer">
+            <p>Да, работаю с новостройками в рамках отдельного блока. Помогаю подобрать проект, сравнить застройщиков и условия, провести сделку без лишнего маркетинга и завышенных ожиданий.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Работаете ли вы без эксклюзива?</button>
+          <div class="faq-answer">
+            <p>Я работаю по эксклюзивному договору. Это не формальность — при такой схеме я полностью отвечаю за процесс и результат. Когда с объектом работают несколько агентов одновременно, нет ни одного ответственного: каждый ждёт, что продаст другой, и никто не управляет ситуацией системно. Объект мелькает везде, теряет ценность и уходит дешевле, чем мог бы. Эксклюзив — это про защиту вашего результата.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Что если у меня уже есть потенциальный покупатель?</button>
+          <div class="faq-answer">
+            <p>Отлично — это хорошая отправная точка. Я помогу проверить его реальную готовность, правильно провести переговоры по цене и условиям, и юридически безопасно закрыть сделку. Наличие покупателя не отменяет необходимость грамотного сопровождения — именно на финальном этапе чаще всего теряются деньги или срываются сделки.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Агент мне не нужен, сделаю все сам.</button>
+          <div class="faq-answer">
+            <p>Продать самостоятельно можно, но важно понимать несколько вещей: большинство звонков — от агентов, предлагающих свои услуги, а не покупателей. Это занимает время и не даёт объективной картины спроса. Собственники редко собирают обратную связь. Без неё сложно понять, почему объект не выбирают и что мешает продаже. "Знакомый юрист" — не продажник. Он оформляет сделку, но не занимается маркетингом, переговорами и созданием спроса. Задача агента — продать дороже, чем собственник сделал бы сам. За счёт подготовки, правильной подачи, фильтрации покупателей и грамотных переговоров результат по цене и условиям почти всегда выше. Если решите продавать сами — удачи, это возможно. Если через время почувствуете что что-то идёт не так — напишите, разберём ситуацию.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact contact-dark">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Связаться</h2>
+        <p class="contact-subtitle animate-on-scroll" data-animate="fade-in-up">Начнём с разговора — без спешки, без обязательств.</p>
+        <div class="contact-main-grid animate-on-scroll" data-animate="fade-in-up">
+          <div class="contact-block">
+            <h3 class="contact-label">Прямой контакт</h3>
+            <a class="contact-link" href="tel:+79118461965">+7 911 846-19-65</a>
+          </div>
+
+          <div class="contact-block">
+            <h3 class="contact-label">Мессенджеры</h3>
+            <a class="contact-link" href="https://wa.me/79938899627" target="_blank" rel="noopener">WhatsApp</a>
+            <a class="contact-link" href="https://t.me/semengme" target="_blank" rel="noopener">Telegram</a>
+          </div>
+
+          <div class="contact-block">
+            <h3 class="contact-label">Встречи с клиентами</h3>
+            <p class="contact-link">Санкт-Петербург, наб. Мойки, д.36, БЦ "Сенатор".<br>Пространство "Office Agent"</p>
+          </div>
+        </div>
+
+        <div class="contact-form-wrapper">
+          <h3 class="contact-form-title">Написать</h3>
+          <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
+            <input type="hidden" name="access_key" value="15cc9dfa-af27-418a-aae7-5a195d354206">
+            <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+            <div class="contact-form-row">
+              <input class="contact-form-control" type="tel" name="phone" placeholder="Телефон" required>
+              <input class="contact-form-control" type="text" name="name" placeholder="Имя">
+              <textarea class="contact-form-control" name="message" placeholder="Сообщение" required></textarea>
+            </div>
+            <label class="consent-label" style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--muted, #888);margin:12px 0;line-height:1.4;">
+              <input type="checkbox" name="consent" required style="margin-top:2px;flex-shrink:0;">
+              <span>Согласен(-на) на обработку персональных данных в соответствии с <a href="privacy-policy.html" target="_blank" style="color:inherit;text-decoration:underline;">политикой конфиденциальности</a></span>
+            </label>
+            <button class="contact-form-submit" type="submit">Отправить</button>
+          </form>
+        </div>
+
+        <div class="contact-divider"></div>
+
+        <p style="font-size:15px;line-height:1.7;color:rgba(229,229,229,0.5);font-weight:300;max-width:480px;margin-bottom:24px;">Если кто-то из знакомых думает о продаже или покупке — порекомендуйте меня. За каждую состоявшуюся сделку я скажу спасибо не только словами.</p>
+        <a href="/referral.html" class="contact-form-submit referral-btn" style="text-decoration:none; margin-bottom: 56px;">
+          Рекомендовать меня →
+        </a>
+
+        <div class="contact-channel">
+          <p class="channel-intro">Веду канал о недвижимости — записываю наблюдения и опыт.</p>
+          <a class="channel-link" href="https://t.me/mezhdu_pokazami" target="_blank" rel="noopener">
+            <span class="channel-name">Между показами</span>
+            <span class="channel-meta">· Telegram</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer site-footer-dark">
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> Семён Гончаров. Агент по недвижимости.</div>
+      <div class="footer-links">
+        <a href="privacy-policy.html">Политика персональных данных</a>
+        <a href="#top">Наверх</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Telegram Button -->
+  <a href="https://t.me/semengme" class="floating-telegram" aria-label="Написать в Telegram" target="_blank" rel="noopener noreferrer">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+    </svg>
+  </a>
+
+  <script src="main-new-clean.js?v=3" defer></script>
+<div id="cookie-banner" style="display:none;position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#0A0A0A;color:#F5F5F5;padding:20px 24px;border-top:1px solid rgba(255,255,255,0.12);">
+  <div style="max-width:1440px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;">
+    <p style="font-family:'Inter',sans-serif;font-size:13px;line-height:1.6;color:#CCCCCC;margin:0;max-width:640px;">
+      Сайт использует файлы cookie для аналитики и улучшения работы. Подробнее — в <a href="privacy-policy.html" style="color:#F5F5F5;text-decoration:underline;">политике конфиденциальности</a>.
+    </p>
+    <div style="display:flex;gap:12px;flex-shrink:0;">
+      <button id="cookie-decline" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;background:transparent;color:#999999;border:1px solid rgba(255,255,255,0.2);padding:10px 18px;cursor:pointer;">Отказаться</button>
+      <button id="cookie-accept" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;background:#0066FF;color:#FFFFFF;border:none;padding:10px 18px;cursor:pointer;">Принять</button>
+    </div>
+  </div>
+</div>
+<script>
+(function() {
+  var CONSENT_KEY = "cookie_consent";
+  var banner = document.getElementById("cookie-banner");
+
+  function getConsent() {
+    try { return localStorage.getItem(CONSENT_KEY); } catch(e) { return null; }
+  }
+  function setConsent(value) {
+    try { localStorage.setItem(CONSENT_KEY, value); } catch(e) {}
+  }
+  function deleteCookiesFor(names) {
+    names.forEach(function(name) {
+      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=." + location.hostname + ";";
+    });
+  }
+
+  var consent = getConsent();
+  if (!consent) {
+    banner.style.display = "block";
+  }
+
+  document.getElementById("cookie-accept").addEventListener("click", function() {
+    setConsent("accepted");
+    banner.style.display = "none";
+  });
+
+  document.getElementById("cookie-decline").addEventListener("click", function() {
+    setConsent("declined");
+    banner.style.display = "none";
+    // Удаляем куки Яндекс.Метрики и Google Analytics при отказе
+    deleteCookiesFor(["_ym_uid", "_ym_d", "_ym_isad", "_ga", "_gid", "_gat"]);
+  });
+})();
+</script>
+</body>
+</html>
