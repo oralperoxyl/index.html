@@ -157,7 +157,7 @@ p {
 .section-frame {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 160px var(--space-lg);
+  padding: 52px var(--space-lg);
   border-top: none;
 }
 
@@ -168,10 +168,6 @@ p {
 
 .text-narrow {
   max-width: var(--measure);
-}
-
-.rule {
-  display: none;
 }
 
 .content-card {
@@ -264,7 +260,7 @@ p {
 
 .hero {
   background: var(--bg-main);
-  padding: clamp(48px, 8vh, 96px) 0 clamp(80px, 12vh, 160px);
+  padding: clamp(48px, 8vh, 96px) 0 52px;
   position: relative;
   overflow: hidden;
 }
@@ -403,10 +399,6 @@ p {
   outline-offset: 2px;
 }
 
-#newbuild .btn {
-  margin-top: 32px;
-}
-
 .case-toggle {
   padding: 0;
   margin-top: 12px;
@@ -450,7 +442,7 @@ p {
 
 .section-work {
   background-color: #FBFAF7;
-  padding: 64px 0 140px;
+  padding: 52px 0;
 }
 
 .work-container {
@@ -631,7 +623,7 @@ p {
 .process-steps {
   list-style: none;
   padding: 0;
-  margin: 48px 0 56px;
+  margin: 48px 0 0;
   display: grid;
   gap: 28px;
 }
@@ -670,6 +662,7 @@ p {
 
 .process-bridge {
   margin-top: 40px;
+  margin-bottom: 0;
   max-width: var(--measure-narrow);
   font-size: 16px;
   line-height: 1.7;
@@ -1029,63 +1022,64 @@ p {
 /* Floating Telegram Button */
 .floating-telegram {
   position: fixed;
-  bottom: 32px;
-  right: 32px;
-  width: 64px;
-  height: 64px;
+  bottom: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
   background: #0088cc;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-white);
-  box-shadow: 0 4px 16px rgba(0, 136, 204, 0.3),
-              0 8px 32px rgba(0, 136, 204, 0.15);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.25s ease, transform 0.25s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+  transition: opacity 0.2s ease, visibility 0s linear 0s;
   z-index: 999;
   text-decoration: none;
   cursor: pointer;
   opacity: 0.85;
 }
 
-.floating-telegram.is-hidden-in-hero {
+/* Hidden: hero, contact/footer zone, open mobile menu, visible cookie banner.
+   visibility removes it from clicks and the Tab order. */
+.floating-telegram.is-hidden-in-hero,
+.floating-telegram.is-hidden {
   opacity: 0;
-  transform: scale(0.8);
+  visibility: hidden;
   pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
 }
 
 .floating-telegram:hover {
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 8px 24px rgba(0, 136, 204, 0.4),
-              0 12px 48px rgba(0, 136, 204, 0.2);
-}
-
-.floating-telegram svg {
-  width: 28px;
-  height: 28px;
-  transition: transform 0.3s ease;
-}
-
-.floating-telegram:hover svg {
-  transform: scale(1.1);
+  opacity: 1;
 }
 
 .floating-telegram:active {
-  transform: translateY(-2px) scale(1.02);
+  opacity: 0.9;
+}
+
+.floating-telegram:focus-visible {
+  outline: none;
+  opacity: 1;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #1C1C1E;
+}
+
+.floating-telegram svg {
+  width: 22px;
+  height: 22px;
 }
 
 @media (max-width: 720px) {
   .floating-telegram {
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    right: calc(16px + env(safe-area-inset-right, 0px));
+    width: 44px;
+    height: 44px;
   }
 
   .floating-telegram svg {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
   }
 }
 
@@ -1148,40 +1142,6 @@ p {
   .case-card {
     min-width: 38%;
   }
-}
-
-.review-form[hidden] {
-  display: none;
-}
-
-.review-form-container {
-  max-width: 680px;
-  margin: 0 auto;
-}
-
-.review-form-title {
-  font-family: var(--font-serif);
-  font-size: 32px;
-  line-height: 1.25;
-  font-weight: 400;
-  color: var(--text-main);
-  margin: 0 0 14px 0;
-}
-
-.review-form-intro {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.65;
-  color: var(--text-muted);
-  margin: 0 0 44px 0;
-  max-width: 580px;
-}
-
-.review-form-inner {
-  padding: 48px 40px;
-  background: #fdfcf9;
-  border: none;
-  border-radius: 18px;
 }
 
 .form-field {
@@ -1385,9 +1345,13 @@ textarea.form-control {
 }
 
 .faq-item.is-open .faq-answer {
-  max-height: 800px;
+  max-height: 1600px;
   opacity: 1;
   padding-bottom: 20px;
+}
+
+.faq-answer p + p {
+  margin-top: 14px;
 }
 
 .faq-answer p {
@@ -1911,7 +1875,7 @@ textarea.contact-form-control {
 
   /* Layout */
   .section-frame {
-    padding: 120px 32px;
+    padding: 32px 32px;
   }
 
   .container {
@@ -1924,12 +1888,12 @@ textarea.contact-form-control {
   }
 
   .work-container {
-    padding: 120px 32px;
+    padding: 32px 32px;
   }
 
   /* Hero */
   .hero {
-    padding: clamp(56px, 10vh, 88px) 0 clamp(64px, 12vh, 96px);
+    padding: clamp(56px, 10vh, 88px) 0 32px;
   }
 
   .hero-inner {
@@ -2223,8 +2187,14 @@ textarea.contact-form-control {
   }
 
   .footer-links {
+    display: flex;
     flex-direction: column;
-    gap: 16px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .footer-links a {
+    margin-left: 0;
   }
 }
 
@@ -2253,15 +2223,15 @@ textarea.contact-form-control {
 
   /* Ultra-compact spacing */
   .section-frame {
-    padding: 80px 20px;
+    padding: 28px 20px;
   }
 
   .work-container {
-    padding: 80px 20px;
+    padding: 28px 20px;
   }
 
   .hero {
-    padding: 32px 0 48px;
+    padding: 32px 0 28px;
   }
 
   .hero-inner {
@@ -2532,39 +2502,6 @@ textarea.contact-form-control {
 }
 
 /* =============================================
-   HERO ОТЗЫВ
-   ============================================= */
-.review-hero {
-  margin: 48px 0 56px;
-  padding: 48px 0;
-  border-top: 1px solid var(--color-gray-200);
-  border-bottom: 1px solid var(--color-gray-200);
-}
-.review-hero-text {
-  font-family: var(--font-serif);
-  font-size: clamp(20px, 3vw, 28px);
-  font-weight: 300;
-  line-height: 1.6;
-  color: var(--text-main);
-  max-width: 860px;
-  margin: 0 0 24px;
-  font-style: italic;
-}
-.review-hero-author {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-.review-hero-author span {
-  opacity: 0.6;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-
-/* =============================================
    FIXES
    ============================================= */
 
@@ -2669,7 +2606,7 @@ textarea.contact-form-control {
   width: 100%;
   height: 860px;
   overflow: hidden;
-  margin: 40px 0 16px;
+  margin: 40px 0 0;
   border-radius: 12px;
   background: #F7F7F4;
   cursor: default;
@@ -2728,15 +2665,6 @@ textarea.contact-form-control {
   text-transform: none;
   letter-spacing: 0;
   opacity: 0.8;
-}
-
-.freecards-hint {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #aaa;
-  margin: 0 0 40px;
 }
 
 @media (max-width: 768px) {
@@ -2893,8 +2821,8 @@ textarea.contact-form-control {
   flex-direction: column;
   align-items: flex-start;
   gap: 0;
-  padding-top: 120px;
-  padding-bottom: 120px;
+  padding-top: 56px;
+  padding-bottom: 56px;
 }
 .cta-mid-label {
   font-family: var(--font-sans);
@@ -2951,7 +2879,7 @@ textarea.contact-form-control {
   color: #fff;
 }
 @media (max-width: 768px) {
-  .cta-mid-inner { padding-top: 80px; padding-bottom: 80px; }
+  .cta-mid-inner { padding-top: 36px; padding-bottom: 36px; }
   .cta-mid-title { font-size: clamp(28px, 7vw, 40px); }
 }
 /* ============================================================
@@ -3403,3 +3331,76 @@ textarea.contact-form-control {
 .sold-card:nth-child(15) img{ object-position: center 42%; }
 .sold-card:nth-child(16) img{ object-position: center 55%; }
 .sold-card:nth-child(17) img{ object-position: center 42%; }
+
+
+/* =============================================
+   CONTACT FORM — consent checkbox
+   ============================================= */
+.contact-dark .consent-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 12px 0;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(229, 229, 229, 0.65);
+  cursor: pointer;
+}
+
+.contact-dark .consent-label input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  margin: 1px 0 0;
+  padding: 0;
+  display: grid;
+  place-content: center;
+  background: transparent;
+  border: 1px solid rgba(229, 229, 229, 0.45);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.contact-dark .consent-label:hover input[type="checkbox"] {
+  border-color: rgba(229, 229, 229, 0.75);
+}
+
+.contact-dark .consent-label input[type="checkbox"]::after {
+  content: "";
+  width: 5px;
+  height: 9px;
+  margin-top: -2px;
+  border: solid #1C1C1E;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+}
+
+.contact-dark .consent-label input[type="checkbox"]:checked {
+  background: #E5E5E5;
+  border-color: #E5E5E5;
+}
+
+.contact-dark .consent-label input[type="checkbox"]:checked::after {
+  opacity: 1;
+}
+
+.contact-dark .consent-label input[type="checkbox"]:focus-visible {
+  outline: 2px solid rgba(229, 229, 229, 0.9);
+  outline-offset: 2px;
+}
+
+.contact-dark .consent-label a {
+  color: rgba(229, 229, 229, 0.85);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.contact-dark .consent-label a:hover {
+  color: #E5E5E5;
+}

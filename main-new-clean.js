@@ -74,22 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const reviewToggle = document.querySelector('.review-toggle');
-  const reviewForm = document.getElementById('review-form');
-  if (reviewToggle && reviewForm) {
-    reviewToggle.addEventListener('click', () => {
-      const isHidden = reviewForm.hasAttribute('hidden');
-      if (isHidden) {
-        reviewForm.removeAttribute('hidden');
-        reviewToggle.setAttribute('aria-expanded', 'true');
-        reviewForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        reviewForm.setAttribute('hidden', '');
-        reviewToggle.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
-
 
   // ============================================
   // PREMIUM SCROLL ANIMATIONS (React Bits Style)
@@ -217,13 +201,52 @@ document.addEventListener('DOMContentLoaded', () => {
   // ============================================
   const heroSectionForFab = document.querySelector('.hero');
   const floatingTelegramBtn = document.querySelector('.floating-telegram');
-  if (heroSectionForFab && floatingTelegramBtn) {
-    const fabObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        floatingTelegramBtn.classList.toggle('is-hidden-in-hero', entry.isIntersecting);
+  if (floatingTelegramBtn) {
+    // Скрываем кнопку: на первом экране; у секции контактов и подвала
+    // (там уже есть обычная ссылка Telegram); при открытом мобильном меню;
+    // пока виден cookie-баннер.
+    let inHero = false;
+    let overlapping = false;
+    const zoneEls = [document.getElementById('contact'), document.querySelector('.site-footer')].filter(Boolean);
+    const cookieBanner = document.getElementById('cookie-banner');
+    const fabNav = document.querySelector('.site-nav');
+
+    if (heroSectionForFab) {
+      new IntersectionObserver((entries) => {
+        entries.forEach(entry => { inHero = entry.isIntersecting; });
+        updateFab();
+      }, { threshold: 0 }).observe(heroSectionForFab);
+    }
+
+    function overlapsZone(pad) {
+      const b = floatingTelegramBtn.getBoundingClientRect();
+      return zoneEls.some(el => {
+        const r = el.getBoundingClientRect();
+        return r.top < b.bottom + pad && r.bottom > b.top - pad &&
+               r.left < b.right + pad && r.right > b.left - pad;
       });
-    }, { threshold: 0 });
-    fabObserver.observe(heroSectionForFab);
+    }
+
+    function updateFab() {
+      // гистерезис: скрываем при касании, показываем снова только после зазора 16px
+      overlapping = overlapsZone(overlapping ? 16 : 0);
+      const menuOpen = !!(fabNav && fabNav.classList.contains('is-open'));
+      const cookieVisible = !!(cookieBanner && getComputedStyle(cookieBanner).display !== 'none');
+      floatingTelegramBtn.classList.toggle('is-hidden-in-hero', inHero);
+      floatingTelegramBtn.classList.toggle('is-hidden', overlapping || menuOpen || cookieVisible);
+    }
+
+    let fabTicking = false;
+    function requestFabUpdate() {
+      if (fabTicking) return;
+      fabTicking = true;
+      requestAnimationFrame(() => { fabTicking = false; updateFab(); });
+    }
+    window.addEventListener('scroll', requestFabUpdate, { passive: true });
+    window.addEventListener('resize', requestFabUpdate);
+    if (fabNav) new MutationObserver(requestFabUpdate).observe(fabNav, { attributes: true, attributeFilter: ['class'] });
+    if (cookieBanner) new MutationObserver(requestFabUpdate).observe(cookieBanner, { attributes: true, attributeFilter: ['style'] });
+    updateFab();
   }
 
   // ============================================
