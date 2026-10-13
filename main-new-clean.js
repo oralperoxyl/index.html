@@ -46,16 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const caseToggles = Array.from(document.querySelectorAll('.case-toggle'));
-  caseToggles.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const card = btn.closest('.case-card');
-      if (!card) return;
-      const isOpen = card.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-  });
-
   const faqItems = Array.from(document.querySelectorAll('.faq-item'));
   faqItems.forEach(item => {
     const btn = item.querySelector('.faq-question');
@@ -79,17 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // PREMIUM SCROLL ANIMATIONS (React Bits Style)
   // ============================================
 
-  // Configuration
   const isMobileDevice = window.innerWidth <= 768;
-  const animationConfig = {
-    threshold: isMobileDevice ? 0.05 : 0.15,
-    rootMargin: isMobileDevice ? '0px 0px -10px 0px' : '0px 0px -50px 0px'
-  };
 
   // Detect if user prefers reduced motion
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Typewriter effect for headings
+  // Эффект «фокуса» для заголовков: из размытия в резкость
   function focusEffect(element) {
     element.style.transition = 'none';
     element.style.opacity = '0';
@@ -115,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Only initialize animations if user hasn't requested reduced motion
+  // Анимации включаем, только если пользователь не отключил движение
   if (!prefersReducedMotion) {
     // Hero-элементы анимируются сразу при загрузке
     const heroSection = document.querySelector('.hero');
@@ -159,64 +144,17 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ============================================
-  // ЧИСЛО АНИМАЦИЯ (счётчик)
+  // ПЛАВАЮЩАЯ КНОПКА TELEGRAM
+  // Скрыта: на первом экране, у секции контактов и подвала (там уже есть
+  // обычная ссылка Telegram), при открытом мобильном меню.
+  // Cookie-баннер кнопку не скрывает: она поднимается над ним.
   // ============================================
-
-  function animateCounter(el, target, suffix, duration) {
-    const start = performance.now();
-    const update = (now) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(eased * target);
-      el.textContent = current + suffix;
-      if (progress < 1) requestAnimationFrame(update);
-    };
-    requestAnimationFrame(update);
-  }
-
-  const badgeObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el = entry.target;
-      const original = el.dataset.original || el.textContent.trim();
-      el.dataset.original = original;
-      const match = original.match(/^(\d+)(\+?\s*.*)$/);
-      if (match) {
-        const target = parseInt(match[1]);
-        const suffix = match[2];
-        animateCounter(el, target, suffix, 1400);
-      }
-      badgeObserver.unobserve(el);
-    });
-  }, { threshold: 0.3 });
-
-  document.querySelectorAll('.about-badge').forEach(el => {
-    badgeObserver.observe(el);
-  });
-
-  // ============================================
-  // ПЛАВАЮЩАЯ КНОПКА TELEGRAM — скрываем внутри хиро
-  // (там уже есть основная кнопка, а плавающая наезжала на текст)
-  // ============================================
-  const heroSectionForFab = document.querySelector('.hero');
   const floatingTelegramBtn = document.querySelector('.floating-telegram');
   if (floatingTelegramBtn) {
-    // Скрываем кнопку: на первом экране; у секции контактов и подвала
-    // (там уже есть обычная ссылка Telegram); при открытом мобильном меню;
-    // пока виден cookie-баннер.
-    let inHero = false;
     let overlapping = false;
     const zoneEls = [document.getElementById('contact'), document.querySelector('.site-footer')].filter(Boolean);
     const cookieBanner = document.getElementById('cookie-banner');
     const fabNav = document.querySelector('.site-nav');
-
-    if (heroSectionForFab) {
-      new IntersectionObserver((entries) => {
-        entries.forEach(entry => { inHero = entry.isIntersecting; });
-        updateFab();
-      }, { threshold: 0 }).observe(heroSectionForFab);
-    }
 
     function overlapsZone(pad) {
       const b = floatingTelegramBtn.getBoundingClientRect();
@@ -228,12 +166,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateFab() {
-      // гистерезис: скрываем при касании, показываем снова только после зазора 16px
+      // Над cookie-баннером: высота баннера уходит в --fab-lift.
+      // Без баннера переменная не задана, и CSS берёт безопасный отступ iPhone.
+      const bannerVisible = !!(cookieBanner && getComputedStyle(cookieBanner).display !== 'none');
+      if (bannerVisible) {
+        floatingTelegramBtn.style.setProperty('--fab-lift', cookieBanner.offsetHeight + 'px');
+      } else {
+        floatingTelegramBtn.style.removeProperty('--fab-lift');
+      }
+      // Первый экран: пока страница прокручена меньше половины высоты окна
+      const onFirstScreen = window.scrollY < window.innerHeight * 0.5;
+      // Гистерезис: скрываем при касании зоны, показываем снова после зазора 16px
       overlapping = overlapsZone(overlapping ? 16 : 0);
       const menuOpen = !!(fabNav && fabNav.classList.contains('is-open'));
-      const cookieVisible = !!(cookieBanner && getComputedStyle(cookieBanner).display !== 'none');
-      floatingTelegramBtn.classList.toggle('is-hidden-in-hero', inHero);
-      floatingTelegramBtn.classList.toggle('is-hidden', overlapping || menuOpen || cookieVisible);
+      floatingTelegramBtn.classList.toggle('is-hidden', onFirstScreen || overlapping || menuOpen);
     }
 
     let fabTicking = false;
