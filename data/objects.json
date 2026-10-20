@@ -1103,7 +1103,80 @@
               "offers": 0
             },
             "feedback": [],
-            "competitors": [],
+            "competitors": [
+              {
+                "address": " ул. Пахомовская, 6к1",
+                "rooms": "1",
+                "area": "36",
+                "price": "7 900 000 ₽",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "https://spb.cian.ru/sale/flat/333676958",
+                "ours": false,
+                "isNew": false
+              },
+              {
+                "address": " ул. Пахомовская, 18к2",
+                "rooms": "1",
+                "area": "33,5",
+                "price": "7 100 000 ₽",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "https://spb.cian.ru/sale/flat/332162707",
+                "ours": false,
+                "isNew": false
+              },
+              {
+                "address": " Северный просп., 123к1",
+                "rooms": "1",
+                "area": "33,3",
+                "price": "7 800 000 ₽",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "https://spb.cian.ru/sale/flat/333711291/",
+                "ours": false,
+                "isNew": false
+              },
+              {
+                "address": "ул. Пахомовская, 14к1",
+                "rooms": "1",
+                "area": "31,7",
+                "price": "7 850 000 ₽",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "https://spb.cian.ru/sale/flat/333705447/",
+                "ours": false,
+                "isNew": false
+              },
+              {
+                "address": "ул. Пахомовская, 12к2",
+                "rooms": "1",
+                "area": "30,9",
+                "price": "7 900 000 ₽",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "https://spb.cian.ru/sale/flat/327484475/",
+                "ours": false,
+                "isNew": false
+              },
+              {
+                "address": "Пискаревский просп., 145к5",
+                "rooms": "1",
+                "area": "29",
+                "price": "7 500 000 ₽",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "https://spb.cian.ru/sale/flat/333723903/",
+                "ours": false,
+                "isNew": false
+              }
+            ],
             "recommendations": [],
             "summary": ""
           }
