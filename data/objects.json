@@ -1089,7 +1089,26 @@
           }
         ]
       },
-      "reports": null
+      "reports": {
+        "weeks": [
+          {
+            "week": 1,
+            "period": "16-20 октября 2026",
+            "dayOnMarket": 4,
+            "price": "",
+            "stats": {
+              "views": 0,
+              "calls": 0,
+              "showings": 0,
+              "offers": 0
+            },
+            "feedback": [],
+            "competitors": [],
+            "recommendations": [],
+            "summary": ""
+          }
+        ]
+      }
     }
   }
 }
