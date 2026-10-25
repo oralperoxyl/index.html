@@ -1207,7 +1207,7 @@
               },
               {
                 "address": "",
-                "rooms": "",
+                "rooms": "1",
                 "area": "",
                 "price": "",
                 "status": "active",
