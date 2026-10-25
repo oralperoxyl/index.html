@@ -1230,8 +1230,8 @@
                 "isNew": false
               },
               {
-                "address": "Санкт-Петербург, Муринская дорога, 25к3",
-                "rooms": "",
+                "address": "Муринская дорога, 25к3",
+                "rooms": "1",
                 "area": "",
                 "price": "",
                 "status": "active",
