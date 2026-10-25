@@ -1199,7 +1199,7 @@
                 "area": "29",
                 "price": "7 500 000 ₽",
                 "status": "sold",
-                "statusText": "В продаже",
+                "statusText": "Снята с продажи",
                 "note": "",
                 "url": "https://spb.cian.ru/sale/flat/333723903/",
                 "ours": false,
