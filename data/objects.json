@@ -1240,6 +1240,18 @@
                 "url": "https://www.avito.ru/sankt-peterburg/kvartiry/1-k._kvartira_308_m_2324_et._7974820284?utm_campaign=native&utm_medium=item_page_ios&utm_source=soc_sharing",
                 "ours": false,
                 "isNew": false
+              },
+              {
+                "address": "",
+                "rooms": "",
+                "area": "",
+                "price": "",
+                "status": "active",
+                "statusText": "В продаже",
+                "note": "",
+                "url": "",
+                "ours": false,
+                "isNew": false
               }
             ],
             "recommendations": [],
