@@ -339,6 +339,38 @@
       color: rgba(229,229,229,0.8);
     }
 
+    /* ── RICH TEXT (абзацы, **жирный**, списки) ── */
+    .rich p { margin: 0 0 0.85em; }
+    .rich p:last-child { margin-bottom: 0; }
+    .rich strong { font-weight: 600; color: inherit; }
+    .summary-text.rich strong { color: #E5E5E5; }
+    .feedback-text.rich strong, .rec-text.rich strong { color: var(--text); }
+    .rich .rich-h { font-weight: 600; letter-spacing: 0.01em; }
+    .rich ul { margin: 0 0 0.85em; padding-left: 1.2em; }
+    .rich ul:last-child { margin-bottom: 0; }
+    .rich li { margin-bottom: 0.3em; }
+
+    /* ── SMA SYNC ── */
+    .btn-sync {
+      font-family: var(--sans); font-size: 12px; font-weight: 500;
+      width: 100%; padding: 10px 16px; margin-bottom: 10px;
+      background: var(--dark); color: #E5E5E5; border: none;
+      border-radius: 4px; cursor: pointer; transition: opacity 0.2s;
+    }
+    .btn-sync:hover { opacity: 0.85; }
+    .btn-sync:disabled { opacity: 0.5; cursor: default; }
+    .sync-sec-title { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 18px 0 6px; }
+    .sync-sec-title:first-child { margin-top: 0; }
+    .sync-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.4; }
+    .sync-row input { margin-top: 3px; accent-color: var(--dark); flex-shrink: 0; }
+    .sync-row .sr-main { flex: 1; min-width: 0; }
+    .sync-row .sr-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .sync-tag { font-size: 9px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 6px; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+    .sync-tag.add { background: #E8F5E9; color: #2D8A4E; }
+    .sync-tag.upd { background: #E6F1FB; color: #185FA5; }
+    .sync-tag.down { background: #FBEAEA; color: #C0392B; }
+    .sync-tag.miss { background: #FFF8E1; color: #B8860B; }
+
     /* ── FOOTER ── */
     .report-footer {
       background: var(--dark); padding: 60px 40px; text-align: center;
@@ -716,6 +748,8 @@
     <div class="edit-group">
       <div class="edit-group-title">Конкуренты</div>
       <div id="e-competitors"></div>
+      <button class="btn-sync" id="btnSmaSync" onclick="smaSyncStart()">⟳ Обновить из СМА (синхронизация)</button>
+      <div class="save-hint" id="smaSyncHint" style="margin:-4px 0 10px;text-align:left;"></div>
       <div style="display:flex;gap:8px;margin-top:4px;">
         <button class="btn-add" onclick="addCompetitor()" style="flex:1;">+ Добавить вручную</button>
         <button class="btn-add" onclick="showSmaImport()" style="flex:1;color:#2D8A4E;border-color:rgba(45,138,78,0.3);">↓ Импорт из СМА</button>
@@ -737,6 +771,22 @@
       </div>
     </div>
 
+    <!-- SMA SYNC MODAL -->
+    <div id="smaSyncModal" style="display:none;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.45);backdrop-filter:blur(4px);align-items:center;justify-content:center;">
+      <div style="background:white;border-radius:12px;padding:32px;max-width:540px;width:92%;max-height:84vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <h3 style="font-family:var(--serif);font-size:18px;font-weight:400;margin:0;padding:0;border:none;">Синхронизация со СМА</h3>
+          <button onclick="smaSyncClose()" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);padding:4px;">✕</button>
+        </div>
+        <p id="smaSyncLead" style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5;"></p>
+        <div id="smaSyncList" style="overflow-y:auto;flex:1;margin-bottom:20px;"></div>
+        <div style="display:flex;gap:8px;">
+          <button id="smaSyncApplyBtn" onclick="smaSyncApply()" style="flex:1;font-family:var(--sans);font-size:13px;font-weight:500;padding:12px;background:var(--dark);color:#E5E5E5;border:none;border-radius:4px;cursor:pointer;">Применить</button>
+          <button onclick="smaSyncClose()" style="font-family:var(--sans);font-size:13px;padding:12px 20px;background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;color:var(--muted);">Отмена</button>
+        </div>
+      </div>
+    </div>
+
     <!-- RECOMMENDATIONS -->
     <div class="edit-group">
       <div class="edit-group-title">Рекомендации</div>
@@ -747,7 +797,8 @@
     <!-- SUMMARY -->
     <div class="edit-group">
       <div class="edit-group-title">Резюме недели</div>
-      <textarea class="edit-textarea" id="e-summary" rows="4" onchange="saveFromPanel()"></textarea>
+      <textarea class="edit-textarea" id="e-summary" rows="8" onchange="saveFromPanel()"></textarea>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px;line-height:1.5;">Абзац — пустая строка. Можно <b>**жирный**</b>, списки с «- » и заголовки с «### ».</p>
     </div>
 
     <button class="btn-save" onclick="saveData()">Сохранить и синхронизировать</button>
@@ -1070,14 +1121,6 @@ function showPicker() {
 }
 
 function renderPicker() {
-  if (!isEditMode) {
-    pickerEl.innerHTML = `
-    <div style="padding:120px 0;text-align:center;">
-      <h1 style="font-family:var(--serif);font-size:28px;font-weight:400;margin-bottom:12px;">Еженедельный отчёт</h1>
-      <p style="color:var(--muted);font-size:15px;">Чтобы посмотреть отчёт по вашему объекту,<br>откройте персональную ссылку, которую вам отправил агент.</p>
-    </div>`;
-    return;
-  }
   const ids = Object.keys(allData.objects);
   pickerEl.innerHTML = `
     <div style="margin-bottom:48px;">
@@ -1115,6 +1158,32 @@ function renderPicker() {
 }
 
 function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+// Безопасное форматирование текста: абзацы, переносы, **жирный**, «- » списки, «### » заголовки
+function fmtRich(raw) {
+  const src = String(raw == null ? '' : raw).replace(/\r\n?/g, '\n').trim();
+  if (!src) return '';
+  const inline = t => escHtml(t)
+    .replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[\s(])\*([^*\n]+?)\*(?=[\s).,;:!?]|$)/g, '$1<em>$2</em>')
+    .replace(/`([^`\n]+)`/g, '$1');
+  return src.split(/\n{2,}/).map(block => {
+    const lines = block.split('\n').map(l => l.replace(/\s+$/, ''));
+    const out = [];
+    let list = null;
+    const flush = () => { if (list) { out.push('<ul>' + list.map(i => '<li>' + inline(i) + '</li>').join('') + '</ul>'); list = null; } };
+    let para = [];
+    const flushP = () => { if (para.length) { out.push('<p>' + para.map(inline).join('<br>') + '</p>'); para = []; } };
+    lines.forEach(l => {
+      let m;
+      if ((m = l.match(/^\s*#{1,6}\s+(.*)$/))) { flush(); flushP(); out.push('<p class="rich-h">' + inline(m[1]) + '</p>'); }
+      else if ((m = l.match(/^\s*(?:[-•*]|\d+[.)])\s+(.*)$/))) { flushP(); (list = list || []).push(m[1]); }
+      else { flush(); para.push(l); }
+    });
+    flush(); flushP();
+    return out.join('');
+  }).join('');
+}
 
 // ─── OBJECT CRUD ───
 async function createObject() {
@@ -1270,7 +1339,7 @@ function render() {
       <div class="feedback-item">
         <div class="feedback-header"><span class="feedback-name">${escHtml(f.name)}</span><span class="feedback-date">${escHtml(f.date)}</span></div>
         <span class="feedback-verdict ${f.verdict}">${escHtml(f.verdictText)}</span>
-        <div class="feedback-text">${escHtml(f.text)}</div>
+        <div class="feedback-text rich">${fmtRich(f.text)}</div>
       </div>`).join('')
     : '<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
 
@@ -1297,7 +1366,7 @@ function render() {
       return `<tr class="${c.ours ? 'our-object' : ''}">
         <td>${addrHtml}</td><td>${escHtml(c.rooms)}</td><td>${escHtml(c.area)}</td>
         <td>${escHtml(c.price)}</td><td><span class="comp-status ${c.status}">${escHtml(c.statusText)}</span></td>
-        <td style="color:var(--muted);font-size:11px;">${escHtml(c.note)}</td></tr>`;
+        <td class="rich" style="color:var(--muted);font-size:11px;">${fmtRich(c.note)}</td></tr>`;
     }).join('') + `<tr><td colspan="6" style="font-size:11px;color:rgba(0,0,0,0.25);padding:12px 16px;border-top:1px solid var(--border);">Данные из СМА · обновите вручную при изменениях</td></tr>`;
 
     document.getElementById('compCards').innerHTML = smaComps.map(c => {
@@ -1310,7 +1379,7 @@ function render() {
       return `<div class="comp-card${cls}">
         <div class="comp-card-top"><div>${addrTag}${badge}<div class="comp-card-meta">${escHtml(meta)}</div></div></div>
         <div class="comp-card-price-row"><span class="comp-card-price">${escHtml(c.price)}</span></div>
-        ${c.note ? '<div class="comp-card-note">' + escHtml(c.note) + '</div>' : ''}
+        ${c.note ? '<div class="comp-card-note rich">' + fmtRich(c.note) + '</div>' : ''}
       </div>`;
     }).join('');
   } else {
@@ -1324,7 +1393,7 @@ function render() {
       return `<tr class="${c.ours ? 'our-object' : ''}">
         <td>${addrHtml}${newBadge}</td><td>${escHtml(c.rooms)}</td><td>${escHtml(c.area)}</td>
         <td>${escHtml(c.price)}</td><td><span class="comp-status ${c.status}">${escHtml(c.statusText)}</span></td>
-        <td>${escHtml(c.note)}</td></tr>`;
+        <td class="rich">${fmtRich(c.note)}</td></tr>`;
     }).join('')
     : '<tr><td colspan="6" style="color:var(--muted);padding:20px 16px;">Пока нет данных</td></tr>';
 
@@ -1349,7 +1418,7 @@ function render() {
         <div class="comp-card-price-row">
           <span class="comp-card-price" style="${priceStyle}">${escHtml(c.price)}</span>
         </div>
-        ${c.note ? '<div class="comp-card-note">' + escHtml(c.note) + '</div>' : ''}
+        ${c.note ? '<div class="comp-card-note rich">' + fmtRich(c.note) + '</div>' : ''}
       </div>`;
     }).join('')
     : '<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
@@ -1359,10 +1428,12 @@ function render() {
   document.getElementById('recList').innerHTML = w.recommendations.map((r, i) => `
     <div class="rec-item">
       <div class="rec-num">${String(i + 1).padStart(2, '0')}</div>
-      <div><div class="rec-title">${escHtml(r.title)}</div><div class="rec-text">${escHtml(r.text)}</div></div>
+      <div><div class="rec-title">${escHtml(r.title)}</div><div class="rec-text rich">${fmtRich(r.text)}</div></div>
     </div>`).join('');
 
-  document.getElementById('summaryText').textContent = w.summary || 'Резюме будет добавлено';
+  const sumEl = document.getElementById('summaryText');
+  sumEl.classList.add('rich');
+  sumEl.innerHTML = fmtRich(w.summary) || 'Резюме будет добавлено';
 }
 
 // ─── EDIT PANEL ───
@@ -1495,7 +1566,7 @@ function renderCompPanel() {
         </div>
         <div class="edit-row"><label class="edit-label">Текст статуса</label><input class="edit-input" data-comp="${i}" data-field="statusText" value="${escAttr(c.statusText)}" onchange="saveFromPanel()"></div>
       </div>
-      <div class="edit-row"><label class="edit-label">Заметка</label><input class="edit-input" data-comp="${i}" data-field="note" value="${escAttr(c.note)}" onchange="saveFromPanel()"></div>
+      <div class="edit-row"><label class="edit-label">Заметка</label><textarea class="edit-textarea" style="min-height:44px;" rows="2" data-comp="${i}" data-field="note" onchange="saveFromPanel()">${escHtml(c.note||'')}</textarea></div>
       <div class="edit-row"><label style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
         <input type="checkbox" data-comp="${i}" data-field="ours" ${c.ours?'checked':''} onchange="saveFromPanel()"> Наш объект
       </label></div>
@@ -1648,6 +1719,222 @@ function importSelectedFromSma() {
   hideSmaImport();
   renderCompPanel(); render(); debounceSave();
 }
+
+// ─── SMA SYNC (одна кнопка: СМА ⇄ конкуренты недели) ───
+function normUrl(u) {
+  u = String(u || '').trim().toLowerCase();
+  if (!u) return '';
+  return u.replace(/^https?:\/\/(www\.)?/, '').replace(/[?#].*$/, '').replace(/\/+$/, '');
+}
+function normAddr(a) {
+  return String(a || '').toLowerCase().replace(/ё/g, 'е')
+    .replace(/(^|[\s,])(санкт-петербург|спб|г\.|ул\.|улица|пр\.|просп\.|проспект|д\.|дом|кв\.|квартира)(?=[\s,.]|$)/g, ' ')
+    .replace(/[^a-zа-я0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
+}
+function numFromStr(v) {
+  if (typeof v === 'number') return v;
+  const n = Number(String(v || '').replace(/[^\d]/g, ''));
+  return n || 0;
+}
+function fmtRub(n) { return n ? Number(n).toLocaleString('ru-RU') + ' ₽' : ''; }
+function cleanNum(v) { return v === undefined || v === null ? '' : String(v); }
+
+function matchComp(list, c, used) {
+  const u = normUrl(c.url), a = normAddr(c.address);
+  let idx = -1;
+  if (u) idx = list.findIndex((x, i) => !used.has(i) && normUrl(x.url) === u);
+  if (idx < 0 && a) idx = list.findIndex((x, i) => !used.has(i) && normAddr(x.address) === a);
+  return idx;
+}
+
+let smaSyncPlan = null;
+
+function smaSyncHint(msg, color) {
+  const el = document.getElementById('smaSyncHint');
+  if (el) { el.textContent = msg || ''; el.style.color = color || ''; }
+}
+
+async function smaSyncStart() {
+  if (!getToken()) { showTokenModal(); return; }
+  const btn = document.getElementById('btnSmaSync');
+  btn.disabled = true; smaSyncHint('Загружаю свежие данные СМА…');
+  try {
+    // 1. сохраняем несохранённые правки, 2. подтягиваем свежий СМА (мог правиться в sma.html)
+    if (saveTimeout) { clearTimeout(saveTimeout); saveTimeout = null; await saveToGitHub(); }
+    const weekIdx = currentWeekIdx, id = currentId;
+    const ok = await loadFromGitHub();
+    if (!ok) { smaSyncHint('Не удалось загрузить данные с GitHub', '#C0392B'); return; }
+    currentId = id; currentWeekIdx = weekIdx;
+    smaSyncBuild();
+  } finally { btn.disabled = false; }
+}
+
+function smaSyncBuild() {
+  const obj = allData.objects[currentId];
+  if (!obj) return;
+  const sma = obj.sma;
+  const w = getCurrentWeek();
+  if (!sma || !Array.isArray(sma.competitors) || !sma.competitors.filter(c => c.address || c.url).length) {
+    smaSyncHint('В СМА этого объекта пока нет конкурентов — заполните их в sma.html', '#B8860B');
+    return;
+  }
+  smaSyncHint('');
+  const smaList = sma.competitors.filter(c => c.address || c.url);
+  const usedRep = new Set();
+  const plan = { add: [], upd: [], miss: [], toSma: [], same: 0 };
+
+  smaList.forEach(sc => {
+    const ri = matchComp(w.competitors, sc, usedRep);
+    const newPrice = numFromStr(sc.price);
+    if (ri < 0) { plan.add.push({ sc }); return; }
+    usedRep.add(ri);
+    const rc = w.competitors[ri];
+    const oldPrice = numFromStr(rc.price);
+    const ch = [];
+    // Цена: актуальная — в отчёте, она уходит в СМА. Если в отчёте цены нет — берём из СМА.
+    if (oldPrice && oldPrice !== newPrice) plan.toSma.push({ sc, rc, from: newPrice ? fmtRub(newPrice) : '—', to: fmtRub(oldPrice) });
+    else if (!oldPrice && newPrice) ch.push({ f: 'price', from: '—', to: fmtRub(newPrice) });
+    if (cleanNum(sc.area) && cleanNum(sc.area) !== cleanNum(rc.area)) ch.push({ f: 'area', from: rc.area || '—', to: cleanNum(sc.area) });
+    if (cleanNum(sc.rooms) && cleanNum(sc.rooms) !== cleanNum(rc.rooms)) ch.push({ f: 'rooms', from: rc.rooms || '—', to: cleanNum(sc.rooms) });
+    if (sc.url && normUrl(sc.url) !== normUrl(rc.url)) ch.push({ f: 'url', from: rc.url || '—', to: sc.url });
+    if (!!sc.ours !== !!rc.ours) ch.push({ f: 'ours', from: rc.ours ? 'да' : 'нет', to: sc.ours ? 'да' : 'нет' });
+    if (ch.length) plan.upd.push({ ri, sc, ch, down: false });
+    else plan.same++;
+  });
+
+  w.competitors.forEach((rc, i) => {
+    if (usedRep.has(i)) return;
+    if (!rc.address && !rc.url) return;
+    // есть в отчёте, нет в СМА: по умолчанию переносим в СМА (двусторонняя синхронизация)
+    plan.miss.push({ ri: i, rc });
+  });
+
+  smaSyncPlan = plan;
+  const list = document.getElementById('smaSyncList');
+  let html = '';
+  const row = (idx, key, tag, tagCls, title, sub, checked) =>
+    `<label class="sync-row"><input type="checkbox" data-sync="${key}" data-i="${idx}" ${checked ? 'checked' : ''}>
+      <div class="sr-main"><div style="font-weight:500;">${escHtml(title)}</div><div class="sr-sub">${sub}</div></div>
+      <span class="sync-tag ${tagCls}">${tag}</span></label>`;
+  const FN = { price: 'цена', area: 'площадь', rooms: 'комнат', url: 'ссылка', ours: 'наш объект' };
+
+  if (plan.add.length) {
+    html += '<div class="sync-sec-title">Новые в СМА → добавить в отчёт</div>';
+    plan.add.forEach((p, i) => {
+      const meta = [p.sc.rooms ? p.sc.rooms + 'к' : '', p.sc.area ? p.sc.area + ' м²' : '', fmtRub(numFromStr(p.sc.price))].filter(Boolean).join(' · ');
+      html += row(i, 'add', 'новый', 'add', p.sc.address || p.sc.url, escHtml(meta), true);
+    });
+  }
+  if (plan.upd.length) {
+    html += '<div class="sync-sec-title">Изменились в СМА → обновить в отчёте</div>';
+    plan.upd.forEach((p, i) => {
+      const rc = w.competitors[p.ri];
+      const sub = p.ch.map(c => FN[c.f] + ': ' + escHtml(String(c.from)) + ' → <b>' + escHtml(String(c.to)) + '</b>').join('<br>');
+      html += row(i, 'upd', p.down ? 'снижение' : 'обновить', p.down ? 'down' : 'upd', rc.address || rc.url, sub, true);
+    });
+  }
+  if (plan.toSma.length) {
+    html += '<div class="sync-sec-title">Цена из отчёта → записать в СМА</div>';
+    plan.toSma.forEach((p, i) => {
+      const sub = 'цена в СМА: ' + escHtml(p.from) + ' → <b>' + escHtml(p.to) + '</b> (из отчёта)';
+      const prevP = numFromStr(p.from), newP = numFromStr(p.to);
+      html += row(i, 'psma', newP < prevP ? 'снижение' : 'цена', newP < prevP ? 'down' : 'upd', p.sc.address || p.rc.address, sub, true);
+    });
+  }
+  if (plan.miss.length) {
+    html += '<div class="sync-sec-title">Есть в отчёте, нет в СМА → добавить в СМА</div>';
+    plan.miss.forEach((p, i) => {
+      const meta = [p.rc.rooms ? p.rc.rooms + 'к' : '', p.rc.area || '', p.rc.price || ''].filter(Boolean).join(' · ');
+      html += row(i, 'miss', 'только тут', 'miss', p.rc.address || p.rc.url, escHtml(meta) + ' · в отчёте останется как есть', !p.rc.ours);
+    });
+  }
+  if (!html) html = '<p style="font-size:14px;color:var(--muted);padding:12px 0;">Всё уже совпадает — менять нечего ✓</p>';
+  else if (plan.same) html += `<p style="font-size:11px;color:var(--muted);padding:12px 0 0;">Без изменений: ${plan.same}. Заметки и тексты статусов в отчёте не затрагиваются.</p>`;
+  else html += '<p style="font-size:11px;color:var(--muted);padding:12px 0 0;">Заметки и тексты статусов в отчёте не затрагиваются.</p>';
+
+  document.getElementById('smaSyncLead').textContent =
+    'Неделя ' + w.week + ' · СМА: ' + smaList.length + ' · в отчёте: ' + w.competitors.length + '. Снимите галочки с того, что менять не нужно.';
+  list.innerHTML = html;
+  document.getElementById('smaSyncApplyBtn').style.display = (plan.add.length || plan.upd.length || plan.toSma.length || plan.miss.length) ? '' : 'none';
+  document.getElementById('smaSyncModal').style.display = 'flex';
+}
+
+function smaSyncClose() {
+  document.getElementById('smaSyncModal').style.display = 'none';
+  smaSyncPlan = null;
+}
+
+async function smaSyncApply() {
+  const plan = smaSyncPlan, obj = allData.objects[currentId];
+  if (!plan || !obj) return;
+  const w = getCurrentWeek();
+  const sel = (key) => new Set([...document.querySelectorAll(`#smaSyncList input[data-sync="${key}"]:checked`)].map(e => +e.dataset.i));
+  const sAdd = sel('add'), sUpd = sel('upd'), sMiss = sel('miss'), sPs = sel('psma');
+  let nAdd = 0, nUpd = 0, nSma = 0, nPrice = 0;
+  plan.toSma.forEach((p, i) => {
+    if (!sPs.has(i)) return;
+    p.sc.price = numFromStr(p.rc.price);
+    nPrice++;
+  });
+
+  plan.add.forEach((p, i) => {
+    if (!sAdd.has(i)) return;
+    const sc = p.sc, ours = !!sc.ours;
+    w.competitors.push({
+      address: sc.address || '', rooms: cleanNum(sc.rooms), area: cleanNum(sc.area),
+      price: fmtRub(numFromStr(sc.price)),
+      status: ours ? 'ours' : 'active', statusText: ours ? 'Наш объект' : 'В продаже',
+      note: '', url: sc.url || '', ours, isNew: !ours
+    });
+    nAdd++;
+  });
+
+  plan.upd.forEach((p, i) => {
+    if (!sUpd.has(i)) return;
+    const rc = w.competitors[p.ri], sc = p.sc;
+    p.ch.forEach(c => {
+      if (c.f === 'price') {
+        rc.price = fmtRub(numFromStr(sc.price));
+      }
+      else if (c.f === 'area') rc.area = cleanNum(sc.area);
+      else if (c.f === 'rooms') rc.rooms = cleanNum(sc.rooms);
+      else if (c.f === 'url') rc.url = sc.url;
+      else if (c.f === 'ours') {
+        rc.ours = !!sc.ours;
+        if (rc.ours) { rc.status = 'ours'; rc.statusText = 'Наш объект'; }
+        else if (rc.status === 'ours') { rc.status = 'active'; rc.statusText = 'В продаже'; }
+      }
+    });
+    nUpd++;
+  });
+
+  plan.miss.forEach((p, i) => {
+    if (!sMiss.has(i)) return;
+    if (!obj.sma) obj.sma = { competitors: [], recommendations: [], priceFrom: 0, priceTo: 0 };
+    if (!obj.sma.competitors) obj.sma.competitors = [];
+    const rc = p.rc;
+    obj.sma.competitors.push({
+      address: rc.address || '', agent: '', area: rc.area || '', rooms: rc.rooms || '', floor: '', condition: '',
+      price: numFromStr(rc.price), ppm: 0, bargain: '', adDate: '', adViews: '',
+      url: rc.url || '', comment: '', ours: !!rc.ours, visited: false
+    });
+    nSma++;
+  });
+
+  smaSyncClose();
+  renderCompPanel(); render();
+  if (saveTimeout) { clearTimeout(saveTimeout); saveTimeout = null; }
+  smaSyncHint('Сохраняю…');
+  const ok = await saveToGitHub();
+  const parts = [];
+  if (nAdd) parts.push('добавлено в отчёт: ' + nAdd);
+  if (nUpd) parts.push('обновлено: ' + nUpd);
+  if (nPrice) parts.push('цен записано в СМА: ' + nPrice);
+  if (nSma) parts.push('добавлено в СМА: ' + nSma);
+  const summary = parts.length ? parts.join(' · ') : 'ничего не выбрано';
+  smaSyncHint(ok ? '✓ ' + summary + ' — сохранено' : '✕ ' + summary + ' — не удалось сохранить, нажмите «Сохранить и синхронизировать»', ok ? '#2D8A4E' : '#C0392B');
+}
+
 function removeComp(i) {
   getCurrentWeek().competitors.splice(i, 1);
   renderCompPanel(); render(); debounceSave();
