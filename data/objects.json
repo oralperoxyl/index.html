@@ -1270,7 +1270,15 @@
               "showings": 2,
               "offers": 0
             },
-            "feedback": [],
+            "feedback": [
+              {
+                "name": "",
+                "date": "",
+                "verdict": "thinking",
+                "verdictText": "Думают",
+                "text": ""
+              }
+            ],
             "competitors": [
               {
                 "address": " ул. Пахомовская, 6к1",
