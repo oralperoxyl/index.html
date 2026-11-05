@@ -147,7 +147,7 @@ p {
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   border-bottom: 1px solid var(--color-gray-200);
   z-index: 100;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .header-inner {
@@ -229,17 +229,6 @@ p {
   max-width: var(--container-max);
   margin: 0 auto;
   padding: 0 var(--space-lg);
-}
-
-.hero-kicker {
-  font-family: var(--font-sans);
-  font-size: 13px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  margin-bottom: clamp(24px, 4vw, 48px);
-  font-weight: var(--fw-medium);
-  opacity: 0.8;
 }
 
 .hero-title {
@@ -606,7 +595,7 @@ p {
   justify-content: center;
   color: var(--color-white);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
-  transition: opacity 0.2s ease, visibility 0s linear 0s, bottom 0.2s ease;
+  transition: opacity 0.2s ease, visibility 0s linear 0s;
   z-index: 999;
   text-decoration: none;
   cursor: pointer;
@@ -957,8 +946,7 @@ p {
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: var(--fw-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.01em;
   color: var(--text-muted);
   line-height: 1.2;
   margin: 0 0 20px 0;
@@ -1053,8 +1041,7 @@ p {
   line-height: 1.3;
   color: var(--text-muted);
   opacity: 0.65;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 
 .contact-form-wrapper {
@@ -1065,8 +1052,7 @@ p {
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: var(--fw-medium);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.01em;
   color: var(--text-muted);
   line-height: 1.2;
   opacity: 0.6;
@@ -1134,8 +1120,7 @@ textarea.contact-form-control {
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: var(--fw-medium);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
@@ -1183,11 +1168,6 @@ textarea.contact-form-control {
 /* Standard smartphones portrait (481-720px) */
 @media (max-width: 720px) {
   /* Header */
-  .site-header {
-    position: sticky;
-    top: 0;
-  }
-
   .header-inner {
     padding: 12px 24px;
     min-height: 56px;
@@ -1681,7 +1661,7 @@ textarea.contact-form-control {
    ============================================= */
 .hero-with-photo {
   display: grid;
-  grid-template-columns: 1fr 340px;
+  grid-template-columns: minmax(0, 1fr) 340px;
   gap: 80px;
   align-items: start;
 }
@@ -1699,7 +1679,7 @@ textarea.contact-form-control {
   background: #f0efec;
 }
 @media (max-width: 1024px) {
-  .hero-with-photo { grid-template-columns: 1fr 260px; gap: 48px; }
+  .hero-with-photo { grid-template-columns: minmax(0, 1fr) 260px; gap: 48px; }
   .hero-photo { height: 420px; }
 }
 
@@ -1771,8 +1751,7 @@ textarea.contact-form-control {
   font-family: var(--font-sans);
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: inherit;
   opacity: 0.7;
   margin: 0;
@@ -1825,10 +1804,9 @@ textarea.contact-form-control {
   border: none;
   padding: 0;
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
   color: inherit;
   opacity: 0.5;
   cursor: pointer;
@@ -1838,7 +1816,7 @@ textarea.contact-form-control {
 
 /* Плавная анимация высоты карточки */
 .freecard {
-  transition: box-shadow 0.2s ease, transform 0.15s ease, height 0.3s ease;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
 }
 .freecard.is-expanded {
   z-index: 500;
@@ -1888,7 +1866,7 @@ textarea.contact-form-control {
 /* HERO PHOTO — mobile */
 @media (max-width: 768px) {
   .hero-with-photo { display: flex; flex-direction: column-reverse; gap: 0; }
-  .hero-photo-wrap { width: 100vw; margin-left: -32px; overflow: hidden; }
+  .hero-photo-wrap { width: auto; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw); align-self: stretch; overflow: hidden; }
   .hero-photo {
     width: 100%;
     height: auto;
@@ -1901,7 +1879,6 @@ textarea.contact-form-control {
   .hero-content { padding-top: 40px; }
 }
 @media (max-width: 480px) {
-  .hero-photo-wrap { margin-left: -20px; }
   .hero-photo { min-height: 85vw; }
 }
 
@@ -1920,14 +1897,6 @@ textarea.contact-form-control {
   gap: 0;
   padding-top: 56px;
   padding-bottom: 56px;
-}
-.cta-mid-label {
-  font-family: var(--font-sans);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(229,229,229,0.45);
-  margin: 0 0 24px;
 }
 .cta-mid-title {
   font-family: var(--font-serif);
@@ -1955,8 +1924,7 @@ textarea.contact-form-control {
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
   text-decoration: none;
   border-radius: 100px;
   border: 1px solid rgba(229,229,229,0.4);
@@ -2018,7 +1986,7 @@ textarea.contact-form-control {
   transition: background .2s, color .2s, border-color .2s;
 }
 .sold-nav-btn:hover{ background: var(--text-main); color: #fff; border-color: var(--text-main); }
-.sold-nav-btn:disabled{ opacity: .35; cursor: default; background: transparent; color: var(--text-main); }
+.sold-nav-btn:disabled{ cursor: not-allowed; background: #F1F0EC; border-color: rgba(0,0,0,.06); color: #B5B3AD; }
 @media (max-width: 768px){ .sold-nav{ display: none; } }
 
 /* --- Horizontal rail --- */
@@ -2161,9 +2129,8 @@ textarea.contact-form-control {
 }
 .sold-card-city{
   font-family: var(--font-sans);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.01em;
   font-weight: var(--fw-regular, 400);
   color: rgba(255,255,255,.78);
   padding: 5px 10px 4px;
@@ -2178,9 +2145,8 @@ textarea.contact-form-control {
 }
 .sold-card-status{
   font-family: var(--font-sans);
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.01em;
   font-weight: var(--fw-medium, 500);
   color: #fff;
   background: var(--accent, #0066FF);
@@ -2230,9 +2196,8 @@ textarea.contact-form-control {
 .sold-card-metric em{
   font-style: normal;
   font-family: var(--font-sans);
-  font-size: 9px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.01em;
   font-weight: var(--fw-regular, 400);
   color: rgba(255,255,255,.55);
 }
@@ -2312,9 +2277,8 @@ textarea.contact-form-control {
   padding-right: 48px;
 }
 .sold-detail-head .sold-detail-eyebrow{
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.01em;
   color: var(--text-muted);
   font-weight: 500;
 }
@@ -2344,9 +2308,8 @@ textarea.contact-form-control {
 .sold-detail-metrics > div{ display: flex; flex-direction: column; gap: 2px; }
 .sold-detail-metrics em{
   font-style: normal;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.01em;
   color: var(--text-muted);
   font-weight: 400;
 }
@@ -2377,11 +2340,11 @@ textarea.contact-form-control {
 .sold-detail-aside{ min-width: 0; }
 .sold-detail-aside .sold-detail-gallery{
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 4px;
 }
 .sold-detail-aside .sold-detail-gallery:has(> *:nth-child(2)){
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 .sold-detail-aside .sold-detail-gallery picture,
 .sold-detail-aside .sold-detail-gallery img{
@@ -2395,11 +2358,11 @@ textarea.contact-form-control {
   /* On tablet/mobile, aside sits below text; keep gallery as 2-col thumbnails
      so single images don't blow up to full width */
   .sold-detail-aside .sold-detail-gallery{
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     max-width: 420px;
   }
   .sold-detail-aside .sold-detail-gallery:not(:has(> *:nth-child(2))){
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     max-width: 260px;
   }
 }
@@ -2499,3 +2462,6 @@ textarea.contact-form-control {
 .contact-dark .consent-label a:hover {
   color: #E5E5E5;
 }
+
+/* Страховка от горизонтальной прокрутки (clip не создаёт скролл-контейнер, sticky работает) */
+html, body { overflow-x: clip; }
