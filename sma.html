@@ -1238,7 +1238,7 @@ async function initApp(){
         at: new Date().toISOString(), mode: mode, input: body.params || { offerUrl: body.offerUrl },
         prices: ((d.prices_and_charts && d.prices_and_charts.prices) || []).map(function (p) { return { name: p.name, price: p.price, ppm: p.price_per_meter }; }),
         similar: Array.isArray(d.similar_offers) ? d.similar_offers.slice(0, 30) : [],
-        sales: Array.isArray(d.sales) ? d.sales.slice(0, 10) : [],
+        sales: Array.isArray(d.sales) ? d.sales.slice(0, 40) : [],
         header: d.header || null
       };
       lastRaw = d;
@@ -1303,9 +1303,11 @@ async function initApp(){
       }).join('');
       h += '<button class="est-btn ghost" id="estApplyComps">Добавить выбранные в конкуренты</button>';
     }
+    if ((v.sales || []).length) h += '<label style="display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted);margin-top:12px"><input type="checkbox" id="estShowSales"' + (v.hideSales ? '' : ' checked') + '> Показывать клиенту реальные сделки (' + v.sales.length + ')</label>';
     h += '<details style="margin-top:10px"><summary style="font-size:11px;color:var(--muted);cursor:pointer">Показать сырой ответ (для отладки)</summary><div class="est-raw" id="estRaw"></div></details>';
     res.innerHTML = h;
     var raw = $('estRaw'); if (raw) raw.textContent = JSON.stringify(lastRaw || { prices: v.prices, similar: v.similar.slice(0, 2), sales: v.sales.slice(0, 1) }, null, 1).slice(0, 6000);
+    var ss = $('estShowSales'); if (ss) ss.onchange = function () { cur().valuation.hideSales = !ss.checked; render(); debounceSave(); };
     var ap = $('estApplyPrice'); if (ap) ap.onclick = applyPrice;
     var ac = $('estApplyComps'); if (ac) ac.onclick = applyComps;
   }
@@ -1336,7 +1338,69 @@ async function initApp(){
     msg('Добавлено: ' + added + (skipped ? ', уже были: ' + skipped : '') + '. Проверьте «Торг» и добавьте комментарии.', 'ok');
   }
 
+  /* ── раздел «Реальные сделки» в отчёте (виден и клиенту) ── */
+  function ru(v) { var n = Number(String(v == null ? '' : v).replace(/[^\d,.]/g, '').replace(',', '.')); return isFinite(n) ? n : 0; }
+  var ROM = { I: 1, II: 2, III: 3, IV: 4 };
+  function qKey(l) { var m = String(l || '').match(/^(I{1,3}|IV)\s*кв\.?\s*(\d{4})/); return m ? Number(m[2]) * 10 + ROM[m[1]] : 0; }
+  function qShort(l) { var m = String(l || '').match(/^(I{1,3}|IV)\s*кв\.?\s*(\d{4})/); return m ? m[1] + ' кв ' + String(m[2]).slice(2) : String(l || ''); }
+
+  function mountSales() {
+    if ($('salesSection')) return;
+    var rec = $('recSection'); if (!rec) return;
+    var sec = document.createElement('section');
+    sec.className = 'report-section'; sec.id = 'salesSection'; sec.style.display = 'none';
+    sec.innerHTML = '<div class="section-label">Рынок · сделки</div><h2 class="section-title">Реальные сделки по данным Росреестра</h2>'
+      + '<div id="salesIntro" class="intro-text" style="margin-bottom:32px"></div><div id="salesChart"></div>'
+      + '<div style="overflow-x:auto;margin-top:32px"><table class="comp-table" style="min-width:520px"><thead><tr><th>Период</th><th>Площадь</th><th>Этаж</th><th>Цена</th><th>За м²</th></tr></thead><tbody id="salesBody"></tbody></table></div>'
+      + '<p style="font-size:12px;color:var(--muted);margin-top:16px;line-height:1.6">Это фактические цены, по которым квартиры были проданы в вашей локации в разные периоды (данные предоставляет партнёр). Они обычно ниже цен в объявлениях: разницу между ценой предложения и ценой сделки даёт торг.</p>';
+    rec.parentNode.insertBefore(sec, rec);
+    if (typeof reportEls !== 'undefined' && reportEls.indexOf('salesSection') < 0) reportEls.push('salesSection');
+  }
+
+  function renderSales() {
+    mountSales();
+    var sec = $('salesSection'), s = cur(); if (!sec || !s) return;
+    var v = s.valuation, rows = ((v && v.sales) || []).map(function (x) {
+      return { q: x.quarter_label, k: qKey(x.quarter_label), area: ru(x.area), floor: ru(x.floor), price: ru(x.price), ppm: ru(x.price_per_square_unit), anchor: !!x.is_from_anchor_house };
+    }).filter(function (x) { return x.price > 0; });
+    if (!rows.length || (v && v.hideSales)) { sec.style.display = 'none'; return; }
+    sec.style.display = '';
+    rows.forEach(function (x) { if (!x.ppm && x.area) x.ppm = Math.round(x.price / x.area); });
+    rows.sort(function (a, b) { return b.k - a.k; });
+    var ppms = rows.map(function (x) { return x.ppm; }).filter(Boolean);
+    var avg = ppms.length ? Math.round(ppms.reduce(function (a, b) { return a + b; }, 0) / ppms.length) : 0;
+    $('salesIntro').innerHTML = '<p>Сделок в выборке: <strong style="color:var(--text)">' + rows.length + '</strong>'
+      + (ppms.length ? '. Цена за м² — от <strong style="color:var(--text)">' + fmt(Math.min.apply(null, ppms)) + '</strong> до <strong style="color:var(--text)">' + fmt(Math.max.apply(null, ppms)) + ' ₽</strong>, в среднем <strong style="color:var(--text)">' + fmt(avg) + ' ₽/м²</strong>' : '') + '.</p>';
+
+    var pts = rows.filter(function (x) { return x.ppm > 0; }).slice(0, 14).reverse();
+    var area = parseNum(s.area), sm = s.sma || {};
+    var recLo = sm.priceFrom && area ? Math.round(Math.min(sm.priceFrom, sm.priceTo) / area) : 0;
+    var recHi = sm.priceTo && area ? Math.round(Math.max(sm.priceFrom, sm.priceTo) / area) : 0;
+    if (pts.length < 2) { $('salesChart').innerHTML = ''; }
+    else {
+      var all = pts.map(function (x) { return x.ppm; }); if (recLo) all.push(recLo); if (recHi) all.push(recHi);
+      var maxP = Math.max.apply(null, all) * 1.08, minP = Math.min.apply(null, all) * 0.88, rng = maxP - minP, plotH = 220;
+      var pct = function (x) { return Math.max(0, Math.min(100, (x - minP) / rng * 100)); };
+      var grid = '';
+      for (var i = 0; i <= 4; i++) grid += '<div class="ch-grid" style="bottom:' + (i * 25) + '%;"><div class="ch-grid-label">' + Math.round((minP + rng * i / 4) / 1000) + 'к</div></div>';
+      var zone = recLo && recHi ? '<div class="ch-zone" style="bottom:' + pct(recLo) + '%;height:' + (pct(recHi) - pct(recLo)) + '%;"><div class="ch-zone-label">рек. ' + Math.round(recLo / 1000) + '–' + Math.round(recHi / 1000) + 'к ₽/м²</div></div>' : '';
+      var cols = pts.map(function (x) {
+        return '<div class="ch-col"><div class="ch-val" style="color:rgba(0,0,0,.45)">' + Math.round(x.ppm / 1000) + 'к</div>'
+          + '<div class="ch-ball" style="background:#0066FF"></div><div class="ch-stick" style="height:' + Math.round(pct(x.ppm) / 100 * plotH) + 'px;background:rgba(0,102,255,.25)"></div>'
+          + '<div style="font-size:9px;color:var(--muted);margin-top:8px;white-space:nowrap">' + esc(qShort(x.q)) + '</div></div>';
+      }).join('');
+      $('salesChart').innerHTML = '<div style="position:relative;padding-left:40px"><div class="ch-area" style="height:' + plotH + 'px;">' + grid + zone + cols + '</div></div>'
+        + '<div style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.6">На графике — цена за м² по реальным сделкам (последние ' + pts.length + '). Данные охватывают разные периоды и относятся к вашей локации; их предоставляет наш партнёр. Зелёная полоса — рекомендуемая стоимость вашего объекта.</div>';
+    }
+    $('salesBody').innerHTML = rows.map(function (x) {
+      return '<tr><td>' + esc(x.q || '—') + '</td><td>' + (x.area ? x.area.toLocaleString('ru-RU') + ' м²' : '—') + '</td><td>' + (x.floor || '—') + '</td>'
+        + '<td style="white-space:nowrap;font-weight:500">' + Number(x.price).toLocaleString('ru-RU') + ' ₽</td><td style="white-space:nowrap">' + (x.ppm ? Number(x.ppm).toLocaleString('ru-RU') + ' ₽' : '—') + '</td></tr>';
+    }).join('');
+  }
+
   /* ── хуки в sma.html ── */
+  var origRender = window.render;
+  window.render = function () { origRender.apply(this, arguments); try { renderSales(); } catch (e) { console.error(e); } };
   var origPopulate = window.populatePanel;
   window.populatePanel = function () { origPopulate.apply(this, arguments); lastRaw = null; try { renderEst(); } catch (e) { console.error(e); } };
   mount();
