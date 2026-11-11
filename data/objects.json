@@ -1513,7 +1513,7 @@
         "priceTo": 6660000
       },
       "strategy": {
-        "priceFrom": 0,
+        "priceFrom": 5800000,
         "priceTo": 0,
         "comm1": 3,
         "comm2": 4,
