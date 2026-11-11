@@ -1518,7 +1518,7 @@
         "comm1": 3,
         "comm2": 4,
         "comm3": 6,
-        "start1": 0,
+        "start1": 7000000,
         "start2": 0,
         "start3": 0,
         "marketing": [
