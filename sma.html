@@ -1252,6 +1252,7 @@ async function initApp(){
   /* ── результат ── */
   function getv(o, keys) { for (var i = 0; i < keys.length; i++) { var v = o[keys[i]]; if (v != null && v !== '') return v; } return ''; }
   function fmtDate(x) {
+    if (typeof x === 'number' || /^\d+$/.test(String(x))) { x = Number(x); if (x < 1e12) x *= 1000; }
     var d = new Date(x); if (isNaN(d)) return '';
     return ('0' + d.getDate()).slice(-2) + '.' + ('0' + (d.getMonth() + 1)).slice(-2) + '.' + d.getFullYear();
   }
@@ -1265,15 +1266,18 @@ async function initApp(){
   }
   function offerToComp(o) {
     var c = blankComp();
-    c.address = String(getv(o, ['address', 'full_address', 'title']) || '');
-    c.url = String(getv(o, ['url', 'link', 'offer_url', 'offerUrl']) || '');
+    c.address = String(getv(o, ['address_string', 'address', 'full_address', 'title']) || '')
+      .replace(/^Ленинградская область,\s*/i, '').replace(/^[^,]*район,\s*/i, '');
+    c.url = String(getv(o, ['offer_link', 'url', 'link', 'offer_url', 'offerUrl']) || '').replace(/[?#].*$/, '');
     c.price = Math.round(num(getv(o, ['price', 'price_rub'])));
     c.area = String(getv(o, ['square', 'area', 'total_area', 'square_total']) || '');
     var fl = getv(o, ['floor']), ft = getv(o, ['floors_total', 'floor_total', 'floorTotal', 'floors_count']);
+    var rp = String(getv(o, ['repair_title', 'repair']) || '');
+    c.condition = /^требуется/i.test(rp) ? 'Требуется ремонт' : rp;
     c.floor = fl ? (ft ? fl + '/' + ft : String(fl)) : '';
     var cr = getv(o, ['created', 'created_at', 'date', 'published']);
     c.adDate = cr ? 'С ' + fmtDate(cr) : '';
-    var vw = getv(o, ['views', 'views_total', 'total_views']); c.adViews = vw ? String(vw) : '';
+    var vw = getv(o, ['views_count', 'views', 'views_total', 'total_views']); c.adViews = vw ? String(vw) : '';
     c.bargain = bargainOf(o);
     c.ppm = c.price && num(c.area) ? Math.round(c.price / num(c.area)) : 0;
     return c;
