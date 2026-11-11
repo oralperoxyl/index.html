@@ -1487,7 +1487,7 @@
             "agent": "Агент",
             "area": "40,1",
             "rooms": "1",
-            "floor": "",
+            "floor": "14/17",
             "condition": "",
             "price": 0,
             "ppm": 0,
