@@ -1387,6 +1387,22 @@
           }
         ]
       }
+    },
+    "жк-сибирь": {
+      "address": "ЖК Сибирь",
+      "area": 0,
+      "rooms": 0,
+      "floor": "",
+      "location": "",
+      "date": "11 ноября 2026 г.",
+      "sma": {
+        "competitors": [],
+        "recommendations": [],
+        "priceFrom": 0,
+        "priceTo": 0
+      },
+      "strategy": null,
+      "reports": null
     }
   }
 }
