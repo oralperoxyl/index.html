@@ -1485,8 +1485,8 @@
           {
             "address": "Тельмана, ул. Невская, 1",
             "agent": "Агент",
-            "area": "",
-            "rooms": "",
+            "area": "40,1",
+            "rooms": "1",
             "floor": "",
             "condition": "",
             "price": 0,
