@@ -215,6 +215,21 @@ a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important
   .price-total{flex-direction:column;align-items:flex-start;gap:6px}
   .price-total-sum{font-size:24px}
 }
+
+/* КЕЙСЫ */
+.cs-kicker{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:baseline;gap:16px}
+.cs-kicker a{font-size:12px;letter-spacing:0;text-transform:none;color:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+.cs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px}
+.cs-card img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:#eceae6}
+.cs-city{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-top:12px}
+.cs-name{font-family:'Playfair Display',serif;font-size:20px;line-height:1.25;margin-top:4px}
+.cs-type{font-size:13px;color:var(--muted);margin-top:2px}
+.cs-res{font-size:14px;line-height:1.55;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.cs-res strong{font-weight:500}
+@media(max-width:640px){.cs-grid{grid-template-columns:1fr;gap:28px}.cs-card img{aspect-ratio:16/10}}
+@media print{.cs-card{break-inside:avoid}}
+.cs-wrap{max-width:900px;margin:0 auto;padding:40px 40px 48px;border-bottom:1px solid var(--border)}
+@media(max-width:640px){.cs-wrap{padding:32px 20px 40px}}
 </style>
 </head>
 <body>
@@ -278,6 +293,33 @@ a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important
   <div class="tldr-row">
     <div class="tldr-text"><strong>Вход без риска.</strong> СМА и первая консультация — бесплатно, комиссия — только по факту сделки.</div>
     <a class="tldr-link" href="#s-choose">Как выбрать →</a>
+  </div>
+</div>
+
+<div class="cs-wrap">
+  <div class="cs-kicker"><span>Как это выглядело на практике</span><a href="https://fastbroker21.ru/#cases" target="_blank" rel="noopener">Все кейсы →</a></div>
+  <div class="cs-grid">
+    <div class="cs-card">
+      <img src="processed_images/cases/sold/07-yugo-vostochnaya-living-sm.webp" alt="Проданная 2-комнатная квартира, Юго-Восточная, Москва" width="600" height="450" loading="lazy" decoding="async">
+      <div class="cs-city">Москва</div>
+      <div class="cs-name">Юго-Восточная</div>
+      <div class="cs-type">2-комнатная квартира</div>
+      <div class="cs-res"><strong>21 день.</strong> Цена выше ожиданий за счёт нескольких офферов.</div>
+    </div>
+    <div class="cs-card">
+      <img src="processed_images/cases/sold/20-petroga6-living-sm.webp" alt="Проданная 3-комнатная квартира на Петроградской стороне, Санкт-Петербург" width="600" height="450" loading="lazy" decoding="async">
+      <div class="cs-city">Санкт-Петербург</div>
+      <div class="cs-name">Петроградская сторона</div>
+      <div class="cs-type">3-комнатная, срочная продажа</div>
+      <div class="cs-res"><strong>12 дней.</strong> Сделка выше стартовой цены.</div>
+    </div>
+    <div class="cs-card">
+      <img src="processed_images/cases/sold/05-kutuzovsky-living-sm.webp" alt="Проданная 2-комнатная квартира на Кутузовском проспекте, Москва" width="600" height="450" loading="lazy" decoding="async">
+      <div class="cs-city">Москва</div>
+      <div class="cs-name">Кутузовский проспект</div>
+      <div class="cs-type">2-комнатная, бизнес-класс</div>
+      <div class="cs-res"><strong>52 дня.</strong> Выбрали лучшее предложение по цене и условиям.</div>
+    </div>
   </div>
 </div>
 

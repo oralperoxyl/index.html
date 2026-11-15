@@ -2465,3 +2465,9 @@ textarea.contact-form-control {
 
 /* Страховка от горизонтальной прокрутки (clip не создаёт скролл-контейнер, sticky работает) */
 html, body { overflow-x: clip; }
+
+/* HERO — телефон: сначала заголовок и кнопка, фото под ними (v117) */
+@media (max-width: 768px) {
+  .hero-with-photo { flex-direction: column; }
+  .hero-content { padding-top: 0; padding-bottom: 32px; }
+}
