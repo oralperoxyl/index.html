@@ -490,9 +490,11 @@ async function ghLoad(){
       }
       if(fail>0)alert('Внимание: '+fail+' запис(ь/и) не расшифровались. Они сохранены и не будут потеряны, но не отображаются.');
       allData={buyers:plain};
+      markBuyersBase();
     } else {
       // Старый открытый формат: сразу пересохраняем зашифрованным
       if(!allData.buyers)allData.buyers={};
+      markBuyersBase();
       debounceSave();
     }
     if(!allData.buyers)allData.buyers={};
@@ -500,39 +502,77 @@ async function ghLoad(){
   }catch(e){setSyncOk('Ошибка загрузки');}
 }
 
+let _baseBuyers={},_saving=false,_saveAgain=false;
+function markBuyersBase(){_baseBuyers={};for(const b of Object.keys(allData.buyers||{}))_baseBuyers[b]=JSON.stringify(allData.buyers[b]);}
+function setSyncErr(msg){
+  document.getElementById('syncDot').className='sync-dot';
+  document.getElementById('syncDot').style.background='#C0392B';
+  document.getElementById('syncText').textContent=msg;
+}
 async function ghSave(){
   const token=getToken();
   if(!token)return;
-  if(!getMaster()){setSyncOk('Нет ключа шифрования — сохранение остановлено');return;}
-  setSyncPending();
+  if(!getMaster()){setSyncErr('Нет ключа шифрования — сохранение остановлено');return;}
+  if(_saving){_saveAgain=true;return;}
+  _saving=true;setSyncPending();
+  const url=`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`;
   try{
-    const out={version:2,buyers:{}};
-    for(const bid of Object.keys(allData.buyers||{})){
-      out.buyers[bid]=await encryptBuyer(bid,allData.buyers[bid]);
+    for(let attempt=0;attempt<4;attempt++){
+      const snap={};
+      for(const bid of Object.keys(allData.buyers||{}))snap[bid]=JSON.stringify(allData.buyers[bid]);
+      const out={version:2,buyers:{}};
+      for(const bid of Object.keys(snap))out.buyers[bid]=await encryptBuyer(bid,JSON.parse(snap[bid]));
+      // Записи, которые не удалось расшифровать при загрузке, переносим как есть, не теряем
+      for(const bid of Object.keys(window._undecryptable||{})){
+        if(!out.buyers[bid])out.buyers[bid]=window._undecryptable[bid];
+      }
+      const bytes=new TextEncoder().encode(JSON.stringify(out,null,2));
+      let binary='';
+      bytes.forEach(b=>binary+=String.fromCharCode(b));
+      const body={message:'Update buyers',content:btoa(binary),branch:GH_BRANCH};
+      if(fileSha)body.sha=fileSha;
+      const r=await fetch(url,{method:'PUT',headers:{Authorization:`token ${token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+      if(r.ok){
+        const j=await r.json();
+        fileSha=j.content.sha;_baseBuyers=snap;
+        document.getElementById('syncDot').style.background='';
+        setSyncOk('Синхронизировано');return;
+      }
+      if(r.status===409||r.status===422){
+        // Файл изменился в другой вкладке/на другом устройстве: подтягиваем чужие правки, свои сохраняем
+        const g=await fetch(url+`?ref=${GH_BRANCH}&t=${Date.now()}`,{cache:'no-store',headers:{Authorization:`token ${token}`}});
+        if(!g.ok){setSyncErr('Не сохранено: ошибка '+g.status);return;}
+        const gj=await g.json();fileSha=gj.sha;
+        const remote=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(gj.content.replace(/\n/g,'')),x=>x.charCodeAt(0))));
+        if(remote.version===2){
+          const renc=remote.buyers||{};
+          for(const bid of Object.keys(renc)){
+            const loc=allData.buyers[bid],base=_baseBuyers[bid];
+            const changed=loc!==undefined?JSON.stringify(loc)!==base:base!==undefined;
+            if(changed)continue;
+            try{
+              allData.buyers[bid]=await decryptBuyer(bid,renc[bid]);
+              _baseBuyers[bid]=JSON.stringify(allData.buyers[bid]);
+              if(window._undecryptable)delete window._undecryptable[bid];
+            }catch(e){(window._undecryptable=window._undecryptable||{})[bid]=renc[bid];}
+          }
+          for(const bid of Object.keys(allData.buyers)){
+            if(!(bid in renc)&&_baseBuyers[bid]!==undefined&&JSON.stringify(allData.buyers[bid])===_baseBuyers[bid]){delete allData.buyers[bid];delete _baseBuyers[bid];}
+          }
+        }
+        continue;
+      }
+      setSyncErr(r.status===401||r.status===403?'Не сохранено: токен недействителен':'Не сохранено: ошибка '+r.status);
+      return;
     }
-    // Записи, которые не удалось расшифровать при загрузке, переносим как есть, не теряем
-    for(const bid of Object.keys(window._undecryptable||{})){
-      if(!out.buyers[bid])out.buyers[bid]=window._undecryptable[bid];
-    }
-    const text=JSON.stringify(out,null,2);
-    const bytes=new TextEncoder().encode(text);
-    let binary='';
-    bytes.forEach(b=>binary+=String.fromCharCode(b));
-    const encoded=btoa(binary);
-    const body={message:'Update buyers',content:encoded,branch:GH_BRANCH};
-    if(fileSha)body.sha=fileSha;
-    const r=await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_FILE}`,{
-      method:'PUT',headers:{Authorization:`token ${token}`,'Content-Type':'application/json'},
-      body:JSON.stringify(body)
-    });
-    const j=await r.json();
-    fileSha=j.content?.sha||fileSha;
-    setSyncOk('Синхронизировано');
-  }catch(e){setSyncOk('Ошибка сохранения');}
+    setSyncErr('Не сохранено: конфликт версий');
+  }catch(e){console.error(e);setSyncErr('Не сохранено: нет сети');}
+  finally{_saving=false;if(_saveAgain){_saveAgain=false;debounceSave();}}
 }
 
 let saveTimer=null;
-function debounceSave(){clearTimeout(saveTimer);saveTimer=setTimeout(ghSave,1200);}
+function debounceSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{saveTimer=null;ghSave();},1200);}
+window.addEventListener('beforeunload',e=>{if(_saving||saveTimer){e.preventDefault();e.returnValue='';}});
 
 // ── SLUGIFY ─────────────────────────────────────────────────
 function slugify(s){return s.toLowerCase().replace(/[^а-яёa-z0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,40);}

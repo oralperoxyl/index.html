@@ -992,6 +992,59 @@ async function initApp(){
   } else if(loaded) renderPicker(); // refresh picker with loaded data
 }
 
+// ── SAFE-SAVE: правки не теряются при конфликте версий ──
+(function(){
+  var baseJson=JSON.stringify(allData),origLoad=loadFromGitHub,saving=null,again=false,MSG='Update SMA data';
+  function dec(j){var c=atob(j.content.replace(/\n/g,''));return JSON.parse(new TextDecoder().decode(Uint8Array.from(c,function(x){return x.charCodeAt(0);})));}
+  function same(a,b){return JSON.stringify(a)===JSON.stringify(b);}
+  function merge(remote){
+    var base=(JSON.parse(baseJson).objects)||{},loc=allData.objects||{};
+    if(!remote.objects)remote.objects={};
+    Object.keys(base).forEach(function(id){if(!(id in loc))delete remote.objects[id];});
+    Object.keys(loc).forEach(function(id){
+      var l=loc[id],b=base[id],r=remote.objects[id];
+      if(!r){if(!b||!same(l,b))remote.objects[id]=l;return;}
+      var keys={};Object.keys(l).forEach(function(k){keys[k]=1;});Object.keys(b||{}).forEach(function(k){keys[k]=1;});
+      Object.keys(keys).forEach(function(k){
+        if(same(l[k],b?b[k]:undefined))return;
+        if(k in l)r[k]=l[k];else delete r[k];
+      });
+    });
+    return remote;
+  }
+  loadFromGitHub=async function(){var ok=await origLoad.apply(this,arguments);if(ok){try{baseJson=JSON.stringify(allData);}catch(e){}}return ok;};
+  async function run(){
+    setLoading(true);
+    try{
+      for(var attempt=0;attempt<4;attempt++){
+        var snap=JSON.stringify(allData);
+        var body={message:MSG,content:btoa(unescape(encodeURIComponent(JSON.stringify(allData,null,2)))),branch:GH_BRANCH};
+        if(fileSha)body.sha=fileSha;
+        var r=await ghFetch('PUT',body);
+        if(!r){setSyncError(getToken()?'Не сохранено: нет сети':'Нет токена');return false;}
+        if(r.ok){var j=await r.json();fileSha=j.content.sha;baseJson=snap;setSyncOk('Сохранено');return true;}
+        if(r.status===409||r.status===422){
+          var g=await fetch('https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+GH_FILE+'?ref='+GH_BRANCH+'&t='+Date.now(),{cache:'no-store',headers:{'Authorization':'Bearer '+getToken(),'Accept':'application/vnd.github+json'}});
+          if(!g.ok){setSyncError('Не сохранено: ошибка '+g.status);return false;}
+          var gj=await g.json();fileSha=gj.sha;allData=merge(dec(gj));
+          continue;
+        }
+        setSyncError('Не сохранено: ошибка '+r.status);
+        if((r.status===401||r.status===403)&&typeof showTokenModal==='function')showTokenModal();
+        return false;
+      }
+      setSyncError('Не сохранено: конфликт версий');return false;
+    }catch(e){console.error(e);setSyncError('Не сохранено: нет сети');return false;}
+    finally{setLoading(false);}
+  }
+  saveToGitHub=async function(){
+    if(saving){again=true;return saving;}
+    saving=run();
+    try{return await saving;}
+    finally{saving=null;if(again){again=false;saveToGitHub();}}
+  };
+  window.addEventListener('beforeunload',function(e){if(saving||(typeof saveTimeout!=='undefined'&&saveTimeout&&baseJson!==JSON.stringify(allData))){e.preventDefault();e.returnValue='';}});
+})();
 (async function(){try{await initApp();}catch(e){console.error(e);showPicker();}})();
 </script>
 <script>
