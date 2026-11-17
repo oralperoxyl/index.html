@@ -3086,6 +3086,22 @@
           "based_on": "С учётом предложений и сделок"
         }
       }
+    },
+    "новый-лесснер": {
+      "address": "Новый Лесснер",
+      "area": 0,
+      "rooms": 0,
+      "floor": "",
+      "location": "",
+      "date": "17 ноября 2026 г.",
+      "sma": {
+        "competitors": [],
+        "recommendations": [],
+        "priceFrom": 0,
+        "priceTo": 0
+      },
+      "strategy": null,
+      "reports": null
     }
   }
 }
