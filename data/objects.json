@@ -3166,7 +3166,7 @@
           }
         ],
         "recommendations": [],
-        "priceFrom": 0,
+        "priceFrom": 25000000,
         "priceTo": 28500000
       },
       "strategy": null,
