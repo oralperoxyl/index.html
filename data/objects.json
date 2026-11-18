@@ -3163,6 +3163,23 @@
             "comment": "Предложил 28 млн, агент сказала, что будет общаться с собственником. Предложений не было, просмотров мало. Понижаются в цене. ",
             "ours": false,
             "visited": false
+          },
+          {
+            "address": "",
+            "agent": "",
+            "area": "",
+            "rooms": "",
+            "floor": "",
+            "condition": "",
+            "price": 0,
+            "ppm": 0,
+            "bargain": "",
+            "adDate": "",
+            "adViews": "",
+            "url": "",
+            "comment": "",
+            "ours": false,
+            "visited": false
           }
         ],
         "recommendations": [
