@@ -67,11 +67,18 @@
 .pt-cta-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .pt-cta-main{display:inline-block;padding:16px 36px;background:#E5E5E5;color:#1C1C1E !important;font-family:var(--font-sans);font-size:13px;font-weight:500;letter-spacing:0.02em;text-decoration:none;border-radius:100px;border:1px solid #E5E5E5;transition:opacity 0.2s ease}
 .pt-cta-main:hover{opacity:0.85}
-.pt-cta-phone{font-size:14px;color:rgba(229,229,229,0.55) !important;margin:20px 0 0}
-.pt-cta-phone a{color:rgba(229,229,229,0.8) !important;text-decoration:none}
+.pt-final{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:64px;align-items:start;padding:24px 0 16px}
+.pt-final-main .contact-subtitle{max-width:520px;margin:0 0 40px}
+.pt-final-side{border-left:1px solid rgba(229,229,229,0.12);padding-left:48px;display:flex;flex-direction:column;gap:48px}
+.pt-final-contacts{display:flex;gap:64px;flex-wrap:wrap}
+.pt-final-channel{margin:0;padding-top:40px;border-top:1px solid rgba(229,229,229,0.12)}
+.pt-final .cta-mid-btn{color:#E5E5E5}
 
 @media (max-width:768px){
   .pt-reward,.pt-terms,.pt-commit,.pt-msgs{grid-template-columns:1fr;gap:32px}
+  .pt-final{grid-template-columns:1fr;gap:48px;padding:0}
+  .pt-final-side{border-left:none;padding-left:0;padding-top:40px;border-top:1px solid rgba(229,229,229,0.12);gap:40px}
+  .pt-final-contacts{gap:40px}
   .pt-commit{gap:0}
   .pt-reward-num{font-size:clamp(44px,13vw,64px)}
   .pt-lead,.pt-both,.pt-msg-text{font-size:16px}
@@ -516,15 +523,38 @@
       </div>
     </section>
 
-    <section id="contact" class="cta-mid">
-      <div class="section-frame cta-mid-inner">
-        <h2 class="cta-mid-title">Есть кто-то на примете?</h2>
-        <p class="cta-mid-sub">Заполните форму — займёт две минуты. Или напишите в Telegram, если есть вопросы.</p>
-        <div class="pt-cta-actions">
-          <a class="pt-cta-main" href="referral.html">Зафиксировать клиента</a>
-          <a class="cta-mid-btn" href="https://t.me/semengme" target="_blank" rel="noopener">Написать в Telegram</a>
+    <section id="contact" class="contact contact-dark">
+      <div class="section-frame">
+        <div class="pt-final">
+          <div class="pt-final-main">
+            <h2 class="animate-on-scroll" data-animate="fade-in-up">Есть кто-то на примете?</h2>
+            <p class="contact-subtitle">Заполните форму — займёт две минуты. Или напишите в Telegram, если есть вопросы.</p>
+            <div class="pt-cta-actions">
+              <a class="pt-cta-main" href="referral.html">Зафиксировать клиента</a>
+              <a class="cta-mid-btn" href="https://t.me/semengme" target="_blank" rel="noopener">Написать в Telegram</a>
+            </div>
+          </div>
+          <div class="pt-final-side">
+            <div class="pt-final-contacts">
+              <div class="contact-block">
+                <h3 class="contact-label">Прямой контакт</h3>
+                <a class="contact-link" href="tel:+79118461965">+7 911 846-19-65</a>
+              </div>
+              <div class="contact-block">
+                <h3 class="contact-label">Мессенджеры</h3>
+                <a class="contact-link" href="https://wa.me/79938899627" target="_blank" rel="noopener">WhatsApp</a>
+                <a class="contact-link" href="https://t.me/semengme" target="_blank" rel="noopener">Telegram</a>
+              </div>
+            </div>
+            <div class="contact-channel pt-final-channel">
+              <p class="channel-intro">Если хотите лучше понимать, как я работаю, загляните в мой канал. Пишу о сделках и рынке, многие посты удобно просто переслать знакомому.</p>
+              <a class="channel-link" href="https://t.me/mezhdu_pokazami" target="_blank" rel="noopener">
+                <span class="channel-name">Между показами</span>
+                <span class="channel-meta">· Telegram</span>
+              </a>
+            </div>
+          </div>
         </div>
-        <p class="pt-cta-phone">или <a href="tel:+79118461965">+7 911 846-19-65</a></p>
       </div>
     </section>
   </main>
