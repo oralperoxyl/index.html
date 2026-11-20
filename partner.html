@@ -115,6 +115,22 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
   .cta-block{padding:32px 20px}
   .cta-footer{padding:48px 20px}
 }
+
+/* ГОТОВОЕ СООБЩЕНИЕ */
+.msg-block{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
+.msg-lead{font-size:16px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:20px;max-width:640px}
+.msg-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
+.msg-card{background:#fff;padding:22px 24px;display:flex;flex-direction:column}
+.msg-card:first-child{border-radius:8px 0 0 8px}
+.msg-card:last-child{border-radius:0 8px 8px 0}
+.msg-label{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.msg-text{font-size:15px;font-weight:300;color:var(--text);line-height:1.7;flex:1;margin-bottom:18px}
+.msg-actions{display:flex;gap:8px;flex-wrap:wrap}
+.msg-btn{display:inline-flex;align-items:center;padding:9px 18px;border:1px solid var(--border);border-radius:999px;background:transparent;color:var(--text);font-family:var(--sans);font-size:14px;cursor:pointer;text-decoration:none;transition:background 0.2s,border-color 0.2s,color 0.2s;-webkit-tap-highlight-color:transparent}
+.msg-btn:hover{border-color:var(--text)}
+.msg-btn.tg:hover{background:#0088cc;border-color:#0088cc;color:#fff}
+.msg-btn.done{border-color:#2D8A4E;color:#2D8A4E}
+@media(max-width:640px){.msg-grid{grid-template-columns:1fr}.msg-card:first-child{border-radius:8px 8px 0 0}.msg-card:last-child{border-radius:0 0 8px 8px}}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -219,7 +235,11 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
         <div style="font-size:15px;font-weight:300;color:var(--text);line-height:1.6">Аукционная продажа — 21 день, максимальная цена</div>
       </div>
     </div>
-    <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.7">Какой формат подойдёт клиенту — разберёмся вместе. Вам об этом думать не нужно. Выплата после закрытия сделки.</p>
+    <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.7">Какой формат подойдёт клиенту — разберёмся вместе. Вам об этом думать не нужно. Выплата в течение 3 дней после того, как я получу комиссию по сделке.</p>
+    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
+      <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Повторные рекомендации</div>
+      <div style="font-size:15px;font-weight:300;color:var(--text);line-height:1.7">Со второй закрытой сделки за 12 месяцев вознаграждение на 25% выше: <strong style="font-weight:500">62 500 ₽</strong> за стандартную продажу и <strong style="font-weight:500">125 000 ₽</strong> за аукционную.</div>
+    </div>
   </div>
 
   <!-- STEPS -->
@@ -246,7 +266,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
         <div class="step-num">03</div>
         <div>
           <div class="step-head">Сделка закрыта — вы получаете деньги</div>
-          <div class="step-text">Вознаграждение выплачивается после фактического закрытия сделки. Наличными или переводом — как удобнее.</div>
+          <div class="step-text">Вознаграждение выплачиваю в течение 3 дней после того, как получу комиссию по сделке. Наличными или переводом, как вам удобнее.</div>
         </div>
       </div>
     </div>
@@ -283,6 +303,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
         <div class="who-desc">Услышали что кто-то думает о покупке или продаже — этого достаточно.</div>
       </div>
     </div>
+    <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.7;margin-top:20px;max-width:640px"><strong style="font-weight:500;color:var(--text)">Работаю в обе стороны.</strong> Если вы ипотечный брокер, юрист, ремонтник, фотограф или дизайнер, своим клиентам, которым нужны такие услуги, я рекомендую партнёров, с которыми уже работаю.</p>
   </div>
 
   <!-- TRUST -->
@@ -323,7 +344,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 
       <div class="pfaq-item">
         <button class="pfaq-q" onclick="togglePfaq(this)">Нужно ли говорить клиенту, что я получу вознаграждение?</button>
-        <div class="pfaq-a">Нет, не обязательно. Можете просто сказать, что рекомендуете знакомого агента. Моя комиссия платится в рамках стандартного договора со стороны клиента — это обычная практика.</div>
+        <div class="pfaq-a">Решайте сами. Многие говорят об этом открыто, и это только добавляет доверия. Для клиента ничего не меняется: моя комиссия по договору та же, ваше вознаграждение я плачу из неё.</div>
       </div>
 
       <div class="pfaq-item">
@@ -343,7 +364,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 
       <div class="pfaq-item">
         <button class="pfaq-q" onclick="togglePfaq(this)">Как получить деньги?</button>
-        <div class="pfaq-a">Как удобнее — обсудим. Переводом или наличными. Главное, чтобы всё было понятно заранее.</div>
+        <div class="pfaq-a">Переводом или наличными, как вам удобнее. Выплачиваю в течение 3 дней после того, как получу комиссию по сделке. Сумму фиксирую заранее в гарантийном письме.</div>
       </div>
 
       <div class="pfaq-item">
@@ -351,6 +372,32 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
         <div class="pfaq-a">Бывает — я работаю не со всеми, и это нормально. Если не сойдёмся по условиям или форматам работы — скажу честно и без неловкости. Ваша рекомендация при этом не теряется: я это запомню, и в следующий раз сделаю для вас бонус поверх обычных условий.</div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- ГОТОВОЕ СООБЩЕНИЕ -->
+  <div class="msg-block">
+    <div class="section-head">
+      <h2 class="section-title">Что написать знакомому</h2>
+    </div>
+    <p class="msg-lead">Не нужно ничего объяснять про процесс и комиссии. Достаточно короткого сообщения, остальное я расскажу сам. Можно отправить как есть или поправить под себя.</p>
+    <div class="msg-grid">
+      <div class="msg-card">
+        <div class="msg-label">Если продаёт</div>
+        <div class="msg-text" id="msgSell">Привет! Помню, ты думаешь о продаже квартиры. У меня есть знакомый агент, Семён Гончаров, работает в Петербурге и Москве. Продаёт через конкуренцию покупателей, а не снижением цены. Вот его сайт: fastbroker21.ru. Могу дать ему твой номер, он сам позвонит.</div>
+        <div class="msg-actions">
+          <button class="msg-btn" onclick="copyMsg('msgSell',this)">Скопировать текст</button>
+          <button class="msg-btn tg" onclick="shareMsg('msgSell')">Отправить в Telegram</button>
+        </div>
+      </div>
+      <div class="msg-card">
+        <div class="msg-label">Если покупает</div>
+        <div class="msg-text" id="msgBuy">Привет! Помню, ты ищешь квартиру. У меня есть знакомый агент, Семён Гончаров, работает в Петербурге и Москве, помогает с подбором и проверкой квартиры. Вот его сайт: fastbroker21.ru. Могу дать ему твой номер, он сам позвонит.</div>
+        <div class="msg-actions">
+          <button class="msg-btn" onclick="copyMsg('msgBuy',this)">Скопировать текст</button>
+          <button class="msg-btn tg" onclick="shareMsg('msgBuy')">Отправить в Telegram</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -379,6 +426,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 
 
 <script>
+function copyMsg(id,btn){
+  var t=document.getElementById(id).innerText.trim();
+  function ok(){var o=btn.textContent;btn.textContent='Скопировано';btn.classList.add('done');setTimeout(function(){btn.textContent=o;btn.classList.remove('done');},2000);}
+  function fb(){var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();a.setSelectionRange(0,t.length);try{document.execCommand('copy');ok();}catch(e){prompt('Скопируйте текст:',t);}document.body.removeChild(a);}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(ok,fb);}else fb();
+}
+function shareMsg(id){
+  var t=document.getElementById(id).innerText.trim();
+  window.open('https://t.me/share/url?url='+encodeURIComponent('https://fastbroker21.ru')+'&text='+encodeURIComponent(t),'_blank','noopener');
+}
 function togglePfaq(btn){
   var item=btn.parentElement;
   var open=item.classList.contains('open');
