@@ -2338,11 +2338,11 @@
             "ppm": 0,
             "bargain": "",
             "adDate": "с 11.08.2026",
-            "adViews": "",
+            "adViews": "472",
             "url": "https://spb.cian.ru/sale/flat/332847079/",
             "comment": "",
-            "ours": false,
-            "visited": false
+            "ours": true,
+            "visited": true
           }
         ],
         "recommendations": [],
