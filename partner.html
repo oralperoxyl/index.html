@@ -1,136 +1,81 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Партнёрам — Семён Гончаров</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="theme-color" content="#F2F2F2">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <title>Партнёрам — Семён Гончаров, агент по недвижимости</title>
+  <meta name="description" content="Порекомендуйте агента по недвижимости в Петербурге и Москве и получите от 50 000 до 100 000 ₽ после сделки. Фиксация клиента на 6 месяцев, гарантийное письмо.">
+  <link rel="canonical" href="https://fastbroker21.ru/partner.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ru_RU">
+  <meta property="og:url" content="https://fastbroker21.ru/partner.html">
+  <meta property="og:site_name" content="Семён Гончаров — агент по недвижимости">
+  <meta property="og:title" content="Партнёрам: вознаграждение 50 000 — 100 000 ₽ за рекомендацию">
+  <meta property="og:description" content="Знаете кого-то, кто продаёт или покупает квартиру в Петербурге или Москве? Порекомендуйте меня, я проведу сделку, вы получите вознаграждение.">
+  <meta property="og:image" content="https://fastbroker21.ru/processed_images/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main-styles.css?v=117">
+
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --serif:'Playfair Display',serif;
-  --sans:'Inter',sans-serif;
-  --bg:#FAFAF8;--dark:#1C1C1E;
-  --text:#1A1A1A;--muted:#666;--border:rgba(0,0,0,0.08);
-  --green:#2D8A4E;
+/* ── Партнёрская страница: всё остальное берётся из main-styles.css ── */
+.pt-lead{font-size:18px;line-height:1.7;color:var(--text-muted);max-width:640px;margin:0}
+.pt-eyebrow{font-family:var(--font-sans);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:0 0 20px}
+
+/* Вознаграждение */
+.pt-reward{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
+.pt-reward-item{border-top:1px solid rgba(0,0,0,0.12);padding-top:24px}
+.pt-reward-label{font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:0 0 16px}
+.pt-reward-num{font-family:var(--font-serif);font-weight:400;font-size:clamp(48px,7vw,96px);line-height:1;letter-spacing:-0.02em;margin:0 0 20px;white-space:nowrap}
+.pt-reward-desc{font-size:16px;line-height:1.6;color:var(--text-muted);margin:0}
+.pt-reward-desc strong{color:var(--text-main);font-weight:500}
+.pt-terms{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;padding-top:24px;border-top:1px solid rgba(0,0,0,0.08)}
+.pt-terms h4{font-family:var(--font-sans);font-size:14px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);opacity:0.7;margin:0 0 12px}
+.pt-terms p{margin:0;font-size:16px;line-height:1.7;color:var(--text-main)}
+.pt-terms strong{font-weight:500}
+
+/* Работаю в обе стороны */
+.pt-both{margin:56px 0 0;padding-top:24px;border-top:1px solid rgba(0,0,0,0.08);max-width:800px;font-size:18px;line-height:1.7;color:var(--text-muted)}
+.pt-both strong{color:var(--text-main);font-weight:500}
+
+/* Обязательства */
+.pt-commit{display:grid;grid-template-columns:1fr 1fr;gap:0 48px;margin-top:48px}
+.pt-commit-item{border-top:1px solid rgba(0,0,0,0.12);padding:24px 0 32px;display:grid;grid-template-columns:32px 1fr;gap:16px}
+.pt-commit-num{font-size:12px;color:var(--text-muted);opacity:0.6;padding-top:4px}
+.pt-commit-item p{margin:0;font-size:17px;line-height:1.65}
+.pt-quote{font-family:var(--font-serif);font-weight:400;font-style:italic;font-size:clamp(22px,2.6vw,32px);line-height:1.4;letter-spacing:-0.01em;max-width:900px;margin:40px 0 0;color:var(--text-main)}
+
+/* Готовые сообщения */
+.pt-msgs{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
+.pt-msg{border-top:1px solid rgba(0,0,0,0.12);padding-top:24px;display:flex;flex-direction:column}
+.pt-msg-text{font-size:18px;line-height:1.7;margin:0 0 28px;flex:1}
+.pt-msg-actions{display:flex;gap:10px;flex-wrap:wrap}
+.pt-btn{display:inline-block;padding:14px 28px;background:transparent;color:var(--text-main);font-family:var(--font-sans);font-size:13px;font-weight:500;letter-spacing:0.02em;text-decoration:none;border-radius:100px;border:1px solid rgba(0,0,0,0.25);cursor:pointer;transition:background 0.2s ease,border-color 0.2s ease,color 0.2s ease;-webkit-tap-highlight-color:transparent}
+@media (hover:hover){.pt-btn:hover{border-color:#000}.pt-btn.tg:hover{background:#0088cc;border-color:#0088cc;color:#fff}}
+.pt-btn.tg:active{background:#0088cc;border-color:#0088cc;color:#fff}
+.pt-btn.done{border-color:#2D8A4E;color:#2D8A4E}
+
+/* Финальный призыв */
+.pt-cta-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.pt-cta-main{display:inline-block;padding:16px 36px;background:#E5E5E5;color:#1C1C1E !important;font-family:var(--font-sans);font-size:13px;font-weight:500;letter-spacing:0.02em;text-decoration:none;border-radius:100px;border:1px solid #E5E5E5;transition:opacity 0.2s ease}
+.pt-cta-main:hover{opacity:0.85}
+.pt-cta-phone{font-size:14px;color:rgba(229,229,229,0.55) !important;margin:20px 0 0}
+.pt-cta-phone a{color:rgba(229,229,229,0.8) !important;text-decoration:none}
+
+@media (max-width:768px){
+  .pt-reward,.pt-terms,.pt-commit,.pt-msgs{grid-template-columns:1fr;gap:32px}
+  .pt-commit{gap:0}
+  .pt-reward-num{font-size:clamp(44px,13vw,64px)}
+  .pt-lead,.pt-both,.pt-msg-text{font-size:16px}
 }
-html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;font-size:16px;line-height:1.6}
-
-.site-header{position:sticky;top:0;z-index:100;background:rgba(250,250,248,0.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between}
-.header-brand{font-family:var(--serif);font-size:16px;font-weight:400;text-decoration:none;color:var(--text)}
-.header-right{font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)}
-
-.hero{background:var(--dark);padding:80px 40px 64px}
-.hero-inner{max-width:860px;margin:0 auto}
-.hero-label{font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(229,229,229,0.62);margin-bottom:16px}
-.hero-title{font-family:var(--serif);font-size:clamp(32px,5vw,58px);font-weight:400;line-height:1.05;letter-spacing:-0.02em;color:#E5E5E5;margin-bottom:16px}
-.hero-title em{font-style:italic;color:rgba(229,229,229,0.62)}
-.hero-sub{font-size:16px;color:rgba(229,229,229,0.75);font-weight:300;max-width:520px;line-height:1.75}
-
-.content{max-width:860px;margin:0 auto;padding:56px 40px 80px}
-.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px}
-.section-title{font-family:var(--serif);font-size:clamp(20px,2.5vw,28px);font-weight:400;letter-spacing:-0.01em}
-
-/* REWARD */
-.reward-block{background:#fff;border-radius:8px;padding:32px;margin-bottom:48px;display:grid;grid-template-columns:1fr 1fr;gap:2px}
-.reward-item{padding:24px 28px}
-.reward-item:first-child{border-radius:8px 0 0 8px;background:#fff}
-.reward-item:last-child{border-radius:0 8px 8px 0;background:rgba(0,0,0,0.02)}
-.reward-amount{font-family:var(--serif);font-size:clamp(28px,4vw,44px);font-weight:400;color:var(--text);line-height:1;margin-bottom:8px}
-.reward-label{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.reward-desc{font-size:15px;font-weight:300;color:var(--muted);line-height:1.65}
-
-/* STEPS */
-.steps-block{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
-.steps-list{display:grid;gap:2px}
-.step{background:#fff;padding:22px 28px;display:grid;grid-template-columns:32px 1fr;gap:16px;align-items:start}
-.step:first-child{border-radius:8px 8px 0 0}
-.step:last-child{border-radius:0 0 8px 8px}
-.step-num{font-family:var(--serif);font-size:13px;color:rgba(0,0,0,0.45);padding-top:2px}
-.step-head{font-size:16px;font-weight:500;color:var(--text);margin-bottom:5px}
-.step-text{font-size:15px;font-weight:300;color:var(--muted);line-height:1.7}
-
-/* WHO */
-.who-block{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
-.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
-.who-item{background:#fff;padding:18px 20px}
-.who-item:first-child{border-radius:8px 0 0 8px}
-.who-item:last-child{border-radius:0 8px 8px 0}
-.who-title{font-size:15px;font-weight:500;color:var(--text);margin-bottom:4px}
-.who-desc{font-size:13px;font-weight:300;color:var(--muted);line-height:1.6}
-
-/* TRUST */
-.trust-block{background:#fff;border-radius:8px;padding:28px 32px;margin-bottom:48px;border-left:3px solid var(--dark)}
-.trust-title{font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
-.trust-items{display:grid;gap:10px}
-.trust-item{display:flex;gap:12px;align-items:start}
-.trust-dash{color:rgba(0,0,0,0.45);flex-shrink:0;padding-top:1px}
-.trust-text{font-size:16px;font-weight:300;color:var(--text);line-height:1.65}
-
-/* CTA BLOCK */
-.cta-block{text-align:center;padding:48px 32px;background:#fff;border-radius:12px;margin-bottom:0}
-.cta-block-title{font-family:var(--serif);font-size:clamp(20px,3vw,28px);font-weight:400;margin-bottom:10px;letter-spacing:-0.01em}
-.cta-block-sub{font-size:16px;color:var(--muted);font-weight:300;margin-bottom:28px;line-height:1.65;max-width:420px;margin-left:auto;margin-right:auto}
-.cta-btn{display:inline-flex;align-items:center;gap:10px;padding:13px 28px;background:var(--dark);border:none;border-radius:999px;text-decoration:none;color:#fff;font-family:var(--sans);font-size:16px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.cta-btn:active{opacity:.85}
-.cta-secondary a{color:var(--muted);text-decoration:none;border-bottom:1px solid var(--border)}
-
-/* FOOTER */
-.cta-footer{background:var(--dark);padding:64px 40px;text-align:center;margin-top:80px}
-.cta-footer-label{font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(229,229,229,0.62);margin-bottom:20px}
-.cta-footer-title{font-family:var(--serif);font-size:clamp(22px,3.5vw,36px);font-weight:400;color:#E5E5E5;line-height:1.2;margin-bottom:12px}
-.cta-footer-title em{font-style:italic;color:rgba(229,229,229,0.75)}
-.cta-footer-sub{font-size:16px;color:rgba(229,229,229,0.62);font-weight:300;margin-bottom:32px;max-width:400px;margin-left:auto;margin-right:auto;line-height:1.65}
-.tg-btn{display:inline-flex;align-items:center;gap:10px;padding:14px 28px;border:1px solid #0088cc;border-radius:999px;text-decoration:none;background:transparent;color:#E5E5E5;font-family:var(--sans);font-size:16px;-webkit-tap-highlight-color:transparent}
-.tg-btn:active{background:#0088cc}
-.footer-copy{margin-top:40px;font-size:12px;color:rgba(229,229,229,0.62)}
-.footer-copy a{color:rgba(229,229,229,0.62);text-decoration:none}
-
-
-/* FAQ — main site style */
-.pfaq{border-top:1px solid var(--border)}
-.pfaq-item{border-bottom:1px solid var(--border)}
-.pfaq-q{background:transparent;border:none;font-family:var(--sans);font-size:16px;font-weight:500;line-height:1.5;padding:20px 0;text-align:left;width:100%;cursor:pointer;display:flex;justify-content:space-between;align-items:start;gap:32px;color:var(--text)}
-.pfaq-q::after{content:'—';font-size:18px;color:var(--muted);flex-shrink:0;transition:transform .3s ease;transform-origin:center;line-height:1;margin-top:3px;opacity:.4}
-.pfaq-item.open .pfaq-q::after{transform:rotate(90deg);opacity:.7}
-.pfaq-a{max-height:0;overflow:hidden;opacity:0;transition:max-height .35s ease,opacity .25s ease,padding .25s ease;font-size:16px;font-weight:300;color:var(--muted);line-height:1.75;padding:0}
-.pfaq-item.open .pfaq-a{max-height:300px;opacity:1;padding-bottom:20px}
-
-@media(max-width:640px){.reward-inner-grid{grid-template-columns:1fr!important}
-
-  .site-header{padding:0 20px}
-  .hero{padding:56px 20px 48px}
-  .content{padding:40px 20px 60px}
-  .reward-block{grid-template-columns:1fr}
-  .reward-item:first-child{border-radius:8px 8px 0 0}
-  .reward-item:last-child{border-radius:0 0 8px 8px}
-  .who-grid{grid-template-columns:1fr}
-  .who-item:first-child{border-radius:8px 8px 0 0}
-  .who-item:last-child{border-radius:0 0 8px 8px}
-  .who-item{border-radius:0}
-  .trust-block{padding:20px 20px 20px 18px}
-  .cta-block{padding:32px 20px}
-  .cta-footer{padding:48px 20px}
-}
-
-/* ГОТОВОЕ СООБЩЕНИЕ */
-.msg-block{margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid var(--border)}
-.msg-lead{font-size:16px;font-weight:300;color:var(--muted);line-height:1.7;margin-bottom:20px;max-width:640px}
-.msg-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px}
-.msg-card{background:#fff;padding:22px 24px;display:flex;flex-direction:column}
-.msg-card:first-child{border-radius:8px 0 0 8px}
-.msg-card:last-child{border-radius:0 8px 8px 0}
-.msg-label{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
-.msg-text{font-size:15px;font-weight:300;color:var(--text);line-height:1.7;flex:1;margin-bottom:18px}
-.msg-actions{display:flex;gap:8px;flex-wrap:wrap}
-.msg-btn{display:inline-flex;align-items:center;padding:9px 18px;border:1px solid var(--border);border-radius:999px;background:transparent;color:var(--text);font-family:var(--sans);font-size:14px;cursor:pointer;text-decoration:none;transition:background 0.2s,border-color 0.2s,color 0.2s;-webkit-tap-highlight-color:transparent}
-.msg-btn:hover{border-color:var(--text)}
-.msg-btn.tg:hover{background:#0088cc;border-color:#0088cc;color:#fff}
-.msg-btn.done{border-color:#2D8A4E;color:#2D8A4E}
-@media(max-width:640px){.msg-grid{grid-template-columns:1fr}.msg-card:first-child{border-radius:8px 8px 0 0}.msg-card:last-child{border-radius:0 0 8px 8px}}
 </style>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
@@ -203,245 +148,417 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 </script>
 </head>
 <body>
-
-<header class="site-header">
-  <a class="header-brand" href="https://fastbroker21.ru">Goncharov Semen</a>
-  <span class="header-right">Партнёрам</span>
-</header>
-
-<section class="hero">
-  <div class="hero-inner">
-    <p class="hero-label">Для партнёров</p>
-    <h1 class="hero-title">Знаете кого-то, кто продаёт<br><em>или покупает недвижимость?</em></h1>
-    <p class="hero-sub">Порекомендуйте меня — я проведу сделку, вы получите вознаграждение. Работаю и с продавцами, и с покупателями.</p>
-  </div>
-</section>
-
-<div class="content">
-
-  <!-- REWARD -->
-  <div class="section-head">
-    <h2 class="section-title">Вознаграждение</h2>
-  </div>
-  <div style="background:#fff;border-radius:8px;padding:28px 32px;margin-bottom:48px">
-    <div style="font-family:var(--serif);font-size:clamp(32px,5vw,52px);font-weight:400;color:var(--text);line-height:1;margin-bottom:16px">50 000 — 100 000 ₽</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-      <div style="padding:14px 16px;background:rgba(0,0,0,0.03);border-radius:6px">
-        <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">50 000 ₽</div>
-        <div style="font-size:15px;font-weight:300;color:var(--text);line-height:1.6">Стандартная продажа — в среднем 55 дней</div>
-      </div>
-      <div style="padding:14px 16px;background:rgba(0,0,0,0.03);border-radius:6px">
-        <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">100 000 ₽</div>
-        <div style="font-size:15px;font-weight:300;color:var(--text);line-height:1.6">Аукционная продажа — 21 день, максимальная цена</div>
-      </div>
+  <header class="site-header bg-main">
+    <div class="container header-inner">
+      <a class="brand" href="/">Goncharov Semen</a>
+      <button class="menu-toggle" type="button" aria-label="Открыть меню" aria-expanded="false">
+        <span class="menu-toggle-icon"></span>
+      </button>
+      <nav class="site-nav">
+        <a href="#reward">Вознаграждение</a>
+        <a href="#how">Как это работает</a>
+        <a href="#cases">Кейсы</a>
+        <a href="#message">Что написать</a>
+        <a href="#faq">FAQ</a>
+        <a href="/">На главную</a>
+      </nav>
     </div>
-    <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.7">Какой формат подойдёт клиенту — разберёмся вместе. Вам об этом думать не нужно. Выплата в течение 3 дней после того, как я получу комиссию по сделке.</p>
-    <div style="margin-top:20px;padding-top:20px;border-top:1px solid var(--border)">
-      <div style="font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Повторные рекомендации</div>
-      <div style="font-size:15px;font-weight:300;color:var(--text);line-height:1.7">Со второй закрытой сделки за 12 месяцев вознаграждение на 25% выше: <strong style="font-weight:500">62 500 ₽</strong> за стандартную продажу и <strong style="font-weight:500">125 000 ₽</strong> за аукционную.</div>
-    </div>
-  </div>
+  </header>
 
-  <!-- STEPS -->
-  <div class="steps-block">
-    <div class="section-head">
-      <h2 class="section-title">Как это работает</h2>
-    </div>
-    <div class="steps-list">
-      <div class="step">
-        <div class="step-num">01</div>
-        <div>
-          <div class="step-head">Вы фиксируете клиента</div>
-          <div class="step-text">Заполняете форму — имя и телефон клиента. Этого достаточно. Фиксация сохраняется на 6 месяцев.</div>
+  <main>
+    <section id="top" class="hero bg-main">
+      <div class="section-frame">
+        <div class="hero-inner hero-with-photo">
+          <div class="hero-content">
+            <h1 class="hero-title animate-on-scroll animate-delay-2" data-animate="fade-in-up">Знаете кого-то, кто продаёт или покупает недвижимость?</h1>
+            <div class="hero-meta">
+              <p class="hero-subtitle animate-on-scroll animate-delay-3" data-animate="fade-in-up">Порекомендуйте меня — я проведу сделку, вы получите вознаграждение. Работаю и с продавцами, и с покупателями.</p>
+              <div class="cta-wrap">
+                <a href="referral.html" class="cta-primary animate-on-scroll animate-delay-4" data-animate="fade-in-up">Зафиксировать клиента</a>
+                <p class="cta-micro animate-on-scroll animate-delay-4" data-animate="fade-in-up">50 000 — 100 000 ₽ после сделки. Форма займёт две минуты.</p>
+              </div>
+            </div>
+          </div>
+          <div class="hero-photo-wrap">
+            <picture>
+              <source srcset="processed_images/bwhero.webp" type="image/webp">
+              <img src="processed_images/bwhero.jpg" alt="Семён Гончаров" class="hero-photo" width="832" height="1248" loading="eager" fetchpriority="high" decoding="async">
+            </picture>
+          </div>
         </div>
       </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <div>
-          <div class="step-head">Я связываюсь и веду сделку</div>
-          <div class="step-text">Дальше всё на мне — продажа, покупка, переговоры. Вам не нужно ничего объяснять клиенту про процесс и комиссии. Я разберусь сам.</div>
+    </section>
+
+    <section id="reward" class="bg-soft">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Вознаграждение</h2>
+        <p class="pt-lead">Какой формат подойдёт клиенту — разберёмся вместе. Вам об этом думать не нужно.</p>
+        <div class="pt-reward">
+          <div class="pt-reward-item">
+            <p class="pt-reward-label">Стандартная продажа</p>
+            <p class="pt-reward-num">50 000 ₽</p>
+            <p class="pt-reward-desc">В среднем 55 дней.</p>
+          </div>
+          <div class="pt-reward-item">
+            <p class="pt-reward-label">Аукционная продажа</p>
+            <p class="pt-reward-num">100 000 ₽</p>
+            <p class="pt-reward-desc">21 день, максимальная цена.</p>
+          </div>
+        </div>
+        <div class="pt-terms">
+          <div>
+            <h4>Повторные рекомендации</h4>
+            <p>Со второй закрытой сделки за 12 месяцев вознаграждение на 25% выше: <strong>62 500 ₽</strong> за стандартную продажу и <strong>125 000 ₽</strong> за аукционную.</p>
+          </div>
+          <div>
+            <h4>Когда выплата</h4>
+            <p>В течение 3 дней после того, как я получу комиссию по сделке. Наличными или переводом, как вам удобнее.</p>
+          </div>
         </div>
       </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <div>
-          <div class="step-head">Сделка закрыта — вы получаете деньги</div>
-          <div class="step-text">Вознаграждение выплачиваю в течение 3 дней после того, как получу комиссию по сделке. Наличными или переводом, как вам удобнее.</div>
+    </section>
+
+    <section id="how" class="process bg-main">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Как это работает</h2>
+        <ol class="process-steps">
+          <li>
+            <span class="process-num">01</span>
+            <span class="process-text">
+              <span class="process-title">Вы фиксируете клиента</span>
+              <span class="process-desc">Заполняете форму — имя и телефон клиента. Этого достаточно. Фиксация сохраняется на 6 месяцев.</span>
+            </span>
+          </li>
+          <li>
+            <span class="process-num">02</span>
+            <span class="process-text">
+              <span class="process-title">Я связываюсь и веду сделку</span>
+              <span class="process-desc">Дальше всё на мне — продажа, покупка, переговоры. Вам не нужно ничего объяснять клиенту про процесс и комиссии. Я разберусь сам.</span>
+            </span>
+          </li>
+          <li>
+            <span class="process-num">03</span>
+            <span class="process-text">
+              <span class="process-title">Сделка закрыта — вы получаете деньги</span>
+              <span class="process-desc">Вознаграждение выплачиваю в течение 3 дней после того, как получу комиссию по сделке. Наличными или переводом, как вам удобнее.</span>
+            </span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="who" class="advantages bg-main">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Кто уже приводит клиентов</h2>
+        <div class="advantages-grid">
+          <div class="adv-column">
+            <h3>По работе</h3>
+            <div class="adv-list">
+              <div class="adv-item">
+                <h4>Ипотечные брокеры</h4>
+                <p>Клиент одобрил ипотеку — нужна квартира. Логичное продолжение.</p>
+              </div>
+              <div class="adv-item">
+                <h4>Юристы и нотариусы</h4>
+                <p>Наследство, развод, раздел имущества — часто заканчивается продажей.</p>
+              </div>
+              <div class="adv-item">
+                <h4>Агенты из других городов</h4>
+                <p>Клиент переезжает в Петербург или Москву — нужен надёжный человек на месте.</p>
+              </div>
+            </div>
+          </div>
+          <div class="adv-column">
+            <h3>Рядом с людьми</h3>
+            <div class="adv-list">
+              <div class="adv-item">
+                <h4>Ремонтники</h4>
+                <p>Делают ремонт — слышат про планы переехать или продать.</p>
+              </div>
+              <div class="adv-item">
+                <h4>Фотографы и дизайнеры</h4>
+                <p>Работают с людьми, которые обустраиваются или готовят квартиру к продаже.</p>
+              </div>
+              <div class="adv-item">
+                <h4>Просто знакомые</h4>
+                <p>Услышали что кто-то думает о покупке или продаже — этого достаточно.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="pt-both"><strong>Работаю в обе стороны.</strong> Если вы ипотечный брокер, юрист, ремонтник, фотограф или дизайнер, своим клиентам, которым нужны такие услуги, я рекомендую партнёров, с которыми уже работаю.</p>
+      </div>
+    </section>
+
+    <section id="cases" class="cases bg-main sold-section">
+      <div class="section-frame">
+        <div class="sold-header">
+          <div>
+            <h2 class="animate-on-scroll" data-animate="fade-in-up">Кейсы</h2>
+            <p class="sold-intro">Так я веду сделки клиентов, которых мне рекомендуют. <a href="/#cases" style="color:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap">Все кейсы</a></p>
+          </div>
+          <div class="sold-nav" aria-hidden="true">
+            <button class="sold-nav-btn" type="button" data-dir="-1" aria-label="Предыдущий кейс">
+              <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="sold-nav-btn" type="button" data-dir="1" aria-label="Следующий кейс">
+              <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="sold-rail">
+          <div class="sold-scroll" id="soldScroll" role="list">
+
+            <!-- 5. ЮГО-ВОСТОЧНАЯ, МОСКВА -->
+            <article class="sold-card" role="listitem" data-case-id="yugo-vostochnaya">
+              <button class="sold-card-main" type="button" aria-expanded="false">
+                <picture>
+                  <source media="(max-width:640px)" srcset="processed_images/cases/sold/07-yugo-vostochnaya-living-sm.webp" type="image/webp">
+                  <source srcset="processed_images/cases/sold/07-yugo-vostochnaya-living.webp" type="image/webp">
+                  <img src="processed_images/cases/sold/07-yugo-vostochnaya-living.webp" alt="Проданная 2-комнатная квартира у метро Юго-Восточная, Москва" width="1200" height="800" loading="lazy" decoding="async">
+                </picture>
+                <span class="sold-card-overlay"></span>
+                <span class="sold-card-top">
+                  <span class="sold-card-city">Москва</span>
+                  <span class="sold-card-status">Продано</span>
+                </span>
+                <span class="sold-card-bottom">
+                  <span class="sold-card-title">Юго-Восточная</span>
+                  <span class="sold-card-type">2-комнатная квартира</span>
+                  <span class="sold-card-meta">
+                    <span class="sold-card-metric"><em>Срок</em><strong>21 день</strong></span>
+                  </span>
+                  <span class="sold-card-result">Цена выше ожиданий — за счёт нескольких офферов.</span>
+                </span>
+              </button>
+              <template class="sold-card-detail-tpl">
+                <p>Квартиру нужно было продать за 21 день. Короткий срок задал плотный график подготовки и показов — за одно окно собрали несколько предложений.</p><p>При выборе покупателя учитывали не только цену, но и готовность, форму расчётов и удобство выхода на сделку. Итоговая цена оказалась выше первоначальных ожиданий собственника.</p>
+              </template>
+            </article>
+
+            <!-- 13. ПЕТРОГРАДСКАЯ СТОРОНА (срочная) -->
+            <article class="sold-card" role="listitem" data-case-id="petrogradskaya-urgent">
+              <button class="sold-card-main" type="button" aria-expanded="false">
+                <picture>
+                  <source media="(max-width:640px)" srcset="processed_images/cases/sold/20-petroga6-living-sm.webp" type="image/webp">
+                  <source srcset="processed_images/cases/sold/20-petroga6-living.webp" type="image/webp">
+                  <img src="processed_images/cases/sold/20-petroga6-living.webp" alt="Проданная 3-комнатная квартира на Петроградской стороне, Санкт-Петербург" width="1200" height="800" loading="lazy" decoding="async">
+                </picture>
+                <span class="sold-card-overlay"></span>
+                <span class="sold-card-top">
+                  <span class="sold-card-city">Санкт-Петербург</span>
+                  <span class="sold-card-status">Продано</span>
+                </span>
+                <span class="sold-card-bottom">
+                  <span class="sold-card-title">Петроградская сторона</span>
+                  <span class="sold-card-type">3-комнатная · срочная продажа</span>
+                  <span class="sold-card-meta">
+                    <span class="sold-card-metric"><em>Срок</em><strong>12 дней</strong></span>
+                  </span>
+                  <span class="sold-card-result">Сделка выше стартовой цены.</span>
+                </span>
+              </button>
+              <template class="sold-card-detail-tpl">
+                <p>Собственник переезжал в другой город, нужно было закрыть до отъезда. За 48 часов подготовили объект и вышли на рынок. 14 показов за первые выходные, 3 оффера, закрыли на 12-й день выше стартовой.</p>
+                <div class="sold-detail-gallery">
+                  <picture><source srcset="processed_images/cases/sold/21-petroga6-bookshelf.webp" type="image/webp"><img src="processed_images/cases/sold/21-petroga6-bookshelf.webp" alt="Рабочая зона с книжным шкафом" loading="lazy"></picture>
+                </div>
+              </template>
+            </article>
+
+            <!-- 3. КУТУЗОВСКИЙ, МОСКВА -->
+            <article class="sold-card" role="listitem" data-case-id="kutuzovsky">
+              <button class="sold-card-main" type="button" aria-expanded="false">
+                <picture>
+                  <source media="(max-width:640px)" srcset="processed_images/cases/sold/05-kutuzovsky-living-sm.webp" type="image/webp">
+                  <source srcset="processed_images/cases/sold/05-kutuzovsky-living.webp" type="image/webp">
+                  <img src="processed_images/cases/sold/05-kutuzovsky-living.webp" alt="Проданная 2-комнатная квартира бизнес-класса на Кутузовском проспекте, Москва" width="1200" height="800" loading="lazy" decoding="async">
+                </picture>
+                <span class="sold-card-overlay"></span>
+                <span class="sold-card-top">
+                  <span class="sold-card-city">Москва</span>
+                  <span class="sold-card-status">Продано</span>
+                </span>
+                <span class="sold-card-bottom">
+                  <span class="sold-card-title">Кутузовский проспект</span>
+                  <span class="sold-card-type">2-комнатная · бизнес-класс</span>
+                  <span class="sold-card-meta">
+                    <span class="sold-card-metric"><em>Срок</em><strong>52 дня</strong></span>
+                  </span>
+                  <span class="sold-card-result">Выбрали лучшее предложение по цене и условиям.</span>
+                </span>
+              </button>
+              <template class="sold-card-detail-tpl">
+                <p>Этот объект мы с собственником приобретали раньше — без ремонта, с сопровождением покупки. Позже квартиру отремонтировали, и когда обстоятельства изменились, потребовалась продажа в определённый срок.</p><p>Готовая квартира требовала иной подачи, чем «голый» метраж. Собрали предложения, сравнили их по цене, форме расчётов и готовности покупателей — выбрали вариант, который давал предсказуемый выход на сделку.</p>
+                <div class="sold-detail-gallery">
+                  <picture><source srcset="processed_images/cases/sold/04-kutuzovsky-kitchen.webp" type="image/webp"><img src="processed_images/cases/sold/04-kutuzovsky-kitchen.webp" alt="Кухня-гостиная" loading="lazy"></picture>
+                </div>
+              </template>
+            </article>
+
+            <!-- 4. ГРАЖДАНСКИЙ ПРОСПЕКТ, СПб -->
+            <article class="sold-card" role="listitem" data-case-id="grazhdansky">
+              <button class="sold-card-main" type="button" aria-expanded="false">
+                <picture>
+                  <source media="(max-width:640px)" srcset="processed_images/cases/sold/06-grazhdansky-room-sm.webp" type="image/webp">
+                  <source srcset="processed_images/cases/sold/06-grazhdansky-room.webp" type="image/webp">
+                  <img src="processed_images/cases/sold/06-grazhdansky-room.webp" alt="Проданная 2-комнатная квартира у метро Гражданский проспект, Санкт-Петербург" width="1200" height="800" loading="lazy" decoding="async">
+                </picture>
+                <span class="sold-card-overlay"></span>
+                <span class="sold-card-top">
+                  <span class="sold-card-city">Санкт-Петербург</span>
+                  <span class="sold-card-status">Продано</span>
+                </span>
+                <span class="sold-card-bottom">
+                  <span class="sold-card-title">Гражданский проспект</span>
+                  <span class="sold-card-type">2-комнатная квартира</span>
+                  <span class="sold-card-meta">
+                    <span class="sold-card-metric"><em>Срок</em><strong>55 дней</strong></span>
+                  </span>
+                </span>
+              </button>
+              <template class="sold-card-detail-tpl">
+                <p>Спокойный рабочий сценарий. Проанализировали ближайших конкурентов, подготовили квартиру и материалы, вышли на рынок.</p><p>Дальше — обычная работа: приём обращений, фильтрация покупателей, показы, переговоры. Сделка закрылась в комфортный для собственника срок, на согласованных условиях — без спешки и искусственных дедлайнов.</p>
+              </template>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="sold-detail" id="soldDetail" hidden aria-live="polite">
+          <button class="sold-detail-close" type="button" aria-label="Закрыть">
+            <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+          <div class="sold-detail-content" id="soldDetailContent"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="promise" class="bg-soft">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Важно</h2>
+        <div class="pt-commit">
+          <div class="pt-commit-item"><span class="pt-commit-num">01</span><p>Я не буду давить на вашего клиента и не буду делать ничего, что может испортить ваши отношения с ним. Репутация важнее одной сделки.</p></div>
+          <div class="pt-commit-item"><span class="pt-commit-num">02</span><p>Если клиент уже в работе или обращался ранее — скажу об этом честно. Рекомендация в таком случае не засчитывается.</p></div>
+          <div class="pt-commit-item"><span class="pt-commit-num">03</span><p>Как только договорюсь с клиентом об условиях и начну работу — вышлю вам гарантийное письмо с фиксацией суммы вашего вознаграждения. Ничего на словах.</p></div>
+          <div class="pt-commit-item"><span class="pt-commit-num">04</span><p>Вы можете в любой момент спросить, как идут дела с вашим клиентом — отвечу честно.</p></div>
+        </div>
+        <p class="pt-quote">Я сам заинтересован в том, чтобы вы приводили клиентов снова — поэтому отношусь к этому серьёзно. Работаю так, чтобы ваш знакомый или клиент остался доволен, а вы не пожалели о рекомендации. Если что-то пойдёт не так — скажу об этом прямо, а не буду делать вид, что всё нормально.</p>
+      </div>
+    </section>
+
+    <section id="message" class="bg-main">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">Что написать знакомому</h2>
+        <p class="pt-lead">Не нужно ничего объяснять про процесс и комиссии. Достаточно короткого сообщения, остальное я расскажу сам. Можно отправить как есть или поправить под себя.</p>
+        <div class="pt-msgs">
+          <div class="pt-msg">
+            <p class="pt-eyebrow">Если продаёт</p>
+            <p class="pt-msg-text" id="msgSell">Привет! Помню, ты думаешь о продаже квартиры. У меня есть знакомый агент, Семён Гончаров, работает в Петербурге и Москве. Продаёт через конкуренцию покупателей, а не снижением цены. Вот его сайт: fastbroker21.ru. Могу дать ему твой номер, он сам позвонит.</p>
+            <div class="pt-msg-actions">
+              <button class="pt-btn" type="button" onclick="copyMsg('msgSell',this)">Скопировать текст</button>
+              <button class="pt-btn tg" type="button" onclick="shareMsg('msgSell')">Отправить в Telegram</button>
+            </div>
+          </div>
+          <div class="pt-msg">
+            <p class="pt-eyebrow">Если покупает</p>
+            <p class="pt-msg-text" id="msgBuy">Привет! Помню, ты ищешь квартиру. У меня есть знакомый агент, Семён Гончаров, работает в Петербурге и Москве, помогает с подбором и проверкой квартиры. Вот его сайт: fastbroker21.ru. Могу дать ему твой номер, он сам позвонит.</p>
+            <div class="pt-msg-actions">
+              <button class="pt-btn" type="button" onclick="copyMsg('msgBuy',this)">Скопировать текст</button>
+              <button class="pt-btn tg" type="button" onclick="shareMsg('msgBuy')">Отправить в Telegram</button>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- WHO -->
-  <div class="who-block">
-    <div class="section-head">
-      <h2 class="section-title">Кто уже приводит клиентов</h2>
-    </div>
-    <div class="who-grid">
-      <div class="who-item">
-        <div class="who-title">Ипотечные брокеры</div>
-        <div class="who-desc">Клиент одобрил ипотеку — нужна квартира. Логичное продолжение.</div>
-      </div>
-      <div class="who-item">
-        <div class="who-title">Юристы и нотариусы</div>
-        <div class="who-desc">Наследство, развод, раздел имущества — часто заканчивается продажей.</div>
-      </div>
-      <div class="who-item">
-        <div class="who-title">Ремонтники</div>
-        <div class="who-desc">Делают ремонт — слышат про планы переехать или продать.</div>
-      </div>
-      <div class="who-item">
-        <div class="who-title">Агенты из других городов</div>
-        <div class="who-desc">Клиент переезжает в Петербург или Москву — нужен надёжный человек на месте.</div>
-      </div>
-      <div class="who-item">
-        <div class="who-title">Фотографы и дизайнеры</div>
-        <div class="who-desc">Работают с людьми, которые обустраиваются или готовят квартиру к продаже.</div>
-      </div>
-      <div class="who-item">
-        <div class="who-title">Просто знакомые</div>
-        <div class="who-desc">Услышали что кто-то думает о покупке или продаже — этого достаточно.</div>
-      </div>
-    </div>
-    <p style="font-size:15px;font-weight:300;color:var(--muted);line-height:1.7;margin-top:20px;max-width:640px"><strong style="font-weight:500;color:var(--text)">Работаю в обе стороны.</strong> Если вы ипотечный брокер, юрист, ремонтник, фотограф или дизайнер, своим клиентам, которым нужны такие услуги, я рекомендую партнёров, с которыми уже работаю.</p>
-  </div>
-
-  <!-- TRUST -->
-  <div class="trust-block">
-    <div class="trust-title">Важно</div>
-    <div class="trust-items">
-      <div class="trust-item">
-        <span class="trust-dash">—</span>
-        <span class="trust-text">Я не буду давить на вашего клиента и не буду делать ничего, что может испортить ваши отношения с ним. Репутация важнее одной сделки.</span>
-      </div>
-      <div class="trust-item">
-        <span class="trust-dash">—</span>
-        <span class="trust-text">Если клиент уже в работе или обращался ранее — скажу об этом честно. Рекомендация в таком случае не засчитывается.</span>
-      </div>
-      <div class="trust-item">
-        <span class="trust-dash">—</span>
-        <span class="trust-text">Как только договорюсь с клиентом об условиях и начну работу — вышлю вам гарантийное письмо с фиксацией суммы вашего вознаграждения. Ничего на словах.</span>
-      </div>
-      <div class="trust-item">
-        <span class="trust-dash">—</span>
-        <span class="trust-text">Вы можете в любой момент спросить, как идут дела с вашим клиентом — отвечу честно.</span>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- PERSONAL NOTE -->
-  <div style="padding:24px 0;margin-bottom:48px;border-bottom:1px solid var(--border)">
-    <p style="font-size:16px;font-weight:300;color:var(--text);line-height:1.8">Я сам заинтересован в том, чтобы вы приводили клиентов снова — поэтому отношусь к этому серьёзно. Работаю так, чтобы ваш знакомый или клиент остался доволен, а вы не пожалели о рекомендации. Если что-то пойдёт не так — скажу об этом прямо, а не буду делать вид, что всё нормально.</p>
-  </div>
-
-  <!-- FAQ -->
-  <div style="margin-bottom:48px">
-    <div class="section-head">
-      <h2 class="section-title">Частые вопросы</h2>
-    </div>
-    <div class="pfaq">
-
-      <div class="pfaq-item">
-        <button class="pfaq-q" onclick="togglePfaq(this)">Нужно ли говорить клиенту, что я получу вознаграждение?</button>
-        <div class="pfaq-a">Решайте сами. Многие говорят об этом открыто, и это только добавляет доверия. Для клиента ничего не меняется: моя комиссия по договору та же, ваше вознаграждение я плачу из неё.</div>
-      </div>
-
-      <div class="pfaq-item">
-        <button class="pfaq-q" onclick="togglePfaq(this)">Что если клиент передумает или сделка не состоится?</button>
-        <div class="pfaq-a">Вознаграждение выплачивается только после закрытия сделки. Если сделка не состоялась — выплаты нет. Это честно для обеих сторон.</div>
-      </div>
-
-      <div class="pfaq-item">
-        <button class="pfaq-q" onclick="togglePfaq(this)">Как долго действует фиксация клиента?</button>
-        <div class="pfaq-a">6 месяцев с момента фиксации. Если за это время клиент выйдет на сделку — вознаграждение ваше.</div>
-      </div>
-
-      <div class="pfaq-item">
-        <button class="pfaq-q" onclick="togglePfaq(this)">Я не из недвижимости — это нормально?</button>
-        <div class="pfaq-a">Абсолютно. Большинство рекомендаций приходит от людей, которые просто услышали, что знакомый думает о покупке или продаже. Специальных знаний не нужно.</div>
-      </div>
-
-      <div class="pfaq-item">
-        <button class="pfaq-q" onclick="togglePfaq(this)">Как получить деньги?</button>
-        <div class="pfaq-a">Переводом или наличными, как вам удобнее. Выплачиваю в течение 3 дней после того, как получу комиссию по сделке. Сумму фиксирую заранее в гарантийном письме.</div>
-      </div>
-
-      <div class="pfaq-item">
-        <button class="pfaq-q" onclick="togglePfaq(this)">Что если вы не договоритесь с моим клиентом?</button>
-        <div class="pfaq-a">Бывает — я работаю не со всеми, и это нормально. Если не сойдёмся по условиям или форматам работы — скажу честно и без неловкости. Ваша рекомендация при этом не теряется: я это запомню, и в следующий раз сделаю для вас бонус поверх обычных условий.</div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- ГОТОВОЕ СООБЩЕНИЕ -->
-  <div class="msg-block">
-    <div class="section-head">
-      <h2 class="section-title">Что написать знакомому</h2>
-    </div>
-    <p class="msg-lead">Не нужно ничего объяснять про процесс и комиссии. Достаточно короткого сообщения, остальное я расскажу сам. Можно отправить как есть или поправить под себя.</p>
-    <div class="msg-grid">
-      <div class="msg-card">
-        <div class="msg-label">Если продаёт</div>
-        <div class="msg-text" id="msgSell">Привет! Помню, ты думаешь о продаже квартиры. У меня есть знакомый агент, Семён Гончаров, работает в Петербурге и Москве. Продаёт через конкуренцию покупателей, а не снижением цены. Вот его сайт: fastbroker21.ru. Могу дать ему твой номер, он сам позвонит.</div>
-        <div class="msg-actions">
-          <button class="msg-btn" onclick="copyMsg('msgSell',this)">Скопировать текст</button>
-          <button class="msg-btn tg" onclick="shareMsg('msgSell')">Отправить в Telegram</button>
+    <section id="faq" class="faq bg-alt">
+      <div class="section-frame">
+        <h2 class="animate-on-scroll" data-animate="fade-in-up">FAQ</h2>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Нужно ли говорить клиенту, что я получу вознаграждение?</button>
+          <div class="faq-answer">
+            <p>Решайте сами. Многие говорят об этом открыто, и это только добавляет доверия. Для клиента ничего не меняется: моя комиссия по договору та же, ваше вознаграждение я плачу из неё.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Что если клиент передумает или сделка не состоится?</button>
+          <div class="faq-answer">
+            <p>Вознаграждение выплачивается только после закрытия сделки. Если сделка не состоялась — выплаты нет. Это честно для обеих сторон.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Как долго действует фиксация клиента?</button>
+          <div class="faq-answer">
+            <p>6 месяцев с момента фиксации. Если за это время клиент выйдет на сделку — вознаграждение ваше.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Я не из недвижимости — это нормально?</button>
+          <div class="faq-answer">
+            <p>Абсолютно. Большинство рекомендаций приходит от людей, которые просто услышали, что знакомый думает о покупке или продаже. Специальных знаний не нужно.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Как получить деньги?</button>
+          <div class="faq-answer">
+            <p>Переводом или наличными, как вам удобнее. Выплачиваю в течение 3 дней после того, как получу комиссию по сделке. Сумму фиксирую заранее в гарантийном письме.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" type="button" aria-expanded="false">Что если вы не договоритесь с моим клиентом?</button>
+          <div class="faq-answer">
+            <p>Бывает — я работаю не со всеми, и это нормально. Если не сойдёмся по условиям или форматам работы — скажу честно и без неловкости. Ваша рекомендация при этом не теряется: я это запомню, и в следующий раз сделаю для вас бонус поверх обычных условий.</p>
+          </div>
         </div>
       </div>
-      <div class="msg-card">
-        <div class="msg-label">Если покупает</div>
-        <div class="msg-text" id="msgBuy">Привет! Помню, ты ищешь квартиру. У меня есть знакомый агент, Семён Гончаров, работает в Петербурге и Москве, помогает с подбором и проверкой квартиры. Вот его сайт: fastbroker21.ru. Могу дать ему твой номер, он сам позвонит.</div>
-        <div class="msg-actions">
-          <button class="msg-btn" onclick="copyMsg('msgBuy',this)">Скопировать текст</button>
-          <button class="msg-btn tg" onclick="shareMsg('msgBuy')">Отправить в Telegram</button>
+    </section>
+
+    <section id="contact" class="cta-mid">
+      <div class="section-frame cta-mid-inner">
+        <h2 class="cta-mid-title">Есть кто-то на примете?</h2>
+        <p class="cta-mid-sub">Заполните форму — займёт две минуты. Или напишите в Telegram, если есть вопросы.</p>
+        <div class="pt-cta-actions">
+          <a class="pt-cta-main" href="referral.html">Зафиксировать клиента</a>
+          <a class="cta-mid-btn" href="https://t.me/semengme" target="_blank" rel="noopener">Написать в Telegram</a>
         </div>
+        <p class="pt-cta-phone">или <a href="tel:+79118461965">+7 911 846-19-65</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer site-footer-dark">
+    <div class="container footer-inner">
+      <div>© <span id="year"></span> Семён Гончаров. Агент по недвижимости. Санкт-Петербург и Москва.</div>
+      <div class="footer-links">
+        <a href="privacy-policy.html">Политика персональных данных</a>
+        <a href="/">На главную</a>
+        <a href="#top">Наверх</a>
       </div>
     </div>
-  </div>
+  </footer>
 
-    <!-- CTA -->
-  <div class="cta-block">
-    <h2 class="cta-block-title">Есть кто-то на примете?</h2>
-    <p class="cta-block-sub">Заполните форму — займёт две минуты. Или напишите в Telegram, если есть вопросы.</p>
-    <a href="https://fastbroker21.ru/referral.html" class="cta-btn">
-      Зафиксировать клиента
-    </a>
-  </div>
-
-</div>
-
-<footer class="cta-footer">
-  <p class="cta-footer-label">Семён Гончаров · Агент по недвижимости · Санкт-Петербург и Москва</p>
-  <h2 class="cta-footer-title">Работаем<br><em>вместе.</em></h2>
-  <p class="cta-footer-sub">Санкт-Петербург и Москва. Если есть клиент — напишите, разберёмся.</p>
-  <a class="tg-btn" href="https://t.me/semengme" target="_blank" rel="noopener">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 6.686l-1.68 7.92c-.125.558-.453.694-.918.432l-2.54-1.873-1.226 1.18c-.136.136-.25.25-.512.25l.183-2.583 4.713-4.257c.205-.183-.045-.284-.318-.101L8.116 14.19l-2.5-.78c-.543-.17-.554-.543.113-.803l9.738-3.754c.452-.164.848.101.463.833z"/></svg>
-    Написать в Telegram
+  <!-- Floating Telegram Button -->
+  <a href="https://t.me/semengme" class="floating-telegram" aria-label="Написать в Telegram" target="_blank" rel="noopener noreferrer">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+    </svg>
   </a>
-  <p style="margin-top:16px;font-size:15px;color:rgba(229,229,229,0.62)">или <a href="tel:+79118461965" style="color:rgba(229,229,229,0.75);text-decoration:none">+7 911 846-19-65</a></p>
-  <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
-</footer>
 
-
-<script>
-function copyMsg(id,btn){
-  var t=document.getElementById(id).innerText.trim();
-  function ok(){var o=btn.textContent;btn.textContent='Скопировано';btn.classList.add('done');setTimeout(function(){btn.textContent=o;btn.classList.remove('done');},2000);}
-  function fb(){var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();a.setSelectionRange(0,t.length);try{document.execCommand('copy');ok();}catch(e){prompt('Скопируйте текст:',t);}document.body.removeChild(a);}
-  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(ok,fb);}else fb();
-}
-function shareMsg(id){
-  var t=document.getElementById(id).innerText.trim();
-  window.open('https://t.me/share/url?url='+encodeURIComponent('https://fastbroker21.ru')+'&text='+encodeURIComponent(t),'_blank','noopener');
-}
-function togglePfaq(btn){
-  var item=btn.parentElement;
-  var open=item.classList.contains('open');
-  document.querySelectorAll('.pfaq-item.open').forEach(function(el){el.classList.remove('open');});
-  if(!open)item.classList.add('open');
-}
-</script>
+  <script src="main-new-clean.js?v=7" defer></script>
+  <script>
+  function copyMsg(id,btn){
+    var t=document.getElementById(id).innerText.trim();
+    function ok(){var o=btn.textContent;btn.textContent='Скопировано';btn.classList.add('done');setTimeout(function(){btn.textContent=o;btn.classList.remove('done');},2000);}
+    function fb(){var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();a.setSelectionRange(0,t.length);try{document.execCommand('copy');ok();}catch(e){prompt('Скопируйте текст:',t);}document.body.removeChild(a);}
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(ok,fb);}else fb();
+  }
+  function shareMsg(id){
+    var t=document.getElementById(id).innerText.trim();
+    window.open('https://t.me/share/url?url='+encodeURIComponent('https://fastbroker21.ru')+'&text='+encodeURIComponent(t),'_blank','noopener');
+  }
+  </script>
 </body>
 </html>
