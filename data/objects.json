@@ -2332,7 +2332,7 @@
             "agent": "Агент",
             "area": "49,4",
             "rooms": "2",
-            "floor": "",
+            "floor": "1/6",
             "condition": "",
             "price": 0,
             "ppm": 0,
