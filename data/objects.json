@@ -3263,8 +3263,8 @@
           {
             "address": "",
             "agent": "",
-            "area": "",
-            "rooms": "",
+            "area": "63,2",
+            "rooms": "2",
             "floor": "",
             "condition": "",
             "price": 0,
