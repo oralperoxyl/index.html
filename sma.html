@@ -151,6 +151,10 @@ a.comp-card-addr{text-decoration:underline;text-decoration-color:rgba(0,0,0,0.1)
 .rec-num{font-family:var(--serif);font-size:20px;color:rgba(0,0,0,0.12);padding-top:2px}
 .rec-text{font-size:14px;color:var(--muted);line-height:1.7}
 .rec-text strong{color:var(--text);font-weight:600}
+.rec-text p,.comp-card-comment p,.comp-table td p{margin:0 0 10px}
+.rec-text p:last-child,.comp-card-comment p:last-child,.comp-table td p:last-child{margin-bottom:0}
+.rec-text a,.comp-card-comment a,.comp-table td p a{color:var(--text);text-decoration:underline;text-decoration-color:rgba(0,0,0,0.25);text-underline-offset:3px;overflow-wrap:anywhere;transition:text-decoration-color 0.2s}
+.rec-text a:hover,.comp-card-comment a:hover{text-decoration-color:var(--text)}
 
 .price-box{background:var(--dark);color:#E5E5E5;padding:32px;border-radius:8px;margin-top:32px}
 .price-box-label{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(229,229,229,0.4);margin-bottom:16px}
@@ -458,6 +462,24 @@ function parseNum(v){if(!v)return 0;return Number(String(v).replace(/,/g,'.').re
 function calcPpm(price,area){const p=parseNum(price),a=parseNum(area);if(!p||!a)return 0;return Math.round(p/a);}
 function slugify(t){return t.toLowerCase().replace(/[^a-zа-яё0-9]/gi,'-').replace(/-+/g,'-').replace(/^-|-$/g,'').substring(0,60);}
 function isStale(dateStr){if(!dateStr)return false;const m=dateStr.match(/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/);if(!m)return false;const y=m[3].length===2?2000+Number(m[3]):Number(m[3]);const d=new Date(y,Number(m[2])-1,Number(m[1]));const diff=(Date.now()-d.getTime())/(1000*60*60*24);return diff>90;}
+// Ссылки и абзацы в тексте: URL становятся кликабельными, пустая строка = новый абзац
+function linkifyHtml(html){
+  return String(html||'').split(/(<a\b[^>]*>[\s\S]*?<\/a>|<[^>]+>)/i).map(function(part){
+    if(!part||part.charAt(0)==='<')return part;
+    return part.replace(/\b((?:https?:\/\/|www\.)[^\s<]*[^\s<.,;:!?)\]»"'])/gi,function(u){
+      var href=/^www\./i.test(u)?'https://'+u:u;
+      var label=u.replace(/^https?:\/\//i,'').replace(/^www\./i,'').replace(/\/$/,'');
+      return '<a href="'+href.replace(/"/g,'&quot;')+'" target="_blank" rel="noopener">'+label+'</a>';
+    });
+  }).join('');
+}
+function richText(html){
+  var t=String(html||'').replace(/\r\n?/g,'\n').trim();
+  if(!t)return '';
+  var paras=t.split(/\n{2,}/);
+  if(paras.length===1)return linkifyHtml(t.replace(/\n/g,'<br>'));
+  return paras.map(function(p){return '<p>'+linkifyHtml(p.trim().replace(/\n/g,'<br>'))+'</p>';}).join('');
+}
 function todayStr(){const d=new Date();return d.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});}
 
 // ─── GITHUB API ───
@@ -665,7 +687,7 @@ function render(){
       +'<td style="white-space:nowrap;"><div style="font-weight:500;">'+(c.price?fmt(c.price)+' \u20bd':'')+'</div><div style="font-size:11px;color:var(--muted);">'+(ppm?fmt(ppm)+' \u20bd/\u043c\u00b2':'')+'</div></td>'
       +'<td style="font-size:12px;">'+escHtml(c.bargain)+'</td>'
       +'<td style="font-size:11px;color:var(--muted);"><div>'+escHtml(c.adDate)+'</div>'+(c.adViews?'<div>'+escHtml(c.adViews)+' \u043f\u0440\u043e\u0441\u043c.</div>':'')+'</td>'
-      +'<td style="font-size:12px;line-height:1.6;">'+escHtml(c.comment)+'</td>'
+      +'<td style="font-size:12px;line-height:1.6;">'+richText(escHtml(c.comment||''))+'</td>'
       +'</tr>';
   }).join(''):'<tr><td colspan="7" style="color:var(--muted);padding:20px 12px;">Добавьте конкурентов в панели редактирования</td></tr>';
 
@@ -681,14 +703,14 @@ function render(){
       +(badges(c)?'<div class="comp-card-badges">'+badges(c)+'</div>':'')
       +(c.bargain?'<div class="comp-card-bargain">Торг: '+escHtml(c.bargain)+'</div>':'')
       +(c.adDate?'<div class="comp-card-ad">В рекламе с '+escHtml(c.adDate)+(c.adViews?' \u00b7 '+escHtml(c.adViews)+' просм.':'')+'</div>':'')
-      +(c.comment?'<div class="comp-card-comment">'+escHtml(c.comment)+'</div>':'')
+      +(c.comment?'<div class="comp-card-comment">'+richText(escHtml(c.comment))+'</div>':'')
       +'</div>';
   }).join(''):'<p style="color:var(--muted);font-size:14px;padding:20px 0;">Пока нет данных</p>';
 
   // Recommendations
   const recs=s.sma?.recommendations||[];
   document.getElementById('recList').innerHTML=recs.map((r,i)=>`
-    <div class="rec-item"><div class="rec-num">${String(i+1).padStart(2,'0')}</div><div class="rec-text">${r}</div></div>`).join('');
+    <div class="rec-item"><div class="rec-num">${String(i+1).padStart(2,'0')}</div><div class="rec-text">${richText(r)}</div></div>`).join('');
 
   // Price box
   const avg=smaData.priceFrom&&smaData.priceTo?Math.round((Number(smaData.priceFrom)+Number(smaData.priceTo))/2):0;
