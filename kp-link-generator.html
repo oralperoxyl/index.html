@@ -65,6 +65,10 @@ button:hover{background:#000}
   <input id="date" type="text" placeholder="по умолчанию — сегодняшняя">
   <div class="hint">Если оставить пустым, в КП подставится сегодняшняя дата автоматически.</div>
 
+  <label>Комиссия за мягкие торги, % (необязательно)</label>
+  <input id="soft" type="text" inputmode="decimal" placeholder="по умолчанию — 4">
+  <div class="hint">Например, 3 или 3,5. Поменяется во всех местах КП, где указаны мягкие торги. Аукцион остаётся 6%.</div>
+
   <button onclick="generate()">Сгенерировать ссылку</button>
 
   <div class="result" id="result">
@@ -84,6 +88,7 @@ function generate(){
   var name = document.getElementById('name').value.trim();
   var object = document.getElementById('object').value.trim();
   var date = document.getElementById('date').value.trim();
+  var soft = document.getElementById('soft').value.trim().replace('%','').replace('.',',');
 
   // Читаемая ссылка: кириллицу оставляем как есть, кодируем только то, что ломает адрес.
   function enc(v){
@@ -94,6 +99,7 @@ function generate(){
   if(name) pairs.push('name=' + enc(name));
   if(object) pairs.push('object=' + enc(object));
   if(date) pairs.push('date=' + enc(date));
+  if(soft) pairs.push('soft=' + enc(soft));
 
   var qs = pairs.join('&');
   var url = base + file + (qs ? '?' + qs : '');

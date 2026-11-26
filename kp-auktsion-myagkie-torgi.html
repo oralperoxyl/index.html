@@ -275,7 +275,7 @@ a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important
 <div class="tldr">
   <div class="tldr-kicker">Коротко о главном — для тех, кто пробегает глазами</div>
   <div class="tldr-row">
-    <div class="tldr-text"><strong>Два формата, одна механика.</strong> Аукцион (6%, задаток на 21-й день) и мягкие торги (4%, 30–55 дней) собирают покупателей в конкуренцию за объект — она и двигает цену вверх. Разница только в масштабе маркетинга.</div>
+    <div class="tldr-text"><strong>Два формата, одна механика.</strong> Аукцион (6%, задаток на 21-й день) и мягкие торги (<span class="fee-soft">4%</span>, 30–55 дней) собирают покупателей в конкуренцию за объект — она и двигает цену вверх. Разница только в масштабе маркетинга.</div>
     <a class="tldr-link" href="#s-formats">Сравнение →</a>
   </div>
   <div class="tldr-row">
@@ -340,7 +340,7 @@ a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important
     </div>
     <div class="sc-col">
       <div class="sc-col-name">Мягкие торги</div>
-      <div class="sc-col-fee">4%</div>
+      <div class="sc-col-fee"><span class="fee-soft">4%</span></div>
       <div class="sc-col-row"><span class="sc-col-label">Срок до задатка</span><span class="sc-col-val">30–55 дней</span></div>
       <div class="sc-col-row"><span class="sc-col-label">Маркетинг</span><span class="sc-col-val">Базовый, минимальный бюджет</span></div>
       <div class="sc-col-row"><span class="sc-col-label">Показы</span><span class="sc-col-val">Раз в неделю, в один день</span></div>
@@ -387,7 +387,7 @@ a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important
   </div>
   <p class="sc-note">Премия нужна не для того, чтобы забрать часть вашей выгоды, а чтобы у меня был стимул не останавливаться на целевой цифре и качать цену выше. Срабатывает она по ситуации — не на каждом объекте. И даже тогда каждый рубль сверх резервной цены делится пополам: половина остаётся вам.</p>
   <p class="sc-note" style="margin-top:8px">Условный пример на круглых цифрах — не прогноз и не гарантия для вашего объекта. Реальный процент зависит от сегмента, состояния объекта и спроса на момент старта. Цифры для вашего объекта считаю на встрече после осмотра.</p>
-  <p class="sc-note" style="margin-top:8px">Мягкие торги (4%) работают по той же логике конкуренции покупателей, но при меньшем охвате. Отдельной статистики по приросту цены для этого формата нет — не подставляю сюда аукционные цифры вместо неё.</p>
+  <p class="sc-note" style="margin-top:8px">Мягкие торги (<span class="fee-soft">4%</span>) работают по той же логике конкуренции покупателей, но при меньшем охвате. Отдельной статистики по приросту цены для этого формата нет — не подставляю сюда аукционные цифры вместо неё.</p>
 
   <div class="sc-alert sc-alert-info" style="margin-top:24px"><strong>Маркетинг — это вложение, а не расход.</strong> В примере выше бюджет на рекламу — 45–90 тысяч ₽, а прирост цены — 1,5–2,25 млн ₽. Каждый вложенный рубль возвращается в цене продажи: именно маркетинг собирает ту конкуренцию покупателей, которая поднимает цену. Без него объект идёт по сценарию зависшего объявления — и теряет на снижениях больше, чем стоил бы весь рекламный бюджет.</div>
 
@@ -445,7 +445,7 @@ a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important
 
 <section class="s" id="s-mechanism-soft">
   <span class="s-num">04 / 08</span>
-  <h2 class="s-title">Механизм мягких торгов — 4%</h2>
+  <h2 class="s-title">Механизм мягких торгов — <span class="fee-soft">4%</span></h2>
   <p class="s-intro">Тот же принцип конкурентных предложений, но в меньшем масштабе. Объект размещается на всех основных площадках — Циан, Авито и остальных — с платным продвижением первые 14 дней, но без полного охвата аукциона: без базы агентов, без наружной рекламы, без ежедневного разгона кампании. Показы группирую раз в неделю: так к каждой дате набирается несколько заинтересованных, а не один покупатель за другим.</p>
 
   <div class="timeline">
@@ -621,7 +621,7 @@ a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important
     <div class="cond-num">02</div>
     <div>
       <div class="cond-title">Срок не критичен, порог входа по бюджету важен</div>
-      <div class="cond-text">Мягкие торги: 4%, минимальный бюджет, задаток обычно на 30–55-й день.</div>
+      <div class="cond-text">Мягкие торги: <span class="fee-soft">4%</span>, минимальный бюджет, задаток обычно на 30–55-й день.</div>
     </div>
   </div>
   <div class="cond">
@@ -828,6 +828,17 @@ a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important
   <p class="footer-copy"><a href="https://fastbroker21.ru">fastbroker21.ru</a></p>
 </footer>
 
+<script>
+(function(){
+  // Комиссия за мягкие торги из ссылки: ?soft=3 или ?soft=3,5. Без параметра остаётся 4%.
+  var raw=new URLSearchParams(window.location.search).get('soft');
+  if(!raw)return;
+  var v=parseFloat(String(raw).replace(',','.').replace('%',''));
+  if(!isFinite(v)||v<=0||v>10)return;
+  var label=String(Math.round(v*100)/100).replace('.',',')+'%';
+  document.querySelectorAll('.fee-soft').forEach(function(el){el.textContent=label;});
+})();
+</script>
 <script>
 (function(){
   // Подстановка имени/объекта/даты из ссылки (?name=...&object=...&date=...),
