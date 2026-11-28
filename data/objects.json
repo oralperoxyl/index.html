@@ -4190,8 +4190,8 @@
     },
     "мурино-ул-привокзальная-3к1": {
       "address": "Мурино, ул. Привокзальная, 3к1",
-      "area": 0,
-      "rooms": 0,
+      "area": 88.6,
+      "rooms": 3,
       "floor": "",
       "location": "",
       "date": "28 ноября 2026 г.",
@@ -4202,7 +4202,8 @@
         "priceTo": 0
       },
       "strategy": null,
-      "reports": null
+      "reports": null,
+      "estimate": {}
     }
   }
 }
