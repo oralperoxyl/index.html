@@ -4189,7 +4189,7 @@
       }
     },
     "мурино-ул-привокзальная-3к1": {
-      "address": "Мурино, ул. Привокзальная, 3к1",
+      "address": "Ленинградская область, Всеволожский район, Мурино, Привокзальная площадь, 3к1",
       "area": 88.6,
       "rooms": 3,
       "floor": "15/23",
@@ -4203,7 +4203,16 @@
       },
       "strategy": null,
       "reports": null,
-      "estimate": {}
+      "estimate": {
+        "propertyType": "1",
+        "roomsCount": "3",
+        "builtYear": "2013",
+        "squareTotal": "88.6",
+        "buildingMaterial": "2",
+        "repairType": "3",
+        "latitude": "",
+        "longitude": ""
+      }
     }
   }
 }
