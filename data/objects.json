@@ -4298,6 +4298,23 @@
             "comment": "Только вышли в продажу, просмотры уже были. Предложений пока не было. К торгу готовы. Прямая продажа, без обременений. ",
             "ours": false,
             "visited": false
+          },
+          {
+            "address": "",
+            "agent": "",
+            "area": "",
+            "rooms": "",
+            "floor": "",
+            "condition": "",
+            "price": 0,
+            "ppm": 0,
+            "bargain": "",
+            "adDate": "",
+            "adViews": "",
+            "url": "",
+            "comment": "",
+            "ours": false,
+            "visited": false
           }
         ],
         "recommendations": [],
