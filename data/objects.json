@@ -4332,6 +4332,23 @@
             "comment": "Только вышли в продажу, несколько просмотров уже были. Предложений не было. ",
             "ours": false,
             "visited": false
+          },
+          {
+            "address": "",
+            "agent": "",
+            "area": "",
+            "rooms": "",
+            "floor": "",
+            "condition": "",
+            "price": 0,
+            "ppm": 0,
+            "bargain": "",
+            "adDate": "",
+            "adViews": "",
+            "url": "https://spb.cian.ru/sale/flat/331104843",
+            "comment": "",
+            "ours": false,
+            "visited": false
           }
         ],
         "recommendations": [],
